@@ -1328,37 +1328,39 @@ function startDictado(mode){
   setDictadoStatus('🔴 Escuchando... Habla libremente');
   const el=document.getElementById('dictado-transcript'); el.style.display='block'; el.textContent='';
   const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
-  // Solución Android: sin continuous, acumulamos frases manualmente
+  // Solución Android: filtro anti-duplicados por hash de frase
+  const seenPhrases = new Set();
+  const normalizar = t => t.trim().toLowerCase().replace(/[.,!?]/g,'');
   const startNewRecogn = () => {
     if(!isRecording) return;
     recogn = new SR();
     recogn.lang = 'es-ES';
     recogn.continuous = false;
-    recogn.interimResults = true;
+    recogn.interimResults = false; // Solo resultados finales, sin interinos
+    recogn.maxAlternatives = 1;
     recogn.onresult = e => {
-      let interim = '';
       for(let i = 0; i < e.results.length; i++){
         if(e.results[i].isFinal){
-          dictadoTranscript += e.results[i][0].transcript + ' ';
-        } else {
-          interim += e.results[i][0].transcript;
+          const frase = e.results[i][0].transcript.trim();
+          const key = normalizar(frase);
+          if(frase && !seenPhrases.has(key)){
+            seenPhrases.add(key);
+            dictadoTranscript += frase + ' ';
+            el.textContent = dictadoTranscript.trim();
+          }
         }
       }
-      el.textContent = (dictadoTranscript + interim).trim();
     };
     recogn.onerror = err => {
-      if(err.error === 'no-speech' || err.error === 'aborted'){
-        setTimeout(startNewRecogn, 400);
+      if(err.error === 'no-speech' || err.error === 'aborted') {
+        setTimeout(startNewRecogn, 500);
         return;
       }
       setDictadoStatus('❌ Error: ' + err.error);
       stopDictado(true);
     };
-    recogn.onend = () => {
-      // Al terminar una frase, esperar y arrancar nueva sesión limpia
-      setTimeout(startNewRecogn, 400);
-    };
-    try { recogn.start(); } catch(ex) { setTimeout(startNewRecogn, 500); }
+    recogn.onend = () => { setTimeout(startNewRecogn, 500); };
+    try { recogn.start(); } catch(ex) { setTimeout(startNewRecogn, 600); }
   };
   startNewRecogn();
 }
