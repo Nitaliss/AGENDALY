@@ -1328,38 +1328,39 @@ function startDictado(mode){
   setDictadoStatus('🔴 Escuchando... Habla libremente');
   const el=document.getElementById('dictado-transcript'); el.style.display='block'; el.textContent='';
   const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
-  recogn=new SR(); recogn.lang='es-ES'; recogn.continuous=false; recogn.interimResults=true;
-  let lastResultIndex=0;
-  recogn.onresult=e=>{
-    let interim='';
-    for(let i=e.resultIndex;i<e.results.length;i++){
-      if(e.results[i].isFinal){
-        // Solo añadir si es un resultado nuevo (evita duplicados en Android)
-        if(i>=lastResultIndex){
-          dictadoTranscript+=e.results[i][0].transcript+' ';
-          lastResultIndex=i+1;
+  // Solución Android: sin continuous, acumulamos frases manualmente
+  const startNewRecogn = () => {
+    if(!isRecording) return;
+    recogn = new SR();
+    recogn.lang = 'es-ES';
+    recogn.continuous = false;
+    recogn.interimResults = true;
+    recogn.onresult = e => {
+      let interim = '';
+      for(let i = 0; i < e.results.length; i++){
+        if(e.results[i].isFinal){
+          dictadoTranscript += e.results[i][0].transcript + ' ';
+        } else {
+          interim += e.results[i][0].transcript;
         }
-      } else {
-        interim+=e.results[i][0].transcript;
       }
-    }
-    el.textContent=(dictadoTranscript+interim).trim();
+      el.textContent = (dictadoTranscript + interim).trim();
+    };
+    recogn.onerror = err => {
+      if(err.error === 'no-speech' || err.error === 'aborted'){
+        setTimeout(startNewRecogn, 400);
+        return;
+      }
+      setDictadoStatus('❌ Error: ' + err.error);
+      stopDictado(true);
+    };
+    recogn.onend = () => {
+      // Al terminar una frase, esperar y arrancar nueva sesión limpia
+      setTimeout(startNewRecogn, 400);
+    };
+    try { recogn.start(); } catch(ex) { setTimeout(startNewRecogn, 500); }
   };
-  recogn.onerror=err=>{
-    if(err.error==='no-speech'){
-      // En Android no-speech es normal, reiniciar silenciosamente
-      if(isRecording){ try{recogn.stop();}catch(ex){} setTimeout(()=>{ if(isRecording) recogn.start(); },300); }
-      return;
-    }
-    setDictadoStatus('❌ Error: '+err.error); stopDictado(true);
-  };
-  recogn.onend=()=>{
-    if(isRecording){
-      // Pequeña pausa antes de reiniciar para evitar solapamiento en Android
-      setTimeout(()=>{ if(isRecording){ lastResultIndex=0; recogn.start(); } },200);
-    }
-  };
-  recogn.start();
+  startNewRecogn();
 }
 function stopDictado(error=false){
   isRecording=false;
