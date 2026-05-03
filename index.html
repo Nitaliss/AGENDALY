@@ -1328,41 +1328,50 @@ function startDictado(mode){
   setDictadoStatus('🔴 Escuchando... Habla libremente');
   const el=document.getElementById('dictado-transcript'); el.style.display='block'; el.textContent='';
   const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
-  // Solución Android: filtro anti-duplicados por hash de frase
-  const seenPhrases = new Set();
-  const normalizar = t => t.trim().toLowerCase().replace(/[.,!?]/g,'');
-  const startNewRecogn = () => {
-    if(!isRecording) return;
-    recogn = new SR();
-    recogn.lang = 'es-ES';
-    recogn.continuous = false;
-    recogn.interimResults = false; // Solo resultados finales, sin interinos
-    recogn.maxAlternatives = 1;
-    recogn.onresult = e => {
-      for(let i = 0; i < e.results.length; i++){
-        if(e.results[i].isFinal){
-          const frase = e.results[i][0].transcript.trim();
-          const key = normalizar(frase);
-          if(frase && !seenPhrases.has(key)){
-            seenPhrases.add(key);
-            dictadoTranscript += frase + ' ';
-            el.textContent = dictadoTranscript.trim();
-          }
+  // Solución definitiva Android: una sola sesión, sin reinicio automático
+  // El usuario pulsa Parar cuando termina — evita cualquier solapamiento
+  recogn = new SR();
+  recogn.lang = 'es-ES';
+  recogn.continuous = true;
+  recogn.interimResults = false;
+  recogn.maxAlternatives = 1;
+  
+  // Guardamos el índice del último resultado procesado
+  let ultimoIdx = 0;
+  
+  recogn.onresult = e => {
+    // Solo procesamos resultados a partir del último índice conocido
+    for(let i = ultimoIdx; i < e.results.length; i++){
+      if(e.results[i].isFinal){
+        const frase = e.results[i][0].transcript.trim();
+        if(frase){
+          dictadoTranscript += frase + ' ';
+          el.textContent = dictadoTranscript.trim();
+          ultimoIdx = i + 1;
         }
       }
-    };
-    recogn.onerror = err => {
-      if(err.error === 'no-speech' || err.error === 'aborted') {
-        setTimeout(startNewRecogn, 500);
-        return;
-      }
-      setDictadoStatus('❌ Error: ' + err.error);
-      stopDictado(true);
-    };
-    recogn.onend = () => { setTimeout(startNewRecogn, 500); };
-    try { recogn.start(); } catch(ex) { setTimeout(startNewRecogn, 600); }
+    }
   };
-  startNewRecogn();
+  
+  recogn.onerror = err => {
+    if(err.error === 'no-speech') return; // ignorar silencio
+    setDictadoStatus('❌ Error: ' + err.error);
+    stopDictado(true);
+  };
+  
+  // En Android onend se dispara sola — solo reiniciamos si seguimos grabando
+  // y han pasado al menos 1 segundo (evita loops rápidos)
+  let ultimoEnd = 0;
+  recogn.onend = () => {
+    const ahora = Date.now();
+    if(isRecording && (ahora - ultimoEnd) > 1000){
+      ultimoEnd = ahora;
+      ultimoIdx = 0; // reset índice para nueva sesión
+      try { recogn.start(); } catch(ex){}
+    }
+  };
+  
+  try { recogn.start(); } catch(ex){ setDictadoStatus('❌ No se pudo iniciar el micrófono.'); }
 }
 function stopDictado(error=false){
   isRecording=false;
