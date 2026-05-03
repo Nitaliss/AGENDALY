@@ -1,12 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="theme-color" content="#2D5016">
-<meta name="description" content="Tu agenda inteligente de productividad personal">
-<link rel="manifest" href="manifest.json">
-<link rel="apple-touch-icon" href="icon-192.png">
-<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -1334,18 +1328,37 @@ function startDictado(mode){
   setDictadoStatus('🔴 Escuchando... Habla libremente');
   const el=document.getElementById('dictado-transcript'); el.style.display='block'; el.textContent='';
   const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
-  recogn=new SR(); recogn.lang='es-ES'; recogn.continuous=true; recogn.interimResults=true;
+  recogn=new SR(); recogn.lang='es-ES'; recogn.continuous=false; recogn.interimResults=true;
+  let lastResultIndex=0;
   recogn.onresult=e=>{
-    let interim='',final='';
+    let interim='';
     for(let i=e.resultIndex;i<e.results.length;i++){
-      if(e.results[i].isFinal) final+=e.results[i][0].transcript+' ';
-      else interim+=e.results[i][0].transcript;
+      if(e.results[i].isFinal){
+        // Solo añadir si es un resultado nuevo (evita duplicados en Android)
+        if(i>=lastResultIndex){
+          dictadoTranscript+=e.results[i][0].transcript+' ';
+          lastResultIndex=i+1;
+        }
+      } else {
+        interim+=e.results[i][0].transcript;
+      }
     }
-    if(final) dictadoTranscript+=final;
     el.textContent=(dictadoTranscript+interim).trim();
   };
-  recogn.onerror=err=>{setDictadoStatus('❌ Error: '+err.error);stopDictado(true);};
-  recogn.onend=()=>{if(isRecording) recogn.start();};
+  recogn.onerror=err=>{
+    if(err.error==='no-speech'){
+      // En Android no-speech es normal, reiniciar silenciosamente
+      if(isRecording){ try{recogn.stop();}catch(ex){} setTimeout(()=>{ if(isRecording) recogn.start(); },300); }
+      return;
+    }
+    setDictadoStatus('❌ Error: '+err.error); stopDictado(true);
+  };
+  recogn.onend=()=>{
+    if(isRecording){
+      // Pequeña pausa antes de reiniciar para evitar solapamiento en Android
+      setTimeout(()=>{ if(isRecording){ lastResultIndex=0; recogn.start(); } },200);
+    }
+  };
   recogn.start();
 }
 function stopDictado(error=false){
@@ -1658,11 +1671,6 @@ function x(s){ if(!s) return ''; return String(s).replace(/&/g,'&amp;').replace(
 
 /* ── INIT ── */
 window.addEventListener('DOMContentLoaded',()=>{
-
-  // PWA Service Worker
-  if('serviceWorker' in navigator){
-    navigator.serviceWorker.register('sw.js').then(function(r){console.log('SW ok');}).catch(function(e){console.log('SW err',e);});
-  }
   checkSession();
   document.getElementById('login-pin').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
   document.getElementById('confirm-ov').addEventListener('click',e=>{if(e.target===document.getElementById('confirm-ov'))closeConfirm();});
