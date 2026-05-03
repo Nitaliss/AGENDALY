@@ -1327,51 +1327,61 @@ function startDictado(mode){
   document.getElementById('dbtn-stop').style.display='inline-flex';
   setDictadoStatus('🔴 Escuchando... Habla libremente');
   const el=document.getElementById('dictado-transcript'); el.style.display='block'; el.textContent='';
-  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
-  // Solución definitiva Android: una sola sesión, sin reinicio automático
-  // El usuario pulsa Parar cuando termina — evita cualquier solapamiento
-  recogn = new SR();
-  recogn.lang = 'es-ES';
-  recogn.continuous = true;
-  recogn.interimResults = false;
-  recogn.maxAlternatives = 1;
-  
-  // Guardamos el índice del último resultado procesado
-  let ultimoIdx = 0;
-  
-  recogn.onresult = e => {
-    // Solo procesamos resultados a partir del último índice conocido
-    for(let i = ultimoIdx; i < e.results.length; i++){
-      if(e.results[i].isFinal){
-        const frase = e.results[i][0].transcript.trim();
-        if(frase){
-          dictadoTranscript += frase + ' ';
-          el.textContent = dictadoTranscript.trim();
-          ultimoIdx = i + 1;
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+  // ANDROID FIX v7: instancia nueva en cada reinicio + deduplicación por contenido
+  // Destruimos el objeto SR en cada reinicio — Android no puede reciclar resultados.
+  // El Set _vistas filtra frases duplicadas por contenido normalizado.
+  const _vistas = new Set();
+  const _norm = t => t.toLowerCase().replace(/[\s.,!?¿¡]+/g,' ').trim();
+
+  const _crearSR = () => {
+    const r = new SR();
+    r.lang = 'es-ES';
+    r.continuous = false;      // UNA frase por sesión — sin reciclaje de Android
+    r.interimResults = false;  // Solo resultados finales confirmados
+    r.maxAlternatives = 1;
+    r.onresult = ev => {
+      for(let i = 0; i < ev.results.length; i++){
+        if(ev.results[i].isFinal){
+          const frase = ev.results[i][0].transcript.trim();
+          const clave = _norm(frase);
+          if(frase && !_vistas.has(clave)){
+            _vistas.add(clave);
+            dictadoTranscript += frase + ' ';
+            el.textContent = dictadoTranscript.trim();
+          }
         }
       }
+    };
+    r.onerror = ev => {
+      if(ev.error === 'no-speech' || ev.error === 'aborted'){
+        if(isRecording) setTimeout(_iniciar, 400);
+        return;
+      }
+      setDictadoStatus('❌ Error: ' + ev.error);
+      stopDictado(true);
+    };
+    r.onend = () => { if(isRecording) setTimeout(_iniciar, 400); };
+    return r;
+  };
+
+  const _iniciar = () => {
+    if(!isRecording) return;
+    // Destruir instancia anterior completamente
+    if(recogn){
+      recogn.onresult = null;
+      recogn.onerror  = null;
+      recogn.onend    = null;
+      try{ recogn.abort(); }catch(ex){}
+      recogn = null;
     }
+    recogn = _crearSR();
+    try{ recogn.start(); }
+    catch(ex){ if(isRecording) setTimeout(_iniciar, 600); }
   };
-  
-  recogn.onerror = err => {
-    if(err.error === 'no-speech') return; // ignorar silencio
-    setDictadoStatus('❌ Error: ' + err.error);
-    stopDictado(true);
-  };
-  
-  // En Android onend se dispara sola — solo reiniciamos si seguimos grabando
-  // y han pasado al menos 1 segundo (evita loops rápidos)
-  let ultimoEnd = 0;
-  recogn.onend = () => {
-    const ahora = Date.now();
-    if(isRecording && (ahora - ultimoEnd) > 1000){
-      ultimoEnd = ahora;
-      ultimoIdx = 0; // reset índice para nueva sesión
-      try { recogn.start(); } catch(ex){}
-    }
-  };
-  
-  try { recogn.start(); } catch(ex){ setDictadoStatus('❌ No se pudo iniciar el micrófono.'); }
+
+  _iniciar();
 }
 function stopDictado(error=false){
   isRecording=false;
