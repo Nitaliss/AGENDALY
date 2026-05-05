@@ -665,7 +665,15 @@ body[data-mode="escolar"][data-theme="verde"]{
       <label>PIN de acceso (4 dígitos)</label>
       <input type="password" id="login-pin" placeholder="••••" maxlength="4" inputmode="numeric"/>
     </div>
+    <div class="lf" id="pista-wrap" style="display:none">
+      <label>Pista del PIN <span style="color:var(--th);font-weight:400">(solo la primera vez)</span></label>
+      <input type="text" id="login-pista" placeholder="Ej: el año de mi boda, cumple de María..." maxlength="60"/>
+    </div>
+    <div id="pista-recordatorio" style="display:none;font-size:12px;color:var(--gm);background:var(--bcp);border-radius:8px;padding:8px 12px;margin-top:-8px;margin-bottom:8px;font-family:'Lato',sans-serif;">
+      <strong>Pista:</strong> <span id="pista-texto"></span>
+    </div>
     <button class="btn-login" onclick="doLogin()">Entrar en mi agenda</button>
+    <button class="btn-login" onclick="mostrarRecuperarPin()" style="background:transparent;color:var(--gm);border:1px solid var(--gm);margin-top:6px;font-size:13px;">¿Olvidaste el PIN?</button>
     <div class="login-note">
       Agenda 100% privada · Solo tú tienes acceso<br>
       Desarrollado por <strong>Alicia Prats</strong> © 2026
@@ -1048,13 +1056,11 @@ function inicializar() {
   try {
     const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
     const hdrs = ['ID','Fecha','Contacto','Tema','Accion','Comunicado','Estado','Notas','Recordatorio','Creado','Imagen'];
-    const hdrEsc = ['ID','Fecha','Asignatura','TipoTarea','FechaEntrega','Descripcion','Estado','Notas','Recordatorio','Creado','Imagen'];
-    ['Tapunto_Trabajo','Tapunto_Escolar','Listas'].forEach(n=>{
+    ['Tapunto_Trabajo','Listas'].forEach(n=>{
       const s=ss.getSheetByName(n)||ss.insertSheet(n);
       if(s.getLastRow()===0){
         if(n==='Tapunto_Trabajo') s.appendRow(hdrs);
-        else if(n==='Tapunto_Escolar') s.appendRow(hdrEsc);
-        else s.appendRow(['Contactos','Temas','Asignaturas','TiposTarea']);
+        else s.appendRow(['Contactos','Temas']);
       }
     });
     Logger.log('✅ Listo. Ahora publica como Web App.');
@@ -1066,34 +1072,27 @@ function getSS(){ return SpreadsheetApp.openById(SPREADSHEET_ID); }
 function doPost(e) {
   try {
     const ss=getSS(), data=JSON.parse(e.postData.contents);
-    const modo=data.modo||'trabajo';
-    const sheetName=modo==='escolar'?'Tapunto_Escolar':'Tapunto_Trabajo';
-    const sheet=getOrCreateSheet(ss,sheetName);
+    const sheet=getOrCreateSheet(ss,'Tapunto_Trabajo');
     const lists=getOrCreateSheet(ss,'Listas');
+    const HDRS=['ID','Fecha','Contacto','Tema','Accion','Comunicado','Estado','Notas','Recordatorio','Creado','Imagen'];
 
     if(data.action==='sync'){
       sheet.clearContents();
-      if(modo==='escolar') sheet.appendRow(['ID','Fecha','Asignatura','TipoTarea','FechaEntrega','Descripcion','Estado','Notas','Recordatorio','Creado','Imagen']);
-      else sheet.appendRow(['ID','Fecha','Contacto','Tema','Accion','Comunicado','Estado','Notas','Recordatorio','Creado','Imagen']);
+      sheet.appendRow(HDRS);
       (data.records||[]).forEach(r=>{
-        if(modo==='escolar') sheet.appendRow([r.id,r.fecha,r.asignatura||r.contacto,r.tipoTarea||r.tema,r.fechaEntrega||'',r.descripcion||r.accion,r.estado,r.notas,r.recordatorio,r.created,r.imagenUrl||'']);
-        else sheet.appendRow([r.id,r.fecha,r.contacto,r.tema,r.accion,r.comunicado,r.estado,r.notas,r.recordatorio,r.created,r.imagenUrl||'']);
+        sheet.appendRow([r.id,r.fecha,r.contacto,r.tema,r.accion,r.comunicado,r.estado,r.notas,r.recordatorio,r.created,r.imagenUrl||'']);
       });
       lists.clearContents();
-      lists.appendRow(['Contactos','Temas','Asignaturas','TiposTarea']);
-      const c=data.contactos||[],t=data.temas||[],a=data.asignaturas||[],tt=data.tiposTarea||[];
-      for(let i=0;i<Math.max(c.length,t.length,a.length,tt.length);i++) lists.appendRow([c[i]||'',t[i]||'',a[i]||'',tt[i]||'']);
+      lists.appendRow(['Contactos','Temas']);
+      const c=data.contactos||[],t=data.temas||[];
+      for(let i=0;i<Math.max(c.length,t.length);i++) lists.appendRow([c[i]||'',t[i]||'']);
     } else if(data.action==='append'){
-      if(sheet.getLastRow()===0){
-        if(modo==='escolar') sheet.appendRow(['ID','Fecha','Asignatura','TipoTarea','FechaEntrega','Descripcion','Estado','Notas','Recordatorio','Creado','Imagen']);
-        else sheet.appendRow(['ID','Fecha','Contacto','Tema','Accion','Comunicado','Estado','Notas','Recordatorio','Creado','Imagen']);
-      }
-      if(modo==='escolar') sheet.appendRow([data.id,data.fecha,data.asignatura||data.contacto,data.tipoTarea||data.tema,data.fechaEntrega||'',data.descripcion||data.accion,data.estado,data.notas,data.recordatorio,data.created,data.imagenUrl||'']);
-      else sheet.appendRow([data.id,data.fecha,data.contacto,data.tema,data.accion,data.comunicado,data.estado,data.notas,data.recordatorio,data.created,data.imagenUrl||'']);
+      if(sheet.getLastRow()===0) sheet.appendRow(HDRS);
+      sheet.appendRow([data.id,data.fecha,data.contacto,data.tema,data.accion,data.comunicado,data.estado,data.notas,data.recordatorio,data.created,data.imagenUrl||'']);
     } else if(data.action==='sync_lists'){
-      lists.clearContents(); lists.appendRow(['Contactos','Temas','Asignaturas','TiposTarea']);
-      const c=data.contactos||[],t=data.temas||[],a=data.asignaturas||[],tt=data.tiposTarea||[];
-      for(let i=0;i<Math.max(c.length,t.length,a.length,tt.length);i++) lists.appendRow([c[i]||'',t[i]||'',a[i]||'',tt[i]||'']);
+      lists.clearContents(); lists.appendRow(['Contactos','Temas']);
+      const c=data.contactos||[],t=data.temas||[];
+      for(let i=0;i<Math.max(c.length,t.length);i++) lists.appendRow([c[i]||'',t[i]||'']);
     } else if(data.action==='upload_image'){
       const folder=DriveApp.getRootFolder(),folders=folder.getFoldersByName('Tapunto_Imagenes');
       const imgFolder=folders.hasNext()?folders.next():folder.createFolder('Tapunto_Imagenes');
@@ -1109,20 +1108,16 @@ function doPost(e) {
 function doGet(e) {
   try {
     const ss=getSS();
-    const modo=e&&e.parameter&&e.parameter.modo?e.parameter.modo:'trabajo';
-    const sheetName=modo==='escolar'?'Tapunto_Escolar':'Tapunto_Trabajo';
-    const sheet=getOrCreateSheet(ss,sheetName);
+    const sheet=getOrCreateSheet(ss,'Tapunto_Trabajo');
     const lists=getOrCreateSheet(ss,'Listas');
     const rows=sheet.getDataRange().getValues();
     const listRows=lists.getDataRange().getValues();
-    const contactos=[],temas=[],asignaturas=[],tiposTarea=[];
+    const contactos=[],temas=[];
     listRows.slice(1).forEach(r=>{
       if(r[0])contactos.push(String(r[0]));
       if(r[1])temas.push(String(r[1]));
-      if(r[2])asignaturas.push(String(r[2]));
-      if(r[3])tiposTarea.push(String(r[3]));
     });
-    return ContentService.createTextOutput(JSON.stringify({rows,contactos,temas,asignaturas,tiposTarea})).setMimeType(ContentService.MimeType.JSON);
+    return ContentService.createTextOutput(JSON.stringify({rows,contactos,temas})).setMimeType(ContentService.MimeType.JSON);
   } catch(err){ return ContentService.createTextOutput(JSON.stringify({ok:false,error:err.message})).setMimeType(ContentService.MimeType.JSON); }
 }`;
 
@@ -1148,7 +1143,7 @@ const VALID_KEYS = [
 ];
 
 const APP_KEY = 'tapunto_v1';
-let state = {records:[],contactos:[],temas:[],acciones:[],comunicados:[],asignaturas:[],tiposTarea:[],sheetsUrl:'',theme:'verde',coverImageData:null,modo:'trabajo'};
+let state = {records:[],contactos:[],temas:[],acciones:[],comunicados:[],sheetsUrl:'',theme:'verde',coverImageData:null,modo:'trabajo'};
 let currentUser = null;
 let editingId   = null;
 let reminderDays = null;
@@ -1176,7 +1171,7 @@ function persist(){
 }
 function loadState(){
   const raw = localStorage.getItem(ukey());
-  if(raw){ try{ state = Object.assign({records:[],contactos:[],temas:[],acciones:[],comunicados:[],asignaturas:[],tiposTarea:[],sheetsUrl:'',theme:'verde',coverImageData:null,modo:'trabajo'}, JSON.parse(raw)); }catch(e){} }
+  if(raw){ try{ state = Object.assign({records:[],contactos:[],temas:[],acciones:[],comunicados:[],sheetsUrl:'',theme:'verde',coverImageData:null,modo:'trabajo'}, JSON.parse(raw)); }catch(e){} }
 }
 
 /* ── PREMIUM / LICENSE ── */
@@ -1244,16 +1239,40 @@ function getOrCreateDeviceId(){
 /* ── UPGRADE MODAL ── */
 function showUpgrade(){ document.getElementById('upg-ov').style.display='flex'; }
 function closeUpgrade(){ document.getElementById('upg-ov').style.display='none'; document.getElementById('upg-msg').textContent=''; }
-function activateLicense(){
+async function activateLicense(){
   const raw = document.getElementById('license-input').value.trim().toUpperCase();
   const msg = document.getElementById('upg-msg');
   if(!raw){ msg.className='upg-msg err'; msg.textContent='Introduce un código de activación.'; return; }
+  if(!/^TAPUNTO-[A-Z0-9]{4}-[A-Z0-9]{4}$/.test(raw)){
+    msg.className='upg-msg err'; msg.textContent='Formato incorrecto. Usa: TAPUNTO-XXXX-XXXX'; return;
+  }
+
+  // ── VALIDACIÓN REMOTA (si hay Sheets conectado) ──
+  if(state.sheetsUrl){
+    try{
+      msg.className='upg-msg'; msg.textContent='⏳ Validando licencia...';
+      const res=await fetch(state.sheetsUrl,{
+        method:'POST',
+        body:JSON.stringify({action:'validate_license',code:raw,email:currentUser})
+      });
+      const data=await res.json();
+      if(data.valid===true){
+        localStorage.setItem('tp_license_'+currentUser,raw);
+        isPremium=true; applyPremiumUI();
+        msg.className='upg-msg ok'; msg.textContent='✓ ¡Premium activado! Bienvenida al plan completo 🐾';
+        setTimeout(closeUpgrade,2000); return;
+      } else if(data.valid===false){
+        msg.className='upg-msg err'; msg.textContent='Código no válido o ya utilizado.'; return;
+      }
+    }catch(e){ console.warn('Validación remota no disponible, usando local'); }
+  }
+
+  // ── FALLBACK LOCAL (demos y tests) ──
   if(VALID_KEYS.includes(raw)){
-    localStorage.setItem('tp_license_'+currentUser, raw);
-    isPremium = true;
-    applyPremiumUI();
+    localStorage.setItem('tp_license_'+currentUser,raw);
+    isPremium=true; applyPremiumUI();
     msg.className='upg-msg ok'; msg.textContent='✓ ¡Premium activado! Bienvenida al plan completo 🐾';
-    setTimeout(closeUpgrade, 2000);
+    setTimeout(closeUpgrade,2000);
   } else {
     msg.className='upg-msg err'; msg.textContent='Código no válido. Comprueba que lo has introducido correctamente.';
   }
@@ -1320,28 +1339,91 @@ function removeCoverImage(){
   document.getElementById('inp-cover-img').value='';
 }
 
+/* ── CRYPTO HELPERS ── */
+async function hashPin(pin){
+  const buf=await crypto.subtle.digest('SHA-256',new TextEncoder().encode('tapunto_salt_2026_'+pin));
+  return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+}
+
 /* ── AUTH ── */
-function doLogin(){
+async function doLogin(){
   const email=document.getElementById('login-email').value.trim().toLowerCase();
   const pin=document.getElementById('login-pin').value.trim();
-  if(!email||pin.length!==4||isNaN(pin)){alert('Introduce correo válido y PIN de 4 dígitos.');return;}
+  if(!email||!email.includes('@')){alert('Introduce un correo válido.');return;}
+  if(pin.length!==4||isNaN(pin)){alert('El PIN debe tener exactamente 4 dígitos.');return;}
+
+  const pinHash=await hashPin(pin);
   const stored=localStorage.getItem('tp_pin_'+email);
-  if(!stored){
-    if(!confirm('Primera vez con este correo. Se guardará el PIN "'+pin+'". ¿Continuar?')) return;
-    localStorage.setItem('tp_pin_'+email,pin);
-  } else if(stored!==pin){alert('PIN incorrecto.');return;}
+
+  // ── MIGRACIÓN SILENCIOSA: si hay PIN en texto plano, lo hasheamos ahora ──
+  if(stored&&stored.length===4&&!isNaN(stored)){
+    if(stored!==pin){alert('PIN incorrecto.');return;}
+    // Migrar a hash sin que el usuario note nada
+    const pista=localStorage.getItem('tp_pista_'+email)||'';
+    localStorage.setItem('tp_pin_'+email,pinHash);
+    console.log('PIN migrado a hash seguro');
+  } else if(stored&&stored.length===64){
+    // Ya está hasheado — comparar hashes
+    if(stored!==pinHash){
+      // Mostrar pista si existe
+      const pista=localStorage.getItem('tp_pista_'+email);
+      if(pista){
+        document.getElementById('pista-texto').textContent=pista;
+        document.getElementById('pista-recordatorio').style.display='block';
+      }
+      alert('PIN incorrecto.');return;
+    }
+  } else if(!stored){
+    // Primera vez — pedir pista
+    const pistaWrap=document.getElementById('pista-wrap');
+    if(pistaWrap.style.display==='none'){
+      pistaWrap.style.display='block';
+      document.getElementById('login-pista').focus();
+      showWarn('Primera vez con este correo. Escribe una pista para recordar tu PIN y pulsa Entrar de nuevo.');
+      return;
+    }
+    const pista=document.getElementById('login-pista').value.trim();
+    if(!confirm('Primera vez con este correo. PIN "'+pin+'" guardado de forma segura. ¿Continuar?')) return;
+    localStorage.setItem('tp_pin_'+email,pinHash);
+    if(pista) localStorage.setItem('tp_pista_'+email,pista);
+  }
+
   currentUser=email;
   localStorage.setItem('tp_session',email);
   loadState();
   if(!checkDeviceLimit()) return;
   document.getElementById('login-ov').style.display='none';
-  // Comprobar T&C
   const tcAceptado=localStorage.getItem('tp_tc_'+currentUser);
   if(!tcAceptado){showTC();return;}
-  // Comprobar modo
   state.modo='trabajo';
   finishLogin();
 }
+
+function mostrarRecuperarPin(){
+  const email=document.getElementById('login-email').value.trim().toLowerCase();
+  if(!email||!email.includes('@')){alert('Introduce primero tu correo.');return;}
+  const pista=localStorage.getItem('tp_pista_'+email);
+  const stored=localStorage.getItem('tp_pin_'+email);
+  if(!stored){alert('No hay cuenta registrada con ese correo en este dispositivo.');return;}
+  if(pista){
+    const resp=prompt('Tu pista del PIN es: "'+pista+'"\n\nSi lo recuerdas, introdúcelo de nuevo en el campo PIN.\n\nSi no, escribe aquí tu nuevo PIN (4 dígitos) para resetearlo:');
+    if(resp&&resp.length===4&&!isNaN(resp)){
+      hashPin(resp).then(h=>{
+        localStorage.setItem('tp_pin_'+email,h);
+        alert('PIN actualizado. Ya puedes entrar.');
+      });
+    }
+  } else {
+    const resp=prompt('No hay pista guardada.\n\nSi quieres resetear el PIN introduce uno nuevo (4 dígitos):');
+    if(resp&&resp.length===4&&!isNaN(resp)){
+      hashPin(resp).then(h=>{
+        localStorage.setItem('tp_pin_'+email,h);
+        alert('PIN reseteado. Ya puedes entrar.');
+      });
+    }
+  }
+}
+
 function doLogout(){
   if(!confirm('¿Cerrar sesión?')) return;
   clearInterval(autoSyncTimer);
@@ -1356,21 +1438,43 @@ function checkSession(){
     document.getElementById('login-ov').style.display='none';
     const tcAceptado=localStorage.getItem('tp_tc_'+currentUser);
     if(!tcAceptado){showTC();return;}
-    const modoGuardado=state.modo||localStorage.getItem('tp_modo_'+currentUser);
-    if(!modoGuardado){showModeSelector();return;}
     finishLogin();
   }
 }
 function postLogin(){ finishLogin(); }
 
-/* ── API KEYS ── */
+/* ── API KEYS (cifradas con XOR) ── */
+function xorCipher(str,key){
+  // Cifrado XOR simple con la clave = email del usuario
+  // No es criptografía de grado militar pero evita exposición en texto plano
+  let result='';
+  for(let i=0;i<str.length;i++){
+    result+=String.fromCharCode(str.charCodeAt(i)^key.charCodeAt(i%key.length));
+  }
+  return btoa(result); // base64 para almacenamiento seguro
+}
+function xorDecipher(encoded,key){
+  try{
+    const str=atob(encoded);
+    let result='';
+    for(let i=0;i<str.length;i++){
+      result+=String.fromCharCode(str.charCodeAt(i)^key.charCodeAt(i%key.length));
+    }
+    return result;
+  }catch(e){return encoded;} // fallback si no está cifrado (compatibilidad)
+}
 function saveApiKey(p){
   const v=document.getElementById(p+'-key').value.trim();
   if(!v){alert('Introduce una clave.');return;}
-  localStorage.setItem('tp_apikey_'+p,v);
-  document.getElementById(p+'-status').innerHTML='<span style="color:#155724">✓ Clave guardada</span>';
+  const cifrada=xorCipher(v,currentUser||'tapunto');
+  localStorage.setItem('tp_apikey_'+p,cifrada);
+  document.getElementById(p+'-status').innerHTML='<span style="color:#155724">✓ Clave guardada (cifrada)</span>';
 }
-function getApiKey(p){ return localStorage.getItem('tp_apikey_'+p)||''; }
+function getApiKey(p){
+  const raw=localStorage.getItem('tp_apikey_'+p)||'';
+  if(!raw) return '';
+  return xorDecipher(raw,currentUser||'tapunto');
+}
 function loadApiKeyStatus(){
   ['gemini','claude'].forEach(p=>{
     if(getApiKey(p)) document.getElementById(p+'-status').innerHTML='<span style="color:#155724">✓ Clave configurada</span>';
