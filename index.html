@@ -11,7 +11,7 @@
 <meta http-equiv="X-Content-Type-Options" content="nosniff">
 <meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
 <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
-<meta name="description" content="Tu agenda personal de productividad. Apunta. Organiza. Avanza.">
+<meta name="description" content="Tu agenda personal de productividad. Apunta. Organiza. Comunica.">
 <link rel="manifest" href="manifest.json">
 <title>Tapunto — Tu agenda inteligente</title>
 <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
@@ -482,7 +482,7 @@ body[data-theme="noche"] .free-bar{background:#2a1f00;border-color:#6b5000;color
   .tab-bar,.save-btn,.fab,.bottom-nav,.cfg-block,.filters,
   .cal-nav-btn,.stats-row,.rec-btns,.edit-banner{display:none!important;}
   .cal-day{min-height:60px;}
-  .cal-day-note{font-size:8px;color:var(--td);line-height:1.2;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;margin-top:1px;}
+  .cal-day-note{font-size:7px;color:var(--td);line-height:1.2;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;margin-top:1px;cursor:pointer;}
 }
 .renewal-banner a{color:#fff;text-decoration:underline;font-weight:700;}
 /* 7 días trial */
@@ -861,12 +861,12 @@ body[data-mode="escolar"][data-theme="verde"]{
 </div>
         <div class="cover-badge">Tu agenda inteligente</div>
       </div>
-      <div class="cover-title">Tapunto</div>
-      <div class="cover-sub">Apunta. Organiza. Avanza.</div>
-      <div class="cover-dev">
-        <small>Desarrollado por</small>
-        <strong>Alicia Prats</strong>
+      <div style="display:flex;align-items:baseline;gap:8px;justify-content:center;">
+        <div class="cover-title" style="font-size:36px;">Tapunto</div>
       </div>
+      <div class="cover-sub" style="font-size:12px;margin-top:2px;">Apunta. Organiza. Comunica.</div>
+      <div id="cover-user-name" style="font-size:11px;color:rgba(255,255,255,0.6);margin-top:3px;"></div>
+      <div style="font-size:8px;color:rgba(255,255,255,0.3);margin-top:2px;">© 2026 Alicia Prats</div>
     </div>
 
     <!-- USER BAR -->
@@ -936,33 +936,59 @@ body[data-mode="escolar"][data-theme="verde"]{
           </div>
         </div>
 
-        <!-- FECHA -->
+        <!-- ASUNTO — CAMPO PRINCIPAL -->
         <div class="fb">
           <div class="field">
-            <label>Fecha y hora <span style="color:#c53030;font-size:10px;">*obligatorio</span></label>
-            <input type="datetime-local" id="inp-fecha"/>
+            <label style="font-size:13px;font-weight:700;">Asunto <span style="color:#c53030;font-size:10px;">*obligatorio</span></label>
+            <div class="row" style="position:relative;">
+              <input type="text" id="inp-tema" placeholder="¿De qué trata esta gestión?" list="tema-list" autocomplete="off"
+                style="flex:1;padding:10px 12px;border:1px solid var(--bd);border-radius:6px;background:var(--bp);font-family:'Lato',sans-serif;font-size:14px;color:var(--td);outline:none;font-weight:600;"/>
+              <datalist id="tema-list"></datalist>
+              <button onclick="dictarAsunto()" id="btn-dict-asunto" title="Dictar asunto"
+                style="padding:8px 10px;background:var(--gm);border:none;border-radius:6px;color:#fff;cursor:pointer;font-size:14px;flex-shrink:0;">🎙️</button>
+              <button class="add-btn" onclick="guardarTemaNew()" title="Guardar asunto">💾</button>
+            </div>
           </div>
         </div>
 
-        <!-- CAMPOS MODO TRABAJO -->
+        <!-- FECHA INTELIGENTE -->
+        <div class="fb">
+          <div class="field">
+            <label>Fecha y hora <span style="color:#c53030;font-size:10px;">*obligatorio</span></label>
+            <div style="display:flex;gap:6px;margin-bottom:6px;flex-wrap:wrap;">
+              <button class="chip" id="chip-hoy" onclick="setFechaChip('hoy',this)">🕐 Ahora</button>
+              <button class="chip" id="chip-ayer" onclick="setFechaChip('ayer',this)">Ayer</button>
+              <button class="chip" id="chip-elegir" onclick="setFechaChip('elegir',this)">📅 Elegir</button>
+            </div>
+            <input type="datetime-local" id="inp-fecha" style="display:none;max-width:240px;"/>
+          </div>
+        </div>
+
+        <!-- SELECTOR MODO -->
+        <div style="display:flex;gap:6px;margin-bottom:10px;">
+          <button id="modo-btn-voz" onclick="setModoRegistro('voz')" style="flex:1;padding:8px;background:var(--gm);color:#fff;border:none;border-radius:8px;font-family:'Lato',sans-serif;font-size:12px;font-weight:700;cursor:pointer;">🎤 Por voz</button>
+          <button id="modo-btn-manual" onclick="setModoRegistro('manual')" style="flex:1;padding:8px;background:var(--bl);color:var(--tm);border:1px solid var(--bd);border-radius:8px;font-family:'Lato',sans-serif;font-size:12px;font-weight:600;cursor:pointer;">✏️ Manual</button>
+        </div>
+
+        <!-- CAMPOS OPCIONALES colapsables (solo en modo manual) -->
+        <div id="campos-opcionales-toggle" onclick="toggleCamposOpcionales()" style="display:none;flex;align-items:center;justify-content:space-between;padding:10px 12px;background:var(--bl);border-radius:8px;cursor:pointer;margin-bottom:4px;border:1px solid var(--bd);user-select:none;">
+          <span style="font-size:13px;color:var(--tm);font-weight:600;">+ Más campos</span>
+          <span id="campos-arrow" style="font-size:11px;color:var(--tl);transition:transform .2s;">▶</span>
+        </div>
+
+        <div id="campos-opcionales" style="display:none;">
+
         <div id="form-trabajo">
           <div class="fb"><div class="fr">
             <div class="field">
-              <label>Asunto <span style="color:#c53030;font-size:10px;">*obligatorio</span></label>
-              <div class="row">
-                <select id="inp-tema"><option value="">Seleccionar...</option></select>
-                <button class="add-btn" onclick="addTema()">+ Nuevo</button>
-              </div>
-            </div>
-            <div class="field">
               <label>Contacto / Proveedor</label>
-              <div class="row">
-                <select id="inp-contacto"><option value="">Seleccionar...</option></select>
-                <button class="add-btn" onclick="addContacto()">+ Nuevo</button>
+              <div class="row" style="position:relative;">
+                <input type="text" id="inp-contacto" placeholder="Nombre del contacto..." list="contacto-list" autocomplete="off"
+                  style="flex:1;padding:8px 12px;border:1px solid var(--bd);border-radius:6px;background:var(--bp);font-family:'Lato',sans-serif;font-size:13px;color:var(--td);outline:none;"/>
+                <datalist id="contacto-list"></datalist>
+                <button class="add-btn" onclick="guardarContactoNuevo()" title="Guardar contacto">💾</button>
               </div>
             </div>
-          </div></div>
-          <div class="fb"><div class="fr">
             <div class="field">
               <label>Acción realizada</label>
               <div class="row">
@@ -970,6 +996,8 @@ body[data-mode="escolar"][data-theme="verde"]{
                 <button class="add-btn" onclick="addAccion()">+ Nueva</button>
               </div>
             </div>
+          </div></div>
+          <div class="fb"><div class="fr">
             <div class="field">
               <label>Comunicado a</label>
               <div class="row">
@@ -977,10 +1005,18 @@ body[data-mode="escolar"][data-theme="verde"]{
                 <button class="add-btn" onclick="addComunicado()">+ Nuevo</button>
               </div>
             </div>
+            <div class="field">
+              <label id="lbl-estado">Estado <button class="tip-btn" onclick="showTip('tip-estado')">ⓘ</button></label>
+              <select id="inp-estado">
+                <option value="">— Sin estado —</option>
+                <option value="pendiente">⏳ Pendiente</option>
+                <option value="en curso">🔄 En curso</option>
+                <option value="resuelto">✅ Resuelto</option>
+              </select>
+            </div>
           </div></div>
         </div>
 
-        <!-- NOTAS CON DICTADO -->
         <div class="fb">
           <div class="field">
             <label id="lbl-notas">Notas libres</label>
@@ -995,10 +1031,9 @@ body[data-mode="escolar"][data-theme="verde"]{
           </div>
         </div>
 
-        <!-- IMAGEN — bloque premium -->
         <div class="fb">
           <div class="field">
-            <label>📎 Imagen / Foto</label>
+            <label>📎 Imagen / Foto <button class="tip-btn" onclick="showTip('tip-imagen')">ⓘ</button></label>
             <div class="premium-lock-wrap">
               <div class="img-upload-area" id="img-upload-area" onclick="document.getElementById('inp-imagen').click()">
                 <div style="font-size:28px;">📷</div>
@@ -1011,7 +1046,7 @@ body[data-mode="escolar"][data-theme="verde"]{
               <div class="img-status" id="img-status"></div>
               <div class="img-uploading" id="img-uploading">
                 <div class="spin"></div>
-                <span>⏳ Espera un momento, subiendo la imagen a Drive...</span>
+                <span>⏳ Subiendo imagen a Drive...</span>
               </div>
               <div class="lock-overlay" id="lock-imagen" onclick="showUpgrade()" style="display:none">
                 <div class="lock-icon">🔒</div>
@@ -1019,19 +1054,6 @@ body[data-mode="escolar"][data-theme="verde"]{
                 <div class="lock-sub">Disponible en Premium ⭐</div>
               </div>
             </div>
-          </div>
-        </div>
-
-        <!-- ESTADO -->
-        <div class="fb">
-          <div class="field">
-            <label id="lbl-estado">Estado <button class="tip-btn" onclick="showTip('tip-estado')">ⓘ</button></label>
-            <select id="inp-estado">
-              <option value="">— Sin estado —</option>
-              <option value="pendiente">⏳ Pendiente</option>
-              <option value="en curso">🔄 En curso</option>
-              <option value="resuelto">✅ Resuelto</option>
-            </select>
           </div>
         </div>
 
@@ -1048,16 +1070,13 @@ body[data-mode="escolar"][data-theme="verde"]{
             <input type="datetime-local" id="inp-recdate" style="display:none;margin-top:8px;max-width:220px;"/>
           </div>
         </div>
-        <!-- CONFIDENCIAL -->
-        <div class="fb">
-          <div class="field">
-            <label style="display:flex;align-items:center;gap:8px;cursor:pointer;">
-              <input type="checkbox" id="inp-confidencial" style="width:16px;height:16px;cursor:pointer;"/>
-              🔒 Registro confidencial
-              <button class="tip-btn" onclick="showTip('tip-confidencial')">ⓘ</button>
-            </label>
-            <div style="font-size:11px;color:var(--tl);margin-top:4px;">Los registros confidenciales no se envían a ninguna IA externa</div>
-          </div>
+
+        </div><!-- /campos-opcionales -->
+
+        <!-- BOTONES GUARDAR / CANCELAR -->
+        <div style="display:flex;gap:8px;margin-top:12px;">
+          <button class="save-btn" id="save-btn" onclick="saveRecord()" style="flex:1;">💾 Guardar registro</button>
+          <button id="btn-cancelar-edit" onclick="cancelEdit()" style="display:none;padding:12px 16px;background:#7B3F00;color:#fff;border:none;border-radius:6px;font-family:'Lato',sans-serif;font-size:14px;font-weight:700;cursor:pointer;">✕ Cancelar</button>
         </div>
 
       </div><!-- /sec-nuevo -->
@@ -1080,6 +1099,7 @@ body[data-mode="escolar"][data-theme="verde"]{
           <select id="f-estado" onchange="renderRecords()">
             <option value="">Todos los estados</option>
             <option>pendiente</option><option>en curso</option><option>resuelto</option>
+            <option value="calendar">📅 En Calendar</option>
           </select>
           <button class="clr-btn" onclick="clearFilters()">✕</button>
           <button class="exp-btn" onclick="exportCSV()">⬇ CSV</button>
@@ -1100,13 +1120,13 @@ body[data-mode="escolar"][data-theme="verde"]{
 
       <!-- ══ CALENDARIO ══ -->
       <div id="sec-calendario" class="section">
-        <div style="background:#e8f4f8;border-radius:8px;padding:8px 12px;margin-bottom:10px;font-size:11px;color:#0c5460;display:flex;align-items:center;gap:6px;">
-          ℹ️ Vista de tus registros por fecha. Para añadir un evento a <strong>Google Calendar</strong> usa el menú ··· de cada registro.
-        </div>
         <div class="cal-nav">
           <button class="cal-nav-btn" onclick="calCambiarMes(-1)">◀</button>
           <div style="display:flex;flex-direction:column;align-items:center;gap:4px;">
-            <div class="cal-nav-title" id="cal-titulo">Mayo 2026</div>
+            <div style="display:flex;align-items:center;gap:4px;">
+              <div class="cal-nav-title" id="cal-titulo">Mayo 2026</div>
+              <button class="tip-btn" onclick="showTip('tip-calendario')" style="flex-shrink:0">ⓘ</button>
+            </div>
             <div style="display:flex;gap:4px;">
               <button id="cal-btn-mensual" onclick="toggleCalVista('mensual')" style="font-size:10px;padding:2px 8px;border:1px solid var(--bd);border-radius:4px;background:var(--bl);cursor:pointer;font-weight:700;color:var(--tm);">Mes</button>
               <button id="cal-btn-semanal" onclick="toggleCalVista('semanal')" style="font-size:10px;padding:2px 8px;border:1px solid var(--bd);border-radius:4px;background:var(--bl);cursor:pointer;font-weight:400;color:var(--tm);">Semana</button>
@@ -1156,11 +1176,11 @@ body[data-mode="escolar"][data-theme="verde"]{
         <!-- FIRMA EMAIL -->
         <div class="cfg-block">
           <div class="cfg-hdr" onclick="toggleCfg(this)">
-            <span class="cfg-hdr-title">✍️ Mi firma para emails</span>
+            <span class="cfg-hdr-title">✍️ Firma y perfil</span>
             <span class="cfg-arrow">▶</span>
           </div>
           <div class="cfg-body">
-            <p style="font-size:12px;color:var(--tl);margin-bottom:10px;">Tu <strong>nombre</strong> aparecerá también en la cabecera de la app. La firma completa se usará en emails y mensajes de WhatsApp generados desde Tapunto.</p>
+            <p style="font-size:12px;color:var(--tl);margin-bottom:10px;">Tu <strong>nombre</strong> aparecerá en la cabecera de la app y en la portada. La firma completa se usará en todos los emails y mensajes de WhatsApp generados desde Tapunto.</p>
             <div style="display:grid;gap:8px;">
               <div>
                 <label style="font-size:11px;font-weight:700;color:var(--tm);text-transform:uppercase;letter-spacing:.4px;display:block;margin-bottom:3px;">Nombre y apellidos</label>
@@ -1244,9 +1264,10 @@ body[data-mode="escolar"][data-theme="verde"]{
             <div id="custom-cover-block" style="margin-top:14px;display:none;">
               <div style="font-size:11px;font-weight:700;color:var(--tm);text-transform:uppercase;letter-spacing:.4px;margin-bottom:6px;">🖼 Imagen personalizada en portada</div>
               <img class="custom-img-preview" id="cover-preview-thumb" src="" alt="" style="display:none;width:100%;border-radius:8px;margin-bottom:8px;"/>
-              <div style="display:flex;gap:8px;margin-bottom:8px;">
-                <button onclick="document.getElementById('inp-cover-camara').click()" style="flex:1;padding:10px;background:var(--gm);color:#fff;border:none;border-radius:8px;font-family:'Lato',sans-serif;font-size:13px;font-weight:700;cursor:pointer;">📷 Hacer foto</button>
-                <button onclick="document.getElementById('inp-cover-img').click()" style="flex:1;padding:10px;background:var(--bl);border:1px solid var(--bd);color:var(--tm);border-radius:8px;font-family:'Lato',sans-serif;font-size:13px;font-weight:600;cursor:pointer;">🖼️ Galería</button>
+              <div style="display:flex;gap:6px;margin-bottom:8px;flex-wrap:wrap;">
+                <button onclick="document.getElementById('inp-cover-camara').click()" style="padding:6px 12px;background:var(--gm);color:#fff;border:none;border-radius:6px;font-family:'Lato',sans-serif;font-size:12px;font-weight:700;cursor:pointer;">📷 Cámara</button>
+                <button onclick="document.getElementById('inp-cover-img').click()" style="padding:6px 12px;background:var(--bl);border:1px solid var(--bd);color:var(--tm);border-radius:6px;font-family:'Lato',sans-serif;font-size:12px;font-weight:600;cursor:pointer;">🖼 Galería</button>
+                <button id="remove-cover-btn" onclick="removeCoverImage()" style="display:none;padding:6px 10px;background:var(--bl);border:1px solid var(--bd);border-radius:6px;cursor:pointer;color:#c53030;font-size:12px;">✕ Quitar</button>
               </div>
               <input type="file" id="inp-cover-camara" accept="image/*" capture="environment" style="display:none" onchange="onCoverImageSelected(event)"/>
               <input type="file" id="inp-cover-img" accept="image/*" style="display:none" onchange="onCoverImageSelected(event)"/>
@@ -1258,7 +1279,7 @@ body[data-mode="escolar"][data-theme="verde"]{
                 </label>
                 <input type="range" class="zoom-slider" id="cover-zoom" min="100" max="200" value="100" oninput="aplicarZoomPortada(this.value)"/>
               </div>
-              <button id="remove-cover-btn" onclick="removeCoverImage()" style="display:none;margin-top:6px;font-size:11px;padding:4px 10px;background:var(--bl);border:1px solid var(--bd);border-radius:4px;cursor:pointer;color:var(--tm);">✕ Quitar imagen</button>
+
             </div>
           </div>
         </div>
@@ -1272,14 +1293,14 @@ body[data-mode="escolar"][data-theme="verde"]{
           <div class="cfg-body">
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:4px;">
               <div>
+                <div style="font-size:11px;font-weight:700;color:var(--tm);margin-bottom:5px;text-transform:uppercase;letter-spacing:.4px;">Temas / Asuntos</div>
+                <div class="list-items" id="lst-temas"></div>
+                <div class="add-row"><input type="text" id="nt" placeholder="Nuevo tema..."/><button onclick="addTemaDirect()">+</button></div>
+              </div>
+              <div>
                 <div style="font-size:11px;font-weight:700;color:var(--tm);margin-bottom:5px;text-transform:uppercase;letter-spacing:.4px;">Contactos</div>
                 <div class="list-items" id="lst-contactos"></div>
                 <div class="add-row"><input type="text" id="nc" placeholder="Nuevo contacto..."/><button onclick="addContactoDirect()">+</button></div>
-              </div>
-              <div>
-                <div style="font-size:11px;font-weight:700;color:var(--tm);margin-bottom:5px;text-transform:uppercase;letter-spacing:.4px;">Temas</div>
-                <div class="list-items" id="lst-temas"></div>
-                <div class="add-row"><input type="text" id="nt" placeholder="Nuevo tema..."/><button onclick="addTemaDirect()">+</button></div>
               </div>
             </div>
           </div>
@@ -1806,8 +1827,21 @@ const reader = new FileReader();
 reader.onload = ev => {
 const data = ev.target.result;
 state.coverImageData = data;
+state.coverZoom = state.coverZoom||100;
 persist().catch(()=>{});
 applyCoverImage(data);
+const zoomWrap=document.getElementById('cover-zoom-wrap');
+const thumb=document.getElementById('cover-preview-thumb');
+if(zoomWrap) zoomWrap.classList.add('show');
+if(thumb){
+thumb.style.display='block';
+thumb.style.transformOrigin='center center';
+thumb.style.transform='scale('+(state.coverZoom/100)+')';
+}
+const slider=document.getElementById('cover-zoom');
+const val=document.getElementById('cover-zoom-val');
+if(slider) slider.value=state.coverZoom||100;
+if(val) val.textContent=(state.coverZoom||100)+'%';
 };
 reader.readAsDataURL(file);
 }
@@ -2094,20 +2128,26 @@ document.getElementById('sheets-status').innerHTML='<div class="connected-tag">�
 startAutoSync(); syncFromSheets(false);
 }
 function initForm(){
-const now=new Date();
-document.getElementById('inp-fecha').value=new Date(now-now.getTimezoneOffset()*60000).toISOString().slice(0,16);
+setFechaChip('hoy',document.getElementById('chip-hoy'));
 fillSelect('inp-contacto',state.contactos); fillSelect('inp-tema',state.temas);
 fillAcciones(); fillComunicados();
+var open=localStorage.getItem('tp_campos_open')==='1';
+var campos=document.getElementById('campos-opcionales');
+var arrow=document.getElementById('campos-arrow');
+if(campos) campos.style.display=open?'block':'none';
+if(arrow) arrow.style.transform=open?'rotate(90deg)':'';
+const btn=document.getElementById('save-btn');
+if(btn){btn.disabled=false;btn.textContent='Guardar registro';btn.classList.remove('editing');}
 }
 function fillSelect(id,arr){ const el=document.getElementById(id),cur=el.value; el.innerHTML='<option value="">Seleccionar...</option>'+arr.map(v=>`<option${v===cur?' selected':''}>${x(v)}</option>`).join(''); }
 function fillAcciones(){ const base=['Llamada telefónica','Reunión presencial','Email enviado','Email recibido','Visita','Pedido realizado','Reclamación','Seguimiento','Resolución']; const all=[...new Set([...base,...state.acciones])]; const el=document.getElementById('inp-accion'),cur=el.value; el.innerHTML='<option value="">Seleccionar...</option>'+all.map(v=>`<option${v===cur?' selected':''}>${x(v)}</option>`).join(''); }
 function fillComunicados(){ const el=document.getElementById('inp-comunicado'),cur=el.value; el.innerHTML='<option value="">Sin comunicar</option>'+state.comunicados.map(v=>`<option${v===cur?' selected':''}>${x(v)}</option>`).join(''); }
-function addContacto(){ const n=prompt('Nuevo contacto:'); if(n&&n.trim()&&!state.contactos.includes(n.trim())){state.contactos.push(n.trim());persist().catch(()=>{});fillSelect('inp-contacto',state.contactos);document.getElementById('inp-contacto').value=n.trim();syncListsToSheets();} }
-function addTema(){ const n=prompt('Nuevo tema:'); if(n&&n.trim()&&!state.temas.includes(n.trim())){state.temas.push(n.trim());persist().catch(()=>{});fillSelect('inp-tema',state.temas);document.getElementById('inp-tema').value=n.trim();syncListsToSheets();} }
+function addContacto(){ const n=prompt('Nuevo contacto:'); if(n&&n.trim()&&!state.contactos.includes(n.trim())){state.contactos.push(n.trim());state.contactos.sort((a,b)=>a.localeCompare(b,'es',{sensitivity:'base'}));persist().catch(()=>{});fillSelect('inp-contacto',state.contactos);document.getElementById('inp-contacto').value=n.trim();syncListsToSheets();} }
+function addTema(){ const n=prompt('Nuevo tema:'); if(n&&n.trim()&&!state.temas.includes(n.trim())){state.temas.push(n.trim());state.temas.sort((a,b)=>a.localeCompare(b,'es',{sensitivity:'base'}));persist().catch(()=>{});fillSelect('inp-tema',state.temas);document.getElementById('inp-tema').value=n.trim();syncListsToSheets();} }
 function addAccion(){ const n=prompt('Nueva acción:'); if(n&&n.trim()&&!state.acciones.includes(n.trim())){state.acciones.push(n.trim());persist().catch(()=>{});fillAcciones();document.getElementById('inp-accion').value=n.trim();} }
 function addComunicado(){ const n=prompt('¿Comunicado a?'); if(n&&n.trim()&&!state.comunicados.includes(n.trim())){state.comunicados.push(n.trim());persist().catch(()=>{});fillComunicados();document.getElementById('inp-comunicado').value=n.trim();} }
-function addContactoDirect(){ const v=document.getElementById('nc').value.trim(); if(v&&!state.contactos.includes(v)){state.contactos.push(v);persist().catch(()=>{});renderLists();fillSelect('inp-contacto',state.contactos);document.getElementById('nc').value='';syncListsToSheets();} }
-function addTemaDirect(){ const v=document.getElementById('nt').value.trim(); if(v&&!state.temas.includes(v)){state.temas.push(v);persist().catch(()=>{});renderLists();fillSelect('inp-tema',state.temas);document.getElementById('nt').value='';syncListsToSheets();} }
+function addContactoDirect(){ const v=document.getElementById('nc').value.trim(); if(v&&!state.contactos.includes(v)){state.contactos.push(v);state.contactos.sort((a,b)=>a.localeCompare(b,'es',{sensitivity:'base'}));persist().catch(()=>{});renderLists();fillSelect('inp-contacto',state.contactos);document.getElementById('nc').value='';syncListsToSheets();} }
+function addTemaDirect(){ const v=document.getElementById('nt').value.trim(); if(v&&!state.temas.includes(v)){state.temas.push(v);state.temas.sort((a,b)=>a.localeCompare(b,'es',{sensitivity:'base'}));persist().catch(()=>{});renderLists();fillSelect('inp-tema',state.temas);document.getElementById('nt').value='';syncListsToSheets();} }
 async function startDictado(mode){
 if(!isPremium && mode!=='noai'){ showUpgrade(); return; }
 if(!('webkitSpeechRecognition' in window||'SpeechRecognition' in window)){ setDictadoStatus('❌ Reconocimiento de voz no disponible. Usa Chrome con HTTPS.'); return; }
@@ -2303,8 +2343,8 @@ const saveBtn=document.getElementById('save-btn');
 if(saveBtn&&saveBtn.disabled) return;
 if(saveBtn) saveBtn.disabled=true;
 const fecha=document.getElementById('inp-fecha').value;
-const tema=document.getElementById('inp-tema').value;
-const contacto=document.getElementById('inp-contacto').value;
+const tema=(document.getElementById('inp-tema').value||'').trim();
+const contacto=(document.getElementById('inp-contacto').value||'').trim();
 const accion=document.getElementById('inp-accion').value;
 const comunicado=document.getElementById('inp-comunicado').value;
 const notas=document.getElementById('inp-notas').value;
@@ -2356,6 +2396,7 @@ body:JSON.stringify({action:'append',token:localStorage.getItem('tp_sheets_token
 }).catch(()=>{});
 }
 preguntarCalendario(rec);
+if(navigator.vibrate) navigator.vibrate(50);
 showToast('toast-ok');
 updateFreeBar();
 resetForm();
@@ -2373,6 +2414,7 @@ return new Promise(res=>{const img=new Image();img.onload=()=>{const MAX=300;let
 function resetForm(){
 ['inp-contacto','inp-tema','inp-accion','inp-comunicado'].forEach(id=>document.getElementById(id).value='');
 document.getElementById('inp-estado').value='';
+setFechaChip('hoy',document.getElementById('chip-hoy'));
 document.getElementById('inp-notas').value='';
 document.getElementById('inp-recdate').value=''; document.getElementById('inp-recdate').style.display='none';
 reminderDays=null; document.querySelectorAll('.chip').forEach(c=>c.classList.remove('on'));
@@ -2381,7 +2423,7 @@ document.getElementById('dictado-transcript').style.display='none';
 document.getElementById('dictado-transcript').textContent='';
 initForm();
 }
-function editRecord(id){
+function _editRecordOrig(id){
 const r=state.records.find(rec=>rec.id===id); if(!r) return;
 editingId=id; switchTab('nuevo',document.querySelector('.tab-btn'));
 document.getElementById('edit-banner').style.display='flex';
@@ -2547,10 +2589,16 @@ var confIcon=r.confidencial?'<span title="Confidencial" style="font-size:10px;ma
 var titulo=(parts.length?parts.join(' · '):(x(r.tema)||'Sin título'))+confIcon;
 var tagT=r.tema?('<span class="tag">'+x(r.tema)+'</span>'):'';
 var tagC=r.comunicado?('<span class="tag">'+x(r.comunicado)+'</span>'):'';
-var rem=r.recordatorio?('<span style="font-size:10px;color:var(--th)">📅 '+r.recordatorio+'</span>'):'';
+var remFecha='';
+if(r.recordatorio){
+var rd=new Date(r.recordatorio);
+remFecha=isNaN(rd)?r.recordatorio:rd.toLocaleDateString('es-ES',{day:'2-digit',month:'short'});
+}
+var remCal=r.calGuardado?'<span style="font-size:10px;color:#0f9d58;font-weight:700;">✅ Calendar</span>':'';
+var rem=r.recordatorio?('<span style="font-size:10px;color:var(--th)">📅 '+remFecha+'</span>'):'';
 var nota=r.notas?('<div class="rec-note">'+x(r.notas).slice(0,100)+(r.notas.length>100?'…':'')+'</div>'):'';
 var imgTag=r.imagenUrl?('<div style="margin-top:5px"><a href="'+r.imagenUrl+'" target="_blank" style="font-size:10px;color:#1a73e8">📷 Ver imagen</a></div>'):'';
-var badge=bl?('<span class="badge '+bc+'">'+bl+'</span>'):'';
+var badge=(bl&&r.estado)?('<span class="badge '+bc+'">'+bl+'</span>'):'';
 var eid=r.id;
 var btnEdit='<button class="rec-btn eb" onclick="editRecord(\'' +eid+ '\')" title="Editar">✏</button>';
 var btnMenu='<button class="rec-btn" onclick="abrirMenuRec(\'' +eid+ '\',event)" style="font-weight:700;letter-spacing:1px" title="Más">···</button>';
@@ -2628,31 +2676,39 @@ notas+img+'</div>';
 }).join('');
 function esc(s){return s?String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'):''}
 function generarWord(regs){
-const S='font-family:Arial,sans-serif;font-size:11pt;color:#000000;';
-const cab='<p style="'+S+'font-size:14pt;font-weight:bold;margin:0 0 2pt">Tapunto</p>'+
-'<p style="'+S+'margin:0 0 1pt">'+esc(filtroTitulo)+'</p>'+
-'<p style="'+S+'margin:0 0 12pt">'+regs.length+' registro'+(regs.length!==1?'s':'')+' · '+new Date().toLocaleDateString('es-ES')+'</p>'+
-'<hr style="border:none;border-top:1pt solid #000;margin:0 0 10pt"/>';
-const cuerpo=regs.map(r=>{
+const S='font-family:Arial,sans-serif;font-size:12pt;color:#1a1a1a;line-height:1.6;';
+const cab='<p style="font-family:Arial,sans-serif;font-size:18pt;font-weight:bold;color:#2D5016;margin:0 0 4pt 0;">Tapunto</p>'+
+'<p style="font-family:Arial,sans-serif;font-size:12pt;color:#555;margin:0 0 2pt 0;">'+esc(filtroTitulo)+'</p>'+
+'<p style="font-family:Arial,sans-serif;font-size:10pt;color:#888;margin:0 0 16pt 0;">'+regs.length+' registro'+(regs.length!==1?'s':'')+' · '+new Date().toLocaleDateString('es-ES',{weekday:'long',day:'2-digit',month:'long',year:'numeric'})+'</p>'+
+'<hr style="border:none;border-top:2pt solid #2D5016;margin:0 0 16pt 0;"/>';
+const cuerpo=regs.map(function(r){
 const d=new Date(r.fecha);
 const fd=isNaN(d)?r.fecha:d.toLocaleDateString('es-ES',{weekday:'long',day:'2-digit',month:'long',year:'numeric'});
 const fh=isNaN(d)?'':d.toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'});
 const fecha=fd+(fh?' · '+fh:'');
-const estado='['+r.estado.toUpperCase()+']';
-const titulo=(r.contacto?esc(r.contacto)+' · ':'')+esc(r.accion);
-const tema=r.tema?'Tema: '+esc(r.tema):'';
-const notas=r.notas?r.notas.replace(/</g,'&lt;').replace(/\n/g,'<br>'):'';
-const img=r.imagenUrl?'Imagen: '+(r.imagenUrl.startsWith('data:')?'[imagen local adjunta]':esc(r.imagenUrl)):'';
-return '<div style="margin-bottom:10pt;padding-bottom:8pt;border-bottom:1pt solid #cccccc">'+
-'<p style="'+S+'margin:0 0 2pt"><span style="font-style:italic">'+esc(fecha)+'</span> &nbsp; '+esc(estado)+'</p>'+
-'<p style="'+S+'font-weight:bold;margin:0 0 2pt">'+titulo+'</p>'+
-(tema?'<p style="'+S+'margin:0 0 2pt">'+tema+'</p>':'')+
-(notas?'<p style="'+S+'margin:0 0 2pt">'+notas+'</p>':'')+
-(img?'<p style="'+S+'margin:0">'+img+'</p>':'')+
+const estadoColor={pendiente:'#856404',resuelto:'#155724','en curso':'#0c5460'};
+const estadoBg={pendiente:'#fff3cd',resuelto:'#d4edda','en curso':'#d1ecf1'};
+const est=r.estado?'<span style="font-size:9pt;font-weight:bold;padding:2pt 8pt;border-radius:8pt;background:'+(estadoBg[r.estado]||'#eee')+';color:'+(estadoColor[r.estado]||'#333')+'">'+r.estado.toUpperCase()+'</span>':'';
+const titulo=(r.tema?esc(r.tema):esc(r.accion)||'Sin título');
+const subtitulo=(r.contacto?esc(r.contacto):'')+(r.accion&&r.tema?' · '+esc(r.accion):'');
+const notas=r.notas?r.notas.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/\n/g,'<br>'):'';
+const img=r.imagenUrl?'<p style="font-family:Arial,sans-serif;font-size:10pt;color:#1a73e8;margin:4pt 0 0 0;">📷 '+(r.imagenUrl.startsWith('data:')?'Imagen local adjunta':'<a href="'+esc(r.imagenUrl)+'" style="color:#1a73e8">Ver imagen en Drive</a>')+'</p>':'';
+return '<div style="margin-bottom:18pt;padding:14pt 16pt;border:1pt solid #e0e0e0;border-radius:6pt;background:#fafafa;page-break-inside:avoid;">'+
+'<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6pt;">'+
+'<span style="font-family:Arial,sans-serif;font-size:10pt;color:#777;font-style:italic;">'+esc(fecha)+'</span>'+
+est+'</div>'+
+'<p style="'+S+'font-size:14pt;font-weight:bold;color:#2D5016;margin:0 0 4pt 0;">'+titulo+'</p>'+
+(subtitulo?'<p style="'+S+'font-size:11pt;color:#555;margin:0 0 6pt 0;">'+subtitulo+'</p>':'')+
+(notas?'<p style="'+S+'font-size:11pt;color:#333;margin:6pt 0 0 0;padding-top:6pt;border-top:1pt solid #eee;">'+notas+'</p>':'')+
+img+
 '</div>';
 }).join('');
 return '<!DOCTYPE html><html><head><meta charset="UTF-8">'+
-'<style>body{font-family:Arial,sans-serif;font-size:11pt;color:#000;background:#fff;margin:0;padding:20pt}</style>'+
+'<style>'+
+'body{font-family:Arial,sans-serif;font-size:12pt;color:#1a1a1a;background:#fff;margin:0;padding:2cm;line-height:1.6;}'+
+'p{margin:0;padding:0;}'+
+'@page{margin:2cm;}'+
+'</style>'+
 '</head><body>'+cab+cuerpo+'</body></html>';
 }
 function descargarDoc(regs, nombre){
@@ -3142,8 +3198,10 @@ startAutoSync();
 document.getElementById('script-box-content').value=APPS_SCRIPT_CODE;
 loadApiKeyStatus();
 state.modo='trabajo';
+sortListas();
 checkTrial();
 checkLicenseExpiry();
+updatePortadaNombre();
 setTimeout(checkBackupSemanal, 5000);
 requestAnimationFrame(()=>{
 applyMode('trabajo');
@@ -3210,6 +3268,7 @@ const TIPS={
 'tip-recordatorio':{title:'📅 Recordatorios y alertas',html:'<p>Añade una fecha de recordatorio y Tapunto te avisará cuando llegue ese día.</p><p>Los recordatorios vencidos aparecen en la pestaña <strong>Alertas</strong>.</p><p>Si activas las notificaciones push en Config, recibirás un aviso en tu móvil aunque la app esté cerrada.</p>'},
 'tip-imagen':{title:'📷 Imágenes adjuntas',html:'<p><strong>Plan Free:</strong> la imagen se guarda en tu dispositivo (tamaño reducido automáticamente).</p><p><strong>Plan Premium:</strong> la imagen se sube a tu Google Drive y se adjunta como enlace en los emails que generes desde este registro.</p><p>Formatos admitidos: JPG, PNG, WEBP.</p>'},
 'tip-estado':{title:'📊 Estados del registro',html:'<p>El estado es opcional — puedes dejarlo en blanco si no lo necesitas.</p><p>• <strong>Pendiente</strong> — la gestión está por resolver</p><p>• <strong>En curso</strong> — está en proceso</p><p>• <strong>Resuelto</strong> — completado</p><p>Los chips de la pestaña Registros muestran el recuento de cada estado y puedes filtrar por ellos.</p>'},
+'tip-calendario':{title:'📅 Mis gestiones — Qué es esto',html:'<p>Esta vista muestra tus registros organizados por fecha en un calendario.</p><p><strong>No es Google Calendar</strong> — es una vista visual de los registros que has guardado en Tapunto.</p><p>Para añadir un evento a tu Google Calendar, abre el menú <strong>···</strong> de cualquier registro y pulsa <strong>📅 Google Calendar</strong>.</p>'},
 'tip-confidencial':{title:'🔒 Registro confidencial',html:'<p>Marca este registro como confidencial para proteger su contenido.</p><p><strong>Qué significa:</strong></p><p>• No se enviará a ninguna IA externa (Gemini) para dictado, email o resumen</p><p>• No se incluirá en resúmenes semanales</p><p>• Sí se sincroniza con tu Google Sheets propio</p><p>• Aparece con un icono 🔒 en el listado de registros</p>'}
 };
 function showTip(id){const t=TIPS[id];if(!t)return;document.getElementById('tip-title').textContent=t.title;document.getElementById('tip-content').innerHTML=t.html;document.getElementById('tip-modal').classList.add('show');}
@@ -3603,10 +3662,15 @@ return firma;
 }
 let calYear=new Date().getFullYear(), calMonth=new Date().getMonth();
 function calCambiarMes(delta){
+if(calVista==='semanal'){
+calSemanaOffset=(calSemanaOffset||0)+delta;
+renderCalendario();
+} else {
 calMonth+=delta;
 if(calMonth>11){calMonth=0;calYear++;}
 if(calMonth<0){calMonth=11;calYear--;}
 renderCalendario();
+}
 }
 function renderCalendario(){
 const meses=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
@@ -3949,18 +4013,21 @@ showWarn('💬 Marcado como enviado por WhatsApp');
 },3000);
 }
 let calVista='mensual';
+var calSemanaOffset=0;
 function toggleCalVista(vista){
 calVista=vista;
+if(vista==='mensual') calSemanaOffset=0;
 document.getElementById('cal-btn-mensual').style.fontWeight=vista==='mensual'?'700':'400';
 document.getElementById('cal-btn-semanal').style.fontWeight=vista==='semanal'?'700':'400';
 renderCalendario();
 }
 function renderCalendarioSemanal(){
 const hoy=new Date();
-const refDate=new Date(calYear,calMonth,1);
-const lunes=new Date(refDate);
+const lunes=new Date(hoy);
 const dow=lunes.getDay();
 lunes.setDate(lunes.getDate()-(dow===0?6:dow-1));
+lunes.setDate(lunes.getDate()+((calSemanaOffset||0)*7));
+lunes.setHours(0,0,0,0);
 const dias=[];
 for(let i=0;i<7;i++){
 const d=new Date(lunes);
@@ -3974,23 +4041,273 @@ const fin=dias[6].toLocaleDateString('es-ES',{day:'2-digit',month:'short',year:'
 document.getElementById('cal-titulo').textContent=ini+' — '+fin;
 let body='<div style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px;">';
 dias.forEach(function(d,i){
-const esHoy=d.toDateString()===hoy.toDateString();
-const recs=state.records.filter(function(r){
-const rd=new Date(r.fecha);
+var esHoy=d.toDateString()===hoy.toDateString();
+var recs=state.records.filter(function(r){
+var rd=new Date(r.fecha);
 return !isNaN(rd)&&rd.toDateString()===d.toDateString();
 });
-const recHtml=recs.map(function(r){
-return '<div style="font-size:9px;color:var(--td);background:var(--bl);border-radius:3px;padding:1px 3px;margin-bottom:1px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;">'
-+(r.tema||r.accion||'—')+'</div>';
+var recHtml='';
+if(recs.length===0){
+recHtml='<div style="font-size:9px;color:var(--tl);font-style:italic">Sin registros</div>';
+} else if(recs.length<=3){
+recHtml=recs.map(function(r){
+var bc=r.estado==='resuelto'?'#155724':r.estado==='en curso'?'#004085':r.estado==='pendiente'?'#856404':'#666';
+var rid=r.id;return '<div onclick="editRecord(\''+rid+'\')" style="font-size:8px;color:'+bc+';background:var(--bl);border-radius:3px;padding:1px 3px;margin-bottom:2px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;cursor:pointer;border-left:2px solid '+bc+';">'+(r.tema||r.accion||'Sin título')+'</div>';
 }).join('');
-body+='<div style="background:'+(esHoy?'var(--bcp)':'var(--bl)')+';border-radius:8px;padding:6px;min-height:80px;border:1px solid var(--bd);">'
-+'<div style="font-size:10px;color:var(--tl);margin-bottom:2px;">'+diasNombre[i]+'</div>'
+} else {
+recHtml='<div style="font-size:8px;color:var(--tl);font-weight:700;margin-bottom:2px;">'+recs.length+' gestiones:</div>';
+recHtml+=recs.slice(0,4).map(function(r){
+var rid2=r.id;return '<div onclick="editRecord(\''+rid2+'\')" style="font-size:8px;color:var(--td);overflow:hidden;white-space:nowrap;text-overflow:ellipsis;cursor:pointer;">·'+(r.tema||r.accion||'—')+'</div>';
+}).join('');
+if(recs.length>4) recHtml+='<div style="font-size:8px;color:var(--tl)">+'+(recs.length-4)+' más</div>';
+}
+var dStr=d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();
+var dStr=d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();
+var donclick='calVerDiaFecha("'+dStr+'")';
+body+='<div onclick="'+donclick+'" style="background:'+(esHoy?'var(--bcp)':'var(--bl)')+';border-radius:8px;padding:6px;min-height:90px;border:1px solid var(--bd);cursor:pointer;">';
++'<div style="font-size:10px;color:var(--tl);margin-bottom:1px;">'+diasNombre[i]+'</div>'
 +'<div style="font-size:13px;font-weight:'+(esHoy?'700':'400')+';color:'+(esHoy?'var(--gm)':'var(--td)')+';margin-bottom:4px;">'+d.getDate()+'</div>'
 +recHtml
 +'</div>';
 });
 body+='</div>';
 document.getElementById('cal-body').innerHTML=body;
+}
+function setFechaChip(tipo,btn){
+['chip-hoy','chip-ayer','chip-elegir'].forEach(function(id){
+var c=document.getElementById(id);
+if(c){c.style.background='';c.style.color='';c.style.borderColor='';}
+});
+if(btn){btn.style.background='var(--gm)';btn.style.color='#fff';btn.style.borderColor='var(--gm)';}
+var inp=document.getElementById('inp-fecha');
+var now=new Date();
+var offset=now.getTimezoneOffset()*60000;
+if(tipo==='hoy'){
+inp.value=new Date(now-offset).toISOString().slice(0,16);
+inp.style.display='none';
+} else if(tipo==='ayer'){
+var ayer=new Date(now-offset-86400000);
+inp.value=ayer.toISOString().slice(0,16);
+inp.style.display='none';
+} else if(tipo==='elegir'){
+inp.style.display='block';
+inp.focus();
+}
+}
+function toggleCamposOpcionales(){
+var campos=document.getElementById('campos-opcionales');
+var arrow=document.getElementById('campos-arrow');
+if(!campos) return;
+var open=campos.style.display==='none';
+campos.style.display=open?'block':'none';
+if(arrow) arrow.style.transform=open?'rotate(90deg)':'';
+localStorage.setItem('tp_campos_open',open?'1':'0');
+}
+function updatePortadaNombre(){
+const firma=getFirma();
+const nombre=firma.nombre||currentUser||'';
+const el=document.getElementById('cover-user-name');
+if(el) el.textContent=nombre?nombre.split(' ')[0]:currentUser.split('@')[0];
+}
+function renderAlertasInteligentes(){
+const hoy=new Date(); hoy.setHours(0,0,0,0);
+const DIAS=7;
+const alertas=state.records.filter(function(r){
+if(r.estado==='resuelto') return false;
+const d=new Date(r.fecha); if(isNaN(d)) return false;
+d.setHours(0,0,0,0);
+return Math.floor((hoy-d)/(86400000))>=DIAS;
+}).sort(function(a,b){return new Date(a.fecha)-new Date(b.fecha);});
+const wrap=document.getElementById('alertas-inteligentes');
+const list=document.getElementById('alertas-inteligentes-list');
+if(!wrap||!list){return;}
+if(!alertas.length){wrap.style.display='none';return;}
+const grupos={hoy:[],semana:[],mes:[],antiguos:[]};
+alertas.forEach(function(r){
+const d=new Date(r.fecha); d.setHours(0,0,0,0);
+const dias=Math.floor((hoy-d)/86400000);
+if(dias<=1) grupos.hoy.push(r);
+else if(dias<=7) grupos.semana.push(r);
+else if(dias<=30) grupos.mes.push(r);
+else grupos.antiguos.push(r);
+});
+function renderGrupo(titulo,recs,collapsed){
+if(!recs.length) return '';
+var html='<div style="margin-bottom:8px;">'
++'<div style="font-size:11px;font-weight:700;color:var(--tl);text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px;">'+titulo+'</div>';
+var visibles=collapsed?recs.slice(0,2):recs;
+visibles.forEach(function(r){
+var d=new Date(r.fecha);
+var fd=isNaN(d)?r.fecha:d.toLocaleDateString('es-ES',{day:'2-digit',month:'short'});
+var dias=Math.floor((hoy-d)/86400000);
+var rid=r.id;
+html+='<div class="alerta-card" onclick="editRecord(\''+rid+'\')">'
++'<div class="alerta-card-title">'+(r.tema||r.accion||'Sin título')+'</div>'
++'<div class="alerta-card-sub">'+(r.contacto?r.contacto+' · ':'')+fd+' · '+dias+' día'+(dias!==1?'s':'')+' sin actividad</div>'
++'</div>';
+});
+if(collapsed&&recs.length>2){
+html+='<div onclick="this.parentNode.innerHTML=this.parentNode.innerHTML" style="font-size:11px;color:var(--gm);padding:4px 8px;cursor:pointer;">Ver '+(recs.length-2)+' más ▼</div>';
+}
+html+='</div>';
+return html;
+}
+var content='';
+content+=renderGrupo('Hoy',grupos.hoy,false);
+content+=renderGrupo('Esta semana',grupos.semana,false);
+content+=renderGrupo('Este mes',grupos.mes,true);
+content+=renderGrupo('Más antiguos',grupos.antiguos,true);
+wrap.style.display='block';
+list.innerHTML=content;
+}
+function fillSelect(id,arr){
+var el=document.getElementById(id);
+if(!el) return;
+var cur=el.value;
+if(el.tagName==='SELECT'){
+el.innerHTML='<option value="">Seleccionar...</option>'+arr.map(function(v){return '<option'+(v===cur?' selected':'')+'>'+x(v)+'</option>';}).join('');
+} else {
+var dlId=id+'-list';
+if(id==='inp-tema') dlId='tema-list';
+if(id==='inp-contacto') dlId='contacto-list';
+var dl=document.getElementById(dlId);
+if(dl) dl.innerHTML=arr.map(function(v){return '<option value="'+x(v)+'">';}).join('');
+}
+}
+function guardarContactoNuevo(){
+var v=document.getElementById('inp-contacto').value.trim();
+if(v&&!state.contactos.includes(v)){
+state.contactos.push(v);
+state.contactos.sort(function(a,b){return a.localeCompare(b,'es',{sensitivity:'base'});});
+persist().catch(function(){});
+renderLists();
+var dl=document.getElementById('contacto-list');
+if(dl) dl.innerHTML=state.contactos.map(function(c){return '<option value="'+x(c)+'">';}).join('');
+syncListsToSheets();
+showWarn('✓ Contacto guardado en la lista');
+}
+}
+function guardarTemaNew(){
+var v=document.getElementById('inp-tema').value.trim();
+if(v&&!state.temas.includes(v)){
+state.temas.push(v);
+state.temas.sort(function(a,b){return a.localeCompare(b,'es',{sensitivity:'base'});});
+persist().catch(function(){});
+renderLists();
+var dl=document.getElementById('tema-list');
+if(dl) dl.innerHTML=state.temas.map(function(t){return '<option value="'+x(t)+'">';}).join('');
+syncListsToSheets();
+showWarn('✓ Asunto guardado en la lista');
+}
+}
+var srAsunto=null,grabandoAsunto=false;
+function dictarAsunto(){
+if(grabandoAsunto){
+grabandoAsunto=false;
+if(srAsunto){try{srAsunto.stop();}catch(e){} srAsunto=null;}
+var btn=document.getElementById('btn-dict-asunto');
+if(btn){btn.style.background='var(--gm)';btn.textContent='🎙️';}
+return;
+}
+var SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+if(!SR){showWarn('Dictado no disponible. Usa Chrome.');return;}
+grabandoAsunto=true;
+var btn=document.getElementById('btn-dict-asunto');
+if(btn){btn.style.background='#c53030';btn.textContent='⏹';}
+srAsunto=new SR();
+srAsunto.lang='es-ES';srAsunto.continuous=false;srAsunto.interimResults=false;
+srAsunto.onresult=function(e){
+if(e.results.length>0){
+var t=e.results[0][0].transcript.trim();
+var inp=document.getElementById('inp-tema');
+if(inp&&t) inp.value=t.charAt(0).toUpperCase()+t.slice(1);
+}
+grabandoAsunto=false;
+if(btn){btn.style.background='var(--gm)';btn.textContent='🎙️';}
+srAsunto=null;
+};
+srAsunto.onerror=function(){
+grabandoAsunto=false;
+if(btn){btn.style.background='var(--gm)';btn.textContent='🎙️';}
+srAsunto=null;
+};
+srAsunto.onend=function(){
+grabandoAsunto=false;
+if(btn){btn.style.background='var(--gm)';btn.textContent='🎙️';}
+};
+try{srAsunto.start();}catch(e){grabandoAsunto=false;if(btn){btn.style.background='var(--gm)';btn.textContent='🎙️';}}
+}
+function sortListas(){
+if(state.contactos) state.contactos.sort(function(a,b){return a.localeCompare(b,'es',{sensitivity:'base'});});
+if(state.temas) state.temas.sort(function(a,b){return a.localeCompare(b,'es',{sensitivity:'base'});});
+if(state.acciones) state.acciones.sort(function(a,b){return a.localeCompare(b,'es',{sensitivity:'base'});});
+if(state.comunicados) state.comunicados.sort(function(a,b){return a.localeCompare(b,'es',{sensitivity:'base'});});
+}
+var modoRegistro='voz';
+function setModoRegistro(modo){
+modoRegistro=modo;
+var btnV=document.getElementById('modo-btn-voz');
+var btnM=document.getElementById('modo-btn-manual');
+var dictado=document.getElementById('dictado-wrap');
+var toggle=document.getElementById('campos-opcionales-toggle');
+var campos=document.getElementById('campos-opcionales');
+if(modo==='voz'){
+if(btnV){btnV.style.background='var(--gm)';btnV.style.color='#fff';btnV.style.border='none';}
+if(btnM){btnM.style.background='var(--bl)';btnM.style.color='var(--tm)';btnM.style.border='1px solid var(--bd)';}
+if(dictado) dictado.style.display='block';
+if(toggle) toggle.style.display='none';
+if(campos) campos.style.display='none';
+} else {
+if(btnM){btnM.style.background='var(--gm)';btnM.style.color='#fff';btnM.style.border='none';}
+if(btnV){btnV.style.background='var(--bl)';btnV.style.color='var(--tm)';btnV.style.border='1px solid var(--bd)';}
+if(dictado) dictado.style.display='none';
+if(toggle) toggle.style.display='flex';
+}
+}
+function onConfidencialChange(){
+var chk=document.getElementById('inp-confidencial');
+var aviso=document.getElementById('conf-gemini-aviso');
+if(aviso) aviso.style.display=(chk&&chk.checked)?'block':'none';
+}
+function calVerDiaFecha(dStr){
+var parts=dStr.split('-');
+var year=parseInt(parts[0]),month=parseInt(parts[1])-1,day=parseInt(parts[2]);
+var recs=state.records.filter(function(r){
+var rd=new Date(r.fecha);
+return !isNaN(rd)&&rd.getFullYear()===year&&rd.getMonth()===month&&rd.getDate()===day;
+});
+var panel=document.getElementById('cal-day-panel');
+var title=document.getElementById('cal-day-title');
+var list=document.getElementById('cal-day-records');
+var meses=['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+title.textContent=day+' de '+meses[month]+' de '+year;
+if(!recs.length){
+list.innerHTML='<div class="empty" style="padding:12px 0">Sin registros este día 🐾</div>';
+} else {
+list.innerHTML=recs.map(function(r){return recHTML(r);}).join('');
+}
+panel.classList.add('show');
+panel.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+var _origCancelEdit=cancelEdit;
+function cancelEdit(){
+var btnCan=document.getElementById('btn-cancelar-edit');
+if(btnCan) btnCan.style.display='none';
+var btn=document.getElementById('save-btn');
+if(btn){btn.textContent='💾 Guardar registro';btn.classList.remove('editing');}
+if(typeof _origCancelEdit==='function') _origCancelEdit();
+}
+function editRecord(id){
+var r=state.records.find(function(rec){return rec.id===id;});
+if(!r) return;
+var btnCan=document.getElementById('btn-cancelar-edit');
+if(btnCan) btnCan.style.display='block';
+setModoRegistro('manual');
+var campos=document.getElementById('campos-opcionales');
+var arrow=document.getElementById('campos-arrow');
+if(campos) campos.style.display='block';
+if(arrow) arrow.style.transform='rotate(90deg)';
+_editRecordOrig(id);
 }
 </script>
 </body>
