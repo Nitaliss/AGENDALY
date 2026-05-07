@@ -2,7 +2,7 @@
 // © 2026 Alicia Prats · tapunto.app
 // IMPORTANTE: cambia el número de CACHE_NAME cada vez que subas una versión nueva
 
-const CACHE_NAME = 'tapunto-v2.3';
+const CACHE_NAME =  'tapunto-v3.4';
 const ASSETS = [
   '/',
   '/index.html',
