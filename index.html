@@ -142,9 +142,10 @@ body{font-family:'Lato',sans-serif;background:var(--body-bg);min-height:100vh;
 .cover-badge{display:inline-block;background:rgba(0,0,0,.25);color:rgba(255,255,255,.9);
   font-size:10px;font-family:'Lato',sans-serif;letter-spacing:2.5px;
   text-transform:uppercase;padding:4px 12px;border-radius:2px;}
-.cover-title{font-family:'Caveat',cursive;font-size:62px;font-weight:700;
+.cover-title{font-family:'Caveat',cursive;font-size:72px;font-weight:700;
   color:#fff;text-shadow:2px 3px 12px rgba(0,0,0,.3);line-height:1;
-  margin-bottom:6px;position:relative;z-index:2;}
+  margin-bottom:4px;position:relative;z-index:2;
+  text-transform:uppercase;letter-spacing:4px;}
 .cover-title span{opacity:.7;font-size:42px;}
 .cover-sub{font-size:13px;color:rgba(255,255,255,.75);font-family:'Lato',sans-serif;
   margin-bottom:auto;position:relative;z-index:2;}
@@ -419,6 +420,22 @@ body[data-theme="noche"] .free-bar{background:#2a1f00;border-color:#6b5000;color
 .week-group{margin-bottom:8px;}
 /* Menú acciones registro */
 .rec-menu-ov{position:fixed;inset:0;z-index:400;background:transparent;}
+/* Registro expandible */
+.record{cursor:pointer;transition:box-shadow .15s;}
+.record:active{opacity:.95;}
+.rec-actions{display:none;padding:8px 10px 4px;border-top:1px solid var(--bd);gap:6px;flex-wrap:wrap;}
+.rec-actions.show{display:flex;}
+.rec-action-btn{flex:1;min-width:50px;padding:6px 3px;border:none;border-radius:8px;font-family:'Lato',sans-serif;font-size:11px;font-weight:700;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px;background:var(--bl);color:var(--tm);border:1px solid var(--bd);}
+.rec-action-btn:active{opacity:.8;}
+.rec-action-btn span{font-size:14px;}
+.rec-action-btn.danger{color:#c53030;border-color:#f5c6c6;}
+/* Indicadores comunicación */
+.comm-icons{display:flex;gap:3px;align-items:center;margin-top:3px;flex-wrap:wrap;}
+.comm-icon{font-size:10px;color:#bbb;padding:2px 5px;border-radius:4px;border:1px solid #e0e0e0;background:#f5f5f5;}
+.comm-icon.sent{color:#155724;background:#d4edda;border:1px solid #82c98a;font-weight:700;font-size:10px;}
+/* Badge estado pulsable */
+.badge{cursor:pointer;user-select:none;transition:transform .1s;}
+.badge:active{transform:scale(.95);}
 .rec-menu{position:fixed;background:var(--w);border-radius:12px;box-shadow:0 8px 32px rgba(0,0,0,.2);padding:6px;min-width:180px;z-index:401;border:1px solid var(--bd);}
 .rec-menu-item{display:flex;align-items:center;gap:10px;padding:11px 14px;border-radius:8px;cursor:pointer;font-size:13px;color:var(--td);font-family:'Lato',sans-serif;font-weight:500;transition:background .1s;white-space:nowrap;}
 .rec-menu-item:active{background:var(--bl);}
@@ -445,6 +462,7 @@ body[data-theme="noche"] .free-bar{background:#2a1f00;border-color:#6b5000;color
 .cal-nav-title{font-family:'Caveat',cursive;font-size:18px;color:var(--td);font-weight:700;}
 .cal-nav-btn{background:none;border:1px solid var(--bd);border-radius:6px;padding:4px 10px;cursor:pointer;font-size:14px;color:var(--tm);}
 .cal-grid{background:var(--bl);border-radius:10px;overflow:hidden;box-shadow:0 2px 8px var(--sh);margin-bottom:10px;}
+.cal-grid.hidden{display:none!important;visibility:hidden;height:0;overflow:hidden;margin:0;padding:0;}
 .cal-header{display:grid;grid-template-columns:repeat(7,1fr);background:var(--gm);color:#fff;}
 .cal-dow{padding:8px 0;text-align:center;font-size:11px;font-weight:700;font-family:'Lato',sans-serif;}
 .cal-body{display:grid;grid-template-columns:repeat(7,1fr);}
@@ -482,7 +500,7 @@ body[data-theme="noche"] .free-bar{background:#2a1f00;border-color:#6b5000;color
   .tab-bar,.save-btn,.fab,.bottom-nav,.cfg-block,.filters,
   .cal-nav-btn,.stats-row,.rec-btns,.edit-banner{display:none!important;}
   .cal-day{min-height:60px;}
-  .cal-day-note{font-size:7px;color:var(--td);line-height:1.2;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;margin-top:1px;cursor:pointer;}
+  .cal-day-note{font-size:9px;color:var(--td);line-height:1.3;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;margin-top:1px;cursor:pointer;}
 }
 .renewal-banner a{color:#fff;text-decoration:underline;font-weight:700;}
 /* 7 días trial */
@@ -664,6 +682,11 @@ body[data-mode="escolar"][data-theme="verde"]{
 .email-modal{background:var(--w);border-radius:16px 16px 0 0;width:100%;max-width:560px;max-height:88vh;display:flex;flex-direction:column;}
 .email-hdr{padding:14px 16px 10px;border-bottom:1px solid var(--bd);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
 .email-body{overflow-y:auto;padding:12px 14px 20px;flex:1;}
+@media(min-width:768px){
+  .notebook{max-width:960px;margin:0 auto;}
+  .tab-bar{max-width:960px;}
+  .page{padding:0 8px;}
+}
 </style>
 </head>
 <body data-theme="verde">
@@ -913,45 +936,19 @@ body[data-mode="escolar"][data-theme="verde"]{
           <button class="upg-btn" onclick="showUpgrade()">⭐ Activar Premium</button>
         </div>
 
-        <!-- DICTADO — bloque premium -->
-        <div class="premium-lock-wrap" id="dictado-wrap">
-          <div class="dictado-bar">
-            <div class="dictado-bar-title">🎤 Dictado inteligente — <span style="font-size:11px;font-weight:400;color:var(--tl)">Habla y genera el registro automáticamente</span><button class="tip-btn" onclick="showTip('tip-dictado')" style="margin-left:6px">ⓘ</button></div>
-            <div class="dictado-btns">
-              <button class="dbtn" id="dbtn-noai" onclick="startDictado('noai')">
-                <span style="width:8px;height:8px;border-radius:50%;background:var(--ga);display:inline-block"></span> Sin IA
-              </button>
-              <button class="dbtn ai-gemini" id="dbtn-gemini" onclick="startDictado('gemini')">✦ Gemini</button>
-
-              <button class="dbtn rec" id="dbtn-stop" onclick="stopDictado()" style="display:none">⏹ Parar</button>
-            </div>
-            <div class="dictado-status" id="dictado-status"></div>
-            <div class="dictado-transcript" id="dictado-transcript"></div>
-          </div>
-          <!-- Candado si es free -->
-          <div class="lock-overlay" id="lock-dictado" onclick="showUpgrade()" style="display:none">
-            <div class="lock-icon">🔒</div>
-            <div class="lock-label">Dictado inteligente</div>
-            <div class="lock-sub">Disponible en Premium ⭐</div>
-          </div>
+        <!-- 1. REGISTRO CONFIDENCIAL -->
+        <div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:var(--bl);border-radius:8px;margin-bottom:8px;border:1px solid var(--bd);">
+          <label style="display:flex;align-items:center;gap:8px;cursor:pointer;flex:1;margin:0;">
+            <input type="checkbox" id="inp-confidencial" onchange="onConfidencialChange()" style="width:16px;height:16px;cursor:pointer;flex-shrink:0;"/>
+            <span style="font-size:13px;color:var(--tm);">🔒 Registro confidencial</span>
+            <button class="tip-btn" onclick="showTip('tip-confidencial')">ⓘ</button>
+          </label>
+        </div>
+        <div id="conf-gemini-aviso" style="display:none;background:#fff3cd;border-radius:8px;padding:8px 12px;margin-bottom:8px;font-size:12px;color:#856404;">
+          ⚠️ Registro confidencial — el dictado con Gemini IA no está disponible. Usa dictado sin IA.
         </div>
 
-        <!-- ASUNTO — CAMPO PRINCIPAL -->
-        <div class="fb">
-          <div class="field">
-            <label style="font-size:13px;font-weight:700;">Asunto <span style="color:#c53030;font-size:10px;">*obligatorio</span></label>
-            <div class="row" style="position:relative;">
-              <input type="text" id="inp-tema" placeholder="¿De qué trata esta gestión?" list="tema-list" autocomplete="off"
-                style="flex:1;padding:10px 12px;border:1px solid var(--bd);border-radius:6px;background:var(--bp);font-family:'Lato',sans-serif;font-size:14px;color:var(--td);outline:none;font-weight:600;"/>
-              <datalist id="tema-list"></datalist>
-              <button onclick="dictarAsunto()" id="btn-dict-asunto" title="Dictar asunto"
-                style="padding:8px 10px;background:var(--gm);border:none;border-radius:6px;color:#fff;cursor:pointer;font-size:14px;flex-shrink:0;">🎙️</button>
-              <button class="add-btn" onclick="guardarTemaNew()" title="Guardar asunto">💾</button>
-            </div>
-          </div>
-        </div>
-
-        <!-- FECHA INTELIGENTE -->
+        <!-- 2. FECHA — siempre visible -->
         <div class="fb">
           <div class="field">
             <label>Fecha y hora <span style="color:#c53030;font-size:10px;">*obligatorio</span></label>
@@ -964,49 +961,94 @@ body[data-mode="escolar"][data-theme="verde"]{
           </div>
         </div>
 
-        <!-- SELECTOR MODO -->
-        <div style="display:flex;gap:6px;margin-bottom:10px;">
-          <button id="modo-btn-voz" onclick="setModoRegistro('voz')" style="flex:1;padding:8px;background:var(--gm);color:#fff;border:none;border-radius:8px;font-family:'Lato',sans-serif;font-size:12px;font-weight:700;cursor:pointer;">🎤 Por voz</button>
-          <button id="modo-btn-manual" onclick="setModoRegistro('manual')" style="flex:1;padding:8px;background:var(--bl);color:var(--tm);border:1px solid var(--bd);border-radius:8px;font-family:'Lato',sans-serif;font-size:12px;font-weight:600;cursor:pointer;">✏️ Manual</button>
+        <!-- DICTADO — bloque premium -->
+                <!-- Badge IA tras dictado -->
+        <div id="ai-badge-container" style="display:none;margin-bottom:8px;"></div>
+
+        <!-- 3. DOS MODOS: VOZ / MANUAL -->
+        <div style="display:flex;gap:6px;margin-bottom:8px;">
+          <button id="modo-btn-voz" onclick="setModoRegistro('voz')"
+            style="flex:1;padding:10px;background:var(--gm);color:#fff;border:none;border-radius:8px;font-family:'Lato',sans-serif;font-size:13px;font-weight:700;cursor:pointer;">
+            🎤 Por voz
+          </button>
+          <button id="modo-btn-manual" onclick="setModoRegistro('manual')"
+            style="flex:1;padding:10px;background:var(--bl);color:var(--tm);border:1px solid var(--bd);border-radius:8px;font-family:'Lato',sans-serif;font-size:13px;font-weight:600;cursor:pointer;">
+            ✏️ Manual
+          </button>
         </div>
 
-        <!-- CAMPOS OPCIONALES colapsables (solo en modo manual) -->
-        <div id="campos-opcionales-toggle" onclick="toggleCamposOpcionales()" style="display:none;flex;align-items:center;justify-content:space-between;padding:10px 12px;background:var(--bl);border-radius:8px;cursor:pointer;margin-bottom:4px;border:1px solid var(--bd);user-select:none;">
-          <span style="font-size:13px;color:var(--tm);font-weight:600;">+ Más campos</span>
-          <span id="campos-arrow" style="font-size:11px;color:var(--tl);transition:transform .2s;">▶</span>
+        <!-- MODO VOZ -->
+        <div id="modo-voz-content">
+          <div class="premium-lock-wrap" id="dictado-wrap">
+            <div class="dictado-bar">
+              <div class="dictado-bar-title">🎤 Dictado inteligente — <span style="font-size:11px;font-weight:400;color:var(--tl)">Habla y genera el registro automáticamente</span><button class="tip-btn" onclick="showTip('tip-dictado')" style="margin-left:6px">ⓘ</button></div>
+              <div class="dictado-btns">
+                <button class="dbtn" id="dbtn-noai" onclick="startDictado('noai')">
+                  <span style="width:8px;height:8px;border-radius:50%;background:var(--ga);display:inline-block"></span> Sin IA
+                </button>
+                <button class="dbtn ai-gemini" id="dbtn-gemini" onclick="startDictado('gemini')">✦ Gemini</button>
+                <button class="dbtn rec" id="dbtn-stop" onclick="stopDictado()" style="display:none">⏹ Parar</button>
+              </div>
+              <div class="dictado-status" id="dictado-status"></div>
+              <div class="dictado-transcript" id="dictado-transcript"></div>
+            </div>
+            <div class="lock-overlay" id="lock-dictado" onclick="showUpgrade()" style="display:none">
+              <div class="lock-icon">🔒</div>
+              <div class="lock-label">Dictado inteligente</div>
+              <div class="lock-sub">Disponible en Premium ⭐</div>
+            </div>
+          </div>
         </div>
 
-        <div id="campos-opcionales" style="display:none;">
-
-        <div id="form-trabajo">
-          <div class="fb"><div class="fr">
+        <!-- MODO MANUAL -->
+        <div id="modo-manual-content" style="display:none;">
+          <!-- Asunto -->
+          <div class="fb">
+            <div class="field">
+              <label style="font-size:13px;font-weight:700;">Asunto <span style="color:#c53030;font-size:10px;">*obligatorio</span></label>
+              <div class="row">
+                <input type="text" id="inp-tema" placeholder="¿De qué trata esta gestión?" list="tema-list" autocomplete="off"
+                  style="flex:1;padding:10px 12px;border:1px solid var(--bd);border-radius:6px;background:var(--bp);font-family:'Lato',sans-serif;font-size:14px;color:var(--td);outline:none;font-weight:600;"/>
+                <datalist id="tema-list"></datalist>
+                <button onclick="dictarAsunto()" id="btn-dict-asunto" title="Dictar asunto"
+                  style="padding:8px 10px;background:var(--gm);border:none;border-radius:6px;color:#fff;cursor:pointer;font-size:14px;flex-shrink:0;">🎙️</button>
+                <button class="add-btn" onclick="guardarTemaNew()" title="Guardar en lista">💾</button>
+              </div>
+            </div>
+          </div>
+          <!-- Contacto -->
+          <div class="fb">
             <div class="field">
               <label>Contacto / Proveedor</label>
-              <div class="row" style="position:relative;">
+              <div class="row">
                 <input type="text" id="inp-contacto" placeholder="Nombre del contacto..." list="contacto-list" autocomplete="off"
                   style="flex:1;padding:8px 12px;border:1px solid var(--bd);border-radius:6px;background:var(--bp);font-family:'Lato',sans-serif;font-size:13px;color:var(--td);outline:none;"/>
                 <datalist id="contacto-list"></datalist>
                 <button class="add-btn" onclick="guardarContactoNuevo()" title="Guardar contacto">💾</button>
               </div>
             </div>
+          </div>
+          <!-- Acción y Comunicado -->
+          <div class="fb"><div class="fr">
             <div class="field">
               <label>Acción realizada</label>
               <div class="row">
                 <select id="inp-accion"><option value="">Seleccionar...</option></select>
-                <button class="add-btn" onclick="addAccion()">+ Nueva</button>
+                <button class="add-btn" onclick="addAccion()">+</button>
               </div>
             </div>
-          </div></div>
-          <div class="fb"><div class="fr">
             <div class="field">
               <label>Comunicado a</label>
               <div class="row">
                 <select id="inp-comunicado"><option value="">Sin comunicar</option></select>
-                <button class="add-btn" onclick="addComunicado()">+ Nuevo</button>
+                <button class="add-btn" onclick="addComunicado()">+</button>
               </div>
             </div>
+          </div></div>
+          <!-- Estado y Notas -->
+          <div class="fb"><div class="fr">
             <div class="field">
-              <label id="lbl-estado">Estado <button class="tip-btn" onclick="showTip('tip-estado')">ⓘ</button></label>
+              <label>Estado <button class="tip-btn" onclick="showTip('tip-estado')">ⓘ</button></label>
               <select id="inp-estado">
                 <option value="">— Sin estado —</option>
                 <option value="pendiente">⏳ Pendiente</option>
@@ -1014,39 +1056,35 @@ body[data-mode="escolar"][data-theme="verde"]{
                 <option value="resuelto">✅ Resuelto</option>
               </select>
             </div>
+            <div class="field">
+              <label>Notas libres</label>
+              <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;">
+                <button id="btn-dict-notas" onclick="toggleDictadoNotas()"
+                  style="padding:5px 10px;background:var(--gm);border:none;border-radius:6px;color:#fff;font-family:'Lato',sans-serif;font-size:11px;font-weight:700;cursor:pointer;">
+                  🎙️ Dictar
+                </button>
+                <span id="dict-notas-status" style="font-size:10px;color:var(--tl);"></span>
+              </div>
+              <textarea id="inp-notas" placeholder="Notas..." style="min-height:60px;"></textarea>
+            </div>
           </div></div>
         </div>
 
+        <!-- 4. IMAGEN — común a ambos modos -->
         <div class="fb">
           <div class="field">
-            <label id="lbl-notas">Notas libres</label>
-            <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
-              <button id="btn-dict-notas" onclick="toggleDictadoNotas()"
-                style="padding:6px 12px;background:var(--gm);border:none;border-radius:6px;color:#fff;font-family:'Lato',sans-serif;font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:5px;">
-                🎙️ Dictar nota
-              </button>
-              <span id="dict-notas-status" style="font-size:11px;color:var(--tl);">Pulsa para dictar</span>
-            </div>
-            <textarea id="inp-notas" placeholder="Escribe o dicta las notas..."></textarea>
-          </div>
-        </div>
-
-        <div class="fb">
-          <div class="field">
-            <label>📎 Imagen / Foto <button class="tip-btn" onclick="showTip('tip-imagen')">ⓘ</button></label>
+            <label>📷 Imagen / Foto <button class="tip-btn" onclick="showTip('tip-imagen')">ⓘ</button></label>
             <div class="premium-lock-wrap">
               <div class="img-upload-area" id="img-upload-area" onclick="document.getElementById('inp-imagen').click()">
-                <div style="font-size:28px;">📷</div>
+                <div style="font-size:24px;">📷</div>
                 <div class="img-upload-label">Toca para adjuntar imagen o foto</div>
-                <div class="img-upload-hint">JPG, PNG, WEBP · Cámara o galería</div>
                 <img class="img-preview" id="img-preview" src="" alt="preview"/>
                 <button class="img-remove-btn" id="img-remove-btn" onclick="removeImage(event)">✕</button>
               </div>
               <input type="file" id="inp-imagen" accept="image/*" capture="environment" style="display:none" onchange="onImageSelected(event)"/>
               <div class="img-status" id="img-status"></div>
-              <div class="img-uploading" id="img-uploading">
-                <div class="spin"></div>
-                <span>⏳ Subiendo imagen a Drive...</span>
+              <div class="img-uploading" id="img-uploading" style="display:none;">
+                <div class="spin"></div><span>⏳ Subiendo imagen...</span>
               </div>
               <div class="lock-overlay" id="lock-imagen" onclick="showUpgrade()" style="display:none">
                 <div class="lock-icon">🔒</div>
@@ -1057,9 +1095,10 @@ body[data-mode="escolar"][data-theme="verde"]{
           </div>
         </div>
 
+        <!-- 5. RECORDATORIO — común a ambos modos -->
         <div class="fb">
           <div class="field">
-            <label>Recordatorio <button class="tip-btn" onclick="showTip('tip-recordatorio')">ⓘ</button></label>
+            <label>🔔 Recordatorio <button class="tip-btn" onclick="showTip('tip-recordatorio')">ⓘ</button></label>
             <div class="chips">
               <button class="chip" onclick="setChip(this,'3')">3 días</button>
               <button class="chip" onclick="setChip(this,'10')">10 días</button>
@@ -1071,12 +1110,10 @@ body[data-mode="escolar"][data-theme="verde"]{
           </div>
         </div>
 
-        </div><!-- /campos-opcionales -->
-
         <!-- BOTONES GUARDAR / CANCELAR -->
         <div style="display:flex;gap:8px;margin-top:12px;">
           <button class="save-btn" id="save-btn" onclick="saveRecord()" style="flex:1;">💾 Guardar registro</button>
-          <button id="btn-cancelar-edit" onclick="cancelEdit()" style="display:none;padding:12px 16px;background:#7B3F00;color:#fff;border:none;border-radius:6px;font-family:'Lato',sans-serif;font-size:14px;font-weight:700;cursor:pointer;">✕ Cancelar</button>
+          <button id="btn-cancelar-edit" onclick="cancelEdit()" style="padding:12px 16px;background:var(--bl);color:#c53030;border:1px solid #f5c6c6;border-radius:6px;font-family:'Lato',sans-serif;font-size:14px;font-weight:700;cursor:pointer;">✕ Cancelar</button>
         </div>
 
       </div><!-- /sec-nuevo -->
@@ -1091,7 +1128,10 @@ body[data-mode="escolar"][data-theme="verde"]{
         </div>
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
           <div class="stats-row" id="stats-row" style="flex:1"></div>
-          <button onclick="toggleSearch()" id="btn-search" title="Buscar" style="background:none;border:1px solid var(--bd);border-radius:8px;padding:6px 10px;cursor:pointer;font-size:15px;margin-left:8px;flex-shrink:0;">🔍</button>
+          <div style="display:flex;gap:4px;flex-shrink:0;margin-left:8px;">
+            <button onclick="toggleSearch()" id="btn-search" title="Buscar" style="background:none;border:1px solid var(--bd);border-radius:8px;padding:6px 10px;cursor:pointer;font-size:15px;">🔍</button>
+            <button onclick="window.open('https://calendar.google.com','_blank')" title="Abrir Google Calendar" style="background:none;border:1px solid var(--bd);border-radius:8px;padding:6px 10px;cursor:pointer;font-size:15px;">📅</button>
+          </div>
         </div>
         <div class="filters">
           <select id="f-tema" onchange="renderRecords()"><option value="">Todos los asuntos</option></select>
@@ -1137,6 +1177,7 @@ body[data-mode="escolar"][data-theme="verde"]{
             <button class="cal-nav-btn" onclick="calCambiarMes(1)">▶</button>
           </div>
         </div>
+        <div id="cal-sem-wrap" style="display:none;width:100%;margin-bottom:10px;overflow-x:auto;"></div>
         <div class="cal-grid">
           <div class="cal-header">
             <div class="cal-dow">L</div><div class="cal-dow">M</div><div class="cal-dow">X</div>
@@ -1145,10 +1186,16 @@ body[data-mode="escolar"][data-theme="verde"]{
           </div>
           <div class="cal-body" id="cal-body"></div>
         </div>
-        <div class="cal-day-panel" id="cal-day-panel">
-          <div class="cal-day-panel-title" id="cal-day-title"></div>
+
+        <!-- Panel día al tocar -->
+        <div id="cal-day-panel" style="display:none;background:var(--bl);border-radius:10px;padding:12px 14px;margin-bottom:10px;box-shadow:0 2px 8px var(--sh);">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+            <div id="cal-day-title" style="font-family:'Caveat',cursive;font-size:16px;color:var(--td);font-weight:700;"></div>
+            <button onclick="document.getElementById('cal-day-panel').style.display='none'" style="background:none;border:none;font-size:16px;cursor:pointer;color:var(--tl);">✕</button>
+          </div>
           <div id="cal-day-records"></div>
         </div>
+
         <div style="display:flex;gap:8px;flex-wrap:wrap;padding:4px 0;font-size:11px;color:var(--tl);">
           <span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#856404;margin-right:3px;"></span>Pendiente</span>
           <span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#1a73e8;margin-right:3px;"></span>En curso</span>
@@ -2242,30 +2289,46 @@ const d=await r.json(); return JSON.parse((d.candidates?.[0]?.content?.parts?.[0
 let aiModalData=null;
 function showAiModal(parsed,provider){
 aiModalData=parsed;
-const badges={gemini:'<div class="ai-badge gemini">✦ Analizado con Gemini</div>',local:'<div class="ai-badge local">🧩 Parser local (sin IA)</div>'};
-document.getElementById('ai-badge-container').innerHTML=badges[provider]||badges.local;
-const accionBase=['Llamada telefónica','Reunión presencial','Email enviado','Email recibido','Visita','Pedido realizado','Reclamación','Seguimiento','Resolución'];
-const accionAll=[...new Set([...accionBase,...state.acciones])];
-const comunAll=[...state.comunicados];
-document.getElementById('ai-fields').innerHTML=
-'<div class="ai-field"><label>Asunto <span style="color:#c53030;font-size:10px">*</span></label>'
-+'<input type="text" id="aif-tema" value="'+x(parsed.tema)+'" list="aif-tl"/>'
-+'<datalist id="aif-tl">'+state.temas.map(function(t){return '<option value="'+x(t)+'">';}).join('')+'</datalist></div>'
-+'<div class="ai-field"><label>Contacto / Proveedor</label>'
-+'<input type="text" id="aif-contacto" value="'+x(parsed.contacto)+'" list="aif-cl"/>'
-+'<datalist id="aif-cl">'+state.contactos.map(function(c){return '<option value="'+x(c)+'">';}).join('')+'</datalist></div>'
-+'<div class="ai-field"><label>Acción realizada</label>'
-+'<select id="aif-accion"><option value="">Seleccionar...</option>'
-+accionAll.map(function(a){return '<option'+(a===parsed.accion?' selected':'')+'>'+x(a)+'</option>';}).join('')+'</select></div>'
-+'<div class="ai-field"><label>Comunicado a</label>'
-+'<input type="text" id="aif-comunicado" value="'+x(parsed.comunicado||'')+'" list="aif-coml"/>'
-+'<datalist id="aif-coml">'+state.comunicados.map(function(c){return '<option value="'+x(c)+'">';}).join('')+'</datalist></div>'
-+'<div class="ai-field"><label>Estado</label>'
-+'<select id="aif-estado"><option value="">— Sin estado —</option>'
-+['pendiente','en curso','resuelto'].map(function(v){return '<option'+(v===parsed.estado?' selected':'')+'>'+v+'</option>';}).join('')+'</select></div>'
-+'<div class="ai-field"><label>Notas libres</label>'
-+'<textarea id="aif-notas">'+x(parsed.notas)+'</textarea></div>';
-document.getElementById('ai-modal-ov').style.display='flex';
+if(parsed.tema){
+var temaEl=document.getElementById('inp-tema');
+if(temaEl) temaEl.value=parsed.tema;
+if(parsed.tema&&!state.temas.includes(parsed.tema)){
+state.temas.push(parsed.tema);
+state.temas.sort(function(a,b){return a.localeCompare(b,'es',{sensitivity:'base'});});
+persist().catch(function(){});
+fillSelect('inp-tema',state.temas);
+}
+}
+if(parsed.contacto){
+var contEl=document.getElementById('inp-contacto');
+if(contEl) contEl.value=parsed.contacto;
+if(!state.contactos.includes(parsed.contacto)){
+state.contactos.push(parsed.contacto);
+state.contactos.sort(function(a,b){return a.localeCompare(b,'es',{sensitivity:'base'});});
+persist().catch(function(){});
+}
+}
+if(parsed.accion){var acEl=document.getElementById('inp-accion');if(acEl)acEl.value=parsed.accion;}
+if(parsed.comunicado){var comEl=document.getElementById('inp-comunicado');if(comEl)comEl.value=parsed.comunicado;}
+if(parsed.estado){var estEl=document.getElementById('inp-estado');if(estEl)estEl.value=parsed.estado;}
+if(parsed.notas){var notEl=document.getElementById('inp-notas');if(notEl)notEl.value=parsed.notas;}
+setModoRegistro('manual');
+var campos=document.getElementById('campos-opcionales');
+var arrow=document.getElementById('campos-arrow');
+var toggle=document.getElementById('campos-opcionales-toggle');
+if(campos) campos.style.display='block';
+if(arrow) arrow.style.transform='rotate(90deg)';
+if(toggle) toggle.style.display='flex';
+var badgeEl=document.getElementById('ai-badge-container');
+if(badgeEl){
+var badges={gemini:'<div class="ai-badge gemini">✦ Analizado con Gemini · Revisa y edita antes de guardar</div>',local:'<div class="ai-badge local">🧩 Parser local · Revisa y edita antes de guardar</div>'};
+badgeEl.innerHTML=badges[provider]||badges.local;
+badgeEl.style.display='block';
+}
+mostrarGeminiBadge(false);
+setDictadoStatus('✓ Campos rellenados — revisa y guarda cuando estés listo');
+var saveBtn=document.getElementById('save-btn');
+if(saveBtn) saveBtn.scrollIntoView({behavior:'smooth',block:'nearest'});
 }
 function closeAiModal(){ document.getElementById('ai-modal-ov').style.display='none'; }
 function applyAiFields(){
@@ -2342,7 +2405,13 @@ async function saveRecord(){
 const saveBtn=document.getElementById('save-btn');
 if(saveBtn&&saveBtn.disabled) return;
 if(saveBtn) saveBtn.disabled=true;
-const fecha=document.getElementById('inp-fecha').value;
+var fechaEl=document.getElementById('inp-fecha');
+if(fechaEl&&fechaEl.style.display==='none'&&!fechaEl.value){
+var now=new Date();
+fechaEl.value=new Date(now-now.getTimezoneOffset()*60000).toISOString().slice(0,16);
+fechaEl.style.display='block';
+}
+const fecha=fechaEl?fechaEl.value:'';
 const tema=(document.getElementById('inp-tema').value||'').trim();
 const contacto=(document.getElementById('inp-contacto').value||'').trim();
 const accion=document.getElementById('inp-accion').value;
@@ -2367,10 +2436,12 @@ const di=document.getElementById('inp-recdate');
 const finalRec=(di.style.display!=='none'&&di.value)?di.value:reminderDays?calcReminder(fecha):orig.recordatorio||'';
 state.records[idx]=Object.assign({},orig,{fecha,contacto,tema,accion,comunicado,estado,notas,recordatorio:finalRec,imagenUrl:imagenUrl||orig.imagenUrl||''});
 persist().catch(()=>{});
-if(state.sheetsUrl) syncToSheets();
+if(saveBtn){saveBtn.disabled=false;saveBtn.style.opacity='1';saveBtn.style.pointerEvents='auto';}
 showToast('toast-upd');
 cancelEdit();
-if(saveBtn) saveBtn.disabled=false;
+renderRecords();
+switchTab('registros',document.querySelectorAll('.tab-btn')[1]);
+if(state.sheetsUrl) setTimeout(function(){syncToSheets();},500);
 return;
 }
 const newId=Date.now().toString();
@@ -2425,11 +2496,29 @@ initForm();
 }
 function _editRecordOrig(id){
 const r=state.records.find(rec=>rec.id===id); if(!r) return;
-editingId=id; switchTab('nuevo',document.querySelector('.tab-btn'));
+editingId=id;
+switchTab('nuevo',document.querySelector('.tab-btn'));
 document.getElementById('edit-banner').style.display='flex';
 document.getElementById('form-title').textContent='Editando registro';
-const btn=document.getElementById('save-btn'); btn.textContent='💾 Guardar cambios'; btn.classList.add('editing');
-document.getElementById('inp-fecha').value=r.fecha||'';
+const btn=document.getElementById('save-btn');
+if(btn){btn.textContent='💾 Guardar cambios';btn.classList.add('editing');btn.disabled=false;}
+setModoRegistro('manual');
+var campos=document.getElementById('campos-opcionales');
+var arrow=document.getElementById('campos-arrow');
+if(campos) campos.style.display='block';
+if(arrow) arrow.style.transform='rotate(90deg)';
+var fechaInp=document.getElementById('inp-fecha');
+if(fechaInp){
+fechaInp.style.display='block';
+fechaInp.value=r.fecha||'';
+}
+var chips=['chip-hoy','chip-ayer','chip-elegir'];
+chips.forEach(function(id){
+var c=document.getElementById(id);
+if(c){c.style.background='';c.style.color='';c.style.borderColor='';}
+});
+var elegir=document.getElementById('chip-elegir');
+if(elegir){elegir.style.background='var(--gm)';elegir.style.color='#fff';elegir.style.borderColor='var(--gm)';}
 if(r.contacto&&!state.contactos.includes(r.contacto)){state.contactos.push(r.contacto);persist().catch(()=>{});}
 if(r.tema&&!state.temas.includes(r.tema)){state.temas.push(r.tema);persist().catch(()=>{});}
 fillSelect('inp-contacto',state.contactos); document.getElementById('inp-contacto').value=r.contacto||'';
@@ -2440,13 +2529,13 @@ document.getElementById('inp-estado').value=r.estado||'pendiente';
 document.getElementById('inp-notas').value=r.notas||'';
 if(r.imagenUrl){ currentImageUrl=r.imagenUrl; const prev=document.getElementById('img-preview'); prev.src=r.imagenUrl; prev.style.display='block'; document.getElementById('img-upload-area').classList.add('has-img'); document.getElementById('img-remove-btn').style.display='flex'; document.getElementById('img-status').innerHTML=r.imagenUrl.startsWith('data:')?'📎 Imagen local':(`📎 <a class="img-drive-link" href="${r.imagenUrl}" target="_blank">🔗 Ver en Drive</a>`); }
 if(r.recordatorio){ const di=document.getElementById('inp-recdate'); di.value=r.recordatorio; di.style.display='block'; const mc=[...document.querySelectorAll('.chip')].find(c=>c.textContent.includes('Fecha')); if(mc){document.querySelectorAll('.chip').forEach(c=>c.classList.remove('on'));mc.classList.add('on');} }
+setTimeout(function(){
+var secNuevo=document.getElementById('sec-nuevo');
+if(secNuevo) secNuevo.scrollTop=0;
 window.scrollTo({top:0,behavior:'smooth'});
-}
-function cancelEdit(){
-editingId=null; document.getElementById('edit-banner').style.display='none';
-document.getElementById('form-title').textContent='Nuevo registro';
-const btn=document.getElementById('save-btn'); btn.textContent='Guardar registro'; btn.classList.remove('editing');
-resetForm();
+var page=document.querySelector('.page');
+if(page) page.scrollTop=0;
+},50);
 }
 function cancelForm(){
 if(editingId){
@@ -2472,9 +2561,8 @@ if(btn) btn.classList.add('active');
 if(tab==='registros'){renderStats();renderRecords();}
 const fab=document.getElementById('fab-btn');
 if(fab) fab.style.display=(tab==='registros'||tab==='nuevo')?'flex':'none';
-if(tab==='config'){renderThemes();loadPinConfig();loadSheetsToken();loadFirmaConfig();}
+if(tab==='config'){renderThemes();loadPinConfig();loadSheetsToken();loadFirmaConfig();renderLists();}
 if(tab==='recordatorios'){renderReminders();renderAlertasInteligentes();}
-if(tab==='config'){renderLists();renderThemes();}
 if(tab==='calendario') renderCalendario();
 }
 function renderStats(){
@@ -2585,35 +2673,45 @@ var fh=isNaN(d)?'':d.toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'
 var bc=r.estado==='resuelto'?'b-done':r.estado==='en curso'?'b-prog':r.estado==='pendiente'?'b-pend':'';
 var bl=r.estado==='resuelto'?'Resuelto':r.estado==='en curso'?'En curso':r.estado==='pendiente'?'Pendiente':'';
 var parts=[r.contacto?x(r.contacto):'',r.accion?x(r.accion):''].filter(Boolean);
-var confIcon=r.confidencial?'<span title="Confidencial" style="font-size:10px;margin-left:3px">🔒</span>':'';
-var titulo=(parts.length?parts.join(' · '):(x(r.tema)||'Sin título'))+confIcon;
-var tagT=r.tema?('<span class="tag">'+x(r.tema)+'</span>'):'';
-var tagC=r.comunicado?('<span class="tag">'+x(r.comunicado)+'</span>'):'';
+var titulo=parts.length?parts.join(' · '):(x(r.tema)||'Sin título');
+var confIcon=r.confidencial?'<span style="font-size:10px;margin-left:3px">🔒</span>':'';
+var tagT=r.tema?'<span class="tag">'+x(r.tema)+'</span>':'';
+var tagC=r.comunicado?'<span class="tag">'+x(r.comunicado)+'</span>':'';
 var remFecha='';
-if(r.recordatorio){
-var rd=new Date(r.recordatorio);
-remFecha=isNaN(rd)?r.recordatorio:rd.toLocaleDateString('es-ES',{day:'2-digit',month:'short'});
+if(r.recordatorio){var rd=new Date(r.recordatorio);remFecha=isNaN(rd)?r.recordatorio:rd.toLocaleDateString('es-ES',{day:'2-digit',month:'short'});}
+var rem=remFecha?'<span style="font-size:10px;color:var(--th)">🔔 '+remFecha+'</span>':'';
+var meta=tagT+tagC+rem;
+var nota=r.notas?'<div class="rec-note">'+x(r.notas).slice(0,80)+(r.notas.length>80?'…':'')+'</div>':'';
+var id=r.id;
+var rid2=id;
+var badge=bl?('<span class="badge '+bc+'" onclick="event.stopPropagation();cycleEstado(\'' +id+ '\')" title="Toca para cambiar estado">'+bl+'</span>'):'';
+var mailIcon='<span class="comm-icon'+(r.mailSent?' sent':'')+'">'+( r.mailSent?'✉ Enviado':'✉')+'</span>';
+var waIcon='<span class="comm-icon'+(r.waEnviado?' sent':'')+'">'+( r.waEnviado?'💬 Enviado':'💬')+'</span>';
+var calIcon=r.calGuardado?'<span class="comm-icon sent">📅 Calendar</span>':'';
+var commRow='<div class="comm-icons">'+mailIcon+waIcon+calIcon+'</div>';
+function btn(icon,label,fn){
+return '<button class="rec-action-btn" onclick="event.stopPropagation();'+fn+'(\'' +id+ '\')"><span>'+icon+'</span>'+label+'</button>';
 }
-var remCal=r.calGuardado?'<span style="font-size:10px;color:#0f9d58;font-weight:700;">✅ Calendar</span>':'';
-var rem=r.recordatorio?('<span style="font-size:10px;color:var(--th)">📅 '+remFecha+'</span>'):'';
-var nota=r.notas?('<div class="rec-note">'+x(r.notas).slice(0,100)+(r.notas.length>100?'…':'')+'</div>'):'';
-var imgTag=r.imagenUrl?('<div style="margin-top:5px"><a href="'+r.imagenUrl+'" target="_blank" style="font-size:10px;color:#1a73e8">📷 Ver imagen</a></div>'):'';
-var badge=(bl&&r.estado)?('<span class="badge '+bc+'">'+bl+'</span>'):'';
-var eid=r.id;
-var btnEdit='<button class="rec-btn eb" onclick="editRecord(\'' +eid+ '\')" title="Editar">✏</button>';
-var btnMenu='<button class="rec-btn" onclick="abrirMenuRec(\'' +eid+ '\',event)" style="font-weight:700;letter-spacing:1px" title="Más">···</button>';
-var btnDel='<button class="rec-btn db" onclick="askDelete(\'' +eid+ '\')" title="Eliminar">🗑</button>';
-return '<div class="record">'
+function btnStop(icon,label,fn){
+return '<button class="rec-action-btn" onclick="event.stopPropagation();'+fn+'()"><span>'+icon+'</span>'+label+'</button>';
+}
+var btnEdit=btn('✏️','Editar','editRecord');
+var btnEmail=btn('✉','Email','abrirEmailModal');
+var btnEmailIA=(isPremium&&getApiKey('gemini')&&!r.confidencial)?btn('🤖','Email IA','emailIA'):'';
+var btnWA=btn('💬','WhatsApp','abrirWhatsApp');
+var btnCal=btn('📅','Calendar','abrirGoogleCalendarConConfirm');
+var btnDel='<button class="rec-action-btn danger" onclick="event.stopPropagation();askDelete(\'' +id+ '\')"><span>🗑</span>Eliminar</button>';
+var actions='<div class="rec-actions" id="ra-'+id+'">'+btnEdit+btnEmail+btnEmailIA+btnWA+btnCal+btnDel+'</div>';
+return '<div class="record" onclick="toggleRecActions(\'' +id+ '\')">'
 +'<div class="rec-date">'+fd+'<br>'+fh+'</div>'
-+'<div style="flex:1;min-width:0">'
-+'<div class="rec-title">'+titulo+'</div>'
-+'<div class="rec-meta">'+tagT+tagC+rem+'</div>'
-+nota+imgTag
++'<div style="flex:1;min-width:0;">'
++'<div class="rec-title">'+titulo+confIcon+'</div>'
++'<div class="rec-meta">'+meta+'</div>'
++nota
 +'</div>'
-+'<div class="rec-right">'+badge
-+'<div class="rec-btns">'+btnEdit+btnMenu+btnDel+'</div>'
++'<div class="rec-right">'+badge+commRow+'</div>'
 +'</div>'
-+'</div>';
++actions;
 }
 function showImgModal(id){ const r=state.records.find(rec=>rec.id===id); if(!r||!r.imagenUrl) return; const w=window.open('','_blank','width=600,height=500'); w.document.write(`<html><body style="margin:0;background:#000;display:flex;align-items:center;justify-content:center;height:100vh"><img src="${r.imagenUrl}" style="max-width:100%;max-height:100%"/></body></html>`); }
 function cycleEstado(id){ const r=state.records.find(rec=>rec.id===id);if(!r)return; const c={pendiente:'en curso','en curso':'resuelto',resuelto:'pendiente'}; r.estado=c[r.estado]||'pendiente'; persist().catch(()=>{}); if(state.sheetsUrl) syncToSheets(); renderRecords(); renderStats(); }
@@ -3392,23 +3490,7 @@ const d=new Date(r.fecha),fd=isNaN(d)?r.fecha:d.toLocaleDateString('es-ES',{day:
 const f=getFirma();
 const firmante=f.nombre||currentUser.split('@')[0];
 const firmaCtx=(f.cargo?', '+f.cargo:'')+(f.empresa?', '+f.empresa:'');
-const prompt='Eres un asistente que redacta emails profesionales en español. '
-+'Tu tarea es escribir un email cálido y profesional, como lo haría una persona real, '
-+'con párrafos bien conectados y coherentes entre sí. Nunca uses listas, esquemas ni puntos.\n\n'
-+'DATOS DE LA GESTIÓN:\n'
-+(r.contacto?'- Destinatario: '+r.contacto+'\n':'')
-+(r.tema?'- Asunto principal: '+r.tema+'\n':'')
-+(r.accion?'- Lo que se hizo: '+r.accion+'\n':'')
-+(r.notas?'- Notas (pueden contener errores de dictado — interpreta el sentido y reescríbelas con coherencia): '+r.notas+'\n':'')
-+'- Fecha de la gestión: '+fd+'\n\n'
-+'INSTRUCCIONES:\n'
-+'1. Saludo: usa "Buenos días" o "Hola" según el tono, seguido del nombre del destinatario si lo hay.\n'
-+'2. Cuerpo: redacta 2-3 párrafos fluidos que expliquen la situación de forma natural y coherente. '
-+'Interpreta las notas aunque tengan errores — extrae el mensaje real y exprésalo con claridad.\n'
-+'3. Cierre: elige una despedida cálida y apropiada al tono del email (puede ser "Un cordial saludo", '
-+'"Quedo a tu disposición", "Hasta pronto" u otra que encaje).\n'
-+'4. Firma solo con el nombre: '+firmante+(firmaCtx?', '+firmaCtx:'')+'\n\n'
-+'Devuelve ÚNICAMENTE el cuerpo del email. Sin asunto, sin markdown, sin explicaciones.';
+const prompt=buildPromptEmail(r,fd,firmante,firmaCtx);
 try{
 const resp=await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key='+key,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({contents:[{parts:[{text:prompt}]}]})});
 const data=await resp.json();
@@ -3593,14 +3675,18 @@ location.reload();
 function abrirEnGmail(){
 const s=document.getElementById('email-asunto').value;
 const c=document.getElementById('email-cuerpo').value;
+const recId=_emailRecId;
 window.open('https://mail.google.com/mail/?view=cm&su='+encodeURIComponent(s)+'&body='+encodeURIComponent(c),'_blank');
 cerrarEmailModal();
+if(recId) marcarEmailEnviado(recId);
 }
 function abrirEnCorreo(){
 const s=document.getElementById('email-asunto').value;
 const c=document.getElementById('email-cuerpo').value;
+const recId=_emailRecId;
 window.open('mailto:?subject='+encodeURIComponent(s)+'&body='+encodeURIComponent(c),'_blank');
 cerrarEmailModal();
+if(recId) marcarEmailEnviado(recId);
 }
 function setDictadoStatus(msg){
 const el=document.getElementById('dictado-status');
@@ -3673,6 +3759,17 @@ renderCalendario();
 }
 }
 function renderCalendario(){
+var calGridEl=document.querySelector('.cal-grid');
+var semWrapEl=document.getElementById('cal-sem-wrap');
+if(calVista==='semanal'){
+if(calGridEl) calGridEl.classList.add('hidden');
+if(semWrapEl) semWrapEl.style.display='block';
+renderCalendarioSemanal();
+return;
+} else {
+if(calGridEl) calGridEl.classList.remove('hidden');
+if(semWrapEl) semWrapEl.style.display='none';
+}
 const meses=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
 document.getElementById('cal-titulo').textContent=meses[calMonth]+' '+calYear;
 const primerDia=new Date(calYear,calMonth,1).getDay();
@@ -3689,7 +3786,16 @@ const dia=d.getDate();
 if(!porDia[dia]) porDia[dia]=[];
 porDia[dia].push(r);
 });
-if(calVista==='semanal'){renderCalendarioSemanal();return;}
+var calGrid=document.querySelector('.cal-grid');
+var semWrap=document.getElementById('cal-sem-wrap');
+if(calVista==='semanal'){
+if(calGrid) calGrid.classList.add('hidden');
+renderCalendarioSemanal();
+return;
+} else {
+if(calGrid) calGrid.classList.remove('hidden');
+if(semWrap) semWrap.style.display='none';
+}
 var body='';
 for(var i=0;i<offset;i++) body+='<div class="cal-day empty"></div>';
 for(var d=1;d<=diasMes;d++){
@@ -3721,14 +3827,11 @@ return !isNaN(d)&&d.getDate()===dia&&d.getMonth()===calMonth&&d.getFullYear()===
 const panel=document.getElementById('cal-day-panel');
 const title=document.getElementById('cal-day-title');
 const list=document.getElementById('cal-day-records');
+if(!panel) return;
 const meses=['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
 title.textContent=dia+' de '+meses[calMonth]+' de '+calYear;
-if(!recs.length){
-list.innerHTML='<div class="empty" style="padding:12px 0">Sin registros este día 🐾</div>';
-} else {
-list.innerHTML=recs.map(function(r){return recHTML(r);}).join('');
-}
-panel.classList.add('show');
+list.innerHTML=recs.length?recs.map(function(r){return recHTML(r);}).join(''):'<div class="empty" style="padding:8px 0">Sin registros este día</div>';
+panel.style.display='block';
 panel.scrollIntoView({behavior:'smooth',block:'nearest'});
 }
 function toggleSearch(){
@@ -3802,6 +3905,7 @@ if(r.accion) msg+=r.accion+'.'+NLW+NLW;
 if(r.notas) msg+=r.notas+NLW+NLW;
 msg+='Saludos,'+NLW+nombre;
 window.open('https://wa.me/?text='+encodeURIComponent(msg),'_blank');
+if(r&&r.id) setTimeout(function(){if(confirm('¿Has enviado el WhatsApp?'))marcarWAEnviado(r.id);},2000);
 }
 async function abrirWhatsAppIA(r){
 const key=getApiKey('gemini');
@@ -3809,17 +3913,7 @@ const d=new Date(r.fecha),fd=isNaN(d)?r.fecha:d.toLocaleDateString('es-ES',{day:
 const f=getFirma();
 const firmante=f.nombre||currentUser.split('@')[0];
 var NLW2='\n';const firmaCtx=(f.cargo?', '+f.cargo:'')+(f.empresa?NLW2+f.empresa:'');
-const promptParts=[
-'Redacta un mensaje de WhatsApp corto, informal pero profesional, como lo enviaría una persona a su compañero o director.',
-'Empieza con Hola, sin nombre específico.',
-'Narra en 2-3 frases naturales lo que pasó, interpretando las notas aunque tengan errores.',
-'No copies los datos en bruto. No uses listas.',
-'Termina con una despedida breve y firma con el nombre '+firmante+'.',
-'Contexto: '+(r.tema||'gestión')+(r.contacto?' con '+r.contacto:'')+(r.accion?' - '+r.accion:'')+'.',
-(r.notas?'Notas a interpretar: '+r.notas:''),
-'Devuelve solo el mensaje, sin nada más.'
-].filter(Boolean).join(' ');
-const prompt=promptParts;
+const prompt=buildPromptWhatsApp(r,fd,firmante);
 try{
 showWarn('⏳ Gemini redactando mensaje WhatsApp...');
 const resp=await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key='+key,{
@@ -4017,61 +4111,79 @@ var calSemanaOffset=0;
 function toggleCalVista(vista){
 calVista=vista;
 if(vista==='mensual') calSemanaOffset=0;
-document.getElementById('cal-btn-mensual').style.fontWeight=vista==='mensual'?'700':'400';
-document.getElementById('cal-btn-semanal').style.fontWeight=vista==='semanal'?'700':'400';
+var btnM=document.getElementById('cal-btn-mensual');
+var btnS=document.getElementById('cal-btn-semanal');
+if(btnM){btnM.style.fontWeight=vista==='mensual'?'700':'400';btnM.style.background=vista==='mensual'?'var(--gm)':'var(--bl)';btnM.style.color=vista==='mensual'?'#fff':'var(--tm)';}
+if(btnS){btnS.style.fontWeight=vista==='semanal'?'700':'400';btnS.style.background=vista==='semanal'?'var(--gm)':'var(--bl)';btnS.style.color=vista==='semanal'?'#fff':'var(--tm)';}
 renderCalendario();
 }
 function renderCalendarioSemanal(){
-const hoy=new Date();
-const lunes=new Date(hoy);
-const dow=lunes.getDay();
+var hoy=new Date(); hoy.setHours(0,0,0,0);
+var lunes=new Date(hoy);
+var dow=lunes.getDay();
 lunes.setDate(lunes.getDate()-(dow===0?6:dow-1));
 lunes.setDate(lunes.getDate()+((calSemanaOffset||0)*7));
 lunes.setHours(0,0,0,0);
-const dias=[];
-for(let i=0;i<7;i++){
-const d=new Date(lunes);
-d.setDate(lunes.getDate()+i);
-dias.push(d);
-}
-const meses=['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
-const diasNombre=['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'];
-const ini=dias[0].toLocaleDateString('es-ES',{day:'2-digit',month:'short'});
-const fin=dias[6].toLocaleDateString('es-ES',{day:'2-digit',month:'short',year:'numeric'});
-document.getElementById('cal-titulo').textContent=ini+' — '+fin;
-let body='<div style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px;">';
-dias.forEach(function(d,i){
+var meses=['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+var diasNom=['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'];
+var fin=new Date(lunes.getTime()+6*86400000);
+var titulo=lunes.getDate()+' '+meses[lunes.getMonth()]+' — '+fin.getDate()+' '+meses[fin.getMonth()]+' '+fin.getFullYear();
+document.getElementById('cal-titulo').textContent=titulo;
+var semWrap=document.getElementById('cal-sem-wrap');
+if(!semWrap) return;
+var cols='';
+for(var i=0;i<7;i++){
+var d=new Date(lunes.getTime()+i*86400000);
 var esHoy=d.toDateString()===hoy.toDateString();
 var recs=state.records.filter(function(r){
 var rd=new Date(r.fecha);
 return !isNaN(rd)&&rd.toDateString()===d.toDateString();
 });
-var recHtml='';
+var numColor=esHoy?'var(--gm)':'var(--td)';
+var bg=esHoy?'var(--bcp)':'var(--bl)';
+var border=esHoy?'2px solid var(--gm)':'1px solid var(--bd)';
+var recsHtml='';
 if(recs.length===0){
-recHtml='<div style="font-size:9px;color:var(--tl);font-style:italic">Sin registros</div>';
-} else if(recs.length<=3){
-recHtml=recs.map(function(r){
-var bc=r.estado==='resuelto'?'#155724':r.estado==='en curso'?'#004085':r.estado==='pendiente'?'#856404':'#666';
-var rid=r.id;return '<div onclick="editRecord(\''+rid+'\')" style="font-size:8px;color:'+bc+';background:var(--bl);border-radius:3px;padding:1px 3px;margin-bottom:2px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;cursor:pointer;border-left:2px solid '+bc+';">'+(r.tema||r.accion||'Sin título')+'</div>';
-}).join('');
+recsHtml='<div style="font-size:9px;color:var(--tl);font-style:italic;padding:2px;">—</div>';
 } else {
-recHtml='<div style="font-size:8px;color:var(--tl);font-weight:700;margin-bottom:2px;">'+recs.length+' gestiones:</div>';
-recHtml+=recs.slice(0,4).map(function(r){
-var rid2=r.id;return '<div onclick="editRecord(\''+rid2+'\')" style="font-size:8px;color:var(--td);overflow:hidden;white-space:nowrap;text-overflow:ellipsis;cursor:pointer;">·'+(r.tema||r.accion||'—')+'</div>';
-}).join('');
-if(recs.length>4) recHtml+='<div style="font-size:8px;color:var(--tl)">+'+(recs.length-4)+' más</div>';
-}
-var dStr=d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();
-var dStr=d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();
-var donclick='calVerDiaFecha("'+dStr+'")';
-body+='<div onclick="'+donclick+'" style="background:'+(esHoy?'var(--bcp)':'var(--bl)')+';border-radius:8px;padding:6px;min-height:90px;border:1px solid var(--bd);cursor:pointer;">';
-+'<div style="font-size:10px;color:var(--tl);margin-bottom:1px;">'+diasNombre[i]+'</div>'
-+'<div style="font-size:13px;font-weight:'+(esHoy?'700':'400')+';color:'+(esHoy?'var(--gm)':'var(--td)')+';margin-bottom:4px;">'+d.getDate()+'</div>'
-+recHtml
-+'</div>';
+recs.slice(0,3).forEach(function(r){
+var color=r.estado==='resuelto'?'#155724':r.estado==='en curso'?'#004085':r.estado==='pendiente'?'#856404':'#666';
+recsHtml+='<div style="font-size:8px;color:'+color+';background:#fff;border-radius:2px;padding:1px 3px;margin-bottom:1px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;border-left:2px solid '+color+';">'+(r.tema||r.accion||'—')+'</div>';
 });
-body+='</div>';
-document.getElementById('cal-body').innerHTML=body;
+if(recs.length>3) recsHtml+='<div style="font-size:8px;color:var(--tl)">+'+(recs.length-3)+' más</div>';
+}
+var dYear=d.getFullYear(), dMonth=d.getMonth(), dDay=d.getDate();
+cols+='<div onclick="abrirDiaSemanal('+dYear+','+dMonth+','+dDay+')" '
++'style="flex:1;min-width:0;background:'+bg+';border:'+border+';border-radius:6px;'
++'padding:4px 3px;min-height:80px;cursor:pointer;-webkit-tap-highlight-color:rgba(0,0,0,.1);">'
++'<div style="text-align:center;margin-bottom:3px;">'
++'<div style="font-size:9px;color:var(--tl);">'+diasNom[i]+'</div>'
++'<div style="font-size:14px;font-weight:700;color:'+numColor+';">'+d.getDate()+'</div>'
++'</div>'
++recsHtml
++'</div>';
+}
+semWrap.style.display='block';
+semWrap.innerHTML='<div style="display:flex;gap:4px;width:100%;">'+cols+'</div>';
+var panel=document.getElementById('cal-day-panel');
+if(panel) panel.style.display='none';
+}
+function abrirDiaSemanal(year,month,day){
+var recs=state.records.filter(function(r){
+var rd=new Date(r.fecha);
+return !isNaN(rd)&&rd.getFullYear()===year&&rd.getMonth()===month&&rd.getDate()===day;
+});
+var panel=document.getElementById('cal-day-panel');
+var title=document.getElementById('cal-day-title');
+var list=document.getElementById('cal-day-records');
+if(!panel||!title||!list) return;
+var meses=['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+title.textContent=day+' de '+meses[month]+' de '+year;
+list.innerHTML=recs.length
+?recs.map(function(r){return recHTML(r);}).join('')
+:'<div style="padding:12px;color:var(--tl);font-style:italic;">Sin registros este día</div>';
+panel.style.display='block';
+panel.scrollIntoView({behavior:'smooth',block:'nearest'});
 }
 function setFechaChip(tipo,btn){
 ['chip-hoy','chip-ayer','chip-elegir'].forEach(function(id){
@@ -4164,14 +4276,13 @@ function fillSelect(id,arr){
 var el=document.getElementById(id);
 if(!el) return;
 var cur=el.value;
+var sorted=arr.slice().sort(function(a,b){return a.localeCompare(b,'es',{sensitivity:'base'});});
 if(el.tagName==='SELECT'){
-el.innerHTML='<option value="">Seleccionar...</option>'+arr.map(function(v){return '<option'+(v===cur?' selected':'')+'>'+x(v)+'</option>';}).join('');
+el.innerHTML='<option value="">Seleccionar...</option>'+sorted.map(function(v){return '<option'+(v===cur?' selected':'')+'>'+x(v)+'</option>';}).join('');
 } else {
-var dlId=id+'-list';
-if(id==='inp-tema') dlId='tema-list';
-if(id==='inp-contacto') dlId='contacto-list';
+var dlId=id==='inp-tema'?'tema-list':id==='inp-contacto'?'contacto-list':id+'-list';
 var dl=document.getElementById(dlId);
-if(dl) dl.innerHTML=arr.map(function(v){return '<option value="'+x(v)+'">';}).join('');
+if(dl) dl.innerHTML=sorted.map(function(v){return '<option value="'+x(v)+'">';}).join('');
 }
 }
 function guardarContactoNuevo(){
@@ -4286,8 +4397,7 @@ list.innerHTML='<div class="empty" style="padding:12px 0">Sin registros este dí
 } else {
 list.innerHTML=recs.map(function(r){return recHTML(r);}).join('');
 }
-panel.classList.add('show');
-panel.scrollIntoView({behavior:'smooth',block:'nearest'});
+if(panel){panel.style.display='block';panel.scrollIntoView({behavior:'smooth',block:'nearest'});}
 }
 var _origCancelEdit=cancelEdit;
 function cancelEdit(){
@@ -4298,16 +4408,117 @@ if(btn){btn.textContent='💾 Guardar registro';btn.classList.remove('editing');
 if(typeof _origCancelEdit==='function') _origCancelEdit();
 }
 function editRecord(id){
-var r=state.records.find(function(rec){return rec.id===id;});
-if(!r) return;
-var btnCan=document.getElementById('btn-cancelar-edit');
-if(btnCan) btnCan.style.display='block';
-setModoRegistro('manual');
-var campos=document.getElementById('campos-opcionales');
-var arrow=document.getElementById('campos-arrow');
-if(campos) campos.style.display='block';
-if(arrow) arrow.style.transform='rotate(90deg)';
 _editRecordOrig(id);
+}
+var _recExpandido=null;
+function toggleRecActions(id){
+if(_recExpandido&&_recExpandido!==id){
+var prev=document.getElementById('ra-'+_recExpandido);
+if(prev) prev.classList.remove('show');
+}
+var el=document.getElementById('ra-'+id);
+if(!el) return;
+var open=el.classList.toggle('show');
+_recExpandido=open?id:null;
+}
+function setModoRegistro(modo){
+var btnV=document.getElementById('modo-btn-voz');
+var btnM=document.getElementById('modo-btn-manual');
+var voz=document.getElementById('modo-voz-content');
+var manual=document.getElementById('modo-manual-content');
+if(modo==='voz'){
+if(btnV){btnV.style.background='var(--gm)';btnV.style.color='#fff';btnV.style.border='none';}
+if(btnM){btnM.style.background='var(--bl)';btnM.style.color='var(--tm)';btnM.style.border='1px solid var(--bd)';}
+if(voz) voz.style.display='block';
+if(manual) manual.style.display='none';
+} else {
+if(btnM){btnM.style.background='var(--gm)';btnM.style.color='#fff';btnM.style.border='none';}
+if(btnV){btnV.style.background='var(--bl)';btnV.style.color='var(--tm)';btnV.style.border='1px solid var(--bd)';}
+if(voz) voz.style.display='none';
+if(manual) manual.style.display='block';
+}
+localStorage.setItem('tp_modo_registro',modo);
+}
+function onConfidencialChange(){
+var chk=document.getElementById('inp-confidencial');
+var aviso=document.getElementById('conf-gemini-aviso');
+if(aviso) aviso.style.display=(chk&&chk.checked)?'block':'none';
+}
+function marcarEmailEnviado(id){
+var idx=state.records.findIndex(function(r){return r.id===id;});
+if(idx>-1){state.records[idx].mailSent=true;persist().catch(function(){});renderRecords();}
+}
+function marcarWAEnviado(id){
+var idx=state.records.findIndex(function(r){return r.id===id;});
+if(idx>-1){state.records[idx].waEnviado=true;persist().catch(function(){});renderRecords();}
+}
+function getFiltered(){
+var recs=[...state.records];
+var fc=document.getElementById('f-contacto')?document.getElementById('f-contacto').value:'';
+var ft=document.getElementById('f-tema')?document.getElementById('f-tema').value:'';
+var fe=document.getElementById('f-estado')?document.getElementById('f-estado').value:'';
+var fq=document.getElementById('search-input')?document.getElementById('search-input').value.toLowerCase():'';
+if(fc) recs=recs.filter(function(r){return r.contacto===fc;});
+if(ft) recs=recs.filter(function(r){return r.tema===ft;});
+if(fe==='calendar') recs=recs.filter(function(r){return r.calGuardado;});
+else if(fe==='mail_sent') recs=recs.filter(function(r){return r.mailSent;});
+else if(fe==='wa_sent') recs=recs.filter(function(r){return r.waEnviado;});
+else if(fe) recs=recs.filter(function(r){return r.estado===fe;});
+if(fq) recs=recs.filter(function(r){
+return (r.contacto&&r.contacto.toLowerCase().includes(fq))
+||(r.tema&&r.tema.toLowerCase().includes(fq))
+||(r.accion&&r.accion.toLowerCase().includes(fq))
+||(r.notas&&r.notas.toLowerCase().includes(fq));
+});
+return recs;
+}
+function calVerDiaFechaStr(dStr){
+var parts=dStr.split('-');
+var year=parseInt(parts[0]),month=parseInt(parts[1])-1,day=parseInt(parts[2]);
+var recs=state.records.filter(function(r){
+var rd=new Date(r.fecha);
+return !isNaN(rd)&&rd.getFullYear()===year&&rd.getMonth()===month&&rd.getDate()===day;
+});
+var panel=document.getElementById('cal-day-panel');
+var title=document.getElementById('cal-day-title');
+var list=document.getElementById('cal-day-records');
+var meses=['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+title.textContent=day+' de '+meses[month]+' de '+year;
+list.innerHTML=recs.length?recs.map(function(r){return recHTML(r);}).join(''):'<div class="empty" style="padding:12px 0">Sin registros este día 🐾</div>';
+panel.classList.add('show');
+panel.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+function buildPromptEmail(r,fd,firmante,firmaCtx){
+var p='Eres un asistente experto en redaccion profesional en espanol. ';
+p+='Tu tarea es transformar los datos de una gestion en un email natural, coherente y profesional. ';
+p+='El estilo debe ser formal pero cercano, claro y directo, como escrito por una persona real. ';
+p+='No copies los campos literalmente ni los listes. Integralos en un texto fluido. ';
+p+='Si falta informacion, redacta de forma generica adecuada sin inventar datos sensibles. ';
+p+='El resultado debe ser un unico bloque de texto listo para enviar, sin asunto, sin markdown. ';
+p+='Datos de la gestion: ';
+p+='Fecha: '+fd+'. ';
+if(r.contacto) p+='Destinatario: '+r.contacto+'. ';
+if(r.tema) p+='Motivo principal: '+r.tema+'. ';
+if(r.accion) p+='Accion realizada: '+r.accion+'. ';
+if(r.notas) p+='Notas (pueden tener errores de dictado, interpretalas): '+r.notas+'. ';
+p+='Instrucciones: 1. Saludo apropiado con el nombre del destinatario si existe. ';
+p+='2. Cuerpo de 2-3 parrafos fluidos que narren la situacion de forma natural. ';
+p+='3. Cierre cordial apropiado al tono. ';
+p+='4. Firma: '+firmante+(firmaCtx?', '+firmaCtx:'')+'. Genera el email ahora:';
+return p;
+}
+function buildPromptWhatsApp(r,fd,firmante){
+var p='Eres un asistente experto en comunicacion profesional. ';
+p+='Redacta un mensaje de WhatsApp corto, natural e informal pero profesional. ';
+p+='Maximo 4-5 lineas. Sin listas. Sin datos en bruto. ';
+p+='Como lo enviaria una persona real a un companero o director. ';
+p+='Empieza con Hola, sin nombre especifico. ';
+p+='Narra la situacion en 2-3 frases fluidas interpretando las notas aunque tengan errores. ';
+p+='Termina con una despedida breve y firma con el nombre '+firmante+'. ';
+p+='Datos: '+(r.tema||r.accion||'gestion')+(r.contacto?' con '+r.contacto:'')+' el '+fd+'.';
+if(r.notas) p+=' Notas a interpretar: '+r.notas+'.';
+p+=' Genera solo el mensaje:';
+return p;
 }
 </script>
 </body>
