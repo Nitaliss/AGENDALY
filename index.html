@@ -577,6 +577,7 @@ body[data-theme="noche"] .free-bar{background:#2a1f00;border-color:#6b5000;color
 .cal-day-num{font-size:12px;color:var(--tm);font-family:'Lato',sans-serif;}
 .cal-dots{display:flex;flex-wrap:wrap;gap:2px;margin-top:2px;}
 .cal-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
+.cal-day-note{font-size:7px;color:var(--td);line-height:1.2;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;margin-top:1px;}
 .cal-dot.pendiente{background:#856404;}
 .cal-dot.en-curso{background:#1a73e8;}
 .cal-dot.resuelto{background:#155724;}
@@ -1236,9 +1237,6 @@ body[data-mode="escolar"][data-theme="verde"]{
             </div>
             <input type="datetime-local" id="inp-recdate" style="display:none;margin-top:8px;max-width:220px;"/>
           </div>
-        </div>
-
-        
 
         </div><!-- /campos-opcionales -->
 
@@ -2528,19 +2526,7 @@ try{
 document.getElementById('img-status').textContent='';
 document.getElementById('img-uploading').style.display='flex';
 const resp=await fetch(state.sheetsUrl,{method:'POST',body:JSON.stringify({action:'upload_image',imageData:currentImageBase64,mimeType:currentImageMime,fileName:'tapunto_'+Date.now()+'_'+(currentImageName||'foto.jpg')})});
-const data=await resp.json();
-document.getElementById('img-uploading').style.display='none';
-if(data.ok&&data.url){
-document.getElementById('img-status').innerHTML=`✓ Subida · <a class="img-drive-link" href="${data.url}" target="_blank">🔗 Ver en Drive</a>`;
-return data.url;
-}
-return null;
-}catch(e){
-document.getElementById('img-uploading').style.display='none';
-document.getElementById('img-status').textContent='⚠ No se pudo subir a Drive.';
-return null;
-}
-}
+
 function setChip(btn,val){
 document.querySelectorAll('.chip').forEach(c=>c.classList.remove('on')); btn.classList.add('on');
 const di=document.getElementById('inp-recdate');
@@ -3429,7 +3415,16 @@ if(state.sheetsUrl){
 document.getElementById('sheets-url').value=state.sheetsUrl;
 document.getElementById('sheets-status').innerHTML='<div class="connected-tag">✓ Google Sheets conectado</div>';
 startAutoSync();
+var _tabBtns=document.querySelectorAll('.tab-btn');
+var _tabReg=null;
+_tabBtns.forEach(function(b){if(b.getAttribute('onclick')&&b.getAttribute('onclick').includes('registros'))_tabReg=b;});
+switchTab('registros',_tabReg);
+
 }
+var tabBtns=document.querySelectorAll('.tab-btn');
+var tabReg=null;
+tabBtns.forEach(function(b){if(b.getAttribute('onclick')&&b.getAttribute('onclick').includes('registros'))tabReg=b;});
+switchTab('registros',tabReg);
 document.getElementById('script-box-content').value=APPS_SCRIPT_CODE;
 loadApiKeyStatus();
 state.modo='trabajo';
@@ -3654,6 +3649,32 @@ showWarn('Error '+resp.status+' al conectar con Gemini.');
 document.getElementById('email-asunto').value=(r.tema||r.accion||'Seguimiento');
 document.getElementById('email-cuerpo').value='';
 return;
+}
+const data=await resp.json();
+var texto='';
+try{texto=data.candidates[0].content.parts[0].text||'';}catch(e){texto='';}
+if(!texto){
+showWarn('Gemini no devolvio respuesta.');
+document.getElementById('email-asunto').value=(r.tema||r.accion||'Seguimiento');
+document.getElementById('email-cuerpo').value='';
+return;
+}
+var asunto=(r.tema||r.accion||'Seguimiento')+(r.contacto?' - '+r.contacto:'');
+var cuerpo=texto;
+var lineas=texto.split('\n');
+if(lineas[0]&&/^asunto:/i.test(lineas[0])){
+asunto=lineas[0].replace(/^asunto:\s*/i,'').trim();
+cuerpo=lineas.slice(1).join('\n').trim()||texto;
+}
+document.getElementById('email-asunto').value=asunto;
+document.getElementById('email-cuerpo').value=cuerpo;
+document.getElementById('email-modal-title').textContent='✉ Email generado — Revisa antes de enviar';
+showWarn('✓ Email generado correctamente.');
+}catch(e){
+showWarn('Error: '+(e.message||'Comprueba tu clave API Gemini.'));
+document.getElementById('email-asunto').value=(r.tema||r.accion||'Seguimiento');
+document.getElementById('email-cuerpo').value='';
+}
 }
 const data=await resp.json();
 var texto='';
@@ -3951,6 +3972,45 @@ if(semWrapEl) semWrapEl.style.display='block';
 renderCalendarioSemanal();
 return;
 }
+if(calGridEl) calGridEl.classList.remove('hidden');
+if(semWrapEl) semWrapEl.style.display='none';
+var meses=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+document.getElementById('cal-titulo').textContent=meses[calMonth]+' '+calYear;
+var primerDia=new Date(calYear,calMonth,1).getDay();
+var diasMes=new Date(calYear,calMonth+1,0).getDate();
+var offset=primerDia===0?6:primerDia-1;
+var hoy=new Date();
+var esHoy=function(d){return d===hoy.getDate()&&calMonth===hoy.getMonth()&&calYear===hoy.getFullYear();};
+var porDia={};
+state.records.forEach(function(r){
+  var d=new Date(r.fecha);
+  if(isNaN(d)||d.getFullYear()!==calYear||d.getMonth()!==calMonth) return;
+  var dia=d.getDate();
+  if(!porDia[dia]) porDia[dia]=[];
+  porDia[dia].push(r);
+});
+var body='';
+for(var i=0;i<offset;i++) body+='<div class="cal-day empty"></div>';
+for(var d=1;d<=diasMes;d++){
+  var recs=porDia[d]||[];
+  var dots=recs.slice(0,3).map(function(r){
+    var cls=r.estado==='resuelto'?'resuelto':r.estado==='en curso'?'en-curso':r.estado==='pendiente'?'pendiente':'sin-estado';
+    return '<div class="cal-dot '+cls+'"></div>';
+  }).join('');
+  var asuntos=recs.slice(0,2).map(function(r){
+    return '<div class="cal-day-note">'+(r.tema||r.accion||'—')+'</div>';
+  }).join('');
+  body+='<div class="cal-day'+(esHoy(d)?' today':'')+'" onclick="calVerDia('+d+')">'
+    +'<div class="cal-day-num">'+d+'</div>'
+    +'<div class="cal-dots">'+dots+'</div>'
+    +asuntos+'</div>';
+}
+var total=offset+diasMes;
+var resto=total%7===0?0:7-(total%7);
+for(var i=0;i<resto;i++) body+='<div class="cal-day empty"></div>';
+document.getElementById('cal-body').innerHTML=body;
+var panel=document.getElementById('cal-day-panel');
+if(panel) panel.style.display='none';
 if(calGridEl) calGridEl.classList.remove('hidden');
 if(semWrapEl) semWrapEl.style.display='none';
 var meses=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
