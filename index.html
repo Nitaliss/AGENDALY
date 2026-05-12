@@ -14,6 +14,7 @@
 <meta name="description" content="Tu agenda personal de productividad. Apunta. Organiza. Comunica.">
 <link rel="manifest" href="manifest.json">
 <title>Tapunto — Tu agenda inteligente</title>
+<!-- TAPUNTO BUILD 2026-05-17-v1 -->
 <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
 <!--
   ============================================================
@@ -1049,7 +1050,7 @@ body[data-mode="escolar"][data-theme="verde"]{
     <div class="page">
 
       <!-- ══ NUEVO ══ -->
-      <div id="sec-nuevo" class="section">
+      <div id="sec-nuevo" class="section" style="display:none;">
         <div class="trial-banner" id="trial-banner"></div>
         <div class="renewal-banner" id="renewal-banner"></div>
         <div class="edit-banner" id="edit-banner">
@@ -1252,7 +1253,7 @@ body[data-mode="escolar"][data-theme="verde"]{
       </div><!-- /sec-nuevo -->
 
       <!-- ══ REGISTROS ══ -->
-      <div id="sec-registros" class="section">
+      <div id="sec-registros" class="section" style="display:none;">
         <div class="search-bar" id="search-bar" style="display:none">
           <span style="color:var(--tl);font-size:16px;">🔍</span>
           <input type="text" id="search-input" placeholder="Buscar por contacto, asunto, notas..." oninput="buscarRegistros(this.value)"/>
@@ -1297,7 +1298,7 @@ body[data-mode="escolar"][data-theme="verde"]{
       </div><!-- /sec-registros -->
 
       <!-- ══ ALERTAS ══ -->
-      <div id="sec-recordatorios" class="section">
+      <div id="sec-recordatorios" class="section" style="display:none;">
         <div class="trial-banner" id="trial-banner-alt" style="display:none"></div>
         <div id="alertas-inteligentes" style="margin-bottom:12px;display:none;">
           <div style="font-family:'Caveat',cursive;font-size:16px;color:#e65100;margin-bottom:8px;font-weight:700;">⚡ Llevan tiempo sin resolverse</div>
@@ -1307,7 +1308,7 @@ body[data-mode="escolar"][data-theme="verde"]{
       </div><!-- /sec-recordatorios -->
 
       <!-- ══ CALENDARIO ══ -->
-      <div id="sec-calendario" class="section">
+      <div id="sec-calendario" class="section" style="display:none;">
         <div class="cal-nav">
           <button class="cal-nav-btn" onclick="calCambiarMes(-1)">◀</button>
           <div style="display:flex;flex-direction:column;align-items:center;gap:4px;">
@@ -1353,7 +1354,7 @@ body[data-mode="escolar"][data-theme="verde"]{
       </div><!-- /sec-calendario -->
 
       <!-- ══ CONFIG ══ -->
-      <div id="sec-config" class="section">
+      <div id="sec-config" class="section" style="display:none;">
 
         <!-- BÁSICO: siempre visible -->
         <div class="cfg-basic" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
@@ -1638,7 +1639,8 @@ body[data-mode="escolar"][data-theme="verde"]{
 <div class="gemini-badge" id="gemini-badge">🤖 Gemini activo</div>
 <div class="wa-badge" id="wa-badge">💬 Compartiendo por WhatsApp</div>
 
-<script>/* TAPUNTO v1 © 2026 Alicia Prats. Licencia propietaria. tapunto.app */
+<script>
+console.log("TAPUNTO BUILD 2026-05-17-v1 CARGADO");/* TAPUNTO v1 © 2026 Alicia Prats. Licencia propietaria. tapunto.app */
 /*
 TAPUNTO v1 © 2026 Alicia Prats — Todos los derechos reservados
 Licencia propietaria. Prohibida su copia o redistribución.
@@ -3451,10 +3453,12 @@ applyMode('trabajo');
 initForm();
 checkTodayReminders();
 initFAB();
+});
+setTimeout(function(){
 var _tb=document.querySelectorAll('.tab-btn'),_tr=null;
 _tb.forEach(function(b){if(b.getAttribute('onclick')&&b.getAttribute('onclick').includes('registros'))_tr=b;});
 switchTab('registros',_tr);
-});}
+},100);}
 function getEscolarData(){
 return {
 asignatura: (document.getElementById('inp-asignatura')||{}).value||'',
@@ -3631,13 +3635,13 @@ async function emailIA(id){
 const r=state.records.find(rec=>rec.id===id);
 if(!r) return;
 const key=getApiKey('gemini');
-if(!key){showWarn('Configura tu clave Gemini en Config → IA.');return;}
-if(r.confidencial){showWarn('Registro confidencial — no se puede usar IA.');return;}
+if(!key){showWarn('Configura tu clave Gemini en Config.');return;}
+if(r.confidencial){showWarn('Registro confidencial: no se puede usar IA.');return;}
 _emailRecId=id;
 const modal=document.getElementById('email-modal');
-if(!modal){showWarn('Error: modal de email no encontrado.');return;}
-document.getElementById('email-modal-title').textContent='🤖 Generando con Gemini...';
-document.getElementById('email-asunto').value='⏳ Generando...';
+if(!modal){abrirEmailModal(id);return;}
+document.getElementById('email-modal-title').textContent='Generando con Gemini...';
+document.getElementById('email-asunto').value='Generando...';
 document.getElementById('email-cuerpo').value='Por favor espera...';
 modal.classList.add('show');
 const d=new Date(r.fecha);
@@ -3647,42 +3651,42 @@ const firmante=firma.nombre||currentUser.split('@')[0]||'';
 const firmaCtx=[firma.cargo,firma.empresa,firma.telefono].filter(Boolean).join(' · ');
 const prompt=buildPromptEmail(r,fd,firmante,firmaCtx);
 try{
-const resp=await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key='+key,{
+const resp=await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key='+key,{
 method:'POST',
 headers:{'Content-Type':'application/json'},
 body:JSON.stringify({contents:[{parts:[{text:prompt}]}]})
 });
+const raw=await resp.text();
 if(!resp.ok){
-showWarn('Error '+resp.status+' al conectar con Gemini.');
-document.getElementById('email-asunto').value=(r.tema||r.accion||'Seguimiento');
-document.getElementById('email-cuerpo').value='';
+document.getElementById('email-asunto').value=r.tema||r.accion||'Gestión';
+document.getElementById('email-cuerpo').value='Error '+resp.status+'. Respuesta: '+raw.slice(0,200);
 return;
 }
-const data=await resp.json();
+var data;
+try{data=JSON.parse(raw);}catch(e){
+document.getElementById('email-asunto').value=r.tema||r.accion||'Gestión';
+document.getElementById('email-cuerpo').value='Error al parsear respuesta de Gemini.';
+return;
+}
 var texto='';
-try{texto=((data.candidates||[])[0]||{}).content&&data.candidates[0].content.parts[0].text||'';}catch(e){texto='';}
+try{texto=data.candidates[0].content.parts[0].text||'';}catch(e){}
 if(!texto){
-showWarn('Gemini no devolvió respuesta.');
-document.getElementById('email-asunto').value=(r.tema||r.accion||'Seguimiento');
-document.getElementById('email-cuerpo').value='';
+document.getElementById('email-asunto').value=r.tema||r.accion||'Gestión';
+document.getElementById('email-cuerpo').value='Gemini no devolvió texto. Respuesta: '+JSON.stringify(data).slice(0,300);
 return;
 }
-var asunto=(r.tema||r.accion||'Seguimiento')+(r.contacto?' - '+r.contacto:'');
+var asunto=(r.tema||r.accion||'Gestión')+(r.contacto?' - '+r.contacto:'');
 var cuerpo=texto;
-var asuntoMatch=texto.match(/^(?:asunto|subject)[:\s]+(.+)$/im);
-if(asuntoMatch&&texto.replace(asuntoMatch[0],'').trim().length>20){
-asunto=asuntoMatch[1].trim();
-cuerpo=texto.replace(asuntoMatch[0],'').trim();
+if(texto.split('\n')[0]&&/^asunto:/i.test(texto.split('\n')[0])){
+asunto=texto.split('\n')[0].replace(/^asunto:\s*/i,'').trim();
+cuerpo=texto.split('\n').slice(1).join('\n').trim()||texto;
 }
-if(r.imagenUrl&&!r.imagenUrl.startsWith('data:')) cuerpo+='\n\n📎 Imagen: '+r.imagenUrl;
 document.getElementById('email-asunto').value=asunto;
 document.getElementById('email-cuerpo').value=cuerpo;
-document.getElementById('email-modal-title').textContent='✉ Enviar email (generado con Gemini)';
-showWarn('✓ Email generado. Revísalo antes de enviar.');
+document.getElementById('email-modal-title').textContent='Email generado — revisa antes de enviar';
 }catch(e){
-showWarn('Error al conectar con Gemini: '+(e.message||''));
-document.getElementById('email-asunto').value=(r.tema||r.accion||'Seguimiento');
-document.getElementById('email-cuerpo').value='';
+document.getElementById('email-asunto').value=r.tema||r.accion||'Gestión';
+document.getElementById('email-cuerpo').value='Error: '+e.message;
 }
 }
 let _menuRecId=null;
