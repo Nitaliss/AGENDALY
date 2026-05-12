@@ -577,6 +577,8 @@ body[data-theme="noche"] .free-bar{background:#2a1f00;border-color:#6b5000;color
 .cal-day-num{font-size:12px;color:var(--tm);font-family:'Lato',sans-serif;}
 .cal-dots{display:flex;flex-wrap:wrap;gap:2px;margin-top:2px;}
 .cal-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
+.chip-fecha{padding:4px 10px;border:1px solid var(--bd);border-radius:12px;font-size:12px;background:var(--bl);color:var(--td);cursor:pointer;white-space:nowrap;}
+.chip-fecha.active{background:var(--gd);color:#fff;border-color:var(--gd);}
 .cal-day-note{font-size:6px;color:var(--td);line-height:1.2;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;margin-top:1px;cursor:pointer;}
 .cal-dot.pendiente{background:#856404;}
 .cal-dot.en-curso{background:#1a73e8;}
@@ -1265,7 +1267,7 @@ body[data-mode="escolar"][data-theme="verde"]{
                 </button>
                 <span id="dict-notas-status" style="font-size:10px;color:var(--tl);"></span>
               </div>
-              <textarea id="inp-notas" placeholder="Notas..." style="min-height:60px;"></textarea>
+              <textarea id="inp-notas" placeholder="Notas..." style="min-height:120px;width:100%;"></textarea>
             </div>
           </div></div>
         </div>
@@ -1318,7 +1320,14 @@ body[data-mode="escolar"][data-theme="verde"]{
             📅 En Calendar
           </button>
           <button class="clr-btn" onclick="clearFilters()">✕</button>
-          <button class="exp-btn" onclick="exportCSV()">⬇ CSV</button>
+          <button id="filtro-chip-hoy" class="chip-fecha" onclick="setFiltroFecha('hoy',this)">Hoy</button>
+          <button id="filtro-chip-semana" class="chip-fecha" onclick="setFiltroFecha('semana',this)">Semana</button>
+          <button id="filtro-chip-mes" class="chip-fecha" onclick="setFiltroFecha('mes',this)">Mes</button>
+          <input type="date" id="fecha-desde" title="Desde" onchange="setFiltroFechaRango()" oninput="setFiltroFechaRango()" style="border:1px solid var(--bd);border-radius:6px;padding:3px 6px;font-size:12px;color:var(--td);background:var(--bl);">
+          <input type="date" id="fecha-hasta" title="Hasta" onchange="setFiltroFechaRango()" oninput="setFiltroFechaRango()" style="border:1px solid var(--bd);border-radius:6px;padding:3px 6px;font-size:12px;color:var(--td);background:var(--bl);">
+          <button onclick="setFiltroFechaRango()" style="padding:3px 10px;border:1px solid var(--gd);border-radius:6px;font-size:12px;background:var(--gd);color:#fff;cursor:pointer;font-weight:700;">🔍</button>
+          <button id="chip-fecha-clr" onclick="clearFiltroFecha()" style="display:none;padding:3px 8px;border:1px solid #f5c6c6;border-radius:6px;font-size:12px;background:#fff0f0;color:#c53030;cursor:pointer;">✕ Fecha</button>
+          <button class="exp-btn" onclick="exportCSV()" style="display:none;">⬇ CSV</button>
           <button class="exp-btn" onclick="abrirLibreta()" style="background:var(--bc);border-color:var(--bc);">📖 Libreta</button>
         </div>
         <!-- Vista Calendar: solo asunto y fecha -->
@@ -1755,7 +1764,7 @@ fmtSheet.setColumnWidth(5,150); fmtSheet.setColumnWidth(6,150); fmtSheet.setColu
 fmtSheet.setColumnWidth(8,300);
 return ContentService.createTextOutput(JSON.stringify({ok:true})).setMimeType(ContentService.MimeType.JSON);
 } else if(data.action==='backup'){
-var bsheet=getOrCreateSheet(ss,'Tapunto_Backup_'+new Date().toISOString().slice(0,10));
+var bsheet=getOrCreateSheet(ss,'Tapunto_Backup_'+function(){var d=new Date();var onejan=new Date(d.getFullYear(),0,1);var w=Math.ceil((((d-onejan)/86400000)+onejan.getDay()+1)/7);return d.getFullYear()+'-S'+(w<10?'0':'')+w;}());
 var bdata=data.records||[];
 if(bdata.length>0){
 bsheet.appendRow(['ID','Fecha','Contacto','Asunto','Accion','Comunicado','Estado','Notas','Recordatorio','Creado','Imagen']);
@@ -1822,6 +1831,7 @@ let reminderDays = null;
 let pendingDelId = null;
 let autoSyncTimer = null;
 let isPremium = false;
+var _filtroFechaDesde=null,_filtroFechaHasta=null;
 let isRecording = false;
 let recogn = null;
 let dictadoMode = null;
@@ -2820,9 +2830,66 @@ if(_calFilterActive) toggleFiltroCalendar(); ['f-contacto','f-tema','f-estado'].
 function getFiltered(){
 const q='';
 const fc=document.getElementById('f-contacto').value,ft=document.getElementById('f-tema').value,fe=document.getElementById('f-estado').value;
+
 return state.records
-.filter(r=>{ if(fc&&r.contacto!==fc)return false; if(ft&&r.tema!==ft)return false; if(fe&&r.estado!==fe)return false; if(q&&!JSON.stringify(r).toLowerCase().includes(q))return false; return true; })
-.sort((a,b)=> sortDesc ? new Date(b.fecha)-new Date(a.fecha) : new Date(a.fecha)-new Date(b.fecha));
+.filter(r=>{
+  if(fc&&r.contacto!==fc)return false;
+  if(ft&&r.tema!==ft)return false;
+  if(fe&&r.estado!==fe)return false;
+  if(q&&!JSON.stringify(r).toLowerCase().includes(q))return false;
+  if(_filtroFechaDesde||_filtroFechaHasta){
+    var rd=new Date(r.fecha);
+    var rdStr=rd.getFullYear()+'-'+(rd.getMonth()<9?'0':'')+(rd.getMonth()+1)+'-'+(rd.getDate()<10?'0':'')+rd.getDate();
+    if(_filtroFechaDesde&&rdStr<_filtroFechaDesde)return false;
+    if(_filtroFechaHasta&&rdStr>_filtroFechaHasta)return false;
+  }
+  return true;
+})
+.sort((a,b)=>new Date(b.fecha)-new Date(a.fecha));
+}
+function setFiltroFecha(tipo,btn){
+var hoy=new Date();
+var d=new Date();
+document.querySelectorAll('.chip-fecha').forEach(function(b){b.classList.remove('active');});
+if(btn) btn.classList.add('active');
+document.getElementById('fecha-desde').value='';
+document.getElementById('fecha-hasta').value='';
+if(tipo==='hoy'){
+  _filtroFechaDesde=hoy.toISOString().slice(0,10);
+  _filtroFechaHasta=hoy.toISOString().slice(0,10);
+}else if(tipo==='semana'){
+  var day=hoy.getDay()||7;
+  var mon=new Date(hoy);mon.setDate(hoy.getDate()-(day-1));
+  var sun=new Date(mon);sun.setDate(mon.getDate()+6);
+  _filtroFechaDesde=mon.toISOString().slice(0,10);
+  _filtroFechaHasta=sun.toISOString().slice(0,10);
+}else if(tipo==='mes'){
+  _filtroFechaDesde=hoy.getFullYear()+'-'+(hoy.getMonth()<9?'0':'')+(hoy.getMonth()+1)+'-01';
+  _filtroFechaHasta=hoy.toISOString().slice(0,10);
+}
+var clrBtn=document.getElementById('chip-fecha-clr');
+if(clrBtn) clrBtn.style.display='inline-block';
+renderRecords();
+}
+function setFiltroFechaRango(){
+var desde=document.getElementById('fecha-desde').value;
+var hasta=document.getElementById('fecha-hasta').value;
+if(!desde&&!hasta) return;
+_filtroFechaDesde=desde||null;
+_filtroFechaHasta=hasta||null;
+document.querySelectorAll('.chip-fecha').forEach(function(b){b.classList.remove('active');});
+var clrBtn=document.getElementById('chip-fecha-clr');
+if(clrBtn) clrBtn.style.display=(_filtroFechaDesde||_filtroFechaHasta)?'inline-block':'none';
+renderRecords();
+}
+function clearFiltroFecha(){
+_filtroFechaDesde=null;_filtroFechaHasta=null;
+document.querySelectorAll('.chip-fecha').forEach(function(b){b.classList.remove('active');});
+var fd=document.getElementById('fecha-desde');if(fd) fd.value='';
+var fh=document.getElementById('fecha-hasta');if(fh) fh.value='';
+var clrBtn=document.getElementById('chip-fecha-clr');
+if(clrBtn) clrBtn.style.display='none';
+renderRecords();
 }
 function getWeekKey(fecha){
 const d=new Date(fecha);
@@ -2961,6 +3028,10 @@ const partes=[];
 if(fc) partes.push('Contacto: '+fc);
 if(ft) partes.push('Tema: '+ft);
 if(fe) partes.push('Estado: '+fe);
+if(_filtroFechaDesde||_filtroFechaHasta){
+  var fstr=(_filtroFechaDesde?'Desde '+_filtroFechaDesde:'')+(_filtroFechaHasta?' Hasta '+_filtroFechaHasta:'');
+  partes.push(fstr.trim());
+}
 const filtroTitulo=partes.length?partes.join(' · '):'Todos los registros';
 function badge(e){
 const col={pendiente:'#856404',resuelto:'#155724','en curso':'#0c5460'};
@@ -3021,13 +3092,15 @@ return '<!DOCTYPE html><html><head><meta charset="UTF-8">'+
 '</head><body>'+cab+cuerpo+'</body></html>';
 }
 function descargarDoc(regs, nombre){
-const html=generarWord(regs);
-const blob=new Blob(['﻿'+html],{type:'application/msword;charset=utf-8'});
-const a=document.createElement('a');
-a.href=URL.createObjectURL(blob);
-a.download=nombre;
-document.body.appendChild(a); a.click();
-setTimeout(()=>{document.body.removeChild(a);URL.revokeObjectURL(a.href);},500);
+var contenido=generarWord(regs);
+var ventana=window.open('','_blank','width=900,height=700');
+if(!ventana){showWarn('Activa las ventanas emergentes para generar el PDF.');return;}
+ventana.document.write(contenido);
+ventana.document.close();
+ventana.focus();
+setTimeout(function(){
+  ventana.print();
+},500);
 }
 let modal=document.getElementById('libreta-modal');
 if(modal) modal.remove();
@@ -3911,6 +3984,7 @@ const recId=_emailRecId;
 window.open('https://mail.google.com/mail/?view=cm&su='+encodeURIComponent(s)+'&body='+encodeURIComponent(c),'_blank');
 cerrarEmailModal();
 if(recId) marcarEmailEnviado(recId);
+setTimeout(function(){showToast('toast-ok');},200);
 }
 function abrirEnCorreo(){
 const s=document.getElementById('email-asunto').value;
@@ -3919,6 +3993,7 @@ const recId=_emailRecId;
 window.open('mailto:?subject='+encodeURIComponent(s)+'&body='+encodeURIComponent(c),'_blank');
 cerrarEmailModal();
 if(recId) marcarEmailEnviado(recId);
+setTimeout(function(){showToast('toast-ok');},200);
 }
 function setDictadoStatus(msg){
 const el=document.getElementById('dictado-status');
