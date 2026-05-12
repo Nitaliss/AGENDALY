@@ -2826,7 +2826,7 @@ if(btn) btn.textContent = sortDesc ? '↓ Más reciente' : '↑ Más antiguo';
 renderRecords();
 }
 function clearFilters(){
-if(_calFilterActive) toggleFiltroCalendar(); ['f-contacto','f-tema','f-estado'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';}); limpiarBusqueda(); renderContactoStats(''); }
+if(_calFilterActive) toggleFiltroCalendar(); ['f-contacto','f-tema','f-estado'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';}); limpiarBusqueda(); renderContactoStats(''); clearFiltroFecha(); renderRecords(); }
 function getFiltered(){
 const q='';
 const fc=document.getElementById('f-contacto').value,ft=document.getElementById('f-tema').value,fe=document.getElementById('f-estado').value;
@@ -2847,42 +2847,37 @@ return state.records
 })
 .sort((a,b)=>new Date(b.fecha)-new Date(a.fecha));
 }
+function _localDateStr(d){
+  return d.getFullYear()+'-'+(d.getMonth()<9?'0':'')+(d.getMonth()+1)+'-'+(d.getDate()<10?'0':'')+d.getDate();
+}
 function setFiltroFecha(tipo,btn){
 var hoy=new Date();
-var d=new Date();
 document.querySelectorAll('.chip-fecha').forEach(function(b){b.classList.remove('active');});
 if(btn) btn.classList.add('active');
 document.getElementById('fecha-desde').value='';
 document.getElementById('fecha-hasta').value='';
 if(tipo==='hoy'){
-  _filtroFechaDesde=hoy.toISOString().slice(0,10);
-  _filtroFechaHasta=hoy.toISOString().slice(0,10);
+  _filtroFechaDesde=_localDateStr(hoy);
+  _filtroFechaHasta=_localDateStr(hoy);
 }else if(tipo==='semana'){
   var day=hoy.getDay()||7;
   var mon=new Date(hoy);mon.setDate(hoy.getDate()-(day-1));
   var sun=new Date(mon);sun.setDate(mon.getDate()+6);
-  _filtroFechaDesde=mon.toISOString().slice(0,10);
-  _filtroFechaHasta=sun.toISOString().slice(0,10);
+  _filtroFechaDesde=_localDateStr(mon);
+  _filtroFechaHasta=_localDateStr(sun);
 }else if(tipo==='mes'){
-  _filtroFechaDesde=hoy.getFullYear()+'-'+(hoy.getMonth()<9?'0':'')+(hoy.getMonth()+1)+'-01';
-  _filtroFechaHasta=hoy.toISOString().slice(0,10);
+  var primerDia=new Date(hoy.getFullYear(),hoy.getMonth(),1);
+  _filtroFechaDesde=_localDateStr(primerDia);
+  _filtroFechaHasta=_localDateStr(hoy);
 }
 var clrBtn=document.getElementById('chip-fecha-clr');
 if(clrBtn) clrBtn.style.display='inline-block';
 renderRecords();
 }
-function normalizarFecha(val){
-if(!val) return null;
-// Si viene en formato dd/mm/yyyy convertir a yyyy-mm-dd
-if(val.includes('/')){
-  var p=val.split('/');
-  if(p.length===3) return p[2]+'-'+p[1].padStart(2,'0')+'-'+p[0].padStart(2,'0');
-}
-return val;
-}
 function setFiltroFechaRango(){
-var desde=normalizarFecha(document.getElementById('fecha-desde').value);
-var hasta=normalizarFecha(document.getElementById('fecha-hasta').value);
+var _normF=function(v){if(!v)return null;if(v.includes('/')){var p=v.split('/');if(p.length===3)return p[2]+'-'+p[1].padStart(2,'0')+'-'+p[0].padStart(2,'0');}return v;};
+var desde=_normF(document.getElementById('fecha-desde').value);
+var hasta=_normF(document.getElementById('fecha-hasta').value);
 if(!desde&&!hasta) return;
 _filtroFechaDesde=desde||null;
 _filtroFechaHasta=hasta||null;
