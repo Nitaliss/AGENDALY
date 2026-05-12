@@ -316,7 +316,7 @@ body{font-family:'Lato',sans-serif;background:var(--body-bg);min-height:100vh;
 }
 
 /* ── PAGE ── */
-.page{background:var(--bp);min-height:100px;padding:18px 18px 32px;
+.page{background:var(--bp);min-height:100px;padding:8px 18px 32px;
   background-image:repeating-linear-gradient(transparent,transparent 27px,rgba(200,184,154,.22) 28px);
   background-size:100% 28px;transition:background .3s;}
 .section{display:none;}.section.active{display:block;}
@@ -1125,7 +1125,43 @@ body[data-mode="escolar"][data-theme="verde"]{
               <div class="lock-label">Dictado inteligente</div>
               <div class="lock-sub">Disponible en Premium ⭐</div>
             </div>
+          
+        <div class="fb">
+          <div class="field">
+            <label>📷 Imagen / Foto <button class="tip-btn" onclick="showTip('tip-imagen')">ⓘ</button></label>
+            <div class="premium-lock-wrap">
+              <div class="img-upload-area" id="img-upload-area" onclick="document.getElementById('inp-imagen').click()">
+                <div style="font-size:24px;">📷</div>
+                <div class="img-upload-label">Toca para adjuntar imagen o foto</div>
+                <img class="img-preview" id="img-preview" src="" alt="preview"/>
+                <button class="img-remove-btn" id="img-remove-btn" onclick="removeImage(event)">✕</button>
+              </div>
+              <input type="file" id="inp-imagen" accept="image/*" capture="environment" style="display:none" onchange="onImageSelected(event)"/>
+              <div class="img-status" id="img-status"></div>
+              <div class="img-uploading" id="img-uploading" style="display:none;">
+                <div class="spin"></div><span>⏳ Subiendo imagen...</span>
+              </div>
+              <div class="lock-overlay" id="lock-imagen" onclick="showUpgrade()" style="display:none">
+                <div class="lock-icon">🔒</div>
+                <div class="lock-label">Imágenes → Google Drive</div>
+                <div class="lock-sub">Disponible en Premium ⭐</div>
+              </div>
+            </div>
           </div>
+        </div>
+        <div class="fb">
+          <div class="field">
+            <label>🔔 Recordatorio <button class="tip-btn" onclick="showTip('tip-recordatorio')">ⓘ</button></label>
+            <div class="chips">
+              <button class="chip" onclick="setChip(this,'3')">3 días</button>
+              <button class="chip" onclick="setChip(this,'10')">10 días</button>
+              <button class="chip" onclick="setChip(this,'15')">15 días</button>
+              <button class="chip" onclick="setChip(this,'30')">30 días</button>
+              <button class="chip" onclick="setChip(this,'manual')">📅 Fecha y hora</button>
+            </div>
+            <input type="datetime-local" id="inp-recdate" style="display:none;margin-top:8px;max-width:220px;"/>
+          </div>
+        </div></div>
         </div>
 
         <!-- MODO MANUAL -->
@@ -1143,7 +1179,43 @@ body[data-mode="escolar"][data-theme="verde"]{
                 <button class="add-btn" onclick="addTema()" title="Nuevo asunto">+</button>
               </div>
             </div>
+          
+        <div class="fb">
+          <div class="field">
+            <label>📷 Imagen / Foto <button class="tip-btn" onclick="showTip('tip-imagen')">ⓘ</button></label>
+            <div class="premium-lock-wrap">
+              <div class="img-upload-area" id="img-upload-area" onclick="document.getElementById('inp-imagen').click()">
+                <div style="font-size:24px;">📷</div>
+                <div class="img-upload-label">Toca para adjuntar imagen o foto</div>
+                <img class="img-preview" id="img-preview" src="" alt="preview"/>
+                <button class="img-remove-btn" id="img-remove-btn" onclick="removeImage(event)">✕</button>
+              </div>
+              <input type="file" id="inp-imagen" accept="image/*" capture="environment" style="display:none" onchange="onImageSelected(event)"/>
+              <div class="img-status" id="img-status"></div>
+              <div class="img-uploading" id="img-uploading" style="display:none;">
+                <div class="spin"></div><span>⏳ Subiendo imagen...</span>
+              </div>
+              <div class="lock-overlay" id="lock-imagen" onclick="showUpgrade()" style="display:none">
+                <div class="lock-icon">🔒</div>
+                <div class="lock-label">Imágenes → Google Drive</div>
+                <div class="lock-sub">Disponible en Premium ⭐</div>
+              </div>
+            </div>
           </div>
+        </div>
+        <div class="fb">
+          <div class="field">
+            <label>🔔 Recordatorio <button class="tip-btn" onclick="showTip('tip-recordatorio')">ⓘ</button></label>
+            <div class="chips">
+              <button class="chip" onclick="setChip(this,'3')">3 días</button>
+              <button class="chip" onclick="setChip(this,'10')">10 días</button>
+              <button class="chip" onclick="setChip(this,'15')">15 días</button>
+              <button class="chip" onclick="setChip(this,'30')">30 días</button>
+              <button class="chip" onclick="setChip(this,'manual')">📅 Fecha y hora</button>
+            </div>
+            <input type="datetime-local" id="inp-recdate" style="display:none;margin-top:8px;max-width:220px;"/>
+          </div>
+        </div></div>
           <!-- Contacto -->
           <div class="fb">
             <div class="field">
@@ -1199,45 +1271,9 @@ body[data-mode="escolar"][data-theme="verde"]{
         </div>
 
 <!-- 4. IMAGEN — común a ambos modos -->
-        <div class="fb">
-          <div class="field">
-            <label>📷 Imagen / Foto <button class="tip-btn" onclick="showTip('tip-imagen')">ⓘ</button></label>
-            <div class="premium-lock-wrap">
-              <div class="img-upload-area" id="img-upload-area" onclick="document.getElementById('inp-imagen').click()">
-                <div style="font-size:24px;">📷</div>
-                <div class="img-upload-label">Toca para adjuntar imagen o foto</div>
-                <img class="img-preview" id="img-preview" src="" alt="preview"/>
-                <button class="img-remove-btn" id="img-remove-btn" onclick="removeImage(event)">✕</button>
-              </div>
-              <input type="file" id="inp-imagen" accept="image/*" capture="environment" style="display:none" onchange="onImageSelected(event)"/>
-              <div class="img-status" id="img-status"></div>
-              <div class="img-uploading" id="img-uploading" style="display:none;">
-                <div class="spin"></div><span>⏳ Subiendo imagen...</span>
-              </div>
-              <div class="lock-overlay" id="lock-imagen" onclick="showUpgrade()" style="display:none">
-                <div class="lock-icon">🔒</div>
-                <div class="lock-label">Imágenes → Google Drive</div>
-                <div class="lock-sub">Disponible en Premium ⭐</div>
-              </div>
-            </div>
-          </div>
-        </div>
 
         
 <!-- 5. RECORDATORIO — común a ambos modos -->
-        <div class="fb">
-          <div class="field">
-            <label>🔔 Recordatorio <button class="tip-btn" onclick="showTip('tip-recordatorio')">ⓘ</button></label>
-            <div class="chips">
-              <button class="chip" onclick="setChip(this,'3')">3 días</button>
-              <button class="chip" onclick="setChip(this,'10')">10 días</button>
-              <button class="chip" onclick="setChip(this,'15')">15 días</button>
-              <button class="chip" onclick="setChip(this,'30')">30 días</button>
-              <button class="chip" onclick="setChip(this,'manual')">📅 Fecha y hora</button>
-            </div>
-            <input type="datetime-local" id="inp-recdate" style="display:none;margin-top:8px;max-width:220px;"/>
-          </div>
-        </div>
 
         
 
