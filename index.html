@@ -1126,42 +1126,6 @@ body[data-mode="escolar"][data-theme="verde"]{
               <div class="lock-sub">Disponible en Premium ⭐</div>
             </div>
           </div>
-        <div class="fb">
-          <div class="field">
-            <label>📷 Imagen / Foto <button class="tip-btn" onclick="showTip('tip-imagen')">ⓘ</button></label>
-            <div class="premium-lock-wrap">
-              <div class="img-upload-area" id="img-upload-area" onclick="document.getElementById('inp-imagen').click()">
-                <div style="font-size:24px;">📷</div>
-                <div class="img-upload-label">Toca para adjuntar imagen o foto</div>
-                <img class="img-preview" id="img-preview-voz" src="" alt="preview"/>
-                <button class="img-remove-btn" id="img-remove-btn-voz" onclick="removeImage(event)">✕</button>
-              </div>
-              <input type="file" id="inp-imagen-voz" accept="image/*" capture="environment" style="display:none" onchange="onImageSelected(event)"/>
-              <div class="img-status" id="img-status"></div>
-              <div class="img-uploading" id="img-uploading" style="display:none;">
-                <div class="spin"></div><span>⏳ Subiendo imagen...</span>
-              </div>
-              <div class="lock-overlay" id="lock-imagen" onclick="showUpgrade()" style="display:none">
-                <div class="lock-icon">🔒</div>
-                <div class="lock-label">Imágenes → Google Drive</div>
-                <div class="lock-sub">Disponible en Premium ⭐</div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="fb">
-          <div class="field">
-            <label>🔔 Recordatorio <button class="tip-btn" onclick="showTip('tip-recordatorio')">ⓘ</button></label>
-            <div class="chips">
-              <button class="chip" onclick="setChip(this,'3')">3 días</button>
-              <button class="chip" onclick="setChip(this,'10')">10 días</button>
-              <button class="chip" onclick="setChip(this,'15')">15 días</button>
-              <button class="chip" onclick="setChip(this,'30')">30 días</button>
-              <button class="chip" onclick="setChip(this,'manual')">📅 Fecha y hora</button>
-            </div>
-            <input type="datetime-local" id="inp-recdate-voz" style="display:none;margin-top:8px;max-width:220px;"/>
-          </div>
-        </div>
         </div>
 
         <!-- MODO MANUAL -->
@@ -1180,42 +1144,6 @@ body[data-mode="escolar"][data-theme="verde"]{
               </div>
             </div>
           </div>
-        <div class="fb">
-          <div class="field">
-            <label>📷 Imagen / Foto <button class="tip-btn" onclick="showTip('tip-imagen')">ⓘ</button></label>
-            <div class="premium-lock-wrap">
-              <div class="img-upload-area" id="img-upload-area" onclick="document.getElementById('inp-imagen').click()">
-                <div style="font-size:24px;">📷</div>
-                <div class="img-upload-label">Toca para adjuntar imagen o foto</div>
-                <img class="img-preview" id="img-preview" src="" alt="preview"/>
-                <button class="img-remove-btn" id="img-remove-btn" onclick="removeImage(event)">✕</button>
-              </div>
-              <input type="file" id="inp-imagen" accept="image/*" capture="environment" style="display:none" onchange="onImageSelected(event)"/>
-              <div class="img-status" id="img-status"></div>
-              <div class="img-uploading" id="img-uploading" style="display:none;">
-                <div class="spin"></div><span>⏳ Subiendo imagen...</span>
-              </div>
-              <div class="lock-overlay" id="lock-imagen" onclick="showUpgrade()" style="display:none">
-                <div class="lock-icon">🔒</div>
-                <div class="lock-label">Imágenes → Google Drive</div>
-                <div class="lock-sub">Disponible en Premium ⭐</div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="fb">
-          <div class="field">
-            <label>🔔 Recordatorio <button class="tip-btn" onclick="showTip('tip-recordatorio')">ⓘ</button></label>
-            <div class="chips">
-              <button class="chip" onclick="setChip(this,'3')">3 días</button>
-              <button class="chip" onclick="setChip(this,'10')">10 días</button>
-              <button class="chip" onclick="setChip(this,'15')">15 días</button>
-              <button class="chip" onclick="setChip(this,'30')">30 días</button>
-              <button class="chip" onclick="setChip(this,'manual')">📅 Fecha y hora</button>
-            </div>
-            <input type="datetime-local" id="inp-recdate" style="display:none;margin-top:8px;max-width:220px;"/>
-          </div>
-        </div>
           <!-- Contacto -->
           <div class="fb">
             <div class="field">
@@ -1271,9 +1199,45 @@ body[data-mode="escolar"][data-theme="verde"]{
         </div>
 
 <!-- 4. IMAGEN — común a ambos modos -->
+        <div class="fb">
+          <div class="field">
+            <label>📷 Imagen / Foto <button class="tip-btn" onclick="showTip('tip-imagen')">ⓘ</button></label>
+            <div class="premium-lock-wrap">
+              <div class="img-upload-area" id="img-upload-area" onclick="document.getElementById('inp-imagen').click()">
+                <div style="font-size:24px;">📷</div>
+                <div class="img-upload-label">Toca para adjuntar imagen o foto</div>
+                <img class="img-preview" id="img-preview" src="" alt="preview"/>
+                <button class="img-remove-btn" id="img-remove-btn" onclick="removeImage(event)">✕</button>
+              </div>
+              <input type="file" id="inp-imagen" accept="image/*" capture="environment" style="display:none" onchange="onImageSelected(event)"/>
+              <div class="img-status" id="img-status"></div>
+              <div class="img-uploading" id="img-uploading" style="display:none;">
+                <div class="spin"></div><span>⏳ Subiendo imagen...</span>
+              </div>
+              <div class="lock-overlay" id="lock-imagen" onclick="showUpgrade()" style="display:none">
+                <div class="lock-icon">🔒</div>
+                <div class="lock-label">Imágenes → Google Drive</div>
+                <div class="lock-sub">Disponible en Premium ⭐</div>
+              </div>
+            </div>
+          </div>
+        </div>
 
         
 <!-- 5. RECORDATORIO — común a ambos modos -->
+        <div class="fb">
+          <div class="field">
+            <label>🔔 Recordatorio <button class="tip-btn" onclick="showTip('tip-recordatorio')">ⓘ</button></label>
+            <div class="chips">
+              <button class="chip" onclick="setChip(this,'3')">3 días</button>
+              <button class="chip" onclick="setChip(this,'10')">10 días</button>
+              <button class="chip" onclick="setChip(this,'15')">15 días</button>
+              <button class="chip" onclick="setChip(this,'30')">30 días</button>
+              <button class="chip" onclick="setChip(this,'manual')">📅 Fecha y hora</button>
+            </div>
+            <input type="datetime-local" id="inp-recdate" style="display:none;margin-top:8px;max-width:220px;"/>
+          </div>
+        </div>
 
         
 
@@ -2468,7 +2432,7 @@ mostrarGeminiBadge(false); setDictadoStatus(''); showAiModal(result,provider);
 }catch(err){ mostrarGeminiBadge(false); setDictadoStatus('❌ Error IA: '+err.message+'. Usando parser local.'); showAiModal(parseLocalDictado(txt),'local'); }
 }
 async function callGemini(prompt){
-const r=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-lite:generateContent?key=${getApiKey('gemini')}`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({contents:[{parts:[{text:prompt}]}]})});
+const r=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${getApiKey('gemini')}`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({contents:[{parts:[{text:prompt}]}]})});
 if(!r.ok) throw new Error('Gemini HTTP '+r.status);
 const d=await r.json(); return JSON.parse((d.candidates?.[0]?.content?.parts?.[0]?.text||'{}').replace(/```json|```/g,'').trim());
 }
@@ -2635,12 +2599,13 @@ saveBtn.textContent='💾 Guardar registro';
 saveBtn.classList.remove('editing');
 }
 if(state.sheetsUrl) setTimeout(function(){syncToSheets();},300);
+showToast('toast-upd');
+if(navigator.vibrate) navigator.vibrate(50);
 renderRecords();
 var tabBtns=document.querySelectorAll('.tab-btn');
 var tabReg=null;
 tabBtns.forEach(function(b){if(b.textContent.includes('Registros')||b.getAttribute('onclick')&&b.getAttribute('onclick').includes('registros'))tabReg=b;});
 switchTab('registros',tabReg);
-setTimeout(function(){showToast('toast-upd');},100);
 return;
 }
 const newId=Date.now().toString();
@@ -2666,11 +2631,11 @@ body:JSON.stringify({action:'append',token:localStorage.getItem('tp_sheets_token
 }).catch(()=>{});
 }
 preguntarCalendario(rec);
-if(navigator.vibrate)navigator.vibrate(50);
+if(navigator.vibrate) navigator.vibrate(50);
 var _tb2=document.querySelectorAll('.tab-btn'),_tr2=null;
 _tb2.forEach(function(b){if(b.getAttribute('onclick')&&b.getAttribute('onclick').includes('registros'))_tr2=b;});
 switchTab('registros',_tr2);
-setTimeout(function(){showToast('toast-ok');},100);
+setTimeout(function(){showToast('toast-ok');},200);
 updateFreeBar();
 resetForm();
 resetCalendarForm();
@@ -2923,10 +2888,6 @@ return '<div class="record" onclick="toggleRecActions(\'' +id+ '\')">'
 }
 function showImgModal(id){ const r=state.records.find(rec=>rec.id===id); if(!r||!r.imagenUrl) return; const w=window.open('','_blank','width=600,height=500'); w.document.write(`<html><body style="margin:0;background:#000;display:flex;align-items:center;justify-content:center;height:100vh"><img src="${r.imagenUrl}" style="max-width:100%;max-height:100%"/>
 <div id="toast-warn" style="position:fixed;bottom:80px;left:50%;transform:translateX(-50%);z-index:9999;padding:12px 20px;border-radius:10px;font-size:13px;display:none;align-items:center;gap:8px;background:#fff8e1;color:#7B3F00;box-shadow:0 4px 16px rgba(0,0,0,.2);min-width:220px;justify-content:center;border:1px solid #f0c040;"></div>
-
-<div id="toast-ok" style="position:fixed;bottom:30px;left:50%;transform:translateX(-50%);z-index:99999;padding:14px 24px;border-radius:10px;font-size:14px;font-weight:700;display:none;align-items:center;gap:8px;background:#1a4a1a;color:#fff;box-shadow:0 4px 20px rgba(0,0,0,.4);min-width:240px;justify-content:center;white-space:nowrap;">✅ Registro guardado correctamente</div>
-<div id="toast-upd" style="position:fixed;bottom:30px;left:50%;transform:translateX(-50%);z-index:99999;padding:14px 24px;border-radius:10px;font-size:14px;font-weight:700;display:none;align-items:center;gap:8px;background:#1a4a1a;color:#fff;box-shadow:0 4px 20px rgba(0,0,0,.4);min-width:240px;justify-content:center;white-space:nowrap;">✅ Registro actualizado correctamente</div>
-<div id="toast-warn" style="position:fixed;bottom:30px;left:50%;transform:translateX(-50%);z-index:99999;padding:14px 24px;border-radius:10px;font-size:13px;display:none;align-items:center;gap:8px;background:#fff8e1;color:#7B3F00;box-shadow:0 4px 16px rgba(0,0,0,.2);min-width:240px;justify-content:center;border:1px solid #f0c040;"></div>
 </body></html>`); }
 function cycleEstado(id){ const r=state.records.find(rec=>rec.id===id);if(!r)return; const c={pendiente:'en curso','en curso':'resuelto',resuelto:'pendiente'}; r.estado=c[r.estado]||'pendiente'; persist().catch(()=>{}); if(state.sheetsUrl) syncToSheets(); renderRecords(); renderStats(); }
 function exportarDatosCompletos(){
@@ -3342,10 +3303,9 @@ renderLists();
 }
 function showToast(id){
 var el=document.getElementById(id);
-console.log('showToast called:', id, el ? 'found' : 'NOT FOUND');
 if(!el) return;
-el.style.cssText+='display:flex!important;opacity:1!important;z-index:99999!important;';
-setTimeout(function(){el.style.display='none';},3500);
+el.style.display='flex';
+setTimeout(function(){el.style.display='none';},3000);
 }
 function showWarn(msg){
 var el=document.getElementById('toast-warn');
@@ -3678,6 +3638,7 @@ else{b.textContent='🎙️ Dictar';b.style.background='var(--gm)';if(s)s.textCo
 async function emailIA(id){
 const r=state.records.find(rec=>rec.id===id);
 if(!r) return;
+if(r.confidencial){showWarn('Registro confidencial — Email IA no disponible.');return;}
 const key=getApiKey('gemini');
 if(!key){showWarn('Configura tu clave Gemini en Config → IA.');return;}
 if(r.confidencial){showWarn('Registro confidencial — no se puede usar IA.');return;}
@@ -3695,25 +3656,22 @@ const firmante=firma.nombre||currentUser.split('@')[0]||'';
 const firmaCtx=[firma.cargo,firma.empresa,firma.telefono].filter(Boolean).join(' · ');
 const prompt=buildPromptEmail(r,fd,firmante,firmaCtx);
 try{
-const resp=await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-lite:generateContent?key='+key,{
+const resp=await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key='+key,{
 method:'POST',
 headers:{'Content-Type':'application/json'},
 body:JSON.stringify({contents:[{parts:[{text:prompt}]}]})
 });
 if(!resp.ok){
-const errTxt=await resp.text();
-console.log('Gemini error:', resp.status, errTxt.slice(0,200));
-showWarn('Error '+resp.status+' Gemini. Revisa tu clave API en Config.');
+showWarn('Error '+resp.status+' al conectar con Gemini.');
 document.getElementById('email-asunto').value=(r.tema||r.accion||'Seguimiento');
-document.getElementById('email-cuerpo').value='Error '+resp.status+': '+errTxt.slice(0,200);
+document.getElementById('email-cuerpo').value='';
 return;
 }
 const data=await resp.json();
-console.log('Gemini raw:', JSON.stringify(data).slice(0,500));
-const texto=data.candidates?.[0]?.content?.parts?.[0]?.text||'';
-console.log('texto:', texto.slice(0,100));
+var texto='';
+try{texto=data.candidates[0].content.parts[0].text||'';}catch(e){texto='';}
 if(!texto){
-showWarn('Gemini no devolvió respuesta. Comprueba tu clave API.');
+showWarn('Gemini no devolvió respuesta.');
 document.getElementById('email-asunto').value=(r.tema||r.accion||'Seguimiento');
 document.getElementById('email-cuerpo').value='';
 return;
@@ -4125,7 +4083,7 @@ var NLW2='\n';const firmaCtx=(f.cargo?', '+f.cargo:'')+(f.empresa?NLW2+f.empresa
 const prompt=buildPromptWhatsApp(r,fd,firmante);
 try{
 showWarn('⏳ Gemini redactando mensaje WhatsApp...');
-const resp=await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-lite:generateContent?key='+key,{
+const resp=await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key='+key,{
 method:'POST',headers:{'Content-Type':'application/json'},
 body:JSON.stringify({contents:[{parts:[{text:prompt}]}]})
 });
@@ -4789,5 +4747,8 @@ splash.classList.remove('fade-out');
 },500);
 }
 </script>
+
+<div id="toast-ok" style="position:fixed;bottom:30px;left:50%;transform:translateX(-50%);z-index:99999;padding:14px 28px;border-radius:12px;font-size:15px;font-weight:700;display:none;align-items:center;gap:8px;background:#1a4a1a;color:#fff;box-shadow:0 4px 20px rgba(0,0,0,.4);white-space:nowrap;">✅ Registro guardado</div>
+<div id="toast-upd" style="position:fixed;bottom:30px;left:50%;transform:translateX(-50%);z-index:99999;padding:14px 28px;border-radius:12px;font-size:15px;font-weight:700;display:none;align-items:center;gap:8px;background:#2D5016;color:#fff;box-shadow:0 4px 20px rgba(0,0,0,.4);white-space:nowrap;">✅ Registro actualizado</div>
 </body>
 </html>
