@@ -3339,9 +3339,11 @@ renderLists();
 }
 function showToast(id){
 var el=document.getElementById(id);
-if(!el) return;
+if(!el){console.warn('Toast not found:',id);return;}
 el.style.display='flex';
-setTimeout(function(){el.style.display='none';},3000);
+el.style.opacity='1';
+console.log('Toast shown:',id);
+setTimeout(function(){el.style.opacity='0';setTimeout(function(){el.style.display='none';el.style.opacity='1';},300);},3000);
 }
 function showWarn(msg){
 var el=document.getElementById('toast-warn');
@@ -3703,19 +3705,9 @@ document.getElementById('email-cuerpo').value='';
 return;
 }
 const data=await resp.json();
-var texto='';
-try{
-  var cands=data.candidates||[];
-  if(cands[0]&&cands[0].content&&cands[0].content.parts&&cands[0].content.parts[0]){
-    texto=cands[0].content.parts[0].text||'';
-  }
-}catch(e){texto='';}
-if(!texto&&data.error){
-  document.getElementById('email-cuerpo').value='Error API: '+JSON.stringify(data.error).slice(0,200);
-  return;
-}
+const texto=data.candidates?.[0]?.content?.parts?.[0]?.text||'';
 if(!texto){
-showWarn('Gemini no devolvió respuesta.');
+showWarn('Gemini no devolvió respuesta. Comprueba tu clave API.');
 document.getElementById('email-asunto').value=(r.tema||r.accion||'Seguimiento');
 document.getElementById('email-cuerpo').value='';
 return;
