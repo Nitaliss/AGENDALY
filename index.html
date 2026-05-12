@@ -2468,7 +2468,7 @@ mostrarGeminiBadge(false); setDictadoStatus(''); showAiModal(result,provider);
 }catch(err){ mostrarGeminiBadge(false); setDictadoStatus('❌ Error IA: '+err.message+'. Usando parser local.'); showAiModal(parseLocalDictado(txt),'local'); }
 }
 async function callGemini(prompt){
-const r=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${getApiKey('gemini')}`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({contents:[{parts:[{text:prompt}]}]})});
+const r=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${getApiKey('gemini')}`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({contents:[{parts:[{text:prompt}]}]})});
 if(!r.ok) throw new Error('Gemini HTTP '+r.status);
 const d=await r.json(); return JSON.parse((d.candidates?.[0]?.content?.parts?.[0]?.text||'{}').replace(/```json|```/g,'').trim());
 }
@@ -2623,7 +2623,6 @@ const finalRec=(di&&di.style.display!=='none'&&di.value)?di.value:reminderDays?c
 state.records[idx]=Object.assign({},orig,{fecha,contacto,tema,accion,comunicado,estado,notas,recordatorio:finalRec,imagenUrl:imagenUrl||orig.imagenUrl||''});
 persist().catch(()=>{});
 editingId=null;
-showToast('toast-upd');
 var banner=document.getElementById('edit-banner');
 if(banner) banner.style.display='none';
 var ft=document.getElementById('form-title');
@@ -2636,13 +2635,12 @@ saveBtn.textContent='💾 Guardar registro';
 saveBtn.classList.remove('editing');
 }
 if(state.sheetsUrl) setTimeout(function(){syncToSheets();},300);
-showToast('toast-upd');
-if(navigator.vibrate) navigator.vibrate(50);
 renderRecords();
 var tabBtns=document.querySelectorAll('.tab-btn');
 var tabReg=null;
 tabBtns.forEach(function(b){if(b.textContent.includes('Registros')||b.getAttribute('onclick')&&b.getAttribute('onclick').includes('registros'))tabReg=b;});
 switchTab('registros',tabReg);
+setTimeout(function(){showToast('toast-upd');},100);
 return;
 }
 const newId=Date.now().toString();
@@ -2668,13 +2666,11 @@ body:JSON.stringify({action:'append',token:localStorage.getItem('tp_sheets_token
 }).catch(()=>{});
 }
 preguntarCalendario(rec);
-showToast('toast-ok');
 if(navigator.vibrate)navigator.vibrate(50);
 var _tb2=document.querySelectorAll('.tab-btn'),_tr2=null;
 _tb2.forEach(function(b){if(b.getAttribute('onclick')&&b.getAttribute('onclick').includes('registros'))_tr2=b;});
 switchTab('registros',_tr2);
-if(navigator.vibrate) navigator.vibrate(50);
-showToast('toast-ok');
+setTimeout(function(){showToast('toast-ok');},100);
 updateFreeBar();
 resetForm();
 resetCalendarForm();
@@ -2846,7 +2842,7 @@ const cc=selC.value,ct=selT.value;
 selC.innerHTML='<option value="">Todos los contactos</option>'+state.contactos.map(c=>`<option${c===cc?' selected':''}>${x(c)}</option>`).join('');
 renderContactoStats(cc);
 selT.innerHTML='<option value="">Todos los temas</option>'+state.temas.map(t=>`<option${t===ct?' selected':''}>${x(t)}</option>`).join('');
-const filtered=getFiltered(),el=document.getElementById('rec-list');
+const filtered=getFiltered();filtered.sort(function(a,b){return new Date(b.fecha)-new Date(a.fecha);});var el=document.getElementById('rec-list');
 if(!filtered.length){el.innerHTML='<div class="empty">No hay registros que coincidan 🐾</div>';return;}
 const grupos={};
 const orden=[];
@@ -3695,7 +3691,7 @@ const firmante=firma.nombre||currentUser.split('@')[0]||'';
 const firmaCtx=[firma.cargo,firma.empresa,firma.telefono].filter(Boolean).join(' · ');
 const prompt=buildPromptEmail(r,fd,firmante,firmaCtx);
 try{
-const resp=await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key='+key,{
+const resp=await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key='+key,{
 method:'POST',
 headers:{'Content-Type':'application/json'},
 body:JSON.stringify({contents:[{parts:[{text:prompt}]}]})
@@ -4131,7 +4127,7 @@ var NLW2='\n';const firmaCtx=(f.cargo?', '+f.cargo:'')+(f.empresa?NLW2+f.empresa
 const prompt=buildPromptWhatsApp(r,fd,firmante);
 try{
 showWarn('⏳ Gemini redactando mensaje WhatsApp...');
-const resp=await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key='+key,{
+const resp=await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key='+key,{
 method:'POST',headers:{'Content-Type':'application/json'},
 body:JSON.stringify({contents:[{parts:[{text:prompt}]}]})
 });
