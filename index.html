@@ -14,7 +14,6 @@
 <meta name="description" content="Tu agenda personal de productividad. Apunta. Organiza. Comunica.">
 <link rel="manifest" href="manifest.json">
 <title>Tapunto — Tu agenda inteligente</title>
-<!-- TAPUNTO BUILD 2026-05-17-v1 -->
 <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
 <!--
   ============================================================
@@ -578,7 +577,7 @@ body[data-theme="noche"] .free-bar{background:#2a1f00;border-color:#6b5000;color
 .cal-day-num{font-size:12px;color:var(--tm);font-family:'Lato',sans-serif;}
 .cal-dots{display:flex;flex-wrap:wrap;gap:2px;margin-top:2px;}
 .cal-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
-.cal-day-note{font-size:7px;color:var(--td);line-height:1.2;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;margin-top:1px;}
+.cal-day-note{font-size:6px;color:var(--td);line-height:1.2;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;margin-top:1px;cursor:pointer;}
 .cal-dot.pendiente{background:#856404;}
 .cal-dot.en-curso{background:#1a73e8;}
 .cal-dot.resuelto{background:#155724;}
@@ -1050,7 +1049,7 @@ body[data-mode="escolar"][data-theme="verde"]{
     <div class="page">
 
       <!-- ══ NUEVO ══ -->
-      <div id="sec-nuevo" class="section" style="display:none;">
+      <div id="sec-nuevo" class="section">
         <div class="trial-banner" id="trial-banner"></div>
         <div class="renewal-banner" id="renewal-banner"></div>
         <div class="edit-banner" id="edit-banner">
@@ -1127,6 +1126,42 @@ body[data-mode="escolar"][data-theme="verde"]{
               <div class="lock-sub">Disponible en Premium ⭐</div>
             </div>
           </div>
+        <div class="fb">
+          <div class="field">
+            <label>📷 Imagen / Foto <button class="tip-btn" onclick="showTip('tip-imagen')">ⓘ</button></label>
+            <div class="premium-lock-wrap">
+              <div class="img-upload-area" id="img-upload-area" onclick="document.getElementById('inp-imagen').click()">
+                <div style="font-size:24px;">📷</div>
+                <div class="img-upload-label">Toca para adjuntar imagen o foto</div>
+                <img class="img-preview" id="img-preview-voz" src="" alt="preview"/>
+                <button class="img-remove-btn" id="img-remove-btn-voz" onclick="removeImage(event)">✕</button>
+              </div>
+              <input type="file" id="inp-imagen-voz" accept="image/*" capture="environment" style="display:none" onchange="onImageSelected(event)"/>
+              <div class="img-status" id="img-status"></div>
+              <div class="img-uploading" id="img-uploading" style="display:none;">
+                <div class="spin"></div><span>⏳ Subiendo imagen...</span>
+              </div>
+              <div class="lock-overlay" id="lock-imagen" onclick="showUpgrade()" style="display:none">
+                <div class="lock-icon">🔒</div>
+                <div class="lock-label">Imágenes → Google Drive</div>
+                <div class="lock-sub">Disponible en Premium ⭐</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="fb">
+          <div class="field">
+            <label>🔔 Recordatorio <button class="tip-btn" onclick="showTip('tip-recordatorio')">ⓘ</button></label>
+            <div class="chips">
+              <button class="chip" onclick="setChip(this,'3')">3 días</button>
+              <button class="chip" onclick="setChip(this,'10')">10 días</button>
+              <button class="chip" onclick="setChip(this,'15')">15 días</button>
+              <button class="chip" onclick="setChip(this,'30')">30 días</button>
+              <button class="chip" onclick="setChip(this,'manual')">📅 Fecha y hora</button>
+            </div>
+            <input type="datetime-local" id="inp-recdate-voz" style="display:none;margin-top:8px;max-width:220px;"/>
+          </div>
+        </div>
         </div>
 
         <!-- MODO MANUAL -->
@@ -1145,6 +1180,42 @@ body[data-mode="escolar"][data-theme="verde"]{
               </div>
             </div>
           </div>
+        <div class="fb">
+          <div class="field">
+            <label>📷 Imagen / Foto <button class="tip-btn" onclick="showTip('tip-imagen')">ⓘ</button></label>
+            <div class="premium-lock-wrap">
+              <div class="img-upload-area" id="img-upload-area" onclick="document.getElementById('inp-imagen').click()">
+                <div style="font-size:24px;">📷</div>
+                <div class="img-upload-label">Toca para adjuntar imagen o foto</div>
+                <img class="img-preview" id="img-preview" src="" alt="preview"/>
+                <button class="img-remove-btn" id="img-remove-btn" onclick="removeImage(event)">✕</button>
+              </div>
+              <input type="file" id="inp-imagen" accept="image/*" capture="environment" style="display:none" onchange="onImageSelected(event)"/>
+              <div class="img-status" id="img-status"></div>
+              <div class="img-uploading" id="img-uploading" style="display:none;">
+                <div class="spin"></div><span>⏳ Subiendo imagen...</span>
+              </div>
+              <div class="lock-overlay" id="lock-imagen" onclick="showUpgrade()" style="display:none">
+                <div class="lock-icon">🔒</div>
+                <div class="lock-label">Imágenes → Google Drive</div>
+                <div class="lock-sub">Disponible en Premium ⭐</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="fb">
+          <div class="field">
+            <label>🔔 Recordatorio <button class="tip-btn" onclick="showTip('tip-recordatorio')">ⓘ</button></label>
+            <div class="chips">
+              <button class="chip" onclick="setChip(this,'3')">3 días</button>
+              <button class="chip" onclick="setChip(this,'10')">10 días</button>
+              <button class="chip" onclick="setChip(this,'15')">15 días</button>
+              <button class="chip" onclick="setChip(this,'30')">30 días</button>
+              <button class="chip" onclick="setChip(this,'manual')">📅 Fecha y hora</button>
+            </div>
+            <input type="datetime-local" id="inp-recdate" style="display:none;margin-top:8px;max-width:220px;"/>
+          </div>
+        </div>
           <!-- Contacto -->
           <div class="fb">
             <div class="field">
@@ -1200,52 +1271,16 @@ body[data-mode="escolar"][data-theme="verde"]{
         </div>
 
 <!-- 4. IMAGEN — común a ambos modos -->
-        <div class="fb">
-          <div class="field">
-            <label>📷 Imagen / Foto <button class="tip-btn" onclick="showTip('tip-imagen')">ⓘ</button></label>
-            <div class="premium-lock-wrap">
-              <div class="img-upload-area" id="img-upload-area" onclick="document.getElementById('inp-imagen').click()">
-                <div style="font-size:24px;">📷</div>
-                <div class="img-upload-label">Toca para adjuntar imagen o foto</div>
-                <img class="img-preview" id="img-preview" src="" alt="preview"/>
-                <button class="img-remove-btn" id="img-remove-btn" onclick="removeImage(event)">✕</button>
-              </div>
-              <input type="file" id="inp-imagen" accept="image/*" capture="environment" style="display:none" onchange="onImageSelected(event)"/>
-              <div class="img-status" id="img-status"></div>
-              <div class="img-uploading" id="img-uploading" style="display:none;">
-                <div class="spin"></div><span>⏳ Subiendo imagen...</span>
-              </div>
-              <div class="lock-overlay" id="lock-imagen" onclick="showUpgrade()" style="display:none">
-                <div class="lock-icon">🔒</div>
-                <div class="lock-label">Imágenes → Google Drive</div>
-                <div class="lock-sub">Disponible en Premium ⭐</div>
-              </div>
-            </div>
-          </div>
-        </div>
 
         
 <!-- 5. RECORDATORIO — común a ambos modos -->
-        <div class="fb">
-          <div class="field">
-            <label>🔔 Recordatorio <button class="tip-btn" onclick="showTip('tip-recordatorio')">ⓘ</button></label>
-            <div class="chips">
-              <button class="chip" onclick="setChip(this,'3')">3 días</button>
-              <button class="chip" onclick="setChip(this,'10')">10 días</button>
-              <button class="chip" onclick="setChip(this,'15')">15 días</button>
-              <button class="chip" onclick="setChip(this,'30')">30 días</button>
-              <button class="chip" onclick="setChip(this,'manual')">📅 Fecha y hora</button>
-            </div>
-            <input type="datetime-local" id="inp-recdate" style="display:none;margin-top:8px;max-width:220px;"/>
-          </div>
-        </div>
 
         
 
         </div><!-- /campos-opcionales -->
 
         <!-- BOTONES GUARDAR / CANCELAR -->
-        <div style="display:flex;gap:8px;margin-top:12px;">
+        <div id="save-cancel-btns" style="display:none;gap:8px;margin-top:12px;">
           <button class="save-btn" id="save-btn" onclick="saveRecord()" style="flex:1;">💾 Guardar registro</button>
           <button id="btn-cancelar-edit" onclick="cancelEdit()" style="padding:12px 16px;background:var(--bl);color:#c53030;border:1px solid #f5c6c6;border-radius:6px;font-family:'Lato',sans-serif;font-size:14px;font-weight:700;cursor:pointer;">✕ Cancelar</button>
         </div>
@@ -1253,7 +1288,7 @@ body[data-mode="escolar"][data-theme="verde"]{
       </div><!-- /sec-nuevo -->
 
       <!-- ══ REGISTROS ══ -->
-      <div id="sec-registros" class="section" style="display:none;">
+      <div id="sec-registros" class="section">
         <div class="search-bar" id="search-bar" style="display:none">
           <span style="color:var(--tl);font-size:16px;">🔍</span>
           <input type="text" id="search-input" placeholder="Buscar por contacto, asunto, notas..." oninput="buscarRegistros(this.value)"/>
@@ -1298,7 +1333,7 @@ body[data-mode="escolar"][data-theme="verde"]{
       </div><!-- /sec-registros -->
 
       <!-- ══ ALERTAS ══ -->
-      <div id="sec-recordatorios" class="section" style="display:none;">
+      <div id="sec-recordatorios" class="section">
         <div class="trial-banner" id="trial-banner-alt" style="display:none"></div>
         <div id="alertas-inteligentes" style="margin-bottom:12px;display:none;">
           <div style="font-family:'Caveat',cursive;font-size:16px;color:#e65100;margin-bottom:8px;font-weight:700;">⚡ Llevan tiempo sin resolverse</div>
@@ -1308,7 +1343,7 @@ body[data-mode="escolar"][data-theme="verde"]{
       </div><!-- /sec-recordatorios -->
 
       <!-- ══ CALENDARIO ══ -->
-      <div id="sec-calendario" class="section" style="display:none;">
+      <div id="sec-calendario" class="section">
         <div class="cal-nav">
           <button class="cal-nav-btn" onclick="calCambiarMes(-1)">◀</button>
           <div style="display:flex;flex-direction:column;align-items:center;gap:4px;">
@@ -1354,7 +1389,7 @@ body[data-mode="escolar"][data-theme="verde"]{
       </div><!-- /sec-calendario -->
 
       <!-- ══ CONFIG ══ -->
-      <div id="sec-config" class="section" style="display:none;">
+      <div id="sec-config" class="section">
 
         <!-- BÁSICO: siempre visible -->
         <div class="cfg-basic" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
@@ -1639,8 +1674,7 @@ body[data-mode="escolar"][data-theme="verde"]{
 <div class="gemini-badge" id="gemini-badge">🤖 Gemini activo</div>
 <div class="wa-badge" id="wa-badge">💬 Compartiendo por WhatsApp</div>
 
-<script>
-console.log("TAPUNTO BUILD 2026-05-17-v1 CARGADO");/* TAPUNTO v1 © 2026 Alicia Prats. Licencia propietaria. tapunto.app */
+<script>/* TAPUNTO v1 © 2026 Alicia Prats. Licencia propietaria. tapunto.app */
 /*
 TAPUNTO v1 © 2026 Alicia Prats — Todos los derechos reservados
 Licencia propietaria. Prohibida su copia o redistribución.
@@ -2346,6 +2380,8 @@ function addComunicado(){ const n=prompt('¿Comunicado a?'); if(n&&n.trim()&&!st
 function addContactoDirect(){ const v=document.getElementById('nc').value.trim(); if(v&&!state.contactos.includes(v)){state.contactos.push(v);state.contactos.sort((a,b)=>a.localeCompare(b,'es',{sensitivity:'base'}));persist().catch(()=>{});renderLists();fillSelect('inp-contacto',state.contactos);document.getElementById('nc').value='';syncListsToSheets();} }
 function addTemaDirect(){ const v=document.getElementById('nt').value.trim(); if(v&&!state.temas.includes(v)){state.temas.push(v);state.temas.sort((a,b)=>a.localeCompare(b,'es',{sensitivity:'base'}));persist().catch(()=>{});renderLists();fillSelect('inp-tema',state.temas);document.getElementById('nt').value='';syncListsToSheets();} }
 async function startDictado(mode){
+var _c=document.getElementById('inp-confidencial');
+if(_c&&_c.checked&&mode==='gemini'){showWarn('Registro confidencial — Gemini no disponible.');return;}
 if(!isPremium && mode!=='noai'){ showUpgrade(); return; }
 if(!('webkitSpeechRecognition' in window||'SpeechRecognition' in window)){ setDictadoStatus('❌ Reconocimiento de voz no disponible. Usa Chrome con HTTPS.'); return; }
 if(mode==='gemini'&&!getApiKey('gemini')){ setDictadoStatus('⚠ Configura tu clave Gemini en Config.'); return; }
@@ -2587,6 +2623,7 @@ const finalRec=(di&&di.style.display!=='none'&&di.value)?di.value:reminderDays?c
 state.records[idx]=Object.assign({},orig,{fecha,contacto,tema,accion,comunicado,estado,notas,recordatorio:finalRec,imagenUrl:imagenUrl||orig.imagenUrl||''});
 persist().catch(()=>{});
 editingId=null;
+showToast('toast-upd');
 var banner=document.getElementById('edit-banner');
 if(banner) banner.style.display='none';
 var ft=document.getElementById('form-title');
@@ -2631,6 +2668,11 @@ body:JSON.stringify({action:'append',token:localStorage.getItem('tp_sheets_token
 }).catch(()=>{});
 }
 preguntarCalendario(rec);
+showToast('toast-ok');
+if(navigator.vibrate)navigator.vibrate(50);
+var _tb2=document.querySelectorAll('.tab-btn'),_tr2=null;
+_tb2.forEach(function(b){if(b.getAttribute('onclick')&&b.getAttribute('onclick').includes('registros'))_tr2=b;});
+switchTab('registros',_tr2);
 if(navigator.vibrate) navigator.vibrate(50);
 showToast('toast-ok');
 updateFreeBar();
@@ -2719,9 +2761,12 @@ function askDelete(id){ pendingDelId=id; document.getElementById('confirm-ov').s
 function closeConfirm(){ pendingDelId=null; document.getElementById('confirm-ov').style.display='none'; }
 function confirmDelete(){ if(!pendingDelId) return; state.records=state.records.filter(r=>r.id!==pendingDelId); persist().catch(()=>{}); if(state.sheetsUrl) syncToSheets(); closeConfirm(); renderRecords(); renderStats(); updateFreeBar(); }
 function switchTab(tab,btn){
-document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
-document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
-document.getElementById('sec-'+tab).classList.add('active');
+document.querySelectorAll('.section').forEach(function(s){s.classList.remove('active');s.style.display='none';});
+document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('active');});
+var _st=document.getElementById('sec-'+tab);
+if(_st){_st.classList.add('active');_st.style.display='block';}
+var _sb=document.getElementById('save-cancel-btns');
+if(_sb) _sb.style.display=(tab==='nuevo')?'flex':'none';
 if(btn) btn.classList.add('active');
 if(tab==='registros'){renderStats();renderRecords();}
 const fab=document.getElementById('fab-btn');
@@ -3453,12 +3498,11 @@ applyMode('trabajo');
 initForm();
 checkTodayReminders();
 initFAB();
-});
-setTimeout(function(){
 var _tb=document.querySelectorAll('.tab-btn'),_tr=null;
 _tb.forEach(function(b){if(b.getAttribute('onclick')&&b.getAttribute('onclick').includes('registros'))_tr=b;});
 switchTab('registros',_tr);
-},100);}
+});
+}
 function getEscolarData(){
 return {
 asignatura: (document.getElementById('inp-asignatura')||{}).value||'',
@@ -3635,13 +3679,13 @@ async function emailIA(id){
 const r=state.records.find(rec=>rec.id===id);
 if(!r) return;
 const key=getApiKey('gemini');
-if(!key){showWarn('Configura tu clave Gemini en Config.');return;}
-if(r.confidencial){showWarn('Registro confidencial: no se puede usar IA.');return;}
+if(!key){showWarn('Configura tu clave Gemini en Config → IA.');return;}
+if(r.confidencial){showWarn('Registro confidencial — no se puede usar IA.');return;}
 _emailRecId=id;
 const modal=document.getElementById('email-modal');
-if(!modal){abrirEmailModal(id);return;}
-document.getElementById('email-modal-title').textContent='Generando con Gemini...';
-document.getElementById('email-asunto').value='Generando...';
+if(!modal){showWarn('Error: modal de email no encontrado.');return;}
+document.getElementById('email-modal-title').textContent='🤖 Generando con Gemini...';
+document.getElementById('email-asunto').value='⏳ Generando...';
 document.getElementById('email-cuerpo').value='Por favor espera...';
 modal.classList.add('show');
 const d=new Date(r.fecha);
@@ -3651,42 +3695,51 @@ const firmante=firma.nombre||currentUser.split('@')[0]||'';
 const firmaCtx=[firma.cargo,firma.empresa,firma.telefono].filter(Boolean).join(' · ');
 const prompt=buildPromptEmail(r,fd,firmante,firmaCtx);
 try{
-const resp=await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key='+key,{
+const resp=await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key='+key,{
 method:'POST',
 headers:{'Content-Type':'application/json'},
 body:JSON.stringify({contents:[{parts:[{text:prompt}]}]})
 });
-const raw=await resp.text();
 if(!resp.ok){
-document.getElementById('email-asunto').value=r.tema||r.accion||'Gestión';
-document.getElementById('email-cuerpo').value='Error '+resp.status+'. Respuesta: '+raw.slice(0,200);
+showWarn('Error '+resp.status+' al conectar con Gemini.');
+document.getElementById('email-asunto').value=(r.tema||r.accion||'Seguimiento');
+document.getElementById('email-cuerpo').value='';
 return;
 }
-var data;
-try{data=JSON.parse(raw);}catch(e){
-document.getElementById('email-asunto').value=r.tema||r.accion||'Gestión';
-document.getElementById('email-cuerpo').value='Error al parsear respuesta de Gemini.';
-return;
-}
+const data=await resp.json();
 var texto='';
-try{texto=data.candidates[0].content.parts[0].text||'';}catch(e){}
+try{
+  var cands=data.candidates||[];
+  if(cands[0]&&cands[0].content&&cands[0].content.parts&&cands[0].content.parts[0]){
+    texto=cands[0].content.parts[0].text||'';
+  }
+}catch(e){texto='';}
+if(!texto&&data.error){
+  document.getElementById('email-cuerpo').value='Error API: '+JSON.stringify(data.error).slice(0,200);
+  return;
+}
 if(!texto){
-document.getElementById('email-asunto').value=r.tema||r.accion||'Gestión';
-document.getElementById('email-cuerpo').value='Gemini no devolvió texto. Respuesta: '+JSON.stringify(data).slice(0,300);
+showWarn('Gemini no devolvió respuesta.');
+document.getElementById('email-asunto').value=(r.tema||r.accion||'Seguimiento');
+document.getElementById('email-cuerpo').value='';
 return;
 }
-var asunto=(r.tema||r.accion||'Gestión')+(r.contacto?' - '+r.contacto:'');
+var asunto=(r.tema||r.accion||'Seguimiento')+(r.contacto?' - '+r.contacto:'');
 var cuerpo=texto;
-if(texto.split('\n')[0]&&/^asunto:/i.test(texto.split('\n')[0])){
-asunto=texto.split('\n')[0].replace(/^asunto:\s*/i,'').trim();
-cuerpo=texto.split('\n').slice(1).join('\n').trim()||texto;
+var asuntoMatch=texto.match(/^(?:asunto|subject)[:\s]+(.+)$/im);
+if(asuntoMatch&&texto.replace(asuntoMatch[0],'').trim().length>20){
+asunto=asuntoMatch[1].trim();
+cuerpo=texto.replace(asuntoMatch[0],'').trim();
 }
+if(r.imagenUrl&&!r.imagenUrl.startsWith('data:')) cuerpo+='\n\n📎 Imagen: '+r.imagenUrl;
 document.getElementById('email-asunto').value=asunto;
 document.getElementById('email-cuerpo').value=cuerpo;
-document.getElementById('email-modal-title').textContent='Email generado — revisa antes de enviar';
+document.getElementById('email-modal-title').textContent='✉ Enviar email (generado con Gemini)';
+showWarn('✓ Email generado. Revísalo antes de enviar.');
 }catch(e){
-document.getElementById('email-asunto').value=r.tema||r.accion||'Gestión';
-document.getElementById('email-cuerpo').value='Error: '+e.message;
+showWarn('Error al conectar con Gemini: '+(e.message||''));
+document.getElementById('email-asunto').value=(r.tema||r.accion||'Seguimiento');
+document.getElementById('email-cuerpo').value='';
 }
 }
 let _menuRecId=null;
