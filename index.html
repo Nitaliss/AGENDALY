@@ -1182,42 +1182,6 @@ body[data-mode="escolar"][data-theme="verde"]{
               </div>
             </div>
           
-        <div class="fb">
-          <div class="field">
-            <label>📷 Imagen / Foto <button class="tip-btn" onclick="showTip('tip-imagen')">ⓘ</button></label>
-            <div class="premium-lock-wrap">
-              <div class="img-upload-area" id="img-upload-area" onclick="document.getElementById('inp-imagen').click()">
-                <div style="font-size:24px;">📷</div>
-                <div class="img-upload-label">Toca para adjuntar imagen o foto</div>
-                <img class="img-preview" id="img-preview" src="" alt="preview"/>
-                <button class="img-remove-btn" id="img-remove-btn" onclick="removeImage(event)">✕</button>
-              </div>
-              <input type="file" id="inp-imagen" accept="image/*" capture="environment" style="display:none" onchange="onImageSelected(event)"/>
-              <div class="img-status" id="img-status"></div>
-              <div class="img-uploading" id="img-uploading" style="display:none;">
-                <div class="spin"></div><span>⏳ Subiendo imagen...</span>
-              </div>
-              <div class="lock-overlay" id="lock-imagen" onclick="showUpgrade()" style="display:none">
-                <div class="lock-icon">🔒</div>
-                <div class="lock-label">Imágenes → Google Drive</div>
-                <div class="lock-sub">Disponible en Premium ⭐</div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="fb">
-          <div class="field">
-            <label>🔔 Recordatorio <button class="tip-btn" onclick="showTip('tip-recordatorio')">ⓘ</button></label>
-            <div class="chips">
-              <button class="chip" onclick="setChip(this,'3')">3 días</button>
-              <button class="chip" onclick="setChip(this,'10')">10 días</button>
-              <button class="chip" onclick="setChip(this,'15')">15 días</button>
-              <button class="chip" onclick="setChip(this,'30')">30 días</button>
-              <button class="chip" onclick="setChip(this,'manual')">📅 Fecha y hora</button>
-            </div>
-            <input type="datetime-local" id="inp-recdate" style="display:none;margin-top:8px;max-width:220px;"/>
-          </div>
-        </div></div>
           <!-- Contacto -->
           <div class="fb">
             <div class="field">
@@ -1270,7 +1234,43 @@ body[data-mode="escolar"][data-theme="verde"]{
               <textarea id="inp-notas" placeholder="Notas..." style="min-height:120px;width:100%;"></textarea>
             </div>
           </div></div>
+        
+        <div class="fb">
+          <div class="field">
+            <label>📷 Imagen / Foto <button class="tip-btn" onclick="showTip('tip-imagen')">ⓘ</button></label>
+            <div class="premium-lock-wrap">
+              <div class="img-upload-area" id="img-upload-area" onclick="document.getElementById('inp-imagen').click()">
+                <div style="font-size:24px;">📷</div>
+                <div class="img-upload-label">Toca para adjuntar imagen o foto</div>
+                <img class="img-preview" id="img-preview" src="" alt="preview"/>
+                <button class="img-remove-btn" id="img-remove-btn" onclick="removeImage(event)">✕</button>
+              </div>
+              <input type="file" id="inp-imagen" accept="image/*" capture="environment" style="display:none" onchange="onImageSelected(event)"/>
+              <div class="img-status" id="img-status"></div>
+              <div class="img-uploading" id="img-uploading" style="display:none;">
+                <div class="spin"></div><span>⏳ Subiendo imagen...</span>
+              </div>
+              <div class="lock-overlay" id="lock-imagen" onclick="showUpgrade()" style="display:none">
+                <div class="lock-icon">🔒</div>
+                <div class="lock-label">Imágenes → Google Drive</div>
+                <div class="lock-sub">Disponible en Premium ⭐</div>
+              </div>
+            </div>
+          </div>
         </div>
+        <div class="fb">
+          <div class="field">
+            <label>🔔 Recordatorio <button class="tip-btn" onclick="showTip('tip-recordatorio')">ⓘ</button></label>
+            <div class="chips">
+              <button class="chip" onclick="setChip(this,'3')">3 días</button>
+              <button class="chip" onclick="setChip(this,'10')">10 días</button>
+              <button class="chip" onclick="setChip(this,'15')">15 días</button>
+              <button class="chip" onclick="setChip(this,'30')">30 días</button>
+              <button class="chip" onclick="setChip(this,'manual')">📅 Fecha y hora</button>
+            </div>
+            <input type="datetime-local" id="inp-recdate" style="display:none;margin-top:8px;max-width:220px;"/>
+          </div>
+        </div></div>
 
 <!-- 4. IMAGEN — común a ambos modos -->
 
@@ -1280,6 +1280,7 @@ body[data-mode="escolar"][data-theme="verde"]{
         
 
         </div><!-- /campos-opcionales -->
+</div>
 
         <!-- BOTONES GUARDAR / CANCELAR -->
         <div id="save-cancel-btns" style="display:none;gap:8px;margin-top:12px;">
@@ -2826,39 +2827,54 @@ if(btn) btn.textContent = sortDesc ? '↓ Más reciente' : '↑ Más antiguo';
 renderRecords();
 }
 function clearFilters(){
-if(_calFilterActive) toggleFiltroCalendar(); ['f-contacto','f-tema','f-estado'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';}); limpiarBusqueda(); renderContactoStats(''); clearFiltroFecha(); renderRecords(); }
+if(_calFilterActive) toggleFiltroCalendar(); ['f-contacto','f-tema','f-estado'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';}); limpiarBusqueda(); renderContactoStats(''); }
+function getFiltered(){
+const q='';
+const fc=document.getElementById('f-contacto').value,ft=document.getElementById('f-tema').value,fe=document.getElementById('f-estado').value;
 
-function _localDateStr(d){
-  return d.getFullYear()+'-'+(d.getMonth()<9?'0':'')+(d.getMonth()+1)+'-'+(d.getDate()<10?'0':'')+d.getDate();
+return state.records
+.filter(r=>{
+  if(fc&&r.contacto!==fc)return false;
+  if(ft&&r.tema!==ft)return false;
+  if(fe&&r.estado!==fe)return false;
+  if(q&&!JSON.stringify(r).toLowerCase().includes(q))return false;
+  if(_filtroFechaDesde||_filtroFechaHasta){
+    var rd=new Date(r.fecha);
+    var rdStr=rd.getFullYear()+'-'+(rd.getMonth()<9?'0':'')+(rd.getMonth()+1)+'-'+(rd.getDate()<10?'0':'')+rd.getDate();
+    if(_filtroFechaDesde&&rdStr<_filtroFechaDesde)return false;
+    if(_filtroFechaHasta&&rdStr>_filtroFechaHasta)return false;
+  }
+  return true;
+})
+.sort((a,b)=>new Date(b.fecha)-new Date(a.fecha));
 }
 function setFiltroFecha(tipo,btn){
 var hoy=new Date();
+var d=new Date();
 document.querySelectorAll('.chip-fecha').forEach(function(b){b.classList.remove('active');});
 if(btn) btn.classList.add('active');
 document.getElementById('fecha-desde').value='';
 document.getElementById('fecha-hasta').value='';
 if(tipo==='hoy'){
-  _filtroFechaDesde=_localDateStr(hoy);
-  _filtroFechaHasta=_localDateStr(hoy);
+  _filtroFechaDesde=hoy.toISOString().slice(0,10);
+  _filtroFechaHasta=hoy.toISOString().slice(0,10);
 }else if(tipo==='semana'){
   var day=hoy.getDay()||7;
   var mon=new Date(hoy);mon.setDate(hoy.getDate()-(day-1));
   var sun=new Date(mon);sun.setDate(mon.getDate()+6);
-  _filtroFechaDesde=_localDateStr(mon);
-  _filtroFechaHasta=_localDateStr(sun);
+  _filtroFechaDesde=mon.toISOString().slice(0,10);
+  _filtroFechaHasta=sun.toISOString().slice(0,10);
 }else if(tipo==='mes'){
-  var primerDia=new Date(hoy.getFullYear(),hoy.getMonth(),1);
-  _filtroFechaDesde=_localDateStr(primerDia);
-  _filtroFechaHasta=_localDateStr(hoy);
+  _filtroFechaDesde=hoy.getFullYear()+'-'+(hoy.getMonth()<9?'0':'')+(hoy.getMonth()+1)+'-01';
+  _filtroFechaHasta=hoy.toISOString().slice(0,10);
 }
 var clrBtn=document.getElementById('chip-fecha-clr');
 if(clrBtn) clrBtn.style.display='inline-block';
 renderRecords();
 }
 function setFiltroFechaRango(){
-var _normF=function(v){if(!v)return null;if(v.includes('/')){var p=v.split('/');if(p.length===3)return p[2]+'-'+p[1].padStart(2,'0')+'-'+p[0].padStart(2,'0');}return v;};
-var desde=_normF(document.getElementById('fecha-desde').value);
-var hasta=_normF(document.getElementById('fecha-hasta').value);
+var desde=document.getElementById('fecha-desde').value;
+var hasta=document.getElementById('fecha-hasta').value;
 if(!desde&&!hasta) return;
 _filtroFechaDesde=desde||null;
 _filtroFechaHasta=hasta||null;
@@ -4717,16 +4733,6 @@ return (r.contacto&&r.contacto.toLowerCase().includes(fq))
 ||(r.accion&&r.accion.toLowerCase().includes(fq))
 ||(r.notas&&r.notas.toLowerCase().includes(fq));
 });
-if(_filtroFechaDesde||_filtroFechaHasta){
-recs=recs.filter(function(r){
-var rd=new Date(r.fecha);
-var rdStr=rd.getFullYear()+'-'+(rd.getMonth()<9?'0':'')+(rd.getMonth()+1)+'-'+(rd.getDate()<10?'0':'')+rd.getDate();
-if(_filtroFechaDesde&&rdStr<_filtroFechaDesde)return false;
-if(_filtroFechaHasta&&rdStr>_filtroFechaHasta)return false;
-return true;
-});
-}
-recs.sort(function(a,b){return new Date(b.fecha)-new Date(a.fecha);});
 return recs;
 }
 function calVerDiaFechaStr(dStr){
