@@ -2871,9 +2871,18 @@ var clrBtn=document.getElementById('chip-fecha-clr');
 if(clrBtn) clrBtn.style.display='inline-block';
 renderRecords();
 }
+function normalizarFecha(val){
+if(!val) return null;
+// Si viene en formato dd/mm/yyyy convertir a yyyy-mm-dd
+if(val.includes('/')){
+  var p=val.split('/');
+  if(p.length===3) return p[2]+'-'+p[1].padStart(2,'0')+'-'+p[0].padStart(2,'0');
+}
+return val;
+}
 function setFiltroFechaRango(){
-var desde=document.getElementById('fecha-desde').value;
-var hasta=document.getElementById('fecha-hasta').value;
+var desde=normalizarFecha(document.getElementById('fecha-desde').value);
+var hasta=normalizarFecha(document.getElementById('fecha-hasta').value);
 if(!desde&&!hasta) return;
 _filtroFechaDesde=desde||null;
 _filtroFechaHasta=hasta||null;
