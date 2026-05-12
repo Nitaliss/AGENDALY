@@ -2599,13 +2599,13 @@ saveBtn.textContent='💾 Guardar registro';
 saveBtn.classList.remove('editing');
 }
 if(state.sheetsUrl) setTimeout(function(){syncToSheets();},300);
-showToast('toast-upd');
 if(navigator.vibrate) navigator.vibrate(50);
 renderRecords();
 var tabBtns=document.querySelectorAll('.tab-btn');
 var tabReg=null;
 tabBtns.forEach(function(b){if(b.textContent.includes('Registros')||b.getAttribute('onclick')&&b.getAttribute('onclick').includes('registros'))tabReg=b;});
 switchTab('registros',tabReg);
+setTimeout(function(){showToast('toast-upd');},300);
 return;
 }
 const newId=Date.now().toString();
