@@ -1,8 +1,6 @@
-// Tapunto Service Worker v2.0
+// Tapunto Service Worker v5.0
 // © 2026 Alicia Prats · tapunto.app
-// IMPORTANTE: cambia el número de CACHE_NAME cada vez que subas una versión nueva
-
-const CACHE_NAME =  'tapunto-v4.7';
+const CACHE_NAME = 'tapunto-v5.0';
 const ASSETS = [
   '/',
   '/index.html',
@@ -16,8 +14,6 @@ const ASSETS = [
   '/icono-384.png',
   '/icono-512.png',
 ];
-
-// INSTALAR — guarda los archivos en caché
 self.addEventListener('install', e => {
   e.waitUntil(
     caches.open(CACHE_NAME)
@@ -25,29 +21,21 @@ self.addEventListener('install', e => {
       .then(() => self.skipWaiting())
   );
 });
-
-// ACTIVAR — elimina cachés antiguas
 self.addEventListener('activate', e => {
   e.waitUntil(
     caches.keys().then(keys =>
-      Promise.all(
-        keys.filter(k => k !== CACHE_NAME).map(k => caches.delete(k))
-      )
+      Promise.all(keys.filter(k => k !== CACHE_NAME).map(k => caches.delete(k)))
     ).then(() => self.clients.claim())
   );
 });
-
-// FETCH — sirve desde caché, actualiza en segundo plano
 self.addEventListener('fetch', e => {
-  // No interceptar APIs externas
   if (e.request.url.includes('googleapis') ||
       e.request.url.includes('generativelanguage') ||
       e.request.url.includes('script.google') ||
       e.request.url.includes('wa.me') ||
       e.request.url.includes('calendar.google') ||
-      e.request.url.includes('mail.google')) return;
-
-  // Estrategia: Network first, caché como fallback
+      e.request.url.includes('mail.google') ||
+      e.request.url.includes('fonts.gstatic')) return;
   e.respondWith(
     fetch(e.request)
       .then(res => {
@@ -61,10 +49,6 @@ self.addEventListener('fetch', e => {
       )
   );
 });
-
-// MENSAJE — forzar actualización desde la app
 self.addEventListener('message', e => {
-  if (e.data && e.data.type === 'SKIP_WAITING') {
-    self.skipWaiting();
-  }
+  if (e.data && e.data.type === 'SKIP_WAITING') self.skipWaiting();
 });
