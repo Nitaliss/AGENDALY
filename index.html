@@ -2468,7 +2468,7 @@ mostrarGeminiBadge(false); setDictadoStatus(''); showAiModal(result,provider);
 }catch(err){ mostrarGeminiBadge(false); setDictadoStatus('❌ Error IA: '+err.message+'. Usando parser local.'); showAiModal(parseLocalDictado(txt),'local'); }
 }
 async function callGemini(prompt){
-const r=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${getApiKey('gemini')}`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({contents:[{parts:[{text:prompt}]}]})});
+const r=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-lite:generateContent?key=${getApiKey('gemini')}`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({contents:[{parts:[{text:prompt}]}]})});
 if(!r.ok) throw new Error('Gemini HTTP '+r.status);
 const d=await r.json(); return JSON.parse((d.candidates?.[0]?.content?.parts?.[0]?.text||'{}').replace(/```json|```/g,'').trim());
 }
@@ -3339,11 +3339,10 @@ renderLists();
 }
 function showToast(id){
 var el=document.getElementById(id);
-if(!el){console.warn('Toast not found:',id);return;}
-el.style.display='flex';
-el.style.opacity='1';
-console.log('Toast shown:',id);
-setTimeout(function(){el.style.opacity='0';setTimeout(function(){el.style.display='none';el.style.opacity='1';},300);},3000);
+console.log('showToast called:', id, el ? 'found' : 'NOT FOUND');
+if(!el) return;
+el.style.cssText+='display:flex!important;opacity:1!important;z-index:99999!important;';
+setTimeout(function(){el.style.display='none';},3500);
 }
 function showWarn(msg){
 var el=document.getElementById('toast-warn');
@@ -3693,19 +3692,23 @@ const firmante=firma.nombre||currentUser.split('@')[0]||'';
 const firmaCtx=[firma.cargo,firma.empresa,firma.telefono].filter(Boolean).join(' · ');
 const prompt=buildPromptEmail(r,fd,firmante,firmaCtx);
 try{
-const resp=await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key='+key,{
+const resp=await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-lite:generateContent?key='+key,{
 method:'POST',
 headers:{'Content-Type':'application/json'},
 body:JSON.stringify({contents:[{parts:[{text:prompt}]}]})
 });
 if(!resp.ok){
-showWarn('Error '+resp.status+' al conectar con Gemini.');
+const errTxt=await resp.text();
+console.log('Gemini error:', resp.status, errTxt.slice(0,200));
+showWarn('Error '+resp.status+' Gemini. Revisa tu clave API en Config.');
 document.getElementById('email-asunto').value=(r.tema||r.accion||'Seguimiento');
-document.getElementById('email-cuerpo').value='';
+document.getElementById('email-cuerpo').value='Error '+resp.status+': '+errTxt.slice(0,200);
 return;
 }
 const data=await resp.json();
+console.log('Gemini raw:', JSON.stringify(data).slice(0,500));
 const texto=data.candidates?.[0]?.content?.parts?.[0]?.text||'';
+console.log('texto:', texto.slice(0,100));
 if(!texto){
 showWarn('Gemini no devolvió respuesta. Comprueba tu clave API.');
 document.getElementById('email-asunto').value=(r.tema||r.accion||'Seguimiento');
@@ -4119,7 +4122,7 @@ var NLW2='\n';const firmaCtx=(f.cargo?', '+f.cargo:'')+(f.empresa?NLW2+f.empresa
 const prompt=buildPromptWhatsApp(r,fd,firmante);
 try{
 showWarn('⏳ Gemini redactando mensaje WhatsApp...');
-const resp=await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key='+key,{
+const resp=await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-lite:generateContent?key='+key,{
 method:'POST',headers:{'Content-Type':'application/json'},
 body:JSON.stringify({contents:[{parts:[{text:prompt}]}]})
 });
