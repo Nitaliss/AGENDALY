@@ -3451,11 +3451,10 @@ applyMode('trabajo');
 initForm();
 checkTodayReminders();
 initFAB();
-});
-
 var _tb=document.querySelectorAll('.tab-btn'),_tr=null;
 _tb.forEach(function(b){if(b.getAttribute('onclick')&&b.getAttribute('onclick').includes('registros'))_tr=b;});
-switchTab('registros',_tr);}
+switchTab('registros',_tr);
+});}
 function getEscolarData(){
 return {
 asignatura: (document.getElementById('inp-asignatura')||{}).value||'',
@@ -3661,7 +3660,7 @@ return;
 }
 const data=await resp.json();
 var texto='';
-try{texto=data.candidates[0].content.parts[0].text||'';}catch(e){texto='';}
+try{texto=((data.candidates||[])[0]||{}).content&&data.candidates[0].content.parts[0].text||'';}catch(e){texto='';}
 if(!texto){
 showWarn('Gemini no devolvió respuesta.');
 document.getElementById('email-asunto').value=(r.tema||r.accion||'Seguimiento');
