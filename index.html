@@ -26,6 +26,54 @@
   ============================================================
 -->
 <style>
+/* ── MODO OSCURO ── */
+body.dark-mode{
+  --bp:#1a1a2e;--bl:#16213e;--bd:#0f3460;--td:#e0e0e0;--tm:#4ecca3;
+  --tc:#a8d8b9;--gd:linear-gradient(135deg,#0f3460,#4ecca3);
+  --bc:#0f3460;--bct:#4ecca3;
+}
+body.dark-mode .notebook{background:#1a1a2e;}
+body.dark-mode .cover{background:linear-gradient(135deg,#0f3460 0%,#1a1a2e 100%);}
+body.dark-mode .tab-bar{background:#16213e;border-bottom:1px solid #0f3460;
+  display:flex;
+}
+.tab-btn{
+  padding:11px 0;
+  border:none;
+  border-right:1.5px solid rgba(0,0,0,.13);
+  background:transparent;
+  cursor:pointer;
+  font-family:'Lato',sans-serif;
+  font-size:13px;
+  font-weight:600;
+  color:var(--td);
+  opacity:0.75;
+  transition:color .15s,opacity .15s,background .15s;
+  white-space:nowrap;
+  flex:1;
+  text-align:center;
+}
+.tab-btn:last-child{border-right:none;}
+.tab-btn:hover{opacity:1;background:rgba(0,0,0,.04);color:var(--gm);}
+.tab-btn.active{
+  color:var(--gm);
+  font-weight:700;
+  opacity:1;
+  background:rgba(45,80,22,.08);
+}
+body.dark-mode .rec-card{background:#16213e;border-color:#0f3460;}
+body.dark-mode .rec-card:hover{background:#0f3460;}
+body.dark-mode input,body.dark-mode select,body.dark-mode textarea{
+  background:#16213e;color:#e0e0e0;border-color:#0f3460;
+}
+body.dark-mode .page{background:#1a1a2e;background-image:repeating-linear-gradient(transparent,transparent 27px,rgba(79,204,163,.08) 28px);}
+body.dark-mode .modal-overlay{background:rgba(0,0,0,.85);}
+body.dark-mode .modal-box,.dark-mode .email-modal-inner{background:#16213e;color:#e0e0e0;}
+body.dark-mode .chip{background:#16213e;border-color:#0f3460;color:#e0e0e0;}
+body.dark-mode .chip.active{background:#0f3460;color:#4ecca3;}
+body.dark-mode .hdr-bar{background:#16213e;}
+body.dark-mode .cfg-section{background:#16213e;border-color:#0f3460;}
+body.dark-mode #dark-toggle{color:#ffd700;}
 /* ── TEMAS ── */
 body[data-theme="verde"]{
   --gd:#2D5016;--gm:#3D6B1F;--gl:#5A8A32;--ga:#6B9E3A;
@@ -300,25 +348,29 @@ body{font-family:'Lato',sans-serif;background:var(--body-bg);min-height:100vh;
 /* ── TABS ── */
 .tabs-bar{background:var(--bl);border-bottom:1px solid var(--bd);
   display:flex;overflow-x:auto;padding:0 10px;transition:background .3s;}
-.tab-btn{padding:10px 14px;font-size:11px;font-family:'Lato',sans-serif;
-  font-weight:700;letter-spacing:.5px;color:var(--tl);border:none;
-  background:transparent;border-bottom:2px solid transparent;cursor:pointer;
-  white-space:nowrap;transition:all .15s;text-transform:uppercase;}
-.tab-btn.active{color:var(--gd);border-bottom-color:var(--gd);}
+
+
 /* Colores por pestaña */
-.tab-btn:nth-child(1){border-top:3px solid #2D5016;}
-.tab-btn:nth-child(2){border-top:3px solid #1a73e8;}
-.tab-btn:nth-child(3){border-top:3px solid #e6a817;}
-.tab-btn:nth-child(4){border-top:3px solid #c0392b;}
-.tab-btn:nth-child(5){border-top:3px solid #6b7280;}
+
+
+
+
+
 @media(min-width:768px){
   .notebook{max-width:1400px;margin:0 auto;width:100%;}
 }
 
 /* ── PAGE ── */
-.page{background:var(--bp);min-height:100px;padding:8px 18px 32px;
+.page{background:var(--bp);min-height:100px;padding:4px 18px 32px;
   background-image:repeating-linear-gradient(transparent,transparent 27px,rgba(200,184,154,.22) 28px);
   background-size:100% 28px;transition:background .3s;}
+#sec-registros.section,#sec-recordatorios.section,#sec-calendario.section,#sec-config.section{padding-top:0!important;margin-top:0!important;}
+.section.active>*:first-child{margin-top:0!important;padding-top:0!important;}
+.stats-bar{margin-top:0!important;padding-top:6px!important;}
+.rec-filters{margin-top:0!important;}
+.cal-nav{margin-top:0!important;}
+.cfg-basic{margin-top:0!important;}
+.rem-section{margin-top:0!important;}
 .section{display:none;}.section.active{display:block;}
 .sec-title{font-family:'Caveat',cursive;font-size:22px;color:var(--tm);
   margin-bottom:14px;padding-bottom:6px;border-bottom:1px solid var(--bd);}
@@ -579,6 +631,8 @@ body[data-theme="noche"] .free-bar{background:#2a1f00;border-color:#6b5000;color
 .cal-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
 .chip-fecha{padding:4px 10px;border:1px solid var(--bd);border-radius:12px;font-size:12px;background:var(--bl);color:var(--td);cursor:pointer;white-space:nowrap;}
 .chip-fecha.active{background:var(--gd);color:#fff;border-color:var(--gd);}
+.notif-banner{display:none;background:#fff8e1;border:1px solid #f0c040;border-radius:8px;padding:10px 16px;margin:8px 16px;font-size:13px;align-items:center;gap:10px;flex-wrap:wrap;}
+.notif-banner button{padding:4px 12px;border-radius:6px;border:none;cursor:pointer;font-size:12px;font-weight:700;}
 .cal-day-note{font-size:6px;color:var(--td);line-height:1.2;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;margin-top:1px;cursor:pointer;}
 .cal-dot.pendiente{background:#856404;}
 .cal-dot.en-curso{background:#1a73e8;}
@@ -1034,7 +1088,8 @@ body[data-mode="escolar"][data-theme="verde"]{
           <span id="sync-label">Sincronizado</span>
         </div>
         <button class="sync-btn" onclick="syncFromSheets(true)">⟳ Sync</button>
-        <button class="logout-btn" onclick="doLogout()">Salir</button>
+        <button id="dark-toggle" onclick="toggleDarkMode()" style="background:none;border:none;font-size:18px;cursor:pointer;padding:4px 6px;line-height:1;" title="Modo oscuro">🌙</button>
+  <button class="logout-btn" onclick="doLogout()">Salir</button>
       </div>
     </div>
 
@@ -1327,9 +1382,9 @@ body[data-mode="escolar"][data-theme="verde"]{
           <input type="date" id="fecha-desde" title="Desde" onchange="setFiltroFechaRango()" oninput="setFiltroFechaRango()" style="border:1px solid var(--bd);border-radius:6px;padding:3px 6px;font-size:12px;color:var(--td);background:var(--bl);">
           <input type="date" id="fecha-hasta" title="Hasta" onchange="setFiltroFechaRango()" oninput="setFiltroFechaRango()" style="border:1px solid var(--bd);border-radius:6px;padding:3px 6px;font-size:12px;color:var(--td);background:var(--bl);">
           <button onclick="setFiltroFechaRango()" style="padding:3px 10px;border:1px solid var(--gd);border-radius:6px;font-size:12px;background:var(--gd);color:#fff;cursor:pointer;font-weight:700;">🔍</button>
+          <button onclick="toggleArchivados()" id="btn-archivados" style="padding:3px 10px;border:1px solid var(--bd);border-radius:6px;font-size:12px;background:var(--bl);color:var(--td);cursor:pointer;">📥 Archivados</button>
           <button id="chip-fecha-clr" onclick="clearFiltroFecha()" style="display:none;padding:3px 8px;border:1px solid #f5c6c6;border-radius:6px;font-size:12px;background:#fff0f0;color:#c53030;cursor:pointer;">✕ Fecha</button>
-          <button class="exp-btn" onclick="exportCSV()" style="display:none;">⬇ CSV</button>
-          <button class="exp-btn" onclick="abrirLibreta()" style="background:var(--bc);border-color:var(--bc);">📖 Libreta</button>
+                    <button class="exp-btn" onclick="abrirLibreta()" style="background:var(--bc);border-color:var(--bc);">📖 Libreta</button>
         </div>
         <!-- Vista Calendar: solo asunto y fecha -->
         <div id="calendar-filter-view" style="display:none;margin-bottom:12px;">
@@ -1624,6 +1679,22 @@ body[data-mode="escolar"][data-theme="verde"]{
             <p style="font-size:10px;color:var(--tl);margin-top:6px;">Marca registrada OEPM M4377915 · Clase 42</p>
           </div>
         </div>
+      
+        <!-- DATOS Y BACKUP -->
+        <div class="cfg-block">
+          <div class="cfg-hdr" onclick="toggleCfg(this)">
+            <span class="cfg-hdr-title">💾 Datos y backup</span>
+            <span class="cfg-arrow">▶</span>
+          </div>
+          <div class="cfg-body">
+            <p style="font-size:13px;color:var(--td);margin-bottom:12px;">Exporta tus registros para hacer una copia de seguridad o analizarlos en Excel.</p>
+            <div style="display:flex;gap:10px;flex-wrap:wrap;">
+              <button onclick="exportCSV()" style="padding:10px 18px;background:var(--gm);color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;">⬇ Exportar CSV</button>
+              <button onclick="exportarDatosCompletos()" style="padding:10px 18px;background:var(--bc);color:var(--bct);border:1px solid var(--bd);border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;">📦 Backup completo JSON</button>
+            </div>
+          </div>
+        </div>
+
       </div><!-- /sec-config -->
     </div><!-- /page -->
   </div><!-- /nb-inner -->
@@ -1833,6 +1904,7 @@ let pendingDelId = null;
 let autoSyncTimer = null;
 let isPremium = false;
 var _filtroFechaDesde=null,_filtroFechaHasta=null;
+var _mostrarArchivados=false;
 let isRecording = false;
 let recogn = null;
 let dictadoMode = null;
@@ -2765,6 +2837,46 @@ document.getElementById("dictado-transcript").style.display="none";
 document.getElementById("dictado-transcript").textContent="";
 }
 }
+function toggleArchivados(){
+_mostrarArchivados=!_mostrarArchivados;
+var btn=document.getElementById('btn-archivados');
+if(btn){
+btn.style.background=_mostrarArchivados?'var(--gm)':'var(--bl)';
+btn.style.color=_mostrarArchivados?'#fff':'var(--td)';
+btn.textContent=_mostrarArchivados?'📤 Ver activos':'📥 Archivados';
+}
+renderRecords();
+}
+function duplicarRegistro(id){
+var r=state.records.find(function(rec){return rec.id===id;});
+if(!r) return;
+var nuevo=JSON.parse(JSON.stringify(r));
+nuevo.id='rec_'+Date.now();
+nuevo.created=new Date().toISOString();
+nuevo.fecha=new Date().toISOString();
+nuevo.archivado=false;
+state.records.unshift(nuevo);
+persist().catch(function(){});
+renderRecords();
+setTimeout(function(){showToast('toast-ok');},200);
+showWarn('✓ Registro duplicado correctamente.');
+}
+function archivarRegistro(id){
+var r=state.records.find(function(rec){return rec.id===id;});
+if(!r) return;
+r.archivado=true;
+persist().catch(function(){});
+renderRecords();
+showWarn('📥 Registro archivado.');
+}
+function restaurarRegistro(id){
+var r=state.records.find(function(rec){return rec.id===id;});
+if(!r) return;
+r.archivado=false;
+persist().catch(function(){});
+renderRecords();
+showWarn('📤 Registro restaurado.');
+}
 function askDelete(id){ pendingDelId=id; document.getElementById('confirm-ov').style.display='flex'; }
 function closeConfirm(){ pendingDelId=null; document.getElementById('confirm-ov').style.display='none'; }
 function confirmDelete(){ if(!pendingDelId) return; state.records=state.records.filter(r=>r.id!==pendingDelId); persist().catch(()=>{}); if(state.sheetsUrl) syncToSheets(); closeConfirm(); renderRecords(); renderStats(); updateFreeBar(); }
@@ -2976,8 +3088,10 @@ var btnEmail=btn('✉','Email','abrirEmailModal');
 var btnEmailIA=(isPremium&&getApiKey('gemini')&&!r.confidencial)?btn('🤖','Email IA','emailIA'):'';
 var btnWA=btn('💬','WhatsApp','abrirWhatsApp');
 var btnCal=btn('📅','Calendar','abrirGoogleCalendarConConfirm');
-var btnDel='<button class="rec-action-btn danger" onclick="event.stopPropagation();askDelete(\'' +id+ '\')"><span>🗑</span>Eliminar</button>';
-var actions='<div class="rec-actions" id="ra-'+id+'">'+btnEdit+btnEmail+btnEmailIA+btnWA+btnCal+btnDel+'</div>';
+var btnDup=btn('📋','Duplicar','duplicarRegistro');
+var btnArch=r.archivado?btn('📤','Restaurar','restaurarRegistro'):btn('📥','Archivar','archivarRegistro');
+var btnDel='<button class="rec-action-btn danger" onclick="event.stopPropagation();askDelete(\'' +id+ '\'\')"><span>🗑</span>Eliminar</button>';
+var actions='<div class="rec-actions" id="ra-'+id+'">'+btnEdit+btnDup+btnArch+btnEmail+btnEmailIA+btnWA+btnCal+btnDel+'</div>';
 return '<div class="record" onclick="toggleRecActions(\'' +id+ '\')">'
 +'<div class="rec-date">'+fd+'<br>'+fh+'</div>'
 +'<div style="flex:1;min-width:0;">'
@@ -3536,6 +3650,8 @@ document.getElementById('inp-tipo-tarea').value=n.trim();
 }
 }
 async function finishLogin(){
+initDarkMode();
+initNotificaciones();
 const _firma=getFirma();
 const _dispName=(_firma.nombre||currentUser.split('@')[0]).split(' ')[0];
 document.getElementById('user-greet').textContent='Hola, '+_dispName.charAt(0).toUpperCase()+_dispName.slice(1)+' 🐾';
@@ -3849,6 +3965,16 @@ const m=document.getElementById('rec-menu');
 if(ov) ov.remove();
 if(m) m.remove();
 _menuRecId=null;
+}
+function toggleArchivados(){
+_mostrarArchivados=!_mostrarArchivados;
+var btn=document.getElementById('btn-archivados');
+if(btn){
+btn.style.background=_mostrarArchivados?'var(--gm)':'var(--bl)';
+btn.style.color=_mostrarArchivados?'#fff':'var(--td)';
+btn.textContent=_mostrarArchivados?'📤 Ver activos':'📥 Archivados';
+}
+renderRecords();
 }
 function duplicarRegistro(id){
 const r=state.records.find(rec=>rec.id===id);
@@ -4822,6 +4948,78 @@ return '<div style="display:flex;align-items:center;justify-content:space-betwee
 +'<span style="font-size:10px;background:#d4edda;color:#155724;padding:2px 8px;border-radius:10px;font-weight:700;">Calendar</span>'
 +'</div>';
 }).join('');
+}
+// ══ NOTIFICACIONES PUSH ══
+function initNotificaciones(){
+if(!('Notification' in window)) return;
+var perm=localStorage.getItem('tp_notif_asked');
+if(perm==='1'||perm==='no') return;
+// Mostrar banner la primera vez
+setTimeout(function(){
+var b=document.getElementById('notif-banner');
+if(b) b.style.display='flex';
+},2000);
+}
+function pedirPermisoNotif(){
+cerrarNotifBanner();
+if(!('Notification' in window)){showWarn('Tu navegador no soporta notificaciones.');return;}
+Notification.requestPermission().then(function(result){
+localStorage.setItem('tp_notif_asked','1');
+if(result==='granted'){
+showToast('toast-ok');
+showWarn('✅ Notificaciones activadas. Recibirás avisos de tus recordatorios.');
+programarNotificaciones();
+}else{
+showWarn('Notificaciones no activadas. Puedes activarlas desde Config.');
+}
+});
+}
+function cerrarNotifBanner(){
+var b=document.getElementById('notif-banner');
+if(b) b.style.display='none';
+localStorage.setItem('tp_notif_asked','no');
+}
+function programarNotificaciones(){
+if(Notification.permission!=='granted') return;
+if(!state||!state.records) return;
+var ahora=new Date();
+state.records.forEach(function(r){
+if(!r.recordatorio) return;
+var fechaRec=new Date(r.recordatorio);
+if(isNaN(fechaRec)) return;
+var diff=fechaRec-ahora;
+if(diff<0||diff>7*24*60*60*1000) return; // Solo próximos 7 días
+var tema=r.tema||r.accion||'Recordatorio';
+var contacto=r.contacto?(' · '+r.contacto):'';
+setTimeout(function(){
+try{
+new Notification('📌 Tapunto — '+tema,{
+body:contacto+(r.notas?' — '+r.notas.slice(0,80):''),
+icon:'/icono-192.png',
+badge:'/icono-72.png',
+tag:'tapunto-rec-'+r.id
+});
+}catch(e){}
+},Math.max(diff,1000));
+});
+}
+function checkNotifPermiso(){
+if(Notification.permission==='granted') programarNotificaciones();
+}
+function toggleDarkMode(){
+var body=document.body;
+var isDark=body.classList.toggle('dark-mode');
+localStorage.setItem('tp_dark_mode',isDark?'1':'0');
+var btn=document.getElementById('dark-toggle');
+if(btn) btn.textContent=isDark?'☀️':'🌙';
+}
+function initDarkMode(){
+var saved=localStorage.getItem('tp_dark_mode');
+if(saved==='1'){
+document.body.classList.add('dark-mode');
+var btn=document.getElementById('dark-toggle');
+if(btn) btn.textContent='☀️';
+}
 }
 function mostrarSplash(){
 var splash=document.getElementById('splash-screen');
