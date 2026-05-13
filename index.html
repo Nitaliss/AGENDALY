@@ -848,6 +848,7 @@ body[data-mode="escolar"][data-theme="verde"]{
   .page{padding:0 8px;}
 }
 </style>
+<script>(function(){try{if(localStorage.getItem('tp_dark_mode')==='1')document.documentElement.style.background='#1a1a2e';}catch(e){};}());</script>
 </head>
 <body data-theme="verde">
 
@@ -1094,7 +1095,8 @@ body[data-mode="escolar"][data-theme="verde"]{
     </div>
 
     <!-- TABS -->
-    <div class="tabs-bar">
+    <div id="notif-banner" style="display:none;background:#fff8e1;border:1px solid #f0c040;padding:10px 16px;font-size:13px;align-items:center;gap:10px;flex-wrap:wrap;">🔔 <span>Activa las notificaciones para recibir avisos de tus recordatorios</span> <button onclick="pedirPermisoNotif()" style="padding:4px 12px;background:var(--gm);color:#fff;border:none;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;">Activar</button> <button onclick="cerrarNotifBanner()" style="padding:4px 10px;background:#eee;color:#666;border:none;border-radius:6px;font-size:12px;cursor:pointer;">Ahora no</button></div>
+<div class="tabs-bar">
       <button class="tab-btn active" id="tab-nuevo" onclick="switchTab('nuevo',this)">✏ <span id="tab-nuevo-lbl">Nuevo</span></button>
       <button class="tab-btn" id="tab-registros" onclick="switchTab('registros',this)">📋 <span id="tab-registros-lbl">Registros</span></button>
       <button class="tab-btn" onclick="switchTab('recordatorios',this)">🔔 <span id="tab-alertas-lbl">Alertas</span></button>
@@ -1517,7 +1519,7 @@ body[data-mode="escolar"][data-theme="verde"]{
           </div>
           <div class="cfg-body">
             <p style="font-size:12px;color:var(--tl);margin-bottom:10px;">Recibe avisos de recordatorios en tu móvil aunque la app esté cerrada.</p>
-            <button onclick="pedirPermisoPush()" style="padding:9px 16px;background:var(--gm);border:none;border-radius:7px;color:#fff;font-family:'Lato',sans-serif;font-size:13px;font-weight:700;cursor:pointer;">🔔 Activar notificaciones</button>
+            <button onclick="pedirPermisoNotif()" style="padding:9px 16px;background:var(--gm);border:none;border-radius:7px;color:#fff;font-family:'Lato',sans-serif;font-size:13px;font-weight:700;cursor:pointer;">🔔 Activar notificaciones</button>
             <div id="cfg-notif-msg" style="margin-top:8px;font-size:12px;color:var(--tl);"></div>
           </div>
         </div>
@@ -2939,46 +2941,38 @@ if(btn) btn.textContent = sortDesc ? '↓ Más reciente' : '↑ Más antiguo';
 renderRecords();
 }
 function clearFilters(){
-if(_calFilterActive) toggleFiltroCalendar(); ['f-contacto','f-tema','f-estado'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';}); limpiarBusqueda(); renderContactoStats(''); }
-function getFiltered(){
-const q='';
-const fc=document.getElementById('f-contacto').value,ft=document.getElementById('f-tema').value,fe=document.getElementById('f-estado').value;
+if(_calFilterActive) toggleFiltroCalendar();
+['f-contacto','f-tema','f-estado'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});
+limpiarBusqueda();
+renderContactoStats('');
+clearFiltroFecha();
+_mostrarArchivados=false;
+var btnArch=document.getElementById('btn-archivados');
+if(btnArch){btnArch.style.background='var(--bl)';btnArch.style.color='var(--td)';btnArch.textContent='📥 Archivados';}
+renderRecords();
+}
 
-return state.records
-.filter(r=>{
-  if(fc&&r.contacto!==fc)return false;
-  if(ft&&r.tema!==ft)return false;
-  if(fe&&r.estado!==fe)return false;
-  if(q&&!JSON.stringify(r).toLowerCase().includes(q))return false;
-  if(_filtroFechaDesde||_filtroFechaHasta){
-    var rd=new Date(r.fecha);
-    var rdStr=rd.getFullYear()+'-'+(rd.getMonth()<9?'0':'')+(rd.getMonth()+1)+'-'+(rd.getDate()<10?'0':'')+rd.getDate();
-    if(_filtroFechaDesde&&rdStr<_filtroFechaDesde)return false;
-    if(_filtroFechaHasta&&rdStr>_filtroFechaHasta)return false;
-  }
-  return true;
-})
-.sort((a,b)=>new Date(b.fecha)-new Date(a.fecha));
+function _localDateStr(d){
+return d.getFullYear()+'-'+(d.getMonth()<9?'0':'')+(d.getMonth()+1)+'-'+(d.getDate()<10?'0':'')+d.getDate();
 }
 function setFiltroFecha(tipo,btn){
 var hoy=new Date();
-var d=new Date();
 document.querySelectorAll('.chip-fecha').forEach(function(b){b.classList.remove('active');});
 if(btn) btn.classList.add('active');
 document.getElementById('fecha-desde').value='';
 document.getElementById('fecha-hasta').value='';
 if(tipo==='hoy'){
-  _filtroFechaDesde=hoy.toISOString().slice(0,10);
-  _filtroFechaHasta=hoy.toISOString().slice(0,10);
+  _filtroFechaDesde=_localDateStr(hoy);
+  _filtroFechaHasta=_localDateStr(hoy);
 }else if(tipo==='semana'){
   var day=hoy.getDay()||7;
   var mon=new Date(hoy);mon.setDate(hoy.getDate()-(day-1));
   var sun=new Date(mon);sun.setDate(mon.getDate()+6);
-  _filtroFechaDesde=mon.toISOString().slice(0,10);
-  _filtroFechaHasta=sun.toISOString().slice(0,10);
+  _filtroFechaDesde=_localDateStr(mon);
+  _filtroFechaHasta=_localDateStr(sun);
 }else if(tipo==='mes'){
   _filtroFechaDesde=hoy.getFullYear()+'-'+(hoy.getMonth()<9?'0':'')+(hoy.getMonth()+1)+'-01';
-  _filtroFechaHasta=hoy.toISOString().slice(0,10);
+  _filtroFechaHasta=_localDateStr(hoy);
 }
 var clrBtn=document.getElementById('chip-fecha-clr');
 if(clrBtn) clrBtn.style.display='inline-block';
@@ -3704,6 +3698,7 @@ function resetEscolarForm(){
 const _origInitForm = initForm;
 function x(s){ if(!s) return ''; return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 window.addEventListener('DOMContentLoaded',()=>{
+initDarkMode();
 checkSession();
 document.getElementById('login-pin').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
 document.getElementById('confirm-ov').addEventListener('click',e=>{if(e.target===document.getElementById('confirm-ov'))closeConfirm();});
@@ -3976,23 +3971,7 @@ btn.textContent=_mostrarArchivados?'📤 Ver activos':'📥 Archivados';
 }
 renderRecords();
 }
-function duplicarRegistro(id){
-const r=state.records.find(rec=>rec.id===id);
-if(!r) return;
-if(!isPremium&&state.records.length>=20){showWarn('Límite de 20 registros en plan Free.');showUpgrade();return;}
-const nuevo=Object.assign({},r,{
-id:Date.now().toString(),
-fecha:new Date().toISOString().slice(0,16),
-created:new Date().toISOString(),
-recordatorio:'',
-imagenUrl:''
-});
-state.records.unshift(nuevo);
-persist().catch(()=>{});
-if(state.sheetsUrl) fetch(state.sheetsUrl,{method:'POST',body:JSON.stringify({action:'append',token:localStorage.getItem('tp_sheets_token_'+currentUser)||'',...nuevo})}).catch(()=>{});
-renderRecords(); renderStats();
-showWarn('📋 Registro duplicado — editalo para actualizarlo');
-}
+
 function abrirGoogleCalendar(id){
 const r=state.records.find(rec=>rec.id===id);
 if(!r) return;
@@ -4842,7 +4821,8 @@ var idx=state.records.findIndex(function(r){return r.id===id;});
 if(idx>-1){state.records[idx].waEnviado=true;persist().catch(function(){});renderRecords();}
 }
 function getFiltered(){
-var recs=[...state.records];
+var recs=(_mostrarArchivados?state.records:state.records.filter(function(r){return !r.archivado;}));
+recs=[].concat(recs);
 var fc=document.getElementById('f-contacto')?document.getElementById('f-contacto').value:'';
 var ft=document.getElementById('f-tema')?document.getElementById('f-tema').value:'';
 var fe=document.getElementById('f-estado')?document.getElementById('f-estado').value:'';
@@ -4859,6 +4839,16 @@ return (r.contacto&&r.contacto.toLowerCase().includes(fq))
 ||(r.accion&&r.accion.toLowerCase().includes(fq))
 ||(r.notas&&r.notas.toLowerCase().includes(fq));
 });
+if(_filtroFechaDesde||_filtroFechaHasta){
+recs=recs.filter(function(r){
+var rd=new Date(r.fecha);
+var rdStr=rd.getFullYear()+'-'+(rd.getMonth()<9?'0':'')+(rd.getMonth()+1)+'-'+(rd.getDate()<10?'0':'')+rd.getDate();
+if(_filtroFechaDesde&&rdStr<_filtroFechaDesde)return false;
+if(_filtroFechaHasta&&rdStr>_filtroFechaHasta)return false;
+return true;
+});
+}
+recs.sort(function(a,b){return new Date(b.fecha)-new Date(a.fecha);});
 return recs;
 }
 function calVerDiaFechaStr(dStr){
