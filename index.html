@@ -296,7 +296,7 @@ body{font-family:'Lato',sans-serif;background:var(--body-bg);min-height:100vh;
 .cover-dev strong{font-family:'Caveat',cursive;font-size:20px;color:rgba(255,255,255,.9);display:block;margin-top:1px;}
 
 /* ── LOGIN ── */
-.login-ov{position:fixed;inset:0;background:rgba(0,0,0,.65);
+#login-ov{position:fixed;inset:0;background:rgba(0,0,0,.65);
   display:flex;align-items:center;justify-content:center;z-index:9999;padding:20px;}
 .login-card{background:var(--w);border-radius:16px;padding:32px 28px;width:100%;
   max-width:360px;box-shadow:0 24px 64px rgba(0,0,0,.35);text-align:center;}
@@ -361,16 +361,24 @@ body{font-family:'Lato',sans-serif;background:var(--body-bg);min-height:100vh;
 }
 
 /* ── PAGE ── */
-.page{background:var(--bp);min-height:100px;padding:4px 18px 32px;
+.page{background:var(--bp);min-height:100px;padding:0 18px 32px;
   background-image:repeating-linear-gradient(transparent,transparent 27px,rgba(200,184,154,.22) 28px);
   background-size:100% 28px;transition:background .3s;}
+#sec-registros>.search-bar+div,
+#sec-recordatorios>div:first-child,
+#sec-calendario>div:first-child,
+#sec-config>div:first-child{margin-top:0!important;}
+
 #sec-registros.section,#sec-recordatorios.section,#sec-calendario.section,#sec-config.section{padding-top:0!important;margin-top:0!important;}
 .section.active>*:first-child{margin-top:0!important;padding-top:0!important;}
-.stats-bar{margin-top:0!important;padding-top:6px!important;}
-.rec-filters{margin-top:0!important;}
-.cal-nav{margin-top:0!important;}
-.cfg-basic{margin-top:0!important;}
-.rem-section{margin-top:0!important;}
+.stats-bar{margin-top:0!important;padding-top:4px!important;}
+.rec-filters{margin-top:0!important;padding-top:4px!important;}
+.cal-nav{margin-top:0!important;padding-top:4px!important;}
+.cfg-basic{margin-top:0!important;padding-top:4px!important;}
+.rem-section{margin-top:0!important;padding-top:4px!important;}
+#sec-registros .search-bar{margin-top:0!important;}
+#sec-registros .notif-banner-inner{margin-top:0!important;}
+#stats-row{padding-top:6px!important;}
 .section{display:none;}.section.active{display:block;}
 .sec-title{font-family:'Caveat',cursive;font-size:22px;color:var(--tm);
   margin-bottom:14px;padding-bottom:6px;border-bottom:1px solid var(--bd);}
@@ -398,7 +406,7 @@ body[data-theme="noche"] .free-bar{background:#2a1f00;border-color:#6b5000;color
   border:none;border-radius:4px;cursor:pointer;font-family:'Lato',sans-serif;font-weight:700;}
 
 /* ── UPGRADE MODAL ── */
-.upg-ov{position:fixed;inset:0;background:rgba(0,0,0,.65);
+#upg-ov{position:fixed;inset:0;background:rgba(0,0,0,.65);
   display:none;align-items:center;justify-content:center;z-index:9980;padding:16px;}
 .upg-modal{background:var(--w);border-radius:16px;padding:28px 24px;
   width:100%;max-width:400px;box-shadow:0 20px 60px rgba(0,0,0,.35);text-align:center;}
@@ -466,7 +474,7 @@ body[data-theme="noche"] .free-bar{background:#2a1f00;border-color:#6b5000;color
   display:none;min-height:40px;font-style:italic;line-height:1.6;}
 
 /* ── AI MODAL ── */
-.ai-modal-ov{position:fixed;inset:0;background:rgba(0,0,0,.6);
+#ai-modal-ov{position:fixed;inset:0;background:rgba(0,0,0,.6);
   display:none;align-items:center;justify-content:center;z-index:9990;padding:16px;}
 .ai-modal{background:var(--w);border-radius:14px;padding:24px 20px;width:100%;
   max-width:480px;box-shadow:0 20px 60px rgba(0,0,0,.3);max-height:90vh;overflow-y:auto;}
@@ -518,7 +526,7 @@ body[data-theme="noche"] .free-bar{background:#2a1f00;border-color:#6b5000;color
   background:transparent;border:1px solid #f0c040;border-radius:4px;cursor:pointer;color:#7B3F00;}
 
 /* ── CONFIRM DELETE ── */
-.confirm-ov{position:fixed;inset:0;background:rgba(0,0,0,.55);
+#confirm-ov{position:fixed;inset:0;background:rgba(0,0,0,.55);
   display:none;align-items:center;justify-content:center;z-index:8888;padding:20px;}
 .confirm-box{background:var(--w);border-radius:12px;padding:28px 24px;
   width:100%;max-width:340px;text-align:center;}
@@ -1355,7 +1363,7 @@ body[data-mode="escolar"][data-theme="verde"]{
           <span class="search-results-count" id="search-count"></span>
           <button class="search-clear" onclick="limpiarBusqueda()" title="Limpiar">✕</button>
         </div>
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:2px;">
           <div class="stats-row" id="stats-row" style="flex:1"></div>
           <div style="display:flex;gap:4px;flex-shrink:0;margin-left:8px;">
             <button onclick="toggleSearch()" id="btn-search" title="Buscar" style="background:none;border:1px solid var(--bd);border-radius:8px;padding:6px 10px;cursor:pointer;font-size:15px;">🔍</button>
@@ -1378,9 +1386,7 @@ body[data-mode="escolar"][data-theme="verde"]{
             📅 En Calendar
           </button>
           <button class="clr-btn" onclick="clearFilters()">✕</button>
-          <button id="filtro-chip-hoy" class="chip-fecha" onclick="setFiltroFecha('hoy',this)">Hoy</button>
           <button id="filtro-chip-semana" class="chip-fecha" onclick="setFiltroFecha('semana',this)">Semana</button>
-          <button id="filtro-chip-mes" class="chip-fecha" onclick="setFiltroFecha('mes',this)">Mes</button>
           <input type="date" id="fecha-desde" title="Desde" onchange="setFiltroFechaRango()" oninput="setFiltroFechaRango()" style="border:1px solid var(--bd);border-radius:6px;padding:3px 6px;font-size:12px;color:var(--td);background:var(--bl);">
           <input type="date" id="fecha-hasta" title="Hasta" onchange="setFiltroFechaRango()" oninput="setFiltroFechaRango()" style="border:1px solid var(--bd);border-radius:6px;padding:3px 6px;font-size:12px;color:var(--td);background:var(--bl);">
           <button onclick="setFiltroFechaRango()" style="padding:3px 10px;border:1px solid var(--gd);border-radius:6px;font-size:12px;background:var(--gd);color:#fff;cursor:pointer;font-weight:700;">🔍</button>
@@ -1474,6 +1480,19 @@ body[data-mode="escolar"][data-theme="verde"]{
         <!-- FIRMA EMAIL -->
         <div class="cfg-block">
           <div class="cfg-hdr" onclick="toggleCfg(this)">
+            <span class="cfg-hdr-title">💾 Datos y backup</span>
+            <span class="cfg-arrow">▶</span>
+          </div>
+          <div class="cfg-body">
+            <p style="font-size:13px;color:var(--td);margin-bottom:12px;">Exporta tus registros para hacer una copia de seguridad o analizarlos en Excel.</p>
+            <div style="display:flex;gap:10px;flex-wrap:wrap;">
+              <button onclick="exportCSV()" style="padding:10px 18px;background:var(--gm);color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;">⬇ Exportar CSV</button>
+              <button onclick="exportarDatosCompletos()" style="padding:10px 18px;background:var(--bc);color:var(--bct);border:1px solid var(--bd);border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;">📦 Backup completo JSON</button>
+            </div>
+          </div>
+        </div>
+<div class="cfg-block">
+          <div class="cfg-hdr" onclick="toggleCfg(this)">
             <span class="cfg-hdr-title">✍️ Firma y perfil</span>
             <span class="cfg-arrow">▶</span>
           </div>
@@ -1510,22 +1529,67 @@ body[data-mode="escolar"][data-theme="verde"]{
             </div>
           </div>
         </div>
-
-        <!-- NOTIFICACIONES -->
-        <div class="cfg-block">
+<div class="cfg-block">
           <div class="cfg-hdr" onclick="toggleCfg(this)">
-            <span class="cfg-hdr-title">🔔 Notificaciones</span>
+            <span class="cfg-hdr-title">🤖 Gemini IA
+              <span style="font-size:10px;background:linear-gradient(135deg,#b8860b,#daa520);color:white;padding:1px 6px;border-radius:6px;margin-left:2px;">Premium</span>
+              <button class="tip-btn" onclick="event.stopPropagation();showTip('tip-gemini')">ⓘ</button>
+            </span>
             <span class="cfg-arrow">▶</span>
           </div>
           <div class="cfg-body">
-            <p style="font-size:12px;color:var(--tl);margin-bottom:10px;">Recibe avisos de recordatorios en tu móvil aunque la app esté cerrada.</p>
-            <button onclick="pedirPermisoNotif()" style="padding:9px 16px;background:var(--gm);border:none;border-radius:7px;color:#fff;font-family:'Lato',sans-serif;font-size:13px;font-weight:700;cursor:pointer;">🔔 Activar notificaciones</button>
-            <div id="cfg-notif-msg" style="margin-top:8px;font-size:12px;color:var(--tl);"></div>
+            <div style="background:var(--verde-bg,#EAF3DE);border-radius:8px;padding:10px 12px;margin-bottom:12px;font-size:12px;color:var(--tm);line-height:1.6;">
+              ✨ Con Gemini activo puedes <strong>dictar y generar registros automáticamente por voz</strong>, y también <strong>redactar emails profesionales</strong> basados en cada registro con un solo toque.
+            </div>
+            <label style="font-size:11px;font-weight:700;color:var(--tm);text-transform:uppercase;letter-spacing:.4px;display:flex;align-items:center;margin-bottom:6px;">
+              Clave API Gemini (gratuita)
+              <button class="tip-btn" onclick="showTip('tip-gemini-key')">ⓘ</button>
+            </label>
+            <div class="url-row" style="margin-top:0">
+              <input type="password" id="gemini-key" placeholder="AIzaSy..."/>
+              <button onclick="saveApiKey('gemini')">Guardar</button>
+            </div>
+            <div id="gemini-status" style="margin-top:6px;font-size:11px;color:var(--tl);"></div>
           </div>
         </div>
-
-        <!-- PIN -->
-        <div class="cfg-block">
+<div class="cfg-block">
+          <div class="cfg-hdr" onclick="toggleCfg(this)">
+            <span class="cfg-hdr-title">🔗 Google Sheets
+              <button class="tip-btn" onclick="event.stopPropagation();showTip('tip-sheets')">ⓘ</button>
+            </span>
+            <span class="cfg-arrow">▶</span>
+          </div>
+          <div class="cfg-body">
+            <p style="font-size:12px;color:var(--tl);margin-bottom:10px;">Sincroniza tus registros en tu propia hoja de Google. Tus datos nunca pasan por servidores de Tapunto.</p>
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:2px;">
+              <div style="font-size:11px;font-weight:700;color:var(--tm);text-transform:uppercase;letter-spacing:.4px;">Código Apps Script</div>
+              <button onclick="copiarScript()" id="btn-copy-script" style="padding:5px 12px;background:var(--gm);border:none;border-radius:6px;color:#fff;font-family:'Lato',sans-serif;font-size:12px;font-weight:700;cursor:pointer;">📋 Copiar código</button>
+            </div>
+            <textarea class="script-box" readonly id="script-box-content"></textarea>
+            <div style="margin-top:10px;">
+              <label style="font-size:11px;font-weight:700;color:var(--tm);text-transform:uppercase;letter-spacing:.4px;display:flex;align-items:center;margin-bottom:4px;">
+                URL del Web App
+                <button class="tip-btn" onclick="showTip('tip-sheets-url')">ⓘ</button>
+              </label>
+              <div class="url-row" style="margin-top:0">
+                <input type="url" id="sheets-url" placeholder="https://script.google.com/macros/s/..."/>
+                <button onclick="connectSheets()">Conectar</button>
+              </div>
+            </div>
+            <div style="margin-top:8px;">
+              <label style="font-size:11px;font-weight:700;color:var(--tm);text-transform:uppercase;letter-spacing:.4px;display:flex;align-items:center;margin-bottom:4px;">
+                Token de seguridad <span style="color:var(--th);font-weight:400;margin-left:4px;">(opcional)</span>
+                <button class="tip-btn" onclick="showTip('tip-token')">ⓘ</button>
+              </label>
+              <input type="password" id="cfg-sheets-token" placeholder="Token secreto configurado en Apps Script"
+                style="width:100%;padding:8px 12px;border:1px solid var(--bd);border-radius:6px;background:var(--bp);font-family:'Lato',sans-serif;font-size:12px;color:var(--td);outline:none;"
+                oninput="localStorage.setItem('tp_sheets_token_'+(currentUser||'x'),this.value)"/>
+            </div>
+            <div id="sheets-status" style="margin-top:8px;"></div>
+            <button onclick="formatearHojaSheets()" style="margin-top:8px;padding:7px 14px;background:var(--bl);border:1px solid var(--bd);border-radius:6px;font-family:'Lato',sans-serif;font-size:12px;font-weight:600;cursor:pointer;color:var(--tm);">✨ Formatear hoja</button>
+          </div>
+        </div>
+<div class="cfg-block">
           <div class="cfg-hdr" onclick="toggleCfg(this)">
             <span class="cfg-hdr-title">🔐 Mi PIN y seguridad</span>
             <span class="cfg-arrow">▶</span>
@@ -1549,9 +1613,57 @@ body[data-mode="escolar"][data-theme="verde"]{
             <div id="cfg-pin-msg" style="margin-top:8px;font-size:12px;"></div>
           </div>
         </div>
+<div class="cfg-block">
+          <div class="cfg-hdr" onclick="toggleCfg(this)">
+            <span class="cfg-hdr-title">📋 Mis listas</span>
+            <span class="cfg-arrow">▶</span>
+          </div>
+          <div class="cfg-body">
+            <div style="display:flex;flex-direction:column;gap:16px;">
 
-        <!-- PERSONALIZACIÓN -->
-        <div class="cfg-block">
+              <!-- Temas/Asuntos -->
+              <div>
+                <div style="font-size:11px;font-weight:700;color:var(--tm);margin-bottom:6px;text-transform:uppercase;letter-spacing:.4px;">📋 Asuntos / Temas</div>
+                <div class="list-items" id="lst-temas"></div>
+                <div class="add-row"><input type="text" id="nt" placeholder="Nuevo asunto..."/><button onclick="addTemaDirect()">+</button></div>
+              </div>
+
+              <!-- Contactos -->
+              <div>
+                <div style="font-size:11px;font-weight:700;color:var(--tm);margin-bottom:6px;text-transform:uppercase;letter-spacing:.4px;">👤 Contactos</div>
+                <div class="list-items" id="lst-contactos"></div>
+                <div class="add-row"><input type="text" id="nc" placeholder="Nuevo contacto..."/><button onclick="addContactoDirect()">+</button></div>
+              </div>
+
+              <!-- Acciones -->
+              <div>
+                <div style="font-size:11px;font-weight:700;color:var(--tm);margin-bottom:6px;text-transform:uppercase;letter-spacing:.4px;">⚡ Acciones realizadas</div>
+                <div class="list-items" id="lst-acciones"></div>
+                <div class="add-row"><input type="text" id="na" placeholder="Nueva acción..."/><button onclick="addAccionDirect()">+</button></div>
+              </div>
+
+              <!-- Comunicado a -->
+              <div>
+                <div style="font-size:11px;font-weight:700;color:var(--tm);margin-bottom:6px;text-transform:uppercase;letter-spacing:.4px;">📢 Comunicado a</div>
+                <div class="list-items" id="lst-comunicados"></div>
+                <div class="add-row"><input type="text" id="nco" placeholder="Nuevo comunicado..."/><button onclick="addComunicadoDirect()">+</button></div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+<div class="cfg-block">
+          <div class="cfg-hdr" onclick="toggleCfg(this)">
+            <span class="cfg-hdr-title">🔔 Notificaciones</span>
+            <span class="cfg-arrow">▶</span>
+          </div>
+          <div class="cfg-body">
+            <p style="font-size:12px;color:var(--tl);margin-bottom:10px;">Recibe avisos de recordatorios en tu móvil aunque la app esté cerrada.</p>
+            <button onclick="pedirPermisoNotif()" style="padding:9px 16px;background:var(--gm);border:none;border-radius:7px;color:#fff;font-family:'Lato',sans-serif;font-size:13px;font-weight:700;cursor:pointer;">🔔 Activar notificaciones</button>
+            <div id="cfg-notif-msg" style="margin-top:8px;font-size:12px;color:var(--tl);"></div>
+          </div>
+        </div>
+<div class="cfg-block">
           <div class="cfg-hdr" onclick="toggleCfg(this)">
             <span class="cfg-hdr-title">🎨 Personalización <span style="font-size:10px;background:linear-gradient(135deg,#b8860b,#daa520);color:white;padding:1px 6px;border-radius:6px;margin-left:2px;">Premium</span></span>
             <span class="cfg-arrow">▶</span>
@@ -1581,94 +1693,7 @@ body[data-mode="escolar"][data-theme="verde"]{
             </div>
           </div>
         </div>
-
-        <!-- MIS LISTAS -->
-        <div class="cfg-block">
-          <div class="cfg-hdr" onclick="toggleCfg(this)">
-            <span class="cfg-hdr-title">📋 Mis listas</span>
-            <span class="cfg-arrow">▶</span>
-          </div>
-          <div class="cfg-body">
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:4px;">
-              <div>
-                <div style="font-size:11px;font-weight:700;color:var(--tm);margin-bottom:5px;text-transform:uppercase;letter-spacing:.4px;">Temas / Asuntos</div>
-                <div class="list-items" id="lst-temas"></div>
-                <div class="add-row"><input type="text" id="nt" placeholder="Nuevo tema..."/><button onclick="addTemaDirect()">+</button></div>
-              </div>
-              <div>
-                <div style="font-size:11px;font-weight:700;color:var(--tm);margin-bottom:5px;text-transform:uppercase;letter-spacing:.4px;">Contactos</div>
-                <div class="list-items" id="lst-contactos"></div>
-                <div class="add-row"><input type="text" id="nc" placeholder="Nuevo contacto..."/><button onclick="addContactoDirect()">+</button></div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- GOOGLE SHEETS -->
-        <div class="cfg-block">
-          <div class="cfg-hdr" onclick="toggleCfg(this)">
-            <span class="cfg-hdr-title">🔗 Google Sheets
-              <button class="tip-btn" onclick="event.stopPropagation();showTip('tip-sheets')">ⓘ</button>
-            </span>
-            <span class="cfg-arrow">▶</span>
-          </div>
-          <div class="cfg-body">
-            <p style="font-size:12px;color:var(--tl);margin-bottom:10px;">Sincroniza tus registros en tu propia hoja de Google. Tus datos nunca pasan por servidores de Tapunto.</p>
-            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
-              <div style="font-size:11px;font-weight:700;color:var(--tm);text-transform:uppercase;letter-spacing:.4px;">Código Apps Script</div>
-              <button onclick="copiarScript()" id="btn-copy-script" style="padding:5px 12px;background:var(--gm);border:none;border-radius:6px;color:#fff;font-family:'Lato',sans-serif;font-size:12px;font-weight:700;cursor:pointer;">📋 Copiar código</button>
-            </div>
-            <textarea class="script-box" readonly id="script-box-content"></textarea>
-            <div style="margin-top:10px;">
-              <label style="font-size:11px;font-weight:700;color:var(--tm);text-transform:uppercase;letter-spacing:.4px;display:flex;align-items:center;margin-bottom:4px;">
-                URL del Web App
-                <button class="tip-btn" onclick="showTip('tip-sheets-url')">ⓘ</button>
-              </label>
-              <div class="url-row" style="margin-top:0">
-                <input type="url" id="sheets-url" placeholder="https://script.google.com/macros/s/..."/>
-                <button onclick="connectSheets()">Conectar</button>
-              </div>
-            </div>
-            <div style="margin-top:8px;">
-              <label style="font-size:11px;font-weight:700;color:var(--tm);text-transform:uppercase;letter-spacing:.4px;display:flex;align-items:center;margin-bottom:4px;">
-                Token de seguridad <span style="color:var(--th);font-weight:400;margin-left:4px;">(opcional)</span>
-                <button class="tip-btn" onclick="showTip('tip-token')">ⓘ</button>
-              </label>
-              <input type="password" id="cfg-sheets-token" placeholder="Token secreto configurado en Apps Script"
-                style="width:100%;padding:8px 12px;border:1px solid var(--bd);border-radius:6px;background:var(--bp);font-family:'Lato',sans-serif;font-size:12px;color:var(--td);outline:none;"
-                oninput="localStorage.setItem('tp_sheets_token_'+(currentUser||'x'),this.value)"/>
-            </div>
-            <div id="sheets-status" style="margin-top:8px;"></div>
-            <button onclick="formatearHojaSheets()" style="margin-top:8px;padding:7px 14px;background:var(--bl);border:1px solid var(--bd);border-radius:6px;font-family:'Lato',sans-serif;font-size:12px;font-weight:600;cursor:pointer;color:var(--tm);">✨ Formatear hoja</button>
-          </div>
-        </div>
-
-        <!-- GEMINI IA -->
-        <div class="cfg-block">
-          <div class="cfg-hdr" onclick="toggleCfg(this)">
-            <span class="cfg-hdr-title">🤖 Gemini IA
-              <span style="font-size:10px;background:linear-gradient(135deg,#b8860b,#daa520);color:white;padding:1px 6px;border-radius:6px;margin-left:2px;">Premium</span>
-              <button class="tip-btn" onclick="event.stopPropagation();showTip('tip-gemini')">ⓘ</button>
-            </span>
-            <span class="cfg-arrow">▶</span>
-          </div>
-          <div class="cfg-body">
-            <div style="background:var(--verde-bg,#EAF3DE);border-radius:8px;padding:10px 12px;margin-bottom:12px;font-size:12px;color:var(--tm);line-height:1.6;">
-              ✨ Con Gemini activo puedes <strong>dictar y generar registros automáticamente por voz</strong>, y también <strong>redactar emails profesionales</strong> basados en cada registro con un solo toque.
-            </div>
-            <label style="font-size:11px;font-weight:700;color:var(--tm);text-transform:uppercase;letter-spacing:.4px;display:flex;align-items:center;margin-bottom:6px;">
-              Clave API Gemini (gratuita)
-              <button class="tip-btn" onclick="showTip('tip-gemini-key')">ⓘ</button>
-            </label>
-            <div class="url-row" style="margin-top:0">
-              <input type="password" id="gemini-key" placeholder="AIzaSy..."/>
-              <button onclick="saveApiKey('gemini')">Guardar</button>
-            </div>
-            <div id="gemini-status" style="margin-top:6px;font-size:11px;color:var(--tl);"></div>
-          </div>
-        </div>
-
-        <div class="cfg-block">
+<div class="cfg-block">
           <div class="cfg-hdr" onclick="toggleCfg(this)">
             <span class="cfg-hdr-title">ℹ️ Acerca de Tapunto</span>
             <span class="cfg-arrow">▶</span>
@@ -1681,21 +1706,7 @@ body[data-mode="escolar"][data-theme="verde"]{
             <p style="font-size:10px;color:var(--tl);margin-top:6px;">Marca registrada OEPM M4377915 · Clase 42</p>
           </div>
         </div>
-      
-        <!-- DATOS Y BACKUP -->
-        <div class="cfg-block">
-          <div class="cfg-hdr" onclick="toggleCfg(this)">
-            <span class="cfg-hdr-title">💾 Datos y backup</span>
-            <span class="cfg-arrow">▶</span>
-          </div>
-          <div class="cfg-body">
-            <p style="font-size:13px;color:var(--td);margin-bottom:12px;">Exporta tus registros para hacer una copia de seguridad o analizarlos en Excel.</p>
-            <div style="display:flex;gap:10px;flex-wrap:wrap;">
-              <button onclick="exportCSV()" style="padding:10px 18px;background:var(--gm);color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;">⬇ Exportar CSV</button>
-              <button onclick="exportarDatosCompletos()" style="padding:10px 18px;background:var(--bc);color:var(--bct);border:1px solid var(--bd);border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;">📦 Backup completo JSON</button>
-            </div>
-          </div>
-        </div>
+
 
       </div><!-- /sec-config -->
     </div><!-- /page -->
@@ -2553,7 +2564,7 @@ mostrarGeminiBadge(false); setDictadoStatus(''); showAiModal(result,provider);
 }catch(err){ mostrarGeminiBadge(false); setDictadoStatus('❌ Error IA: '+err.message+'. Usando parser local.'); showAiModal(parseLocalDictado(txt),'local'); }
 }
 async function callGemini(prompt){
-const r=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${getApiKey('gemini')}`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({contents:[{parts:[{text:prompt}]}]})});
+const r=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${getApiKey('gemini')}`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({contents:[{parts:[{text:prompt}]}]})});
 if(!r.ok) throw new Error('Gemini HTTP '+r.status);
 const d=await r.json(); return JSON.parse((d.candidates?.[0]?.content?.parts?.[0]?.text||'{}').replace(/```json|```/g,'').trim());
 }
@@ -2904,17 +2915,8 @@ const enCurso=R.filter(r=>r.estado==='en curso').length;
 const res=R.filter(r=>r.estado==='resuelto').length;
 const alrt=R.filter(r=>r.recordatorio&&r.recordatorio<=today&&r.estado!=='resuelto').length;
 document.getElementById('stats-row').innerHTML=`
-<div class="stat-chip" onclick="abrirStatsModal('total')">
-<span class="chip-num">${R.length}</span><span>Total</span>
-</div>
 <div class="stat-chip chip-pend" onclick="abrirStatsModal('pendiente')">
 <span class="chip-num">${pend}</span><span>Pendientes</span>
-</div>
-<div class="stat-chip" onclick="abrirStatsModal('en curso')" style="border-color:#bee3f8">
-<span class="chip-num" style="color:#2b6cb0">${enCurso}</span><span>En curso</span>
-</div>
-<div class="stat-chip chip-res" onclick="abrirStatsModal('resuelto')">
-<span class="chip-num">${res}</span><span>Resueltos</span>
 </div>
 <div class="stat-chip chip-alrt" onclick="abrirStatsModal('alertas')">
 <span class="chip-num">${alrt}</span><span>🔔 Alertas</span>
@@ -3231,8 +3233,8 @@ overflow:hidden;margin:auto;">
 <div style="font-size:10px;opacity:.6;margin-top:4px">${rows.length} registro${rows.length!==1?'s':''} · ${new Date().toLocaleDateString('es-ES',{day:'2-digit',month:'long',year:'numeric'})}</div>
 </div>
 <div style="background:#EDE4D3;border-bottom:1px solid #C8B89A;padding:9px 22px;display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
-<button onclick="document.getElementById('_dl_todos').click()" style="padding:6px 12px;border:none;border-radius:5px;font-size:12px;font-weight:700;cursor:pointer;background:#2D5016;color:white;font-family:Lato,sans-serif;">⬇ Word completo</button>
-<button onclick="document.getElementById('_dl_ind').click()" style="padding:6px 12px;border:none;border-radius:5px;font-size:12px;font-weight:700;cursor:pointer;background:#5A8A32;color:white;font-family:Lato,sans-serif;">⬇ Word por registro</button>
+<button onclick="document.getElementById('_dl_todos').click()" style="padding:6px 12px;border:none;border-radius:5px;font-size:12px;font-weight:700;cursor:pointer;background:#2D5016;color:white;font-family:Lato,sans-serif;">⬇ Descargar PDF</button>
+<button onclick="document.getElementById('_dl_ind').click()" style="padding:6px 12px;border:none;border-radius:5px;font-size:12px;font-weight:700;cursor:pointer;background:#5A8A32;color:white;font-family:Lato,sans-serif;">⬇ PDF por registro</button>
 <button onclick="abrirLibretaSemana()" style="padding:6px 12px;border:none;border-radius:5px;font-size:12px;font-weight:700;cursor:pointer;background:#1a73e8;color:white;font-family:Lato,sans-serif;">📅 Esta semana</button>
 ${isPremium?`<span style="background:#fff8e1;border:1px solid #f0c040;border-radius:4px;padding:5px 10px;font-size:11px;color:#7B3F00;display:inline-flex;align-items:center;gap:6px;">
 ⭐ <label style="cursor:pointer">Fondo: <input type="color" id="lib-color" value="${libPref.bg}" onchange="libColor(this.value)" style="width:22px;height:18px;border:none;cursor:pointer;padding:0;vertical-align:middle;"></label>
@@ -3490,9 +3492,13 @@ setTimeout(()=>document.body.removeChild(a),500);
 }
 }
 function renderLists(){
-const rc=(arr,key)=>arr.map((v,i)=>`<div class="list-item"><span>${x(v)}</span><button class="del-li" onclick="removeItem('${key}',${i})">×</button></div>`).join('')||'<div style="font-size:11px;color:var(--th);">Sin elementos</div>';
+const rc=(arr,key)=>arr.map((v,i)=>`<div class="list-item"><span onclick="editListItem('${key}',${i},this)" style="cursor:pointer;flex:1;" title="Pulsa para editar">${x(v)}</span><button class="del-li" onclick="removeItem('${key}',${i})">×</button></div>`).join('')||'<div style="font-size:11px;color:var(--th);">Sin elementos</div>';
 document.getElementById('lst-contactos').innerHTML=rc(state.contactos,'contactos');
 document.getElementById('lst-temas').innerHTML=rc(state.temas,'temas');
+const elA=document.getElementById('lst-acciones');
+if(elA) elA.innerHTML=rc(state.acciones||[],'acciones');
+const elC=document.getElementById('lst-comunicados');
+if(elC) elC.innerHTML=rc(state.comunicados||[],'comunicados');
 const esEscolar=(state.modo||'trabajo')==='escolar';
 const blk=document.getElementById('lst-escolar-block');
 if(blk) blk.style.display=esEscolar?'block':'none';
@@ -3877,7 +3883,7 @@ const firmante=firma.nombre||currentUser.split('@')[0]||'';
 const firmaCtx=[firma.cargo,firma.empresa,firma.telefono].filter(Boolean).join(' · ');
 const prompt=buildPromptEmail(r,fd,firmante,firmaCtx);
 try{
-const resp=await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key='+key,{
+const resp=await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key='+key,{
 method:'POST',
 headers:{'Content-Type':'application/json'},
 body:JSON.stringify({contents:[{parts:[{text:prompt}]}]})
@@ -4207,7 +4213,7 @@ var cls=r.estado==='resuelto'?'resuelto':r.estado==='en curso'?'en-curso':r.esta
 return '<div class="cal-dot '+cls+'"></div>';
 }).join('');
 var asuntos=recs.slice(0,2).map(function(r){
-return '<div class="cal-day-note">'+(r.tema||r.accion||'—')+'</div>';
+return '<div class="cal-day-note" onclick="event.stopPropagation();calVerDia('+d+')">'+( r.tema||r.accion||'—')+'</div>';
 }).join('');
 body+='<div class="cal-day'+(esHoy(d)?' today':'')+'" onclick="calVerDia('+d+')">'
 +'<div class="cal-day-num">'+d+'</div>'
@@ -4221,6 +4227,20 @@ document.getElementById('cal-body').innerHTML=body;
 var panel=document.getElementById('cal-day-panel');
 if(panel) panel.style.display='none';
 }
+function abrirRegistroDesdeCalendario(id){
+var r=state.records.find(function(rec){return rec.id===id;});
+if(!r) return;
+var panel=document.getElementById('cal-day-panel');
+var list=document.getElementById('cal-day-records');
+var title=document.getElementById('cal-day-title');
+if(!panel) return;
+var d=new Date(r.fecha);
+var meses=['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+title.textContent=(isNaN(d)?'Registro':d.getDate()+' de '+meses[d.getMonth()]+' de '+d.getFullYear());
+list.innerHTML=recHTML(r);
+panel.style.display='block';
+panel.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
 function calVerDia(dia){
 const recs=state.records.filter(function(r){
 const d=new Date(r.fecha);
@@ -4232,7 +4252,10 @@ const list=document.getElementById('cal-day-records');
 if(!panel) return;
 const meses=['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
 title.textContent=dia+' de '+meses[calMonth]+' de '+calYear;
-list.innerHTML=recs.length?recs.map(function(r){return recHTML(r);}).join(''):'<div class="empty" style="padding:8px 0">Sin registros este día</div>';
+list.innerHTML=recs.length?recs.map(function(r){
+var h=recHTML(r);
+return '<div style="border-bottom:1px solid var(--bd);padding:4px 0;">'+h+'</div>';
+}).join(''):'<div class="empty" style="padding:8px 0">Sin registros este día</div>';
 panel.style.display='block';
 panel.scrollIntoView({behavior:'smooth',block:'nearest'});
 }
@@ -4300,7 +4323,7 @@ var NLW2='\n';const firmaCtx=(f.cargo?', '+f.cargo:'')+(f.empresa?NLW2+f.empresa
 const prompt=buildPromptWhatsApp(r,fd,firmante);
 try{
 showWarn('⏳ Gemini redactando mensaje WhatsApp...');
-const resp=await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key='+key,{
+const resp=await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key='+key,{
 method:'POST',headers:{'Content-Type':'application/json'},
 body:JSON.stringify({contents:[{parts:[{text:prompt}]}]})
 });
@@ -4821,7 +4844,7 @@ var idx=state.records.findIndex(function(r){return r.id===id;});
 if(idx>-1){state.records[idx].waEnviado=true;persist().catch(function(){});renderRecords();}
 }
 function getFiltered(){
-var recs=(_mostrarArchivados?state.records:state.records.filter(function(r){return !r.archivado;}));
+var recs=(_mostrarArchivados?state.records.filter(function(r){return r.archivado;}):state.records.filter(function(r){return !r.archivado;}));
 recs=[].concat(recs);
 var fc=document.getElementById('f-contacto')?document.getElementById('f-contacto').value:'';
 var ft=document.getElementById('f-tema')?document.getElementById('f-tema').value:'';
