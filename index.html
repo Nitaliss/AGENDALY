@@ -1878,6 +1878,29 @@ body[data-theme="tierra"] .home-btn-alertas{background:linear-gradient(135deg,#1
 }
 .week-group { margin-left: 0; }
 .cfg-section { box-sizing: border-box; }
+
+/* Notas Rápidas - botón óvalo */
+.home-btn-notas{
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  width:60%;margin:8px auto 0;
+  padding:12px 24px;border-radius:50px;border:none;cursor:pointer;
+  font-family:'Lato',sans-serif;font-weight:800;font-size:12px;
+  letter-spacing:.5px;text-transform:uppercase;color:#fff;
+  transition:transform .15s,box-shadow .15s;
+}
+.home-btn-notas:active{transform:scale(.96);}
+body[data-theme="verde"] .home-btn-notas{background:linear-gradient(135deg,#1a5276,#2980b9);box-shadow:0 8px 24px rgba(26,82,118,.35);}
+body[data-theme="noche"] .home-btn-notas{background:linear-gradient(135deg,#6c3483,#9b59b6);box-shadow:0 8px 24px rgba(108,52,131,.35);}
+body[data-theme="rosa"] .home-btn-notas{background:linear-gradient(135deg,#1a5276,#2980b9);box-shadow:0 8px 24px rgba(26,82,118,.35);}
+body[data-theme="tierra"] .home-btn-notas{background:linear-gradient(135deg,#1a5276,#2980b9);box-shadow:0 8px 24px rgba(26,82,118,.35);}
+.home-btn-notas{background:linear-gradient(135deg,#1a5276,#2980b9);box-shadow:0 8px 24px rgba(26,82,118,.35);}
+/* Alertas pequeño en home */
+.home-btn-alertas{min-height:80px!important;}
+
+/* Ocultar botón INICIO en pantalla home */
+#sec-home.active ~ * .btn-home,
+body.on-home .btn-home { display:none !important; }
+.hdr-top .btn-home { display:flex; }
 </style>
 <script>(function(){try{if(localStorage.getItem('tp_dark_mode')==='1')document.documentElement.style.background='#1a1a2e';}catch(e){};}());</script>
 </head>
@@ -2146,24 +2169,29 @@ body[data-theme="tierra"] .home-btn-alertas{background:linear-gradient(135deg,#1
       <!-- ══ NUEVO ══ -->
       <div id="sec-home" class="section active">
   <div class="home-grid">
-    <button class="home-btn home-btn-nuevo" onclick="irSeccion('nuevo')">
-      <span class="home-icon">✏️</span>
-      <span>NUEVO REGISTRO</span>
-    </button>
+    <div style="grid-column:1/-1;display:flex;gap:10px;align-items:stretch;">
+      <button class="home-btn home-btn-nuevo" onclick="irSeccion('nuevo')" style="flex:1;">
+        <span class="home-icon">✏️</span>
+        <span>NUEVO REGISTRO</span>
+      </button>
+      <button class="home-btn home-btn-alertas" onclick="irSeccion('recordatorios')" style="flex:0 0 64px;flex-direction:column;gap:3px;padding:10px 8px;">
+        <span style="font-size:22px;line-height:1;">🔔</span>
+        <span id="home-badge-alertas" style="font-size:11px;font-weight:800;background:rgba(255,255,255,.3);border-radius:10px;padding:1px 6px;min-width:18px;text-align:center;">—</span>
+      </button>
+    </div>
     <button class="home-btn home-btn-registros" onclick="irSeccion('registros')">
       <span class="home-icon">📋</span>
       <span>LISTA DE REGISTROS</span>
     </button>
     <button class="home-btn home-btn-gestiones" onclick="irSeccion('calendario')">
       <span class="home-icon">📅</span>
-      <span>MIS GESTIONES</span>
-    </button>
-    <button class="home-btn home-btn-alertas" onclick="irSeccion('recordatorios')">
-      <span class="home-icon">🔔</span>
-      <span>ALERTAS</span>
-      <span class="home-badge" id="home-badge-alertas" style="display:none;">0</span>
+      <span>MI AGENDA</span>
     </button>
   </div>
+  <button class="home-btn-notas" onclick="irSeccion('notas')">
+    <span style="font-size:22px;">📝</span>
+    <span>NOTAS RÁPIDAS</span>
+  </button>
   <button class="home-cfg" onclick="irSeccion('config')">⚙️ Configuración</button>
 </div>
 
@@ -2396,7 +2424,28 @@ body[data-theme="tierra"] .home-btn-alertas{background:linear-gradient(135deg,#1
       </div><!-- /sec-calendario -->
 
       <!-- ══ CONFIG ══ -->
-      <div id="sec-config" class="section">
+      <div id="sec-notas" class="section">
+  <div style="padding:12px 16px;">
+    <!-- Nueva anotación -->
+    <div style="display:flex;gap:8px;margin-bottom:16px;align-items:flex-start;">
+      <textarea id="nota-input" placeholder="Escribe o dicta una nota rápida..."
+        style="flex:1;padding:10px 12px;border:1px solid var(--bd);border-radius:10px;
+        background:var(--bp);color:var(--td);font-family:'Lato',sans-serif;font-size:14px;
+        resize:none;min-height:56px;outline:none;line-height:1.4;"></textarea>
+      <div style="display:flex;flex-direction:column;gap:6px;">
+        <button onclick="dictarCampo('nota-input',this)"
+          title="🎙️ Dictado de voz · Requiere micrófono y HTTPS"
+          style="padding:10px;background:var(--gm);color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:18px;">🎙️</button>
+        <button onclick="guardarNota()"
+          style="padding:10px;background:var(--gd);color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:18px;">✓</button>
+      </div>
+    </div>
+    <!-- Lista de notas -->
+    <div id="notas-list"></div>
+  </div>
+</div>
+
+<div id="sec-config" class="section">
 
         <!-- BÁSICO: siempre visible -->
         <div class="cfg-basic" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
@@ -2823,7 +2872,7 @@ const buf=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(atob('dG
 return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('').slice(0,32);
 }
 const APP_KEY = 'tapunto_v1';
-let state = {records:[],contactos:[],temas:[],acciones:[],comunicados:[],sheetsUrl:'',theme:'verde',coverImageData:null,modo:'trabajo'};
+let state = {records:[],contactos:[],temas:[],acciones:[],comunicados:[],notas:[],sheetsUrl:'',theme:'verde',coverImageData:null,modo:'trabajo'};
 let currentUser = null;
 let editingId   = null;
 let reminderDays = null;
@@ -3469,14 +3518,20 @@ document.getElementById('img-status').textContent='📎 Lista · Se subirá a Dr
 reader.readAsDataURL(file);
 }
 function removeImage(e){
-e.stopPropagation();
+if(e&&e.stopPropagation) e.stopPropagation();
 currentImageBase64=null; currentImageMime=null; currentImageName=null; currentImageUrl=null;
-document.getElementById('img-preview').style.display='none';
-document.getElementById('img-preview').src='';
-document.getElementById('img-remove-btn').style.display='none';
-document.getElementById('img-upload-area').classList.remove('has-img');
-document.getElementById('img-status').textContent='';
-document.getElementById('inp-imagen').value='';
+var prev=document.getElementById('img-preview');
+if(prev){prev.style.display='none';prev.src='';}
+var rmBtn=document.getElementById('img-remove-btn');
+if(rmBtn) rmBtn.style.display='none';
+var area=document.getElementById('img-upload-area');
+if(area) area.classList.remove('has-img');
+var status=document.getElementById('img-status');
+if(status) status.textContent='';
+var inp1=document.getElementById('inp-imagen');
+if(inp1) inp1.value='';
+var inp2=document.getElementById('inp-imagen-galeria');
+if(inp2) inp2.value='';
 }
 async function uploadImageToDrive(){
 if(!currentImageBase64||!state.sheetsUrl) return null;
@@ -3612,7 +3667,7 @@ setFechaChip('hoy',document.getElementById('chip-hoy'));
 document.getElementById('inp-notas').value='';
 var _rd=document.getElementById('inp-recdate');if(_rd){_rd.value='';_rd.style.display='none';}
 reminderDays=null; document.querySelectorAll('.chip').forEach(c=>c.classList.remove('on'));
-removeImage({stopPropagation:()=>{}}); setDictadoStatus('');
+removeImage(null); setDictadoStatus('');
 var _dt=document.getElementById('dictado-transcript');if(_dt){_dt.style.display='none';_dt.textContent='';}
 initForm();
 }
@@ -3716,8 +3771,80 @@ showWarn('📤 Registro restaurado.');
 function askDelete(id){ pendingDelId=id; document.getElementById('confirm-ov').style.display='flex'; }
 function closeConfirm(){ pendingDelId=null; document.getElementById('confirm-ov').style.display='none'; }
 function confirmDelete(){ if(!pendingDelId) return; state.records=state.records.filter(r=>r.id!==pendingDelId); persist().catch(()=>{}); if(state.sheetsUrl) syncToSheets(); closeConfirm(); renderRecords(); renderStats(); updateFreeBar(); }
+function guardarNota(){
+var inp=document.getElementById('nota-input');
+var texto=inp?inp.value.trim():'';
+if(!texto) return;
+var nota={id:Date.now().toString(),texto:texto,fecha:new Date().toISOString()};
+if(!state.notas) state.notas=[];
+state.notas.unshift(nota);
+persist().catch(function(){});
+inp.value='';
+renderNotas();
+}
+function eliminarNota(id){
+if(!state.notas) return;
+state.notas=state.notas.filter(function(n){return n.id!==id;});
+persist().catch(function(){});
+renderNotas();
+}
+function convertirNotaEnRegistro(id){
+var nota=state.notas?state.notas.find(function(n){return n.id===id;}):null;
+if(!nota) return;
+irSeccion('nuevo');
+setTimeout(function(){
+var inp=document.getElementById('inp-notas');
+if(inp) inp.value=nota.texto;
+// Mostrar botones guardar/cancelar
+var scb=document.getElementById('save-cancel-btns');
+if(scb) scb.style.display='flex';
+// Marcar que venimos de notas para que cancelar vuelva ahí
+document.body.setAttribute('data-cancel-dest','notas');
+},100);
+}
+function renderNotas(){
+var list=document.getElementById('notas-list');
+if(!list) return;
+var notas=state.notas||[];
+if(!notas.length){
+list.innerHTML='<div style="text-align:center;color:var(--tl);padding:32px;font-size:13px;">No hay notas aún.<br>Escribe o dicta tu primera nota.</div>';
+return;
+}
+// Agrupar por día
+var grupos={};
+notas.forEach(function(n){
+var d=new Date(n.fecha);
+var key=d.toLocaleDateString('es-ES',{weekday:'long',day:'2-digit',month:'long',year:'numeric'});
+if(!grupos[key]) grupos[key]=[];
+grupos[key].push(n);
+});
+list.innerHTML=Object.keys(grupos).map(function(dia){
+var items=grupos[dia].map(function(n){
+var hora=new Date(n.fecha).toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'});
+return '<div style="display:flex;align-items:flex-start;gap:8px;padding:10px 0;border-bottom:1px solid var(--bd);" data-notaid="'+n.id+'">'+
+'<span style="font-size:11px;color:var(--tl);white-space:nowrap;margin-top:2px;min-width:36px;">'+hora+'</span>'+
+'<span style="flex:1;font-size:14px;color:var(--td);line-height:1.4;">'+n.texto.replace(/</g,'&lt;')+'</span>'+
+'<div style="display:flex;gap:4px;flex-shrink:0;">'+
+'<button class="nota-to-reg" data-id="'+n.id+'" title="Convertir en registro" style="padding:4px 8px;background:var(--gm);color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:11px;">→ Reg</button>'+
+'<button class="nota-del" data-id="'+n.id+'" style="padding:4px 8px;background:none;color:#c53030;border:1px solid #f5c6c6;border-radius:6px;cursor:pointer;font-size:14px;">✕</button>'+
+'</div>'+
+'</div>';
+}).join('');
+return '<div style="margin-bottom:12px;">'+
+'<div style="font-size:11px;font-weight:800;color:var(--gm);text-transform:uppercase;letter-spacing:.5px;padding:8px 0 4px;border-bottom:2px solid var(--gm);margin-bottom:4px;">'+dia+'</div>'+
+items+'</div>';
+}).join('');
+list.onclick=function(e){
+var btn=e.target.closest('button');
+if(!btn) return;
+var id=btn.getAttribute('data-id');
+if(!id) return;
+if(btn.classList.contains('nota-to-reg')) convertirNotaEnRegistro(id);
+if(btn.classList.contains('nota-del')) eliminarNota(id);
+};
+}
 function irHome(){
-var secs=['home','nuevo','registros','recordatorios','calendario','config'];
+var secs=['home','nuevo','registros','recordatorios','calendario','notas','config'];
 secs.forEach(function(s){
 var el=document.getElementById('sec-'+s);
 if(el){el.classList.remove('active');el.style.display='none';}
@@ -3726,8 +3853,12 @@ var sb=document.getElementById('save-cancel-btns');
 if(sb) sb.style.display='none';
 var home=document.getElementById('sec-home');
 if(home){home.classList.add('active');home.style.display='flex';}
+document.body.classList.add('on-home');
 document.getElementById('hdr-section-title').textContent='TAPUNTO';
 var sb=document.getElementById('save-cancel-btns');if(sb)sb.style.display='none';
+// Limpiar notas rápidas al volver al home
+var ni=document.getElementById('nota-input');if(ni)ni.value='';
+var mp=document.getElementById('img-menu-popup');if(mp)mp.remove();
 renderHomeBadges();
 }
 function renderHomeBadges(){
@@ -3738,11 +3869,12 @@ var d=new Date(r.recordatorio);
 return !isNaN(d)&&d<=new Date();
 }).length:0;
 var badge=document.getElementById('home-badge-alertas');
-if(badge) badge.textContent=alertas>0?alertas:'';
+if(badge) badge.textContent=alertas>0?alertas:'—';
 }
 function irSeccion(tab){
+document.body.classList.remove('on-home');
 switchTab(tab,null);
-var titles={nuevo:'NUEVO REGISTRO',registros:'LISTA DE REGISTROS',recordatorios:'ALERTAS',calendario:'MIS GESTIONES',config:'CONFIGURACIÓN'};
+var titles={nuevo:'NUEVO REGISTRO',registros:'LISTA DE REGISTROS',recordatorios:'ALERTAS',calendario:'MI AGENDA',notas:'NOTAS RÁPIDAS',config:'CONFIGURACIÓN'};
 document.getElementById('hdr-section-title').textContent=titles[tab]||'TAPUNTO';
 }
 function switchTab(tab,btn){
@@ -3759,6 +3891,7 @@ if(tab==='registros'){renderStats();renderRecords();}
 if(tab==='config'){renderThemes();loadPinConfig();loadSheetsToken();loadFirmaConfig();renderLists();}
 if(tab==='recordatorios'){renderReminders();renderAlertasInteligentes();}
 if(tab==='calendario') renderCalendario();
+if(tab==='notas'){if(!state.notas) state.notas=[];renderNotas();setTimeout(function(){var i=document.getElementById('nota-input');if(i)i.focus();},100);}
 }
 function renderStats(){
 const R=state.records,today=new Date().toISOString().slice(0,10);
@@ -4510,6 +4643,11 @@ window.addEventListener('DOMContentLoaded',()=>{
 initDarkMode();
 checkSession();
 document.getElementById('login-pin').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
+document.addEventListener('keydown',function(e){
+if(e.key==='Enter'&&!e.shiftKey&&document.activeElement&&document.activeElement.id==='nota-input'){
+e.preventDefault();guardarNota();
+}
+});
 document.getElementById('confirm-ov').addEventListener('click',e=>{if(e.target===document.getElementById('confirm-ov'))closeConfirm();});
 document.getElementById('ai-modal-ov').addEventListener('click',e=>{if(e.target===document.getElementById('ai-modal-ov'))closeAiModal();});
 document.getElementById('upg-ov').addEventListener('click',e=>{if(e.target===document.getElementById('upg-ov'))closeUpgrade();});
@@ -5490,6 +5628,9 @@ sr.onend=function(){restore();};
 try{sr.start();}catch(e){restore();}
 }
 function cancelEdit(){
+var dest=document.body.getAttribute('data-cancel-dest')||'home';
+document.body.removeAttribute('data-cancel-dest');
+
 editingId=null;
 var banner=document.getElementById('edit-banner');
 if(banner) banner.style.display='none';
