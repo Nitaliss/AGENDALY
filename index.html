@@ -3370,7 +3370,7 @@ async function syncToSheets(){
 if(!state.sheetsUrl) return;
 setSyncStatus('syncing','Subiendo...');
 try{
-await fetch(state.sheetsUrl,{method:'POST',headers:{'Content-Type':'application/json'},
+await fetch(state.sheetsUrl,{method:'POST',
 body:JSON.stringify({action:'sync',token:localStorage.getItem('tp_sheets_token_'+currentUser)||'',
 records:state.records,contactos:state.contactos,temas:state.temas,
 notas:(state.notas||[]).map(function(n){return {id:n.id,texto:n.texto,fecha:n.fecha,archivado:n.archivado||false};})
