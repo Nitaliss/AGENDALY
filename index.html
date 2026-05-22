@@ -3248,6 +3248,7 @@ state.theme = id;
 persist().catch(()=>{});
 document.body.setAttribute('data-theme', id);
 renderThemes();
+syncConfigToSheets();
 }
 function onCoverImageSelected(e){
 const file = e.target.files[0]; if(!file) return;
@@ -3257,6 +3258,7 @@ reader.onload = ev => {
 const data = ev.target.result;
 state.coverImageData = data;
 state.coverZoom = state.coverZoom||100;
+syncConfigToSheets();
 persist().catch(()=>{});
 applyCoverImage(data);
 const zoomWrap=document.getElementById('cover-zoom-wrap');
@@ -5905,7 +5907,10 @@ checkTrial();
 checkLicenseExpiry();
 updatePortadaNombre();
 irHome();
-if(isPremium&&state.sheetsUrl) syncFromSheets(false).catch(()=>{});
+if(isPremium&&state.sheetsUrl){
+syncFromSheets(false).catch(()=>{});
+setTimeout(function(){syncConfigToSheets();},3000);
+}
 mostrarSplash();
 setTimeout(checkBackupSemanal, 5000);
 requestAnimationFrame(()=>{
@@ -6286,6 +6291,8 @@ email:document.getElementById('cfg-firma-email').value.trim()
 localStorage.setItem('tp_firma_'+currentUser,JSON.stringify(firma));
 const msg=document.getElementById('cfg-firma-msg');
 if(msg){msg.style.color='#155724';msg.textContent='✓ Firma guardada';setTimeout(()=>msg.textContent='',2500);}
+
+syncConfigToSheets();
 }
 function loadFirmaConfig(){
 const f=getFirma();
