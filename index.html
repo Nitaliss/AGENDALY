@@ -869,7 +869,7 @@ body[data-mode="escolar"][data-theme="verde"]{
 }
 .home-grid{
   display:grid;grid-template-columns:1fr 1fr;
-  gap:14px;width:100%;max-width:440px;margin:0 auto 16px;
+  gap:14px;width:100%;max-width:440px;margin:0 auto 0;
 }
 .home-btn{
   display:flex;flex-direction:column;align-items:center;justify-content:center;
@@ -896,7 +896,7 @@ body[data-mode="escolar"][data-theme="verde"]{
   box-shadow:0 8px 24px rgba(92,74,42,.35);
 }
 .home-btn-alertas{
-  grid-column:1/-1;min-height:72px;flex-direction:row;
+  flex-direction:row;
   gap:14px;font-size:13px;padding:18px 24px;justify-content:flex-start;
   background:linear-gradient(135deg,#8B3A0F,#c85d1e);
   box-shadow:0 8px 24px rgba(139,58,15,.35);
@@ -1778,7 +1778,7 @@ body[data-mode="escolar"][data-theme="verde"]{
 /* ── HOME SCREEN ── */
 #sec-home{display:none;}
 #sec-home.active{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:80vh;padding:24px 20px;}
-.home-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;width:100%;max-width:420px;margin:0 auto;}
+.home-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;width:100%;max-width:420px;margin:0 auto 0;}
 .home-btn{
   display:flex;flex-direction:column;align-items:center;justify-content:center;
   padding:28px 16px;border-radius:20px;border:none;cursor:pointer;
@@ -1794,7 +1794,7 @@ body[data-mode="escolar"][data-theme="verde"]{
   font-size:15px;padding:22px 28px;
 }
 .home-btn-alertas{
-  grid-column:1/-1;min-height:80px;flex-direction:row;gap:14px;
+  flex-direction:row;gap:14px;
   font-size:13px;padding:18px 24px;justify-content:flex-start;
 }
 .home-badge{
@@ -1882,7 +1882,7 @@ body[data-theme="tierra"] .home-btn-alertas{background:linear-gradient(135deg,#1
 /* Notas Rápidas - botón óvalo */
 .home-btn-notas{
   display:flex;align-items:center;justify-content:center;gap:8px;
-  width:60%;margin:8px auto 0;
+  width:100%;max-width:420px;margin:14px auto 0;
   padding:12px 24px;border-radius:50px;border:none;cursor:pointer;
   font-family:'Lato',sans-serif;font-weight:800;font-size:12px;
   letter-spacing:.5px;text-transform:uppercase;color:#fff;
@@ -1895,12 +1895,16 @@ body[data-theme="rosa"] .home-btn-notas{background:linear-gradient(135deg,#1a527
 body[data-theme="tierra"] .home-btn-notas{background:linear-gradient(135deg,#1a5276,#2980b9);box-shadow:0 8px 24px rgba(26,82,118,.35);}
 .home-btn-notas{background:linear-gradient(135deg,#1a5276,#2980b9);box-shadow:0 8px 24px rgba(26,82,118,.35);}
 /* Alertas pequeño en home */
-.home-btn-alertas{min-height:80px!important;}
+.home-btn-alertas{}
 
 /* Ocultar botón INICIO en pantalla home */
 #sec-home.active ~ * .btn-home,
 body.on-home .btn-home { display:none !important; }
 .hdr-top .btn-home { display:flex; }
+
+/* Header - acciones a la derecha siempre */
+body.on-home .hdr-top { justify-content: flex-end; }
+body.on-home .btn-home { display: none !important; }
 </style>
 <script>(function(){try{if(localStorage.getItem('tp_dark_mode')==='1')document.documentElement.style.background='#1a1a2e';}catch(e){};}());</script>
 </head>
@@ -2168,7 +2172,7 @@ body.on-home .btn-home { display:none !important; }
 
       <!-- ══ NUEVO ══ -->
       <div id="sec-home" class="section active">
-  <div class="home-grid">
+  <div class="home-grid" style="margin-bottom:0;">
     <div style="grid-column:1/-1;display:flex;gap:10px;align-items:stretch;">
       <button class="home-btn home-btn-nuevo" onclick="irSeccion('nuevo')" style="flex:1;">
         <span class="home-icon">✏️</span>
@@ -2188,11 +2192,12 @@ body.on-home .btn-home { display:none !important; }
       <span>MI AGENDA</span>
     </button>
   </div>
-  <button class="home-btn-notas" onclick="irSeccion('notas')">
+  <div style="height:28px;flex-shrink:0;"></div>
+  <button class="home-btn-notas" onclick="irSeccion('notas')" style="margin-top:0;">
     <span style="font-size:22px;">📝</span>
     <span>NOTAS RÁPIDAS</span>
   </button>
-  <button class="home-cfg" onclick="irSeccion('config')">⚙️ Configuración</button>
+  <button class="home-cfg" onclick="irSeccion('config')" style="margin-top:8px;">⚙️ Configuración</button>
 </div>
 
 <div id="sec-nuevo" class="section">
@@ -2291,7 +2296,7 @@ body.on-home .btn-home { display:none !important; }
               <div class="img-upload-area" id="img-upload-area" onclick="mostrarMenuImagen(event)">
                 <div style="font-size:24px;">📷</div>
                 <div class="img-upload-label">Toca para adjuntar imagen o foto</div>
-                <img class="img-preview" id="img-preview" src="" alt="preview"/>
+                <img class="img-preview" id="img-preview" src="" alt="preview" style="display:none;"/>
                 <button class="img-remove-btn" id="img-remove-btn" onclick="removeImage(event)" style="display:none;">✕</button>
               </div>
               <input type="file" id="inp-imagen-galeria" accept="image/*" style="display:none" onchange="onImageSelected(event)"/>
@@ -2426,6 +2431,24 @@ body.on-home .btn-home { display:none !important; }
       <!-- ══ CONFIG ══ -->
       <div id="sec-notas" class="section">
   <div style="padding:12px 16px;">
+    <!-- Barra herramientas notas -->
+    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid var(--bd);">
+      <button onclick="exportNotasJSON()" title="Exportar backup de notas" style="padding:7px 12px;background:var(--gm);color:#fff;border:none;border-radius:8px;font-family:'Lato',sans-serif;font-size:12px;font-weight:700;cursor:pointer;">📥 Exportar notas</button>
+      <label title="Restaurar backup de notas" style="padding:7px 12px;background:var(--bl);color:var(--td);border:1px solid var(--bd);border-radius:8px;font-family:'Lato',sans-serif;font-size:12px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;">
+        📂 Restaurar
+        <input type="file" accept=".json" style="display:none" onchange="importNotasJSON(event)">
+      </label>
+      <button onclick="mostrarPDFNotas()" title="Exportar PDF con filtro de fechas ⭐ Premium" style="padding:7px 12px;background:var(--bc);color:#fff;border:none;border-radius:8px;font-family:'Lato',sans-serif;font-size:12px;font-weight:700;cursor:pointer;">📄 PDF <span style="font-size:9px;background:rgba(255,255,255,.25);padding:1px 4px;border-radius:4px;">⭐</span></button>
+    </div>
+    <!-- Filtro fechas PDF (oculto por defecto) -->
+    <div id="notas-pdf-filter" style="display:none;background:var(--bl);border:1px solid var(--bd);border-radius:8px;padding:10px;margin-bottom:12px;gap:10px;flex-wrap:wrap;align-items:center;">
+      <span style="font-size:12px;font-weight:700;color:var(--td);">📅 Filtrar PDF:</span>
+      <input type="date" id="notas-pdf-desde" style="padding:6px;border:1px solid var(--bd);border-radius:6px;background:var(--bp);color:var(--td);font-size:12px;"/>
+      <span style="font-size:12px;color:var(--tl);">hasta</span>
+      <input type="date" id="notas-pdf-hasta" style="padding:6px;border:1px solid var(--bd);border-radius:6px;background:var(--bp);color:var(--td);font-size:12px;"/>
+      <button onclick="generarPDFNotas()" style="padding:6px 14px;background:var(--gm);color:#fff;border:none;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;">Generar PDF</button>
+      <button onclick="document.getElementById('notas-pdf-filter').style.display='none'" style="padding:6px 10px;background:none;color:var(--tl);border:1px solid var(--bd);border-radius:6px;font-size:12px;cursor:pointer;">✕</button>
+    </div>
     <!-- Nueva anotación -->
     <div style="display:flex;gap:8px;margin-bottom:16px;align-items:flex-start;">
       <textarea id="nota-input" placeholder="Escribe o dicta una nota rápida..."
@@ -2526,13 +2549,13 @@ body.on-home .btn-home { display:none !important; }
             <span class="cfg-arrow">▶</span>
           </div>
           <div class="cfg-body">
-            <div id="sheets-premium-lock" style="display:none;flex-direction:column;align-items:center;padding:20px;text-align:center;gap:12px;">
+            <div id="sheets-premium-lock" style="display:flex;flex-direction:column;align-items:center;padding:20px;text-align:center;gap:12px;">
               <div style="font-size:36px;">🔒</div>
               <div style="font-size:14px;font-weight:700;color:var(--td);">Sincronización Google Sheets</div>
               <div style="font-size:12px;color:var(--tl);">Guarda tus registros en tu propio Google Sheets. Accede desde cualquier dispositivo. Tus datos nunca pasan por servidores de Tapunto.</div>
               <button onclick="showUpgrade()" style="padding:10px 24px;background:linear-gradient(135deg,#b8860b,#daa520);color:#fff;border:none;border-radius:8px;font-family:'Lato',sans-serif;font-size:13px;font-weight:700;cursor:pointer;">⭐ Activar Premium</button>
             </div>
-            <div id="sheets-premium-content">
+            <div id="sheets-premium-content" style="display:none;">
               <p style="font-size:12px;color:var(--tl);margin-bottom:10px;">Sincroniza tus registros en tu propia hoja de Google. Tus datos nunca pasan por servidores de Tapunto.</p>
               <span id="sheets-status" style="font-size:12px;display:block;margin-bottom:8px;"></span>
               <input type="url" id="sheets-url" placeholder="URL del Apps Script..." style="width:100%;padding:8px;border:1px solid var(--bd);border-radius:6px;font-size:12px;background:var(--bp);color:var(--td);margin-bottom:8px;box-sizing:border-box;"/>
@@ -3003,7 +3026,7 @@ const cfgPrem = document.getElementById('cfg-premium-info');
 if(isPremium){
 badge.className='plan-badge plan-premium'; badge.textContent='⭐ PREMIUM';
 cfgBadge.className='plan-badge plan-premium'; cfgBadge.textContent='⭐ PREMIUM';
-cfgDesc.textContent='Registros ilimitados · Google Sheets · Todos los temas · Imagen · 📖 Libreta PDF';
+cfgDesc.textContent='Registros ilimitados · Google Sheets · Todos los temas · Imagen personalizada · 📖 Libreta PDF · 📄 PDF Notas';
 cfgLic.style.display='none'; cfgPrem.style.display='block';
 } else {
 badge.className='plan-badge plan-free'; badge.textContent='FREE';
@@ -3421,6 +3444,14 @@ document.getElementById('sheets-status').innerHTML='<div class="connected-tag">�
 startAutoSync(); syncFromSheets(false);
 }
 function initForm(){
+// Limpiar imagen explícitamente
+var prev=document.getElementById('img-preview');
+if(prev){prev.style.display='none';prev.src='';}
+var rmBtn=document.getElementById('img-remove-btn');
+if(rmBtn) rmBtn.style.display='none';
+var area=document.getElementById('img-upload-area');
+if(area) area.classList.remove('has-img');
+currentImageBase64=null;currentImageMime=null;currentImageName=null;currentImageUrl=null;
 setFechaChip('hoy',document.getElementById('chip-hoy'));
 fillSelect('inp-contacto',state.contactos);
 fillSelect('inp-tema',state.temas);
@@ -3467,9 +3498,9 @@ inp.click();
 }
 function mostrarMenuImagen(e){
 e.stopPropagation();
-// Si ya hay imagen, no abrir menú
+// Si ya hay imagen real, no abrir menú sino permitir eliminarla
 var prev=document.getElementById('img-preview');
-if(prev&&prev.style.display!=='none') return;
+if(prev&&prev.style.display!=='none'&&prev.src&&prev.src!==window.location.href) return;
 // Crear menú emergente
 var existing=document.getElementById('img-menu-popup');
 if(existing){existing.remove();return;}
@@ -3538,7 +3569,15 @@ if(!currentImageBase64||!state.sheetsUrl) return null;
 try{
 document.getElementById('img-status').textContent='';
 document.getElementById('img-uploading').style.display='flex';
-const resp=await fetch(state.sheetsUrl,{method:'POST',body:JSON.stringify({action:'upload_image',imageData:currentImageBase64,mimeType:currentImageMime,fileName:'tapunto_'+Date.now()+'_'+(currentImageName||'foto.jpg')})});
+const resp=await fetch(state.sheetsUrl,{method:'POST',body:JSON.stringify({action:'upload_image',imageData:currentImageBase64,mimeType:currentImageMime,fileName:(function(){
+var tema=(document.getElementById('inp-tema')||{}).value||'tapunto';
+tema=tema.replace(/[^a-zA-Z0-9áéíóúÁÉÍÓÚñÑüÜ]/g,'-').replace(/-+/g,'-').slice(0,30);
+var d=new Date();
+var fecha=d.getFullYear()+''+String(d.getMonth()+1).padStart(2,'0')+''+String(d.getDate()).padStart(2,'0');
+var hora=String(d.getHours()).padStart(2,'0')+''+String(d.getMinutes()).padStart(2,'0');
+var ext=(currentImageMime||'image/jpeg').split('/')[1]||'jpg';
+return tema+'_'+fecha+'_'+hora+'.'+ext;
+})()})});
 const data=await resp.json();
 document.getElementById('img-uploading').style.display='none';
 if(data.ok&&data.url){
@@ -3771,6 +3810,86 @@ showWarn('📤 Registro restaurado.');
 function askDelete(id){ pendingDelId=id; document.getElementById('confirm-ov').style.display='flex'; }
 function closeConfirm(){ pendingDelId=null; document.getElementById('confirm-ov').style.display='none'; }
 function confirmDelete(){ if(!pendingDelId) return; state.records=state.records.filter(r=>r.id!==pendingDelId); persist().catch(()=>{}); if(state.sheetsUrl) syncToSheets(); closeConfirm(); renderRecords(); renderStats(); updateFreeBar(); }
+function exportNotasJSON(){
+if(!state.notas||!state.notas.length){alert('No hay notas para exportar.');return;}
+var backup={version:'1.0',tipo:'notas',fecha:new Date().toISOString(),usuario:currentUser||'tapunto',notas:state.notas};
+var a=document.createElement('a');
+a.href=URL.createObjectURL(new Blob([JSON.stringify(backup,null,2)],{type:'application/json'}));
+a.download='Tapunto_notas_'+new Date().toISOString().slice(0,10)+'.json';
+a.click();
+}
+function importNotasJSON(e){
+var file=e.target.files[0];if(!file)return;
+var reader=new FileReader();
+reader.onload=function(ev){
+try{
+var b=JSON.parse(ev.target.result);
+if(!b.notas||!Array.isArray(b.notas)){alert('Archivo inválido.');return;}
+if(!state.notas) state.notas=[];
+var ids=new Set(state.notas.map(function(n){return n.id;}));
+var nuevas=0;
+var blKey='tp_blacklist_notas_'+(currentUser||'tapunto');
+var bl=JSON.parse(localStorage.getItem(blKey)||'[]');
+b.notas.forEach(function(n){if(n.id&&!ids.has(n.id)&&!bl.includes(n.id)){state.notas.push(n);nuevas++;}});
+// Ordenar cronológicamente inverso
+state.notas.sort(function(a,b){return new Date(b.fecha)-new Date(a.fecha);});
+persist().catch(function(){});
+renderNotas();
+alert('Restauradas '+nuevas+' notas nuevas.');
+}catch(err){alert('Error: '+err.message);}
+};
+reader.readAsText(file);e.target.value='';
+}
+function mostrarPDFNotas(){
+if(!isPremium){showUpgrade();return;}
+var filtro=document.getElementById('notas-pdf-filter');
+if(filtro) filtro.style.display=filtro.style.display==='flex'?'none':'flex';
+}
+function generarPDFNotas(){
+if(!state.notas||!state.notas.length){alert('No hay notas.');return;}
+var desde=document.getElementById('notas-pdf-desde').value;
+var hasta=document.getElementById('notas-pdf-hasta').value;
+var notas=state.notas.filter(function(n){
+var d=new Date(n.fecha);
+if(desde&&d<new Date(desde)) return false;
+if(hasta&&d>new Date(hasta+'T23:59:59')) return false;
+return true;
+});
+if(!notas.length){alert('No hay notas en ese rango de fechas.');return;}
+var firma=getFirma();
+var nombre=firma.nombre||currentUser.split('@')[0];
+var fechaHoy=new Date().toLocaleDateString('es-ES',{day:'2-digit',month:'long',year:'numeric'});
+var filtroTxt='';
+if(desde||hasta) filtroTxt='Período: '+(desde?new Date(desde).toLocaleDateString('es-ES'):'inicio')+' — '+(hasta?new Date(hasta).toLocaleDateString('es-ES'):'hoy');
+function esc(s){return s?String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'):''}
+var filas=notas.map(function(n){
+var d=new Date(n.fecha);
+var fd=d.toLocaleDateString('es-ES',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'});
+return '<tr><td style="padding:8px 6px;font-size:11px;color:#666;white-space:nowrap;vertical-align:top;border-bottom:1px solid #eee;">'+esc(fd)+'</td>'+
+'<td style="padding:8px 6px;font-size:13px;vertical-align:top;border-bottom:1px solid #eee;">'+esc(n.texto).replace(/\n/g,'<br>')+'</td></tr>';
+}).join('');
+var contenido='<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Tapunto — Notas</title>'+
+'<style>body{font-family:Arial,sans-serif;margin:0;padding:20px;color:#1a1a1a;}'+
+'.hdr{display:flex;justify-content:space-between;padding-bottom:12px;border-bottom:3px solid #2D5016;margin-bottom:8px;}'+
+'.logo{font-size:22px;font-weight:900;color:#2D5016;}.tagline{font-size:9px;color:#5A8A32;text-transform:uppercase;letter-spacing:1px;margin-top:2px;}'+
+'.meta{font-size:11px;color:#666;text-align:right;line-height:1.6;}.filtro{font-size:10px;color:#5A8A32;font-style:italic;margin-bottom:12px;}'+
+'table{width:100%;border-collapse:collapse;}thead tr{background:#2D5016;}thead th{color:white;padding:8px 6px;font-size:11px;text-align:left;}'+
+'tbody tr:nth-child(even){background:#f9f9f9;}'+
+'.footer{margin-top:16px;font-size:9px;color:#aaa;text-align:center;border-top:1px solid #eee;padding-top:8px;}'+
+'@media print{body{padding:0;}@page{margin:1.5cm;}}'+
+'</style></head><body>'+
+'<div class="hdr"><div><div class="logo">📝 Tapunto — Notas Rápidas</div><div class="tagline">Tu agenda personal segura</div></div>'+
+'<div class="meta"><strong>'+esc(nombre)+'</strong><br>'+esc(fechaHoy)+'<br>'+notas.length+' nota'+(notas.length!==1?'s':'')+'</div></div>'+
+(filtroTxt?'<div class="filtro">🔍 '+esc(filtroTxt)+'</div>':'')+
+'<table><thead><tr><th style="width:130px;">Fecha</th><th>Nota</th></tr></thead><tbody>'+filas+'</tbody></table>'+
+'<div class="footer">Tu agenda personal segura · tapunto.app · © 2026 Alicia Prats</div>'+
+'<scr'+'ipt>window.onload=function(){window.print();}</'+'script>'+
+'</body></html>';
+var ventana=window.open('','_blank','width=800,height=600');
+if(!ventana){showWarn('Activa ventanas emergentes para generar el PDF.');return;}
+ventana.document.write(contenido);ventana.document.close();ventana.focus();
+document.getElementById('notas-pdf-filter').style.display='none';
+}
 function guardarNota(){
 var inp=document.getElementById('nota-input');
 var texto=inp?inp.value.trim():'';
@@ -3784,6 +3903,12 @@ renderNotas();
 }
 function eliminarNota(id){
 if(!state.notas) return;
+// Añadir a lista negra
+var blKey='tp_blacklist_notas_'+(currentUser||'tapunto');
+try{
+var bl=JSON.parse(localStorage.getItem(blKey)||'[]');
+if(!bl.includes(id)){bl.push(id);localStorage.setItem(blKey,JSON.stringify(bl));}
+}catch(e){}
 state.notas=state.notas.filter(function(n){return n.id!==id;});
 persist().catch(function(){});
 renderNotas();
@@ -5649,6 +5774,7 @@ if(btnCan) btnCan.style.display='none';
 var badgeEl=document.getElementById('ai-badge-container');
 if(badgeEl){badgeEl.style.display='none';badgeEl.innerHTML='';}
 resetForm();
+if(dest==='notas') irSeccion('notas'); else irHome();
 }
 function editRecord(id){
 var calPanel=document.getElementById('cal-day-panel');
