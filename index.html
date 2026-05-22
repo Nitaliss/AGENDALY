@@ -4033,7 +4033,7 @@ if(tab==='registros'){renderStats();renderRecords();}
 if(tab==='config'){renderThemes();loadPinConfig();loadSheetsToken();loadFirmaConfig();renderLists();}
 if(tab==='recordatorios'){renderReminders();renderAlertasInteligentes();}
 if(tab==='calendario') renderCalendario();
-if(tab==='notas'){if(!state.notas) state.notas=[];renderNotas();setTimeout(function(){var i=document.getElementById('nota-input');if(i)i.focus();},100);}
+if(tab==='notas'){if(!state.notas) state.notas=[];renderNotas();setTimeout(function(){var i=document.getElementById('nota-input');if(i)i.focus();},100);if(isPremium&&state.sheetsUrl) syncFromSheets(false).catch(function(){});}
 }
 function renderStats(){
 const R=state.records,today=new Date().toISOString().slice(0,10);
@@ -4739,6 +4739,7 @@ checkTrial();
 checkLicenseExpiry();
 updatePortadaNombre();
 irHome();
+if(isPremium&&state.sheetsUrl) syncFromSheets(false).catch(()=>{});
 mostrarSplash();
 setTimeout(checkBackupSemanal, 5000);
 requestAnimationFrame(()=>{
