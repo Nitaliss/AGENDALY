@@ -2772,6 +2772,28 @@ lists.clearContents();
 lists.appendRow(['Contactos','Temas']);
 const c=data.contactos||[],t=data.temas||[];
 for(let i=0;i<Math.max(c.length,t.length);i++) lists.appendRow([c[i]||'',t[i]||'']);
+// Sincronizar Notas Rápidas
+const notasData=data.notas||[];
+if(notasData.length>0){
+let ns=ss.getSheetByName('Notas_Rapidas');
+if(!ns){ns=ss.insertSheet('Notas_Rapidas');ns.appendRow(['ID','Texto','Fecha','Archivado']);}
+const nv=ns.getDataRange().getValues();
+const nIds=new Set(nv.slice(1).map(r=>String(r[0])));
+notasData.forEach(function(n){
+if(!n.id) return;
+if(!nIds.has(String(n.id))){
+ns.appendRow([n.id,n.texto,n.fecha,n.archivado?'1':'0']);
+} else {
+for(let r=1;r<nv.length;r++){
+if(String(nv[r][0])===String(n.id)){
+ns.getRange(r+1,2).setValue(n.texto);
+ns.getRange(r+1,4).setValue(n.archivado?'1':'0');
+break;
+}
+}
+}
+});
+}
 } else if(data.action==='append'){
 if(sheet.getLastRow()===0) sheet.appendRow(HDRS);
 sheet.appendRow([data.id,data.fecha,data.contacto,data.tema,data.accion,data.comunicado,data.estado,data.notas,data.recordatorio,data.created,data.imagenUrl||'']);
