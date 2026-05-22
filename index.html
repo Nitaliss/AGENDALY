@@ -2832,6 +2832,32 @@ bsheet.appendRow(['ID','Fecha','Contacto','Asunto','Accion','Comunicado','Estado
 bdata.forEach(function(r){bsheet.appendRow([r.id,r.fecha,r.contacto,r.tema,r.accion,r.comunicado,r.estado,r.notas,r.recordatorio,r.created,r.imagenUrl||'']);});
 }
 return ContentService.createTextOutput(JSON.stringify({ok:true})).setMimeType(ContentService.MimeType.JSON);
+} else if(data.action==='sync_notas'){
+const sn=data.notas||[];
+let ns=ss.getSheetByName('Notas_Rapidas');
+if(!ns){ns=ss.insertSheet('Notas_Rapidas');ns.appendRow(['ID','Texto','Fecha','Archivado']);}
+const nv=ns.getDataRange().getValues();
+const nIds=new Set(nv.slice(1).map(r=>String(r[0])));
+sn.forEach(function(n){
+if(!n.id) return;
+if(!nIds.has(String(n.id))){
+ns.appendRow([n.id,n.texto,n.fecha,n.archivado?'1':'0']);
+} else {
+for(let r=1;r<nv.length;r++){
+if(String(nv[r][0])===String(n.id)){
+ns.getRange(r+1,2).setValue(n.texto);
+ns.getRange(r+1,4).setValue(n.archivado?'1':'0');
+break;
+}
+}
+}
+});
+} else if(data.action==='delete'){
+const delId=String(data.id||'');
+if(delId){const vals=sheet.getDataRange().getValues();for(let r=vals.length-1;r>=1;r--){if(String(vals[r][0])===delId){sheet.deleteRow(r+1);break;}}}
+} else if(data.action==='deleteNota'){
+const dNId=String(data.id||'');
+if(dNId){const ns=ss.getSheetByName('Notas_Rapidas');if(ns){const nv=ns.getDataRange().getValues();for(let r=nv.length-1;r>=1;r--){if(String(nv[r][0])===dNId){ns.deleteRow(r+1);break;}}}}
 } else if(data.action==='validate_license'){
 const HASHES_VALIDOS=[
 ];
