@@ -3378,6 +3378,16 @@ notas:(state.notas||[]).map(function(n){return {id:n.id,texto:n.texto,fecha:n.fe
 setSyncStatus('ok','Sincronizado');
 }catch(e){setSyncStatus('error','Error al subir');}
 }
+async function syncNotasToSheets(){
+if(!state.sheetsUrl||!isPremium) return;
+if(!state.notas||!state.notas.length) return;
+try{
+await fetch(state.sheetsUrl,{method:'POST',
+body:JSON.stringify({action:'sync_notas',token:localStorage.getItem('tp_sheets_token_'+currentUser)||'',
+notas:state.notas.map(function(n){return {id:n.id,texto:n.texto,fecha:n.fecha,archivado:n.archivado||false};})
+})});
+}catch(e){}
+}
 async function syncListsToSheets(){
 if(!state.sheetsUrl) return;
 try{ await fetch(state.sheetsUrl,{method:'POST',body:JSON.stringify({action:'sync_lists',contactos:state.contactos,temas:state.temas})}); }catch(e){}
@@ -3389,7 +3399,7 @@ const cfg={action:'saveConfig',token:localStorage.getItem('tp_sheets_token_'+cur
 user:currentUser,theme:state.theme||'verde',
 firma:JSON.stringify(getFirma()),
 coverImage:state.coverImageData?await compressCoverForSheets(state.coverImageData):''};
-fetch(state.sheetsUrl,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(cfg)}).catch(()=>{});
+fetch(state.sheetsUrl,{method:'POST',body:JSON.stringify(cfg)}).catch(()=>{});
 }catch(e){}
 }
 async function compressCoverForSheets(dataUrl){
@@ -3796,7 +3806,7 @@ try{const bl=JSON.parse(localStorage.getItem(blKey)||'[]');if(!bl.includes(id)){
 state.records=state.records.filter(r=>r.id!==id);
 await persist().catch(()=>{});
 if(state.sheetsUrl){
-try{await fetch(state.sheetsUrl,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'delete',token:localStorage.getItem('tp_sheets_token_'+currentUser)||'',id:id})});}catch(e){}
+try{await fetch(state.sheetsUrl,{method:'POST',body:JSON.stringify({action:'delete',token:localStorage.getItem('tp_sheets_token_'+currentUser)||'',id:id})});}catch(e){}
 syncFromSheets(false).catch(()=>{});
 }
 closeConfirm();renderRecords();renderStats();updateFreeBar();
@@ -3880,7 +3890,7 @@ state.notas.unshift(nota);
 persist().catch(function(){});
 inp.value='';
 renderNotas();
-if(state.sheetsUrl) setTimeout(function(){syncToSheets().catch(function(){});},300);
+if(state.sheetsUrl&&isPremium) setTimeout(function(){syncNotasToSheets().catch(function(){});},300);
 }
 function eliminarNota(id){
 if(!state.notas) return;
@@ -3888,7 +3898,7 @@ var blKey='tp_blacklist_notas_'+(currentUser||'tapunto');
 try{var bl=JSON.parse(localStorage.getItem(blKey)||'[]');if(!bl.includes(id)){bl.push(id);localStorage.setItem(blKey,JSON.stringify(bl));}}catch(e){}
 state.notas=state.notas.filter(function(n){return n.id!==id;});
 persist().catch(function(){});
-if(state.sheetsUrl){fetch(state.sheetsUrl,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'deleteNota',token:localStorage.getItem('tp_sheets_token_'+currentUser)||'',id:id})}).catch(function(){});}
+if(state.sheetsUrl){fetch(state.sheetsUrl,{method:'POST',body:JSON.stringify({action:'deleteNota',token:localStorage.getItem('tp_sheets_token_'+currentUser)||'',id:id})}).catch(function(){});}
 renderNotas();
 }
 function archivarNota(id){
@@ -3897,7 +3907,7 @@ var nota=state.notas.find(function(n){return n.id===id;});
 if(!nota) return;
 nota.archivado=!nota.archivado;
 persist().catch(function(){});
-if(state.sheetsUrl) syncToSheets().catch(function(){});
+if(state.sheetsUrl&&isPremium) syncNotasToSheets().catch(function(){});
 renderNotas();
 }
 function editarNota(id,span){
@@ -3916,7 +3926,7 @@ btns.appendChild(btnG);btns.appendChild(btnC);
 wrap.appendChild(input);wrap.appendChild(btns);
 span.parentNode.replaceChild(wrap,span);
 input.focus();input.select();
-function guardar(){var nuevo=input.value.trim();if(nuevo&&nuevo!==nota.texto){nota.texto=nuevo;persist().catch(function(){});if(state.sheetsUrl)syncToSheets().catch(function(){});}renderNotas();}
+function guardar(){var nuevo=input.value.trim();if(nuevo&&nuevo!==nota.texto){nota.texto=nuevo;persist().catch(function(){});if(state.sheetsUrl&&isPremium)syncNotasToSheets().catch(function(){});}renderNotas();}
 function cancelar(){renderNotas();}
 btnG.addEventListener('click',guardar);btnC.addEventListener('click',cancelar);
 input.addEventListener('keydown',function(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();guardar();}if(e.key==='Escape'){cancelar();}});
