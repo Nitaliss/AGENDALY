@@ -1886,17 +1886,7 @@ body.on-home .hdr-top{justify-content:flex-end;}
 body.on-home .btn-home{display:none!important;}
 
 /* Botón config flotante abajo derecha */
-.btn-config-float{
-  position:fixed;bottom:80px;right:12px;
-  width:56px;height:56px;border-radius:14px;
-  background:var(--gm);border:none;
-  color:#fff;font-size:20px;cursor:pointer;
-  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;
-  box-shadow:0 4px 16px rgba(0,0,0,.35);
-  transition:transform .15s;z-index:99999;
-  font-family:'Lato',sans-serif;
-}
-.btn-config-float:active{transform:scale(.92);}
+.btn-config-float{display:none !important;}
 </style>
 <script>(function(){try{if(localStorage.getItem('tp_dark_mode')==='1')document.documentElement.style.background='#1a1a2e';}catch(e){};}());</script>
 </head>
@@ -2186,6 +2176,9 @@ body.on-home .btn-home{display:none!important;}
     <span style="font-size:20px;">📝</span>
     <span>NOTAS RÁPIDAS</span>
   </button>
+  <div style="display:flex;justify-content:flex-end;margin-top:8px;padding-right:4px;">
+    <button onclick="irSeccion('config')" style="padding:6px 14px;background:var(--bl);color:var(--tl);border:1px solid var(--bd);border-radius:16px;font-family:'Lato',sans-serif;font-size:11px;font-weight:600;cursor:pointer;">⚙️ Config</button>
+  </div>
 </div>
 
 <div id="sec-nuevo" class="section">
@@ -3459,18 +3452,6 @@ if(!r.id||seenIds.has(r.id)) return false;
 seenIds.add(r.id); return true;
 });
 if(data.theme||data.firma||data.coverImage) syncConfigFromSheets(data).catch(()=>{});
-if(data.notas&&Array.isArray(data.notas)){
-if(!state.notas) state.notas=[];
-var blKeyN='tp_blacklist_notas_'+(currentUser||'tapunto');
-var blN=[];try{blN=JSON.parse(localStorage.getItem(blKeyN)||'[]');}catch(e){}
-var idsN=new Set(state.notas.map(function(n){return n.id;}));
-data.notas.forEach(function(n){
-if(!n.id||blN.includes(n.id)) return;
-if(!idsN.has(n.id)){state.notas.push(n);}
-else{var loc=state.notas.find(function(x){return x.id===n.id;});if(loc){loc.archivado=n.archivado;loc.texto=n.texto;}}
-});
-state.notas.sort(function(a,b){return new Date(b.fecha)-new Date(a.fecha);});
-}
 // Guardar timestamp de última sync exitosa
 localStorage.setItem('tp_last_sync_'+( currentUser||'tapunto'), Date.now().toString());
 var blKey='tp_blacklist_'+(currentUser||'tapunto');
@@ -3482,6 +3463,26 @@ renderStats(); renderRecords();
 fillSelect('inp-contacto',state.contactos); fillSelect('inp-tema',state.temas);
 fillAcciones(); fillComunicados();
 } else { setSyncStatus('ok','Sin datos remotos'); }
+// Procesar notas siempre, independiente de si hay registros
+if(data&&data.notas&&Array.isArray(data.notas)){
+if(!state.notas) state.notas=[];
+var blKeyN='tp_blacklist_notas_'+(currentUser||'tapunto');
+var blN=[];try{blN=JSON.parse(localStorage.getItem(blKeyN)||'[]');}catch(e){}
+var idsN=new Set(state.notas.map(function(n){return n.id;}));
+var notasNuevas=0;
+data.notas.forEach(function(n){
+if(!n.id||blN.includes(n.id)) return;
+if(!idsN.has(n.id)){state.notas.push(n);notasNuevas++;}
+else{var loc=state.notas.find(function(x){return x.id===n.id;});if(loc){loc.archivado=n.archivado;loc.texto=n.texto;}}
+});
+if(notasNuevas>0||data.notas.length>0){
+state.notas.sort(function(a,b){return new Date(b.fecha)-new Date(a.fecha);});
+persist().catch(function(){});
+// Actualizar vista si estamos en notas
+var secNotas=document.getElementById('sec-notas');
+if(secNotas&&secNotas.classList.contains('active')) renderNotas();
+}
+}
 }catch(e){ setSyncStatus('error','Sin conexión'); }
 }
 function connectSheets(){
@@ -3877,9 +3878,9 @@ var nota={id:Date.now().toString(),texto:texto,fecha:new Date().toISOString()};
 if(!state.notas) state.notas=[];
 state.notas.unshift(nota);
 persist().catch(function(){});
-if(state.sheetsUrl) syncToSheets().catch(function(){});
 inp.value='';
 renderNotas();
+if(state.sheetsUrl) setTimeout(function(){syncToSheets().catch(function(){});},300);
 }
 function eliminarNota(id){
 if(!state.notas) return;
