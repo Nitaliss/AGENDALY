@@ -1879,7 +1879,10 @@ body[data-theme="tierra"] .home-btn-alertas{background:linear-gradient(135deg,#1
 .week-group { margin-left: 0; }
 .cfg-section { box-sizing: border-box; }
 
-.home-btn-notas{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;max-width:420px;margin:0 auto;padding:12px 24px;border-radius:50px;border:none;cursor:pointer;font-family:'Lato',sans-serif;font-weight:800;font-size:12px;letter-spacing:.5px;text-transform:uppercase;color:#fff;background:linear-gradient(135deg,#1a5276,#2980b9);box-shadow:0 6px 20px rgba(26,82,118,.35);transition:transform .15s;}
+.home-btns-row{display:flex;gap:10px;width:100%;max-width:420px;margin:0 auto;}
+.home-btn-notas{display:flex;align-items:center;justify-content:center;gap:6px;flex:1;padding:11px 8px;border-radius:50px;border:none;cursor:pointer;font-family:'Lato',sans-serif;font-weight:800;font-size:11px;letter-spacing:.4px;text-transform:uppercase;color:#fff;background:linear-gradient(135deg,#1a5276,#2980b9);box-shadow:0 4px 14px rgba(26,82,118,.3);transition:transform .15s;}
+.home-btn-rutinas{display:flex;align-items:center;justify-content:center;gap:6px;flex:1;padding:11px 8px;border-radius:50px;border:none;cursor:pointer;font-family:'Lato',sans-serif;font-weight:800;font-size:11px;letter-spacing:.4px;text-transform:uppercase;color:#fff;background:linear-gradient(135deg,#1a6b3a,#27ae60);box-shadow:0 4px 14px rgba(26,107,58,.3);transition:transform .15s;}
+.home-btn-notas:active,.home-btn-rutinas:active{transform:scale(.96);}
 .home-btn-notas:active{transform:scale(.96);}
 .home-cfg{display:block;width:auto;margin:8px auto 0;padding:6px 16px;border-radius:20px;border:1px solid var(--bd);cursor:pointer;background:var(--bl);color:var(--tl);font-family:'Lato',sans-serif;font-size:11px;font-weight:600;text-align:center;}
 body.on-home .hdr-top{justify-content:flex-end;}
@@ -2172,12 +2175,19 @@ body.on-home .btn-home{display:none!important;}
     </button>
   </div>
   <div style="height:14px;flex-shrink:0;"></div>
-  <button class="home-btn-notas" onclick="irSeccion('notas')" style="margin-top:0;">
-    <span style="font-size:20px;">📝</span>
-    <span>NOTAS RÁPIDAS</span>
-  </button>
-  <div style="display:flex;justify-content:flex-end;margin-top:8px;padding-right:4px;">
-    <button onclick="irSeccion('config')" style="padding:6px 14px;background:var(--bl);color:var(--tl);border:1px solid var(--bd);border-radius:16px;font-family:'Lato',sans-serif;font-size:11px;font-weight:600;cursor:pointer;">⚙️ Config</button>
+  <div class="home-btns-row">
+    <button class="home-btn-notas" onclick="irSeccion('notas')">
+      <span style="font-size:18px;">📝</span>
+      <span>TO DO</span>
+    </button>
+    <button class="home-btn-rutinas" onclick="irSeccion('rutinas')">
+      <span style="font-size:18px;">🌱</span>
+      <span>MIS RUTINAS</span>
+    </button>
+  </div>
+  <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:20px;padding-right:4px;">
+    <button onclick="irSeccion('config')" style="padding:6px 14px;background:var(--bl);color:var(--tl);border:1px solid var(--bd);border-radius:16px;font-family:'Lato',sans-serif;font-size:11px;font-weight:600;cursor:pointer;">⚙️ Configuración</button>
+    <button onclick="mostrarAyuda()" style="padding:6px 14px;background:#0078D4;color:#fff;border:none;border-radius:16px;font-family:'Lato',sans-serif;font-size:11px;font-weight:700;cursor:pointer;letter-spacing:.3px;">AYUDA</button>
   </div>
 </div>
 
@@ -2426,13 +2436,38 @@ body.on-home .btn-home{display:none!important;}
       <button onclick="document.getElementById('notas-pdf-filter').style.display='none'" style="padding:6px 10px;background:none;color:var(--tl);border:1px solid var(--bd);border-radius:6px;font-size:12px;cursor:pointer;">✕</button>
     </div>
     <div style="display:flex;gap:8px;margin-bottom:16px;align-items:flex-start;">
-      <textarea id="nota-input" placeholder="Escribe o dicta una nota rápida..." style="flex:1;padding:10px 12px;border:1px solid var(--bd);border-radius:10px;background:var(--bp);color:var(--td);font-family:'Lato',sans-serif;font-size:14px;resize:none;min-height:56px;outline:none;line-height:1.4;"></textarea>
+      <textarea id="nota-input" placeholder="Escribe o dicta una tarea o nota..." style="flex:1;padding:10px 12px;border:1px solid var(--bd);border-radius:10px;background:var(--bp);color:var(--td);font-family:'Lato',sans-serif;font-size:14px;resize:none;min-height:56px;outline:none;line-height:1.4;"></textarea>
       <div style="display:flex;flex-direction:column;gap:6px;">
         <button onclick="dictarCampo('nota-input',this)" title="🎙️ Dictado de voz · Requiere micrófono y HTTPS · El audio se procesa en tu dispositivo" style="padding:10px;background:var(--gm);color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:18px;">🎙️</button>
         <button onclick="guardarNota()" style="padding:10px;background:var(--gd);color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:18px;">✓</button>
       </div>
     </div>
     <div id="notas-list"></div>
+  </div>
+</div>
+
+<div id="sec-rutinas" class="section">
+  <div style="padding:12px 16px;">
+
+    <!-- Barra superior -->
+    <div style="display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap;">
+      <button onclick="abrirNuevaRutina()" style="padding:8px 14px;background:var(--gm);color:#fff;border:none;border-radius:8px;font-family:'Lato',sans-serif;font-size:12px;font-weight:700;cursor:pointer;">+ Nueva</button>
+      <button onclick="exportRutinasJSON()" style="padding:8px 12px;background:var(--bl);color:var(--td);border:1px solid var(--bd);border-radius:8px;font-family:'Lato',sans-serif;font-size:12px;font-weight:600;cursor:pointer;">📥 Backup</button>
+      <label style="padding:8px 12px;background:var(--bl);color:var(--td);border:1px solid var(--bd);border-radius:8px;font-family:'Lato',sans-serif;font-size:12px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;">
+        📂 Restaurar<input type="file" accept=".json" style="display:none" onchange="importRutinasJSON(event)">
+      </label>
+      <button onclick="mostrarSelectorPDFRutina()" style="padding:8px 12px;background:var(--bc);color:#fff;border:none;border-radius:8px;font-family:'Lato',sans-serif;font-size:12px;font-weight:600;cursor:pointer;">📄 PDF</button>
+    </div>
+
+    <!-- Indicador de progreso del día -->
+    <div id="rutinas-progreso" style="background:var(--bl);border-radius:10px;padding:10px 14px;margin-bottom:16px;border:1px solid var(--bd);display:flex;align-items:center;justify-content:space-between;">
+      <span style="font-size:12px;color:var(--tl);">Progreso de hoy</span>
+      <span id="rutinas-progreso-txt" style="font-size:13px;font-weight:800;color:var(--gm);">0 / 0</span>
+    </div>
+
+    <!-- Lista de rutinas de hoy -->
+    <div id="rutinas-list"></div>
+
   </div>
 </div>
 
@@ -2530,9 +2565,13 @@ body.on-home .btn-home{display:none!important;}
               <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;">
                 <button onclick="saveSheetsUrl()" style="padding:8px 14px;background:var(--gm);color:#fff;border:none;border-radius:6px;font-size:12px;cursor:pointer;">💾 Conectar</button>
                 <button onclick="syncFromSheets(true)" style="padding:8px 14px;background:var(--bl);color:var(--td);border:1px solid var(--bd);border-radius:6px;font-size:12px;cursor:pointer;">⟳ Sincronizar</button>
+                <button onclick="formatearSheets()" style="padding:8px 14px;background:var(--bl);color:var(--td);border:1px solid var(--bd);border-radius:6px;font-size:12px;cursor:pointer;">🎨 Formatear hoja</button>
                 <button onclick="desconectarSheets()" style="padding:8px 14px;background:var(--bl);color:#c53030;border:1px solid #f5c6c6;border-radius:6px;font-size:12px;cursor:pointer;">✕ Desconectar</button>
               </div>
-              <div style="margin-bottom:6px;font-size:12px;font-weight:700;color:var(--td);">Token de acceso</div>
+              <div style="margin-bottom:6px;font-size:12px;font-weight:700;color:var(--td);display:flex;align-items:center;gap:6px;">
+                Token de acceso
+                <button onclick="mostrarTooltipToken(this)" style="width:18px;height:18px;border-radius:50%;background:var(--gm);color:#fff;border:none;font-size:10px;font-weight:700;cursor:pointer;flex-shrink:0;line-height:1;">ⓘ</button>
+              </div>
               <input type="text" id="cfg-sheets-token" placeholder="Token..." style="width:100%;padding:8px;border:1px solid var(--bd);border-radius:6px;font-size:12px;background:var(--bp);color:var(--td);margin-bottom:8px;box-sizing:border-box;"/>
               <button onclick="saveSheetsToken()" style="padding:8px 14px;background:var(--bl);color:var(--td);border:1px solid var(--bd);border-radius:6px;font-size:12px;cursor:pointer;margin-bottom:12px;">💾 Guardar token</button>
               <div style="padding:10px;background:var(--bl);border-radius:8px;border:1px solid var(--bd);">
@@ -2803,26 +2842,68 @@ file.setSharing(DriveApp.Access.ANYONE_WITH_LINK,DriveApp.Permission.VIEW);
 const id=file.getId();
 return ContentService.createTextOutput(JSON.stringify({ok:true,url:'https://drive.google.com/file/d/'+id+'/view',thumb:'https://drive.google.com/thumbnail?id='+id+'&sz=w400',id:id})).setMimeType(ContentService.MimeType.JSON);
 } else if(data.action==='formatear'){
+// ── Tapunto_Trabajo ──
 var fmtSheet=getOrCreateSheet(ss,'Tapunto_Trabajo');
 fmtSheet.setFrozenRows(1);
 var fmtRange=fmtSheet.getDataRange();
-if(fmtRange.getNumRows()>1) fmtSheet.getRange(1,1,1,fmtRange.getNumColumns()).createFilter();
-var hdrRange=fmtSheet.getRange(1,1,1,fmtRange.getNumColumns());
+var numCols=fmtRange.getNumColumns();
+// Cabecera
+var hdrRange=fmtSheet.getRange(1,1,1,numCols);
 hdrRange.setBackground('#2D5016');
 hdrRange.setFontColor('#FFFFFF');
 hdrRange.setFontWeight('bold');
-fmtSheet.hideColumns(1);
-if(fmtRange.getNumColumns()>=9) fmtSheet.hideColumns(9);
-if(fmtRange.getNumColumns()>=10) fmtSheet.hideColumns(10);
+hdrRange.setFontSize(11);
+// Filtro
+try{fmtSheet.getRange(1,1,1,numCols).createFilter();}catch(ex){}
+// Ocultar columnas técnicas: ID(1), Recordatorio(9), Creado(10), Imagen(11)
+[1,9,10,11].forEach(function(c){if(c<=numCols) fmtSheet.hideColumns(c);});
+// Anchos columnas visibles
+fmtSheet.setColumnWidth(2,130); // Fecha
+fmtSheet.setColumnWidth(3,160); // Contacto
+fmtSheet.setColumnWidth(4,200); // Asunto
+fmtSheet.setColumnWidth(5,160); // Acción
+fmtSheet.setColumnWidth(6,160); // Comunicado
+fmtSheet.setColumnWidth(7,110); // Estado
+fmtSheet.setColumnWidth(8,350); // Notas
+// Color filas por estado
 var fmtVals=fmtSheet.getDataRange().getValues();
 for(var i=1;i<fmtVals.length;i++){
 var estado=String(fmtVals[i][6]||'').toLowerCase();
 var color=estado==='resuelto'?'#d4edda':estado==='en curso'?'#cce5ff':estado==='pendiente'?'#fff3cd':'#ffffff';
-fmtSheet.getRange(i+1,1,1,fmtRange.getNumColumns()).setBackground(color);
+fmtSheet.getRange(i+1,1,1,numCols).setBackground(color);
 }
-fmtSheet.setColumnWidth(2,120); fmtSheet.setColumnWidth(3,150); fmtSheet.setColumnWidth(4,180);
-fmtSheet.setColumnWidth(5,150); fmtSheet.setColumnWidth(6,150); fmtSheet.setColumnWidth(7,100);
-fmtSheet.setColumnWidth(8,300);
+fmtSheet.setRowHeight(1,32);
+// ── Notas_Rapidas ──
+var notasFmt=ss.getSheetByName('Notas_Rapidas');
+if(notasFmt){
+notasFmt.setFrozenRows(1);
+var nRange=notasFmt.getDataRange();
+var nCols=nRange.getNumColumns();
+var nHdr=notasFmt.getRange(1,1,1,nCols);
+nHdr.setBackground('#1a5276');
+nHdr.setFontColor('#FFFFFF');
+nHdr.setFontWeight('bold');
+nHdr.setFontSize(11);
+notasFmt.hideColumns(1); // Ocultar ID
+notasFmt.setColumnWidth(2,400); // Texto
+notasFmt.setColumnWidth(3,140); // Fecha
+notasFmt.setColumnWidth(4,100); // Archivado
+notasFmt.setRowHeight(1,32);
+}
+// ── Tapunto_Config ──
+var cfgFmt=ss.getSheetByName('Tapunto_Config');
+if(cfgFmt) cfgFmt.hideSheet();
+// ── Listas ──
+var listFmt=ss.getSheetByName('Listas');
+if(listFmt){
+var lHdr=listFmt.getRange(1,1,1,2);
+lHdr.setBackground('#2D5016');
+lHdr.setFontColor('#FFFFFF');
+lHdr.setFontWeight('bold');
+listFmt.setColumnWidth(1,200);
+listFmt.setColumnWidth(2,200);
+listFmt.setFrozenRows(1);
+}
 return ContentService.createTextOutput(JSON.stringify({ok:true})).setMimeType(ContentService.MimeType.JSON);
 } else if(data.action==='backup'){
 var bsheet=getOrCreateSheet(ss,'Tapunto_Backup_'+function(){var d=new Date();var onejan=new Date(d.getFullYear(),0,1);var w=Math.ceil((((d-onejan)/86400000)+onejan.getDay()+1)/7);return d.getFullYear()+'-S'+(w<10?'0':'')+w;}());
@@ -2858,6 +2939,24 @@ if(delId){const vals=sheet.getDataRange().getValues();for(let r=vals.length-1;r>
 } else if(data.action==='deleteNota'){
 const dNId=String(data.id||'');
 if(dNId){const ns=ss.getSheetByName('Notas_Rapidas');if(ns){const nv=ns.getDataRange().getValues();for(let r=nv.length-1;r>=1;r--){if(String(nv[r][0])===dNId){ns.deleteRow(r+1);break;}}}}
+} else if(data.action==='saveConfig'){
+let cfgSheet=ss.getSheetByName('Tapunto_Config');
+if(!cfgSheet){cfgSheet=ss.insertSheet('Tapunto_Config');cfgSheet.appendRow(['Key','Value','Updated']);}
+const cfgVals=cfgSheet.getDataRange().getValues();
+const cfgMap={};
+cfgVals.slice(1).forEach(function(r){cfgMap[String(r[0])]=r;});
+const now=new Date().toISOString();
+const upsert=function(key,val){
+if(cfgMap[key]){
+const ri=cfgVals.findIndex(function(r){return String(r[0])===key;});
+if(ri>0){cfgSheet.getRange(ri+1,2).setValue(val);cfgSheet.getRange(ri+1,3).setValue(now);}
+} else {
+cfgSheet.appendRow([key,val,now]);
+}
+};
+if(data.theme) upsert('theme',data.theme);
+if(data.firma) upsert('firma',data.firma);
+if(data.coverImage) upsert('coverImage',data.coverImage);
 } else if(data.action==='validate_license'){
 const HASHES_VALIDOS=[
 ];
@@ -2891,7 +2990,10 @@ if(r[0])contactos.push(String(r[0]));
 if(r[1])temas.push(String(r[1]));
 });
 let notasRows=[];try{const ns=ss.getSheetByName('Notas_Rapidas');if(ns&&ns.getLastRow()>1){notasRows=ns.getDataRange().getValues().slice(1).map(r=>({id:String(r[0]),texto:String(r[1]),fecha:String(r[2]),archivado:r[3]==='1'||r[3]===true}));}}catch(ex){}
-return ContentService.createTextOutput(JSON.stringify({rows,contactos,temas,notas:notasRows})).setMimeType(ContentService.MimeType.JSON);
+let theme='',firma='',coverImage='';
+try{const cs=ss.getSheetByName('Tapunto_Config');if(cs&&cs.getLastRow()>1){cs.getDataRange().getValues().slice(1).forEach(function(r){if(r[0]==='theme')theme=String(r[1]||'');if(r[0]==='firma')firma=String(r[1]||'');if(r[0]==='coverImage')coverImage=String(r[1]||'');});}}catch(ex){}
+const ssName=ss.getName();
+return ContentService.createTextOutput(JSON.stringify({rows,contactos,temas,notas:notasRows,theme:theme||undefined,firma:firma||undefined,coverImage:coverImage||undefined,sheetName:ssName})).setMimeType(ContentService.MimeType.JSON);
 } catch(err){ return ContentService.createTextOutput(JSON.stringify({ok:false,error:err.message})).setMimeType(ContentService.MimeType.JSON); }
 }`;
 const THEMES = [
@@ -2912,7 +3014,8 @@ const buf=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(atob('dG
 return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('').slice(0,32);
 }
 const APP_KEY = 'tapunto_v1';
-let state = {records:[],contactos:[],temas:[],acciones:[],comunicados:[],notas:[],sheetsUrl:'',theme:'verde',coverImageData:null,modo:'trabajo'};
+let state = {records:[],contactos:[],temas:[],acciones:[],comunicados:[],notas:[],rutinas:[],sheetsUrl:'',theme:'verde',coverImageData:null,modo:'trabajo'};
+var rutinasFechaActual = {}; // {id: fechaKey} fecha seleccionada por cada rutina
 let currentUser = null;
 let editingId   = null;
 let reminderDays = null;
@@ -3428,6 +3531,25 @@ setTimeout(function(){btn.textContent=orig;},2000);
 ta.select();document.execCommand('copy');
 });
 }
+function formatearSheets(){
+if(!state.sheetsUrl){alert('Primero conecta Google Sheets.');return;}
+var btn=event.target;
+btn.textContent='⏳ Formateando...';
+btn.disabled=true;
+fetch(state.sheetsUrl,{method:'POST',
+body:JSON.stringify({action:'formatear',token:localStorage.getItem('tp_sheets_token_'+currentUser)||''})
+}).then(function(r){return r.json();})
+.then(function(d){
+btn.textContent='✓ Formateado';
+btn.style.background='var(--gm)';
+btn.style.color='#fff';
+setTimeout(function(){btn.textContent='🎨 Formatear hoja';btn.style.background='';btn.style.color='';btn.disabled=false;},3000);
+}).catch(function(){
+btn.textContent='❌ Error';
+btn.disabled=false;
+setTimeout(function(){btn.textContent='🎨 Formatear hoja';},2000);
+});
+}
 function startAutoSync(){ clearInterval(autoSyncTimer); autoSyncTimer=setInterval(()=>syncFromSheets(false),30*60*1000); }
 function setSyncStatus(s,msg){ const dot=document.getElementById('sync-dot'),lbl=document.getElementById('sync-label'); dot.className='sync-dot'+(s==='syncing'?' syncing':s==='error'?' error':''); lbl.textContent=msg; }
 async function syncToSheets(){
@@ -3440,6 +3562,7 @@ records:state.records,contactos:state.contactos,temas:state.temas,
 notas:(state.notas||[]).map(function(n){return {id:n.id,texto:n.texto,fecha:n.fecha,archivado:n.archivado||false};})
 })});
 setSyncStatus('ok','Sincronizado');
+if(data.sheetName){var ss_el=document.getElementById('sheets-status');if(ss_el)ss_el.innerHTML='<div class="connected-tag">✓ Conectado · 📊 '+data.sheetName+'</div>';}
 }catch(e){setSyncStatus('error','Error al subir');}
 }
 async function syncNotasToSheets(){
@@ -3457,7 +3580,7 @@ if(!state.sheetsUrl) return;
 try{ await fetch(state.sheetsUrl,{method:'POST',body:JSON.stringify({action:'sync_lists',contactos:state.contactos,temas:state.temas})}); }catch(e){}
 }
 async function syncConfigToSheets(){
-if(!state.sheetsUrl||!currentUser) return;
+if(!state.sheetsUrl||!currentUser||!isPremium) return;
 try{
 const cfg={action:'saveConfig',token:localStorage.getItem('tp_sheets_token_'+currentUser)||'',
 user:currentUser,theme:state.theme||'verde',
@@ -3567,6 +3690,13 @@ document.getElementById('sheets-status').innerHTML='<div class="connected-tag">�
 startAutoSync(); syncFromSheets(false);
 }
 function initForm(){
+// Limpiar imagen al abrir nuevo registro
+var _prev=document.getElementById('img-preview');if(_prev){_prev.style.display='none';_prev.src='';}
+var _rmBtn=document.getElementById('img-remove-btn');if(_rmBtn)_rmBtn.style.display='none';
+var _area=document.getElementById('img-upload-area');if(_area)_area.classList.remove('has-img');
+var _imgStatus=document.getElementById('img-status');if(_imgStatus)_imgStatus.textContent='';
+currentImageBase64=null;currentImageMime=null;currentImageName=null;currentImageUrl=null;
+var _popup=document.getElementById('img-menu-popup');if(_popup)_popup.remove();
 setFechaChip('hoy',document.getElementById('chip-hoy'));
 fillSelect('inp-contacto',state.contactos);
 fillSelect('inp-tema',state.temas);
@@ -3628,8 +3758,8 @@ document.getElementById('img-uploading').style.display='flex';
 const _tema=(document.getElementById('inp-tema').value||'tapunto').replace(/[^a-zA-Z0-9áéíóúÁÉÍÓÚñÑ]/g,'-').slice(0,25);
 const _d=new Date();
 const _fecha=_d.getFullYear()+''+String(_d.getMonth()+1).padStart(2,'0')+''+String(_d.getDate()).padStart(2,'0')+'_'+String(_d.getHours()).padStart(2,'0')+''+String(_d.getMinutes()).padStart(2,'0');
-const _ext=(currentImageMime||'image/jpeg').split('/')[1];
-const _fileName=_tema+'_'+_fecha+'.'+_ext;
+const _ext=(currentImageMime||'image/jpeg').split('/')[1]||'jpg';
+const _fileName=_temaClean+'_'+_fecha+'_'+_hora+'.'+_ext;
 const resp=await fetch(state.sheetsUrl,{method:'POST',body:JSON.stringify({action:'upload_image',imageData:currentImageBase64,mimeType:currentImageMime,fileName:_fileName})});
 const data=await resp.json();
 document.getElementById('img-uploading').style.display='none';
@@ -3865,15 +3995,20 @@ function closeConfirm(){ pendingDelId=null; document.getElementById('confirm-ov'
 async function confirmDelete(){
 if(!pendingDelId) return;
 const id=pendingDelId;
+// Cerrar modal primero - siempre
+closeConfirm();
+// Lista negra
 const blKey='tp_blacklist_records_'+(currentUser||'tapunto');
 try{const bl=JSON.parse(localStorage.getItem(blKey)||'[]');if(!bl.includes(id)){bl.push(id);localStorage.setItem(blKey,JSON.stringify(bl));}}catch(e){}
+// Eliminar local
 state.records=state.records.filter(r=>r.id!==id);
-await persist().catch(()=>{});
+persist().catch(()=>{});
+renderRecords();renderStats();updateFreeBar();
+// Sync Sheets en segundo plano - no bloquea UI
 if(state.sheetsUrl){
-try{await fetch(state.sheetsUrl,{method:'POST',body:JSON.stringify({action:'delete',token:localStorage.getItem('tp_sheets_token_'+currentUser)||'',id:id})});}catch(e){}
-syncFromSheets(false).catch(()=>{});
+fetch(state.sheetsUrl,{method:'POST',body:JSON.stringify({action:'delete',token:localStorage.getItem('tp_sheets_token_'+currentUser)||'',id:id})}).catch(()=>{});
+setTimeout(function(){syncFromSheets(false).catch(()=>{});},1000);
 }
-closeConfirm();renderRecords();renderStats();updateFreeBar();
 }
 function exportNotasJSON(){
 if(!state.notas||!state.notas.length){alert('No hay notas para exportar.');return;}
@@ -3944,6 +4079,686 @@ if(!ventana){alert('Activa ventanas emergentes.');return;}
 ventana.document.write(contenido);ventana.document.close();ventana.focus();
 document.getElementById('notas-pdf-filter').style.display='none';
 }
+function abrirCamara(){
+var inp=document.createElement('input');
+inp.type='file';inp.accept='image/*';
+inp.setAttribute('capture','environment');
+inp.style.display='none';
+inp.onchange=function(e){onImageSelected(e);if(inp.parentNode)document.body.removeChild(inp);};
+document.body.appendChild(inp);
+inp.click();
+}
+function mostrarMenuImagen(e){
+if(e&&e.stopPropagation) e.stopPropagation();
+// Si ya hay imagen real, no abrir menú
+var prev=document.getElementById('img-preview');
+if(prev&&prev.style.display!=='none'&&prev.src&&prev.src!==window.location.href) return;
+// Quitar menú existente
+var existing=document.getElementById('img-menu-popup');
+if(existing){existing.remove();return;}
+var menu=document.createElement('div');
+menu.id='img-menu-popup';
+menu.style.cssText='position:fixed;z-index:9999;background:var(--w,#fff);border:1px solid var(--bd,#ddd);border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,.2);padding:8px;display:flex;flex-direction:column;gap:6px;min-width:180px;';
+var area=document.getElementById('img-upload-area');
+var rect=area.getBoundingClientRect();
+menu.style.top=(rect.bottom+8)+'px';
+menu.style.left=rect.left+'px';
+var b1=document.createElement('button');
+b1.textContent='📷 Cámara';
+b1.title='En móvil abre la cámara directamente · En ordenador abre el selector de archivos';
+b1.style.cssText='padding:10px 16px;background:var(--gm);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;text-align:left;width:100%;';
+b1.onclick=function(){abrirCamara();var m=document.getElementById('img-menu-popup');if(m)m.remove();};
+var b2=document.createElement('button');
+b2.textContent='🖼️ Galería';
+b2.style.cssText='padding:10px 16px;background:var(--bl,#f5f5f5);color:var(--td,#333);border:1px solid var(--bd,#ddd);border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;text-align:left;width:100%;';
+b2.onclick=function(){document.getElementById('inp-imagen-galeria').click();var m=document.getElementById('img-menu-popup');if(m)m.remove();};
+menu.appendChild(b1);menu.appendChild(b2);
+document.body.appendChild(menu);
+setTimeout(function(){
+document.addEventListener('click',function close(){
+var m=document.getElementById('img-menu-popup');if(m)m.remove();
+document.removeEventListener('click',close);
+});
+},100);
+}
+function abrirCamaraPortada(){
+var inp=document.createElement('input');
+inp.type='file';inp.accept='image/*';
+inp.setAttribute('capture','environment');
+inp.style.display='none';
+inp.onchange=function(e){onCoverImageSelected(e);if(inp.parentNode)document.body.removeChild(inp);};
+document.body.appendChild(inp);
+inp.click();
+}
+// ═══════════════════════════════════════
+// MIS RUTINAS
+// ═══════════════════════════════════════
+function abrirNuevaRutina(){
+var existing=document.getElementById('nueva-rutina-ov');
+if(existing){existing.style.display='flex';return;}
+var overlay=document.createElement('div');
+overlay.id='nueva-rutina-ov';
+overlay.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:9000;display:flex;align-items:center;justify-content:center;padding:16px;';
+var box=document.createElement('div');
+box.style.cssText='background:var(--w,#fff);border-radius:16px;max-width:400px;width:100%;padding:20px;position:relative;';
+
+// Título
+var title=document.createElement('div');
+title.style.cssText='font-size:16px;font-weight:800;color:var(--gm);margin-bottom:16px;';
+title.textContent='🌱 Nueva Rutina';
+
+// Botón cerrar
+var btnClose=document.createElement('button');
+btnClose.textContent='✕';
+btnClose.style.cssText='position:absolute;top:12px;right:12px;background:none;border:none;font-size:22px;cursor:pointer;color:var(--tl);';
+btnClose.onclick=function(){overlay.remove();};
+
+// Campo nombre
+var labelNombre=document.createElement('label');
+labelNombre.style.cssText='font-size:12px;font-weight:700;color:var(--td);display:block;margin-bottom:4px;';
+labelNombre.textContent='Nombre';
+var inpNombre=document.createElement('input');
+inpNombre.type='text';inpNombre.id='nr-nombre';
+inpNombre.placeholder='Ej: Vasos de agua, Medicación, Gym...';
+inpNombre.style.cssText='width:100%;padding:8px;border:1px solid var(--bd);border-radius:8px;font-size:14px;background:var(--bp);color:var(--td);box-sizing:border-box;margin-bottom:12px;';
+
+// Campo tipo
+var labelTipo=document.createElement('label');
+labelTipo.style.cssText='font-size:12px;font-weight:700;color:var(--td);display:block;margin-bottom:4px;';
+labelTipo.textContent='Tipo de registro';
+var selTipo=document.createElement('select');
+selTipo.id='nr-tipo';
+selTipo.style.cssText='width:100%;padding:8px;border:1px solid var(--bd);border-radius:8px;font-size:14px;background:var(--bp);color:var(--td);margin-bottom:12px;';
+[['bool','✓ Sí / No'],['num','🔢 Número (vasos, km, minutos...)'],['time','⏰ Hora']].forEach(function(o){
+var opt=document.createElement('option');opt.value=o[0];opt.textContent=o[1];selTipo.appendChild(opt);
+});
+
+// Campo meta
+var metaWrap=document.createElement('div');
+metaWrap.id='nr-meta-wrap';
+metaWrap.style.marginBottom='12px';
+var labelMeta=document.createElement('label');
+labelMeta.style.cssText='font-size:12px;font-weight:700;color:var(--td);display:block;margin-bottom:4px;';
+labelMeta.innerHTML='Meta diaria <span style="font-weight:400;color:var(--tl);">(opcional)</span>';
+var inpMeta=document.createElement('input');
+inpMeta.type='number';inpMeta.id='nr-meta';inpMeta.min='0';
+inpMeta.placeholder='Ej: 8 vasos, 30 minutos...';
+inpMeta.style.cssText='width:100%;padding:8px;border:1px solid var(--bd);border-radius:8px;font-size:14px;background:var(--bp);color:var(--td);box-sizing:border-box;';
+metaWrap.appendChild(labelMeta);metaWrap.appendChild(inpMeta);
+
+// Campo frecuencia
+var labelFreq=document.createElement('label');
+labelFreq.style.cssText='font-size:12px;font-weight:700;color:var(--td);display:block;margin-bottom:4px;';
+labelFreq.textContent='Frecuencia';
+var selFreq=document.createElement('select');
+selFreq.id='nr-freq';
+selFreq.style.cssText='width:100%;padding:8px;border:1px solid var(--bd);border-radius:8px;font-size:14px;background:var(--bp);color:var(--td);margin-bottom:16px;';
+[['daily','📅 Diaria'],['weekly','📆 Semanal'],['monthly','🗓️ Mensual']].forEach(function(o){
+var opt=document.createElement('option');opt.value=o[0];opt.textContent=o[1];selFreq.appendChild(opt);
+});
+
+// Botones
+var btnsDiv=document.createElement('div');
+btnsDiv.style.cssText='display:flex;gap:8px;';
+var btnGuardar=document.createElement('button');
+btnGuardar.textContent='💾 Guardar';
+btnGuardar.style.cssText='flex:1;padding:10px;background:var(--gm);color:#fff;border:none;border-radius:8px;font-family:Lato,sans-serif;font-size:13px;font-weight:700;cursor:pointer;';
+btnGuardar.onclick=function(){guardarNuevaRutina();};
+var btnCancel=document.createElement('button');
+btnCancel.textContent='Cancelar';
+btnCancel.style.cssText='padding:10px 16px;background:var(--bl);color:var(--td);border:1px solid var(--bd);border-radius:8px;font-size:13px;cursor:pointer;';
+btnCancel.onclick=function(){overlay.remove();};
+btnsDiv.appendChild(btnGuardar);btnsDiv.appendChild(btnCancel);
+
+// Mostrar/ocultar meta según tipo
+selTipo.onchange=function(){
+metaWrap.style.display=this.value==='bool'?'none':'block';
+};
+selTipo.dispatchEvent(new Event('change'));
+
+// Ensamblar
+box.appendChild(btnClose);box.appendChild(title);
+box.appendChild(labelNombre);box.appendChild(inpNombre);
+box.appendChild(labelTipo);box.appendChild(selTipo);
+box.appendChild(metaWrap);
+box.appendChild(labelFreq);box.appendChild(selFreq);
+box.appendChild(btnsDiv);
+overlay.appendChild(box);
+document.body.appendChild(overlay);
+inpNombre.focus();
+}
+
+function editarRutina(id){
+var r=state.rutinas?state.rutinas.find(function(x){return x.id===id;}):null;
+if(!r) return;
+var ov=document.getElementById('nueva-rutina-ov');
+if(ov) ov.remove();
+var overlay=document.createElement('div');
+overlay.id='nueva-rutina-ov';
+overlay.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:9000;display:flex;align-items:center;justify-content:center;padding:16px;';
+var box=document.createElement('div');
+box.style.cssText='background:var(--w,#fff);border-radius:16px;max-width:400px;width:100%;padding:20px;position:relative;';
+box.innerHTML='<button id="btn-cerrar-edit-rutina" style="position:absolute;top:12px;right:12px;background:none;border:none;font-size:22px;cursor:pointer;color:var(--tl);">✕</button>'+
+'<div style="font-size:16px;font-weight:800;color:var(--gm);margin-bottom:16px;">✏️ Editar Rutina</div>'+
+'<div style="margin-bottom:12px;"><label style="font-size:12px;font-weight:700;color:var(--td);display:block;margin-bottom:4px;">Nombre</label>'+
+'<input type="text" id="nr-nombre" value="'+r.nombre+'" style="width:100%;padding:8px;border:1px solid var(--bd);border-radius:8px;font-size:14px;background:var(--bp);color:var(--td);box-sizing:border-box;"/></div>'+
+'<div style="margin-bottom:12px;"><label style="font-size:12px;font-weight:700;color:var(--td);display:block;margin-bottom:4px;">Meta diaria</label>'+
+'<input type="number" id="nr-meta" value="'+(r.meta||'')+'" min="0" style="width:100%;padding:8px;border:1px solid var(--bd);border-radius:8px;font-size:14px;background:var(--bp);color:var(--td);box-sizing:border-box;"/></div>'+
+'<div style="margin-bottom:16px;"><label style="font-size:12px;font-weight:700;color:var(--td);display:block;margin-bottom:4px;">Frecuencia</label>'+
+'<select id="nr-freq" style="width:100%;padding:8px;border:1px solid var(--bd);border-radius:8px;font-size:14px;background:var(--bp);color:var(--td);">'+
+'<option value="daily"'+(r.freq==='daily'?' selected':'')+'>📅 Diaria</option>'+
+'<option value="weekly"'+(r.freq==='weekly'?' selected':'')+'>📆 Semanal</option>'+
+'<option value="monthly"'+(r.freq==='monthly'?' selected':'')+'>🗓️ Mensual</option>'+
+'</select></div>'+
+'<div style="display:flex;gap:8px;">'+
+'<button id="btn-guardar-edit-rutina" style="flex:1;padding:10px;background:var(--gm);color:#fff;border:none;border-radius:8px;font-family:Lato,sans-serif;font-size:13px;font-weight:700;cursor:pointer;">💾 Guardar</button>'+
+'<button id="btn-cancel-edit-rutina" style="padding:10px 16px;background:var(--bl);color:var(--td);border:1px solid var(--bd);border-radius:8px;font-size:13px;cursor:pointer;">Cancelar</button>'+
+'</div>';
+overlay.appendChild(box);
+document.body.appendChild(overlay);
+document.getElementById('btn-cerrar-edit-rutina').onclick=function(){overlay.remove();};
+document.getElementById('btn-cancel-edit-rutina').onclick=function(){overlay.remove();};
+document.getElementById('btn-guardar-edit-rutina').onclick=function(){
+var nombre=document.getElementById('nr-nombre').value.trim();
+if(!nombre){alert('Introduce un nombre.');return;}
+r.nombre=nombre;
+r.meta=document.getElementById('nr-meta').value||null;
+r.freq=document.getElementById('nr-freq').value;
+persist().catch(function(){});
+overlay.remove();
+renderRutinasHoy();
+};
+}
+function guardarNuevaRutina(){
+var nombre=document.getElementById('nr-nombre').value.trim();
+if(!nombre){alert('Introduce un nombre para la rutina.');return;}
+var rutina={
+id:Date.now().toString(),
+nombre:nombre,
+tipo:document.getElementById('nr-tipo').value,
+meta:document.getElementById('nr-meta').value||null,
+freq:document.getElementById('nr-freq').value,
+creada:new Date().toISOString(),
+registros:{}
+};
+if(!state.rutinas) state.rutinas=[];
+state.rutinas.push(rutina);
+persist().catch(function(){});
+document.getElementById('nueva-rutina-ov').style.display='none';
+renderRutinasHoy();
+}
+
+function getTodayKey(){
+var d=new Date();
+return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+}
+
+function registrarRutina(id,valor,fechaKey){
+if(!state.rutinas) return;
+var r=state.rutinas.find(function(x){return x.id===id;});
+if(!r) return;
+if(!r.registros) r.registros={};
+var key=fechaKey||getTodayKey();
+r.registros[key]=valor;
+persist().catch(function(){});
+renderRutinasHoy();
+}
+function pedirFechaYRegistrar(id, valor){
+var rut=state.rutinas?state.rutinas.find(function(x){return x.id===id;}):null;
+if(!rut) return;
+var ov=document.createElement('div');
+ov.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px;';
+var box=document.createElement('div');
+box.style.cssText='background:var(--w,#fff);border-radius:14px;padding:20px;max-width:300px;width:100%;';
+
+var t=document.createElement('div');
+t.style.cssText='font-size:14px;font-weight:800;color:var(--td);margin-bottom:14px;text-align:center;';
+t.textContent='📅 ¿Para qué día?';
+
+function hacerRegistro(fechaKey){
+registrarRutina(id, valor, fechaKey);
+ov.remove();
+}
+
+function crearBtn(texto, bg, color, border, cb){
+var b=document.createElement('button');
+b.textContent=texto;
+b.style.cssText='display:block;width:100%;padding:10px;background:'+bg+';color:'+color+';border:'+border+';border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;margin-bottom:8px;text-align:left;';
+b.onclick=cb;
+return b;
+}
+
+var hoy=new Date();
+var todayKey=hoy.getFullYear()+'-'+String(hoy.getMonth()+1).padStart(2,'0')+'-'+String(hoy.getDate()).padStart(2,'0');
+var yaHoy=rut.registros&&rut.registros[todayKey]!=null&&rut.registros[todayKey]!==false&&rut.registros[todayKey]!=='';
+
+var ayer=new Date(hoy);ayer.setDate(hoy.getDate()-1);
+var ayerKey=ayer.getFullYear()+'-'+String(ayer.getMonth()+1).padStart(2,'0')+'-'+String(ayer.getDate()).padStart(2,'0');
+var yaAyer=rut.registros&&rut.registros[ayerKey]!=null&&rut.registros[ayerKey]!==false&&rut.registros[ayerKey]!=='';
+
+// Botón Hoy
+var txtHoy='Hoy — '+hoy.toLocaleDateString('es-ES',{weekday:'short',day:'2-digit',month:'short'});
+if(yaHoy) txtHoy+=' (✓ ya registrado — pulsa para desmarcar)';
+var bHoy=crearBtn(txtHoy, yaHoy?'#d4edda':'var(--gm)', yaHoy?'#155724':'#fff', 'none', function(){
+if(yaHoy){registrarRutina(id,false,todayKey);}
+else{hacerRegistro(todayKey);}
+ov.remove();
+});
+
+// Botón Ayer
+var txtAyer='Ayer — '+ayer.toLocaleDateString('es-ES',{weekday:'short',day:'2-digit',month:'short'});
+if(yaAyer) txtAyer+=' (✓ ya registrado — pulsa para desmarcar)';
+var bAyer=crearBtn(txtAyer, yaAyer?'#d4edda':'var(--bl)', yaAyer?'#155724':'var(--td)', yaAyer?'none':'1px solid var(--bd)', function(){
+if(yaAyer){registrarRutina(id,false,ayerKey);}
+else{hacerRegistro(ayerKey);}
+ov.remove();
+});
+
+// Otra fecha
+var otraDiv=document.createElement('div');
+otraDiv.style.cssText='display:flex;gap:6px;margin-bottom:8px;';
+var fechaInp=document.createElement('input');
+fechaInp.type='date';
+fechaInp.max=todayKey;
+fechaInp.style.cssText='flex:1;padding:8px;border:1px solid var(--bd);border-radius:8px;font-size:13px;background:var(--bp);color:var(--td);';
+var bOtra=document.createElement('button');
+bOtra.textContent='✓ Registrar';
+bOtra.style.cssText='padding:8px 12px;background:var(--gm);color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;';
+bOtra.onclick=function(){
+if(!fechaInp.value){alert('Selecciona una fecha.');return;}
+hacerRegistro(fechaInp.value);
+};
+otraDiv.appendChild(fechaInp);otraDiv.appendChild(bOtra);
+
+// Cancelar
+var bCan=document.createElement('button');
+bCan.textContent='Cancelar';
+bCan.style.cssText='display:block;width:100%;padding:8px;background:none;color:var(--tl);border:none;font-size:12px;cursor:pointer;';
+bCan.onclick=function(){ov.remove();};
+
+box.appendChild(t);box.appendChild(bHoy);box.appendChild(bAyer);box.appendChild(otraDiv);box.appendChild(bCan);
+ov.appendChild(box);document.body.appendChild(ov);
+}
+
+function eliminarRutina(id){
+var r=state.rutinas?state.rutinas.find(function(x){return x.id===id;}):null;
+if(!r) return;
+var ov=document.createElement('div');
+ov.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px;';
+var box=document.createElement('div');
+box.style.cssText='background:var(--w,#fff);border-radius:14px;padding:20px;max-width:320px;width:100%;text-align:center;';
+var t=document.createElement('div');t.style.cssText='font-size:15px;font-weight:800;color:var(--td);margin-bottom:8px;';t.textContent='¿Eliminar rutina?';
+var d=document.createElement('div');d.style.cssText='font-size:13px;color:var(--tl);margin-bottom:16px;';d.textContent='"'+r.nombre+'" y todo su historial se eliminarán.';
+var btns=document.createElement('div');btns.style.cssText='display:flex;gap:8px;justify-content:center;';
+var bCancel=document.createElement('button');bCancel.textContent='Cancelar';bCancel.style.cssText='padding:9px 20px;background:var(--bl);color:var(--td);border:1px solid var(--bd);border-radius:8px;font-size:13px;cursor:pointer;';
+bCancel.onclick=function(){ov.remove();};
+var bOk=document.createElement('button');bOk.textContent='Sí, eliminar';bOk.style.cssText='padding:9px 20px;background:#c53030;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;';
+bOk.onclick=function(){
+state.rutinas=state.rutinas.filter(function(x){return x.id!==id;});
+persist().catch(function(){});
+ov.remove();
+renderRutinasHoy();
+};
+btns.appendChild(bCancel);btns.appendChild(bOk);
+box.appendChild(t);box.appendChild(d);box.appendChild(btns);
+ov.appendChild(box);document.body.appendChild(ov);
+}
+
+function verHoy(){renderRutinasHoy();}
+
+function renderRutinasHoy(){
+var list=document.getElementById('rutinas-list');
+var progEl=document.getElementById('rutinas-progreso-txt');
+if(!list) return;
+if(!state.rutinas) state.rutinas=[];
+var today=getTodayKey();
+var rutinas=state.rutinas.filter(function(r){return true;});
+
+// Progreso de hoy
+var completadas=rutinas.filter(function(r){
+return r.registros&&r.registros[today]!=null&&r.registros[today]!==''&&r.registros[today]!==false;
+}).length;
+if(progEl) progEl.textContent=completadas+' / '+rutinas.length;
+
+if(!rutinas.length){
+list.innerHTML='<div style="text-align:center;color:var(--tl);padding:32px;font-size:13px;">No tienes rutinas.<br>Pulsa <strong>+ Nueva</strong> para empezar.</div>';
+return;
+}
+
+list.innerHTML='';
+rutinas.forEach(function(r){
+// Inicializar fecha si no existe
+if(!rutinasFechaActual[r.id]) rutinasFechaActual[r.id]=today;
+var fechaKey=rutinasFechaActual[r.id];
+var valActual=r.registros&&r.registros[fechaKey]!=null?r.registros[fechaKey]:null;
+var hecho=valActual!=null&&valActual!==''&&valActual!==false;
+
+// Formatear fecha
+var fd=new Date(fechaKey+'T12:00:00');
+var fechaLabel=fd.toLocaleDateString('es-ES',{weekday:'short',day:'2-digit',month:'short'});
+var esHoy=fechaKey===today;
+
+// Card de rutina
+var card=document.createElement('div');
+card.style.cssText='background:var(--bl);border:1px solid '+(hecho?'#28a745':'var(--bd)')+';border-radius:12px;padding:12px 14px;margin-bottom:10px;';
+
+// Fila 1: nombre + botones acción
+var row1=document.createElement('div');
+row1.style.cssText='display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;';
+var nombre=document.createElement('div');
+nombre.style.cssText='font-size:14px;font-weight:700;color:var(--td);';
+nombre.textContent=r.nombre+(r.meta&&r.tipo==='num'?' (meta: '+r.meta+')':'');
+var acciones=document.createElement('div');
+acciones.style.cssText='display:flex;gap:4px;';
+
+var bGraf=document.createElement('button');bGraf.textContent='📊';bGraf.title='Ver evolución';
+bGraf.style.cssText='padding:5px 8px;background:var(--bc);color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:13px;';
+bGraf.onclick=function(){verGraficaRutina(r.id);};
+
+var bEdit=document.createElement('button');bEdit.textContent='✏️';bEdit.title='Editar';
+bEdit.style.cssText='padding:5px 8px;background:var(--bl);color:var(--td);border:1px solid var(--bd);border-radius:6px;cursor:pointer;font-size:13px;';
+bEdit.onclick=function(){editarRutina(r.id);};
+
+var bDel=document.createElement('button');bDel.textContent='🗑';bDel.title='Eliminar';
+bDel.style.cssText='padding:5px 8px;background:none;color:#c53030;border:1px solid #f5c6c6;border-radius:6px;cursor:pointer;font-size:13px;';
+bDel.onclick=function(){eliminarRutina(r.id);};
+
+acciones.appendChild(bGraf);acciones.appendChild(bEdit);acciones.appendChild(bDel);
+row1.appendChild(nombre);row1.appendChild(acciones);
+
+// Fila 2: navegador de fecha
+var row2=document.createElement('div');
+row2.style.cssText='display:flex;align-items:center;gap:8px;margin-bottom:10px;';
+
+var bPrev=document.createElement('button');bPrev.textContent='←';
+bPrev.style.cssText='padding:5px 10px;background:var(--bl);color:var(--td);border:1px solid var(--bd);border-radius:6px;cursor:pointer;font-size:14px;font-weight:700;';
+bPrev.onclick=(function(rid,freq){return function(){
+var curr=new Date(rutinasFechaActual[rid]+'T12:00:00');
+if(freq==='daily') curr.setDate(curr.getDate()-1);
+else if(freq==='weekly') curr.setDate(curr.getDate()-7);
+else curr.setMonth(curr.getMonth()-1);
+rutinasFechaActual[rid]=curr.getFullYear()+'-'+String(curr.getMonth()+1).padStart(2,'0')+'-'+String(curr.getDate()).padStart(2,'0');
+renderRutinasHoy();
+};})(r.id,r.freq);
+
+var fechaDiv=document.createElement('div');
+fechaDiv.style.cssText='flex:1;text-align:center;font-size:12px;font-weight:700;color:var(--td);padding:6px;background:'+(esHoy?'var(--gm)':'var(--w,#fff)')+';color:'+(esHoy?'#fff':'var(--td)')+';border-radius:8px;border:1px solid var(--bd);';
+fechaDiv.textContent=esHoy?'HOY — '+fechaLabel:fechaLabel;
+
+var bNext=document.createElement('button');bNext.textContent='→';
+bNext.style.cssText='padding:5px 10px;background:var(--bl);color:var(--td);border:1px solid var(--bd);border-radius:6px;cursor:pointer;font-size:14px;font-weight:700;';
+// No permitir fecha futura
+var nextDate=new Date(fechaKey+'T12:00:00');
+if(r.freq==='daily') nextDate.setDate(nextDate.getDate()+1);
+else if(r.freq==='weekly') nextDate.setDate(nextDate.getDate()+7);
+else nextDate.setMonth(nextDate.getMonth()+1);
+var nextKey=nextDate.getFullYear()+'-'+String(nextDate.getMonth()+1).padStart(2,'0')+'-'+String(nextDate.getDate()).padStart(2,'0');
+if(nextKey>today){
+bNext.disabled=true;bNext.style.opacity='0.3';bNext.style.cursor='default';
+} else {
+bNext.onclick=(function(rid,freq){return function(){
+var curr=new Date(rutinasFechaActual[rid]+'T12:00:00');
+if(freq==='daily') curr.setDate(curr.getDate()+1);
+else if(freq==='weekly') curr.setDate(curr.getDate()+7);
+else curr.setMonth(curr.getMonth()+1);
+var nk=curr.getFullYear()+'-'+String(curr.getMonth()+1).padStart(2,'0')+'-'+String(curr.getDate()).padStart(2,'0');
+if(nk<=today) rutinasFechaActual[rid]=nk;
+renderRutinasHoy();
+};})(r.id,r.freq);
+}
+
+row2.appendChild(bPrev);row2.appendChild(fechaDiv);row2.appendChild(bNext);
+
+// Fila 3: input de valor + guardar
+var row3=document.createElement('div');
+row3.style.cssText='display:flex;align-items:center;gap:8px;';
+var inputEl=null;
+
+if(r.tipo==='bool'){
+var bMarcar=document.createElement('button');
+bMarcar.textContent=hecho?'✓ Marcado — pulsa para desmarcar':'Marcar como hecho';
+bMarcar.style.cssText='flex:1;padding:10px;background:'+(hecho?'#28a745':'var(--gm)')+';color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;';
+bMarcar.onclick=(function(rid,fk,h){return function(){
+registrarRutina(rid,!h,fk);
+};})(r.id,fechaKey,hecho);
+row3.appendChild(bMarcar);
+} else {
+if(r.tipo==='num'){
+inputEl=document.createElement('input');
+inputEl.type='number';inputEl.min='0';
+inputEl.value=valActual!==null?valActual:'';
+inputEl.placeholder='Introduce valor...';
+inputEl.style.cssText='flex:1;padding:8px;border:1px solid var(--bd);border-radius:8px;font-size:14px;font-weight:700;background:var(--bp);color:var(--td);text-align:center;';
+} else if(r.tipo==='time'){
+inputEl=document.createElement('input');
+inputEl.type='time';
+inputEl.value=valActual||'';
+inputEl.style.cssText='flex:1;padding:8px;border:1px solid var(--bd);border-radius:8px;font-size:14px;background:var(--bp);color:var(--td);';
+}
+var bGuardar=document.createElement('button');
+bGuardar.textContent='💾 Guardar';
+bGuardar.style.cssText='padding:8px 16px;background:var(--gm);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;';
+bGuardar.onclick=(function(rid,fk,inp){return function(){
+var v=inp.value;
+if(v===''||v===null){registrarRutina(rid,null,fk);}
+else{registrarRutina(rid,isNaN(v)?v:parseFloat(v),fk);}
+// Feedback visual
+bGuardar.textContent='✓ Guardado';bGuardar.style.background='#28a745';
+setTimeout(function(){bGuardar.textContent='💾 Guardar';bGuardar.style.background='var(--gm)';},1500);
+};})(r.id,fechaKey,inputEl);
+if(inputEl) row3.appendChild(inputEl);
+row3.appendChild(bGuardar);
+
+// Botón borrar valor
+if(valActual!==null&&valActual!==''&&valActual!==false){
+var bBorrar=document.createElement('button');
+bBorrar.textContent='✕';bBorrar.title='Borrar valor';
+bBorrar.style.cssText='padding:8px;background:none;color:#c53030;border:1px solid #f5c6c6;border-radius:8px;cursor:pointer;font-size:14px;';
+bBorrar.onclick=(function(rid,fk){return function(){registrarRutina(rid,null,fk);};})(r.id,fechaKey);
+row3.appendChild(bBorrar);
+}
+}
+
+// Info frecuencia y estado
+var info=document.createElement('div');
+info.style.cssText='font-size:10px;color:var(--tl);margin-top:6px;';
+info.textContent=(r.freq==='daily'?'Diaria':r.freq==='weekly'?'Semanal':'Mensual')+(hecho?' · ✓ Registrado':'');
+
+card.appendChild(row1);card.appendChild(row2);card.appendChild(row3);card.appendChild(info);
+list.appendChild(card);
+});
+
+// Re-asignar event delegation (vacío - todo usa closures ahora)
+}
+
+function verGraficaRutina(id){
+var r=state.rutinas?state.rutinas.find(function(x){return x.id===id;}):null;
+if(!r) return;
+
+// Tipo de gráfico por defecto según tipo
+var tipoGraf=r.tipo==='bool'?'calor':'linea';
+
+// Preparar periodos según frecuencia
+function getPeriodos(){
+var periodos=[];
+var hoy=new Date();
+if(r.freq==='daily'){
+for(var i=89;i>=0;i--){var d=new Date(hoy);d.setDate(hoy.getDate()-i);var k=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');periodos.push({key:k,label:String(d.getDate()).padStart(2,'0')+'/'+(d.getMonth()+1),d:new Date(d)});}
+} else if(r.freq==='weekly'){
+for(var i=11;i>=0;i--){var d=new Date(hoy);d.setDate(hoy.getDate()-i*7);var k=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');periodos.push({key:k,label:'S'+(i===0?'hoy':String(d.getDate()).padStart(2,'0')+'/'+(d.getMonth()+1)),d:new Date(d)});}
+} else {
+for(var i=11;i>=0;i--){var d=new Date(hoy.getFullYear(),hoy.getMonth()-i,1);var k=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-01';periodos.push({key:k,label:d.toLocaleDateString('es-ES',{month:'short',year:'2-digit'}),d:new Date(d)});}
+}
+return periodos;
+}
+
+// Para frecuencia semanal/mensual: agregar todos los registros del período
+function getValPeriodo(periodo,idx,todos){
+if(r.freq==='daily'){
+return r.registros&&r.registros[periodo.key]!=null?r.registros[periodo.key]:null;
+} else if(r.freq==='weekly'){
+// Todos los días de esa semana
+var desde=new Date(periodo.d);var vals=[];
+for(var d=0;d<7;d++){
+var dd=new Date(desde);dd.setDate(desde.getDate()+d);
+var k=dd.getFullYear()+'-'+String(dd.getMonth()+1).padStart(2,'0')+'-'+String(dd.getDate()).padStart(2,'0');
+if(r.registros&&r.registros[k]!=null&&r.registros[k]!==false&&r.registros[k]!=='') vals.push(r.registros[k]);
+}
+if(!vals.length) return null;
+if(r.tipo==='bool') return vals.some(function(v){return v;});
+return vals.reduce(function(s,v){return s+(parseFloat(v)||0);},0)/vals.length;
+} else {
+// Todos los días de ese mes
+var year=periodo.d.getFullYear(),month=periodo.d.getMonth();
+var diasMes=new Date(year,month+1,0).getDate();var vals=[];
+for(var d=1;d<=diasMes;d++){
+var k=year+'-'+String(month+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
+if(r.registros&&r.registros[k]!=null&&r.registros[k]!==false&&r.registros[k]!=='') vals.push(r.registros[k]);
+}
+if(!vals.length) return null;
+if(r.tipo==='bool') return vals.length>0;
+return vals.reduce(function(s,v){return s+(parseFloat(v)||0);},0)/vals.length;
+}
+}
+
+var periodos=getPeriodos();
+var vals=periodos.map(function(p,i){return {periodo:p,val:getValPeriodo(p,i,periodos)};});
+
+function generarGraficaHTML(tipo){
+if(tipo==='calor'&&r.freq==='daily'){
+// Mapa de calor 13x7 para diaria
+var hoy2=new Date();var diaSem=hoy2.getDay();
+var inicio=new Date(hoy2);inicio.setDate(hoy2.getDate()-(diaSem+7*12));
+var celdas=[];
+for(var w=0;w<91;w++){
+var fd=new Date(inicio);fd.setDate(inicio.getDate()+w);
+var fk=fd.getFullYear()+'-'+String(fd.getMonth()+1).padStart(2,'0')+'-'+String(fd.getDate()).padStart(2,'0');
+var fval=r.registros&&r.registros[fk]!=null?r.registros[fk]:null;
+var hecho=fval!=null&&fval!==false&&fval!=='';
+celdas.push('<div title="'+fd.toLocaleDateString('es-ES',{day:'2-digit',month:'2-digit',year:'numeric'})+(hecho?' ✓':'')+'" style="width:12px;height:12px;background:'+(hecho?'#28a745':'#e9ecef')+';border-radius:2px;"></div>');
+}
+var diasL=['D','L','M','X','J','V','S'];
+var lCol='<div style="display:flex;flex-direction:column;gap:2px;margin-right:4px;">'+diasL.map(function(l){return '<div style="height:12px;font-size:8px;color:var(--tl);line-height:12px;">'+l+'</div>';}).join('')+'</div>';
+var grid='<div style="display:flex;gap:2px;">';
+for(var col=0;col<13;col++){grid+='<div style="display:flex;flex-direction:column;gap:2px;">';for(var row=0;row<7;row++){var ci=col*7+row;grid+=celdas[ci]||'<div style="width:12px;height:12px;"></div>';}grid+='</div>';}
+grid+='</div>';
+var total=vals.filter(function(v){return v.val!=null&&v.val!==false&&v.val!=='';}).length;
+var rAct=0;var maxR=0;var rC=0;
+vals.forEach(function(v){var h=v.val!=null&&v.val!==false&&v.val!=='';if(h){rC++;maxR=Math.max(maxR,rC);}else{rC=0;}});rAct=rC;
+return '<div style="display:flex;align-items:flex-start;overflow-x:auto;margin-bottom:8px;">'+lCol+grid+'</div>'+
+'<div style="display:flex;gap:4px;align-items:center;font-size:10px;color:var(--tl);margin-bottom:10px;"><div style="width:10px;height:10px;background:#e9ecef;border-radius:2px;"></div>Sin reg.&nbsp;<div style="width:10px;height:10px;background:#28a745;border-radius:2px;"></div>Hecho</div>'+
+'<div style="display:flex;gap:12px;">'+
+'<div style="text-align:center;"><div style="font-size:18px;font-weight:900;color:#28a745;">'+total+'</div><div style="font-size:10px;color:var(--tl);">total</div></div>'+
+'<div style="text-align:center;"><div style="font-size:18px;font-weight:900;color:var(--gm);">'+rAct+'</div><div style="font-size:10px;color:var(--tl);">racha actual</div></div>'+
+'<div style="text-align:center;"><div style="font-size:18px;font-weight:900;color:var(--bc);">'+maxR+'</div><div style="font-size:10px;color:var(--tl);">racha máx.</div></div>'+
+'</div>';
+}
+// BARRAS (para todos los tipos y frecuencias)
+if(tipo==='barras'||tipo==='calor'){
+var bW=Math.max(4,Math.floor(420/vals.length)-2);
+var maxV=Math.max(1,Math.max.apply(null,vals.map(function(v){return r.tipo==='bool'?(v.val?1:0):(parseFloat(v.val)||0);})));
+if(r.meta) maxV=Math.max(maxV,parseFloat(r.meta));
+var svgH=80;
+var bars=vals.map(function(v,i){
+var h=0;var color='#e9ecef';
+if(v.val!=null&&v.val!==false&&v.val!==''){
+if(r.tipo==='bool'){h=svgH;color='#28a745';}
+else{var vn=parseFloat(v.val)||0;h=Math.round(vn/maxV*svgH);color=r.meta&&vn>=parseFloat(r.meta)?'#28a745':'#2980b9';}
+}
+var x=i*(bW+2);
+var showLabel=vals.length<=12||(i%Math.ceil(vals.length/10)===0||i===vals.length-1);
+return '<rect x="'+x+'" y="'+(svgH-h)+'" width="'+bW+'" height="'+h+'" fill="'+color+'" rx="2"/>'+
+(showLabel?'<text x="'+(x+bW/2)+'" y="'+(svgH+12)+'" text-anchor="middle" font-size="7" fill="#999">'+v.periodo.label+'</text>':'');
+}).join('');
+var total2=vals.filter(function(v){return v.val!=null&&v.val!==false&&v.val!=='';}).length;
+return '<svg xmlns="http://www.w3.org/2000/svg" width="100%" viewBox="0 0 '+(vals.length*(bW+2))+' '+(svgH+16)+'" style="overflow:visible;margin-bottom:10px;">'+bars+'</svg>'+
+'<div style="font-size:10px;color:var(--tl);">'+(r.freq==='daily'?'Últimos 90 días':r.freq==='weekly'?'Últimas 12 semanas':'Últimos 12 meses')+'</div>'+
+'<div style="display:flex;gap:12px;margin-top:8px;">'+
+'<div style="text-align:center;"><div style="font-size:18px;font-weight:900;color:#28a745;">'+total2+'</div><div style="font-size:10px;color:var(--tl);">períodos registrados</div></div>'+
+(r.meta?'<div style="text-align:center;"><div style="font-size:18px;font-weight:900;color:#f0ad4e;">'+r.meta+'</div><div style="font-size:10px;color:var(--tl);">meta</div></div>':'')+
+'</div>';
+}
+// LÍNEA
+if(tipo==='linea'){
+var W=420,H=90,pad=10;
+var valsNum=vals.map(function(v){return parseFloat(v.val)||0;});
+var maxVL=Math.max(1,Math.max.apply(null,valsNum));
+if(r.meta) maxVL=Math.max(maxVL,parseFloat(r.meta));
+var points=vals.map(function(v,i){var x=pad+i*(W-2*pad)/(vals.length-1||1);var y=H-pad-valsNum[i]/maxVL*(H-2*pad);return x+','+y;}).join(' ');
+var area=pad+','+(H-pad)+' '+points+' '+(W-pad)+','+(H-pad);
+var metaY=r.meta?H-pad-parseFloat(r.meta)/maxVL*(H-2*pad):null;
+var prom=vals.filter(function(v){return v.val!=null&&v.val!=='';});
+var avg=prom.length?Math.round(prom.reduce(function(s,v){return s+(parseFloat(v.val)||0);},0)/prom.length*10)/10:0;
+return '<svg xmlns="http://www.w3.org/2000/svg" width="100%" viewBox="0 0 '+W+' '+H+'" style="overflow:visible;margin-bottom:10px;">'+
+(metaY!==null?'<line x1="'+pad+'" y1="'+metaY+'" x2="'+(W-pad)+'" y2="'+metaY+'" stroke="#f0ad4e" stroke-width="1.5" stroke-dasharray="4,3"/>':'')+''+
+'<polyline fill="rgba(40,167,69,.12)" stroke="none" points="'+area+'"/>'+
+'<polyline fill="none" stroke="#28a745" stroke-width="2" stroke-linejoin="round" points="'+points+'"/>'+
+vals.map(function(v,i){var x=pad+i*(W-2*pad)/(vals.length-1||1);var y=H-pad-valsNum[i]/maxVL*(H-2*pad);return valsNum[i]>0?'<circle cx="'+x+'" cy="'+y+'" r="3" fill="#28a745" stroke="#fff" stroke-width="1"/>':'';}).join('')+
+'</svg>'+
+'<div style="font-size:10px;color:var(--tl);margin-bottom:8px;">'+(r.freq==='daily'?'Últimos 90 días':r.freq==='weekly'?'Últimas 12 semanas':'Últimos 12 meses')+'</div>'+
+'<div style="display:flex;gap:12px;">'+
+'<div style="text-align:center;"><div style="font-size:18px;font-weight:900;color:#28a745;">'+avg+'</div><div style="font-size:10px;color:var(--tl);">media</div></div>'+
+(r.meta?'<div style="text-align:center;"><div style="font-size:18px;font-weight:900;color:#f0ad4e;">'+r.meta+'</div><div style="font-size:10px;color:var(--tl);">meta</div></div>':'')+
+'</div>';
+}
+return '';
+}
+
+// Modal
+var ov2=document.getElementById('grafica-rutina-ov');if(ov2)ov2.remove();
+var overlay=document.createElement('div');
+overlay.id='grafica-rutina-ov';
+overlay.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:9000;display:flex;align-items:center;justify-content:center;padding:16px;overflow-y:auto;';
+var box=document.createElement('div');
+box.style.cssText='background:var(--w,#fff);border-radius:16px;max-width:520px;width:100%;padding:20px;position:relative;margin:auto;';
+var closeBtn=document.createElement('button');
+closeBtn.textContent='✕';closeBtn.style.cssText='position:absolute;top:12px;right:12px;background:none;border:none;font-size:22px;cursor:pointer;color:var(--tl);';
+closeBtn.onclick=function(){overlay.remove();};
+var title=document.createElement('div');
+title.style.cssText='font-size:15px;font-weight:800;color:var(--gm);margin-bottom:4px;';
+title.textContent=r.nombre;
+var sub=document.createElement('div');
+sub.style.cssText='font-size:11px;color:var(--tl);margin-bottom:12px;';
+sub.textContent=r.freq==='daily'?'Frecuencia diaria · 90 días':r.freq==='weekly'?'Frecuencia semanal · 12 semanas':'Frecuencia mensual · 12 meses';
+// Selector gráfico
+var selDiv=document.createElement('div');
+selDiv.style.cssText='display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap;';
+var grafDiv=document.createElement('div');
+var tipos=[{k:'calor',l:'📅 Calor'},{k:'barras',l:'📊 Barras'},{k:'linea',l:'📈 Línea'}];
+// Para frecuencias no-diarias, calor no aplica
+if(r.freq!=='daily') tipos=tipos.filter(function(t){return t.k!=='calor';});
+function actualizarGrafica(tipo){
+tipoGraf=tipo;
+grafDiv.innerHTML=generarGraficaHTML(tipo);
+selDiv.querySelectorAll('button').forEach(function(b){
+var act=b.getAttribute('data-tipo')===tipo;
+b.style.background=act?'var(--gm)':'var(--bl)';
+b.style.color=act?'#fff':'var(--td)';
+b.style.border=act?'none':'1px solid var(--bd)';
+});
+}
+tipos.forEach(function(t){
+var btn=document.createElement('button');
+btn.textContent=t.l;btn.setAttribute('data-tipo',t.k);
+btn.style.cssText='padding:6px 12px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;font-family:Lato,sans-serif;';
+btn.onclick=function(){actualizarGrafica(t.k);};
+selDiv.appendChild(btn);
+});
+var pdfBtn=document.createElement('button');
+pdfBtn.textContent='📄 PDF';pdfBtn.style.cssText='padding:10px 20px;background:var(--bc);color:#fff;border:none;border-radius:8px;font-family:Lato,sans-serif;font-size:13px;font-weight:700;cursor:pointer;margin-right:8px;';
+pdfBtn.onclick=function(){overlay.remove();generarPDFRutina(r.id);};
+var closeBtnBot=document.createElement('button');
+closeBtnBot.textContent='Cerrar';closeBtnBot.style.cssText='padding:10px 28px;background:var(--gm);color:#fff;border:none;border-radius:8px;font-family:Lato,sans-serif;font-size:13px;font-weight:700;cursor:pointer;';
+closeBtnBot.onclick=function(){overlay.remove();};
+var footer=document.createElement('div');footer.style.cssText='text-align:center;margin-top:16px;';
+footer.appendChild(pdfBtn);footer.appendChild(closeBtnBot);
+box.appendChild(closeBtn);box.appendChild(title);box.appendChild(sub);box.appendChild(selDiv);box.appendChild(grafDiv);box.appendChild(footer);
+overlay.appendChild(box);document.body.appendChild(overlay);
+// Seleccionar gráfico por defecto
+var defaultTipo=r.tipo==='bool'&&r.freq==='daily'?'calor':r.tipo==='num'?'linea':'barras';
+actualizarGrafica(defaultTipo);
+}
+
 function guardarNota(){
 var inp=document.getElementById('nota-input');
 var texto=inp?inp.value.trim():'';
@@ -4023,7 +4838,7 @@ toggleArch.onclick=function(){list.setAttribute('data-show-arch',mostrarArchivad
 toggleArch.textContent=mostrarArchivadas?'← Ver notas activas':'📦 Archivadas ('+nArchivadas+')';
 toggleArch.style.display=nArchivadas>0?'inline-block':'none';
 if(!notas.length){
-list.innerHTML='<div style="text-align:center;color:var(--tl);padding:32px;font-size:13px;">'+(mostrarArchivadas?'No hay notas archivadas.':'No hay notas aún.<br>Escribe o dicta tu primera nota.')+'</div>';
+list.innerHTML='<div style="text-align:center;color:var(--tl);padding:32px;font-size:13px;">'+(mostrarArchivadas?'No hay tareas archivadas.':'No hay tareas aún.<br>Escribe o dicta tu primera tarea.')+'</div>';
 return;
 }
 var grupos={};
@@ -4058,8 +4873,243 @@ if(btn.classList.contains('nota-arch')) archivarNota(id);
 if(btn.classList.contains('nota-del')) eliminarNota(id);
 };
 }
+function mostrarTooltipToken(btn){
+var existing=document.getElementById('token-tooltip');
+if(existing){existing.remove();return;}
+var tip=document.createElement('div');
+tip.id='token-tooltip';
+tip.style.cssText='position:fixed;z-index:9999;background:#1a1a2e;color:#fff;border-radius:10px;padding:12px 16px;font-size:12px;line-height:1.6;max-width:280px;box-shadow:0 8px 24px rgba(0,0,0,.3);';
+var rect=btn.getBoundingClientRect();
+tip.style.top=(rect.bottom+8)+'px';
+tip.style.left=Math.max(8,rect.left-200)+'px';
+tip.innerHTML='<strong>🔐 Token de acceso</strong><br><br>'+
+'Es una contraseña opcional para proteger tu Apps Script.<br><br>'+
+'<strong>Sin token:</strong> cualquiera con tu URL puede acceder (poco probable pero posible).<br><br>'+
+'<strong>Con token:</strong> solo Tapunto con tu contraseña puede acceder.<br><br>'+
+'Para uso personal sin compartir, puedes dejarlo vacío.'+
+'<br><br><small style="opacity:.7">Pulsa en cualquier lugar para cerrar</small>';
+document.body.appendChild(tip);
+setTimeout(function(){
+document.addEventListener('click',function close(){
+var t=document.getElementById('token-tooltip');if(t)t.remove();
+document.removeEventListener('click',close);
+});
+},100);
+}
+
+function mostrarAyuda(){
+var ov=document.getElementById('ayuda-ov');
+if(ov){ov.style.display='flex';return;}
+var overlay=document.createElement('div');
+overlay.id='ayuda-ov';
+overlay.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:9000;display:flex;align-items:flex-start;justify-content:center;padding:16px;overflow-y:auto;';
+overlay.innerHTML=`
+<div style="background:var(--w,#fff);border-radius:16px;max-width:480px;width:100%;padding:20px;position:relative;margin:auto;">
+  <button onclick="document.getElementById('ayuda-ov').style.display='none'" style="position:absolute;top:12px;right:12px;background:none;border:none;font-size:22px;cursor:pointer;color:var(--tl);">✕</button>
+  <div style="font-size:20px;font-weight:900;color:var(--gm);margin-bottom:4px;">❓ Ayuda — Tapunto</div>
+  <div style="font-size:11px;color:var(--tl);margin-bottom:16px;">Tu agenda personal segura</div>
+  
+  <!-- ÍNDICE -->
+  <div style="background:var(--bl);border-radius:10px;padding:12px;margin-bottom:20px;border:1px solid var(--bd);">
+    <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:var(--gm);margin-bottom:8px;">Índice</div>
+    <div style="display:flex;flex-direction:column;gap:4px;">
+      <a onclick="document.getElementById('ayuda-s1').scrollIntoView({behavior:'smooth'})" style="font-size:12px;color:var(--gm);cursor:pointer;text-decoration:none;">🚀 Primeros pasos</a>
+      <a onclick="document.getElementById('ayuda-s2').scrollIntoView({behavior:'smooth'})" style="font-size:12px;color:var(--gm);cursor:pointer;text-decoration:none;">📋 Crear un registro</a>
+      <a onclick="document.getElementById('ayuda-s3').scrollIntoView({behavior:'smooth'})" style="font-size:12px;color:var(--gm);cursor:pointer;text-decoration:none;">📝 Notas Rápidas</a>
+      <a onclick="document.getElementById('ayuda-s4').scrollIntoView({behavior:'smooth'})" style="font-size:12px;color:var(--gm);cursor:pointer;text-decoration:none;">🔗 Google Sheets — Configuración</a>
+      <a onclick="document.getElementById('ayuda-s5').scrollIntoView({behavior:'smooth'})" style="font-size:12px;color:var(--gm);cursor:pointer;text-decoration:none;">⭐ Plan Premium</a>
+      <a onclick="document.getElementById('ayuda-s6').scrollIntoView({behavior:'smooth'})" style="font-size:12px;color:var(--gm);cursor:pointer;text-decoration:none;">🔧 Problemas frecuentes</a>
+    </div>
+  </div>
+
+  <div id="ayuda-s1" style="margin-bottom:20px;">
+    <div style="font-size:14px;font-weight:800;color:var(--gm);margin-bottom:8px;padding-bottom:4px;border-bottom:2px solid var(--gm);">🚀 Primeros pasos</div>
+    <div style="font-size:12px;color:var(--td);line-height:1.7;">
+      1. Introduce tu email y un PIN de 4 dígitos para crear tu cuenta.<br>
+      2. Acepta los términos de uso.<br>
+      3. Empieza a registrar tus gestiones con el botón <strong>✏️ Nuevo Registro</strong>.<br>
+      4. Tus datos se guardan de forma segura en tu dispositivo.
+    </div>
+  </div>
+
+  <div id="ayuda-s2" style="margin-bottom:20px;">
+    <div style="font-size:14px;font-weight:800;color:var(--gm);margin-bottom:8px;padding-bottom:4px;border-bottom:2px solid var(--gm);">📋 Crear un registro</div>
+    <div style="font-size:12px;color:var(--td);line-height:1.7;">
+      · <strong>Asunto:</strong> tema o motivo de la gestión.<br>
+      · <strong>Contacto:</strong> persona o empresa relacionada.<br>
+      · <strong>Acción:</strong> qué se hizo (llamada, email, reunión…).<br>
+      · <strong>Estado:</strong> pendiente, en curso o resuelto.<br>
+      · <strong>Imagen:</strong> adjunta una foto desde cámara o galería.<br>
+      · El botón 🎙️ permite dictar por voz (requiere HTTPS).<br>
+      · Puedes añadir una alerta de recordatorio con fecha y hora.
+    </div>
+  </div>
+
+  <div id="ayuda-s3" style="margin-bottom:20px;">
+    <div style="font-size:14px;font-weight:800;color:var(--gm);margin-bottom:8px;padding-bottom:4px;border-bottom:2px solid var(--gm);">📝 Notas Rápidas</div>
+    <div style="font-size:12px;color:var(--td);line-height:1.7;">
+      · Escribe o dicta anotaciones rápidas sin formulario.<br>
+      · Pulsa el texto de una nota para <strong>editarla</strong>.<br>
+      · Botón <strong>→ Reg</strong> convierte la nota en un registro completo.<br>
+      · Botón 📦 archiva la nota (se puede recuperar).<br>
+      · <strong>Exportar/Restaurar:</strong> copia de seguridad en JSON.<br>
+      · <strong>PDF ⭐:</strong> exporta las notas con filtro de fechas (Premium).
+    </div>
+  </div>
+
+  <div id="ayuda-s4" style="margin-bottom:20px;">
+    <div style="font-size:14px;font-weight:800;color:var(--gm);margin-bottom:8px;padding-bottom:4px;border-bottom:2px solid var(--gm);">🔗 Google Sheets — Configuración</div>
+    <div style="font-size:12px;color:var(--td);line-height:1.7;">
+      <strong>Instalación del Apps Script:</strong><br>
+      1. Abre Google Sheets → Extensiones → Apps Script.<br>
+      2. Borra el código existente y pega el código de Tapunto.<br>
+      3. Ejecuta la función <code style="background:var(--bl);padding:1px 4px;border-radius:3px;">inicializar</code>.<br>
+      4. Implementar → Nueva implementación → App web → Cualquiera.<br>
+      5. Copia la URL y pégala en Configuración → Google Sheets.<br><br>
+      <strong>Token de acceso:</strong> contraseña opcional para proteger tu script. Para uso personal puedes dejarlo vacío.<br><br>
+      <strong>Sincronización:</strong> automática al entrar (Premium) o manual con el botón ⟳.
+    </div>
+  </div>
+
+  <div id="ayuda-s5" style="margin-bottom:20px;">
+    <div style="font-size:14px;font-weight:800;color:var(--gm);margin-bottom:8px;padding-bottom:4px;border-bottom:2px solid var(--gm);">⭐ Plan Premium</div>
+    <div style="font-size:12px;color:var(--td);line-height:1.7;">
+      · Registros ilimitados (Free: 20).<br>
+      · Sincronización automática con Google Sheets.<br>
+      · Todos los temas de color.<br>
+      · Imagen personalizada en portada.<br>
+      · 📖 Libreta PDF profesional con filtros.<br>
+      · 📄 PDF de Notas Rápidas con filtro de fechas.<br>
+      · Backup automático semanal.<br><br>
+      Introduce tu código en <strong>Configuración → Plan</strong>.
+    </div>
+  </div>
+
+  <div id="ayuda-s6" style="margin-bottom:8px;">
+    <div style="font-size:14px;font-weight:800;color:var(--gm);margin-bottom:8px;padding-bottom:4px;border-bottom:2px solid var(--gm);">🔧 Problemas frecuentes</div>
+    <div style="font-size:12px;color:var(--td);line-height:1.7;">
+      <strong>El dictado no funciona:</strong> requiere HTTPS. Prueba desde tapunto.app.<br><br>
+      <strong>No sincroniza:</strong> verifica que la URL del Apps Script es correcta y que la implementación es pública (Cualquiera).<br><br>
+      <strong>Error al subir imagen:</strong> comprueba que el Apps Script está instalado y tiene permisos de Google Drive.<br><br>
+      <strong>Olvidé mi PIN:</strong> no es posible recuperarlo (seguridad). Crea una nueva cuenta con otro email.<br><br>
+      <strong>Los datos no aparecen en otro dispositivo:</strong> asegúrate de tener Google Sheets configurado y pulsa ⟳ Sincronizar.
+    </div>
+  </div>
+
+  <div style="text-align:center;margin-top:16px;">
+    <button onclick="document.getElementById('ayuda-ov').style.display='none'" style="padding:10px 28px;background:var(--gm);color:#fff;border:none;border-radius:8px;font-family:'Lato',sans-serif;font-size:13px;font-weight:700;cursor:pointer;">Cerrar</button>
+  </div>
+</div>`;
+document.body.appendChild(overlay);
+}
+
+function mostrarSelectorPDFRutina(){
+if(!state.rutinas||!state.rutinas.length){alert('No hay rutinas creadas.');return;}
+var ov=document.createElement('div');
+ov.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px;';
+var box=document.createElement('div');
+box.style.cssText='background:var(--w,#fff);border-radius:14px;padding:20px;max-width:320px;width:100%;';
+var t=document.createElement('div');t.style.cssText='font-size:15px;font-weight:800;color:var(--gm);margin-bottom:12px;';t.textContent='📄 Selecciona una rutina';
+var sel=document.createElement('select');
+sel.style.cssText='width:100%;padding:9px;border:1px solid var(--bd);border-radius:8px;font-size:14px;background:var(--bp);color:var(--td);margin-bottom:16px;';
+state.rutinas.forEach(function(r){
+var opt=document.createElement('option');
+opt.value=r.id;opt.textContent=r.nombre;
+sel.appendChild(opt);
+});
+var btns=document.createElement('div');btns.style.cssText='display:flex;gap:8px;';
+var bCancel=document.createElement('button');bCancel.textContent='Cancelar';bCancel.style.cssText='flex:1;padding:9px;background:var(--bl);color:var(--td);border:1px solid var(--bd);border-radius:8px;font-size:13px;cursor:pointer;';
+bCancel.onclick=function(){ov.remove();};
+var bOk=document.createElement('button');bOk.textContent='Generar PDF';bOk.style.cssText='flex:1;padding:9px;background:var(--gm);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;';
+bOk.onclick=function(){var id=sel.value;ov.remove();generarPDFRutina(id);};
+btns.appendChild(bCancel);btns.appendChild(bOk);
+box.appendChild(t);box.appendChild(sel);box.appendChild(btns);
+ov.appendChild(box);document.body.appendChild(ov);
+}
+function exportRutinasJSON(){
+if(!state.rutinas||!state.rutinas.length){alert('No hay rutinas para exportar.');return;}
+var b={version:'1.0',tipo:'rutinas',fecha:new Date().toISOString(),rutinas:state.rutinas};
+var a=document.createElement('a');
+a.href=URL.createObjectURL(new Blob([JSON.stringify(b,null,2)],{type:'application/json'}));
+a.download='Tapunto_rutinas_'+new Date().toISOString().slice(0,10)+'.json';
+a.click();
+}
+function importRutinasJSON(e){
+var file=e.target.files[0];if(!file)return;
+var reader=new FileReader();
+reader.onload=function(ev){
+try{
+var b=JSON.parse(ev.target.result);
+if(!b.rutinas||!Array.isArray(b.rutinas)){alert('Archivo inválido.');return;}
+if(!state.rutinas) state.rutinas=[];
+var ids=new Set(state.rutinas.map(function(r){return r.id;}));
+var nuevas=0;
+b.rutinas.forEach(function(r){if(r.id&&!ids.has(r.id)){state.rutinas.push(r);nuevas++;}});
+persist().catch(function(){});renderRutinasHoy();
+alert('Restauradas '+nuevas+' rutinas nuevas.');
+}catch(err){alert('Error: '+err.message);}
+};reader.readAsText(file);e.target.value='';
+}
+function generarPDFRutina(id){
+var r=state.rutinas?state.rutinas.find(function(x){return x.id===id;}):null;
+if(!r){alert('Rutina no encontrada.');return;}
+var dias=[];
+for(var i=89;i>=0;i--){
+var d=new Date();d.setDate(d.getDate()-i);
+var key=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+dias.push({key:key,fecha:d.toLocaleDateString('es-ES',{day:'2-digit',month:'2-digit',year:'numeric'}),val:r.registros&&r.registros[key]!=null?r.registros[key]:null});
+}
+var registrados=dias.filter(function(d){return d.val!=null&&d.val!==false&&d.val!=='';});
+function esc(s){return s?String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;'):''}
+var filas=registrados.map(function(d){
+var v=r.tipo==='bool'?'✓ Sí':String(d.val);
+return '<tr><td style="padding:7px 10px;border-bottom:1px solid #eee;font-size:12px;color:#666;">'+esc(d.fecha)+'</td>'+
+'<td style="padding:7px 10px;border-bottom:1px solid #eee;font-size:13px;font-weight:600;">'+esc(v)+(r.meta&&r.tipo==='num'?' / '+r.meta:'')+'</td></tr>';
+}).join('');
+var pct=dias.length>0?Math.round(registrados.length/dias.length*100):0;
+// Generar gráfica SVG para el PDF
+var maxVal=1;
+if(r.tipo==='num'){
+maxVal=Math.max(1,Math.max.apply(null,dias.map(function(d){return parseFloat(d.val)||0;})));
+if(r.meta) maxVal=Math.max(maxVal,parseFloat(r.meta));
+}
+var svgW=600,svgH=120,barW=Math.floor(svgW/dias.length)-1,padL=0;
+var svgBars=dias.map(function(d,idx){
+var h=0,color='#e0e0e0';
+if(d.val!=null&&d.val!==false&&d.val!==''){
+if(r.tipo==='bool'){h=svgH;color='#28a745';}
+else if(r.tipo==='num'){h=Math.round((parseFloat(d.val)||0)/maxVal*svgH);color=parseFloat(d.val)>=(parseFloat(r.meta)||0)?'#28a745':'#f0ad4e';}
+else if(r.tipo==='time'){h=svgH;color='#2980b9';}
+}
+var x=idx*(barW+1);
+var label=(idx%7===0||idx===29)?String(new Date(d.key).getDate()).padStart(2,'0')+'/'+(new Date(d.key).getMonth()+1):'';
+return '<rect x="'+x+'" y="'+(svgH-h)+'" width="'+barW+'" height="'+h+'" fill="'+color+'" rx="2"/>'+
+(label?'<text x="'+(x+barW/2)+'" y="'+(svgH+12)+'" text-anchor="middle" font-size="8" fill="#999">'+label+'</text>':'');
+}).join('');
+var svgGrafica='<svg xmlns="http://www.w3.org/2000/svg" width="'+svgW+'" height="'+(svgH+20)+'" style="width:100%;max-width:600px;">'+svgBars+'</svg>';
+var contenido='<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Tapunto — '+esc(r.nombre)+'</title>'+
+'<style>body{font-family:Arial,sans-serif;margin:0;padding:20px;color:#1a1a1a;}.hdr{display:flex;justify-content:space-between;padding-bottom:12px;border-bottom:3px solid #2D5016;margin-bottom:16px;}.logo{font-size:22px;font-weight:900;color:#2D5016;}.tagline{font-size:9px;color:#5A8A32;text-transform:uppercase;letter-spacing:1px;margin-top:2px;}.meta{font-size:11px;color:#666;text-align:right;line-height:1.8;}.stats{display:flex;gap:20px;margin-bottom:16px;}.stat{background:#f9f9f9;border-radius:8px;padding:10px 16px;text-align:center;}.stat-n{font-size:22px;font-weight:900;color:#2D5016;}.stat-l{font-size:10px;color:#666;}table{width:100%;border-collapse:collapse;}thead tr{background:#2D5016;}thead th{color:white;padding:8px 10px;font-size:11px;text-align:left;}.footer{margin-top:20px;font-size:9px;color:#aaa;text-align:center;border-top:1px solid #eee;padding-top:8px;}.no-print{text-align:center;margin:16px 0;}@media print{.no-print{display:none;}body{padding:0;}@page{margin:1.5cm;}}'+
+'</style></head><body>'+
+'<div class="hdr"><div><div class="logo">🌱 '+esc(r.nombre)+'</div><div class="tagline">Mis Rutinas — Tapunto</div></div>'+
+'<div class="meta">'+new Date().toLocaleDateString('es-ES',{day:'2-digit',month:'long',year:'numeric'})+'<br>Últimos 90 días<br>Frecuencia: '+(r.freq==='daily'?'Diaria':r.freq==='weekly'?'Semanal':'Mensual')+'</div></div>'+
+'<div class="stats">'+
+'<div class="stat"><div class="stat-n">'+registrados.length+'</div><div class="stat-l">Días registrados</div></div>'+
+'<div class="stat"><div class="stat-n">'+pct+'%</div><div class="stat-l">Cumplimiento</div></div>'+
+(r.meta&&r.tipo==='num'?'<div class="stat"><div class="stat-n">'+r.meta+'</div><div class="stat-l">Meta diaria</div></div>':'')+
+'</div>'+
+'<div style="margin-bottom:20px;"><div style="font-size:11px;font-weight:700;color:#666;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px;">Evolución (90 días)</div>'+svgGrafica+
+(r.meta&&r.tipo==='num'?'<div style="font-size:10px;color:#999;margin-top:4px;"><span style="color:#28a745;">■</span> Meta conseguida &nbsp;<span style="color:#f0ad4e;">■</span> Parcial &nbsp;<span style="color:#e0e0e0;">■</span> Sin registrar</div>':'')+'</div>'+
+'<table><thead><tr><th>Fecha</th><th>Registro</th></tr></thead><tbody>'+filas+'</tbody></table>'+
+'<div class="footer">Mis Rutinas · tapunto.app · © 2026 Alicia Prats</div>'+
+'<div class="no-print"><button onclick="window.print()" style="padding:10px 20px;background:#2D5016;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;margin-right:8px;">🖨️ Imprimir / PDF</button>'+
+'<button onclick="window.close()" style="padding:10px 20px;background:#f5f5f5;color:#333;border:1px solid #ddd;border-radius:8px;font-size:13px;cursor:pointer;">← Volver</button></div>'+
+'</body></html>';
+var ventana=window.open('','_blank','width=700,height=600');
+if(!ventana){alert('Activa ventanas emergentes.');return;}
+ventana.document.write(contenido);ventana.document.close();ventana.focus();
+}
 function irHome(){
-var secs=['home','nuevo','registros','recordatorios','calendario','notas','config'];
+var secs=['home','nuevo','registros','recordatorios','calendario','notas','rutinas','config'];
 secs.forEach(function(s){
 var el=document.getElementById('sec-'+s);
 if(el){el.classList.remove('active');el.style.display='none';}
@@ -4077,6 +5127,7 @@ var sb=document.getElementById('save-cancel-btns');if(sb)sb.style.display='none'
 renderHomeBadges();
 }
 function renderHomeBadges(){
+
 var alertas=state.records?state.records.filter(function(r){
 if(r.archivado||r.estado==='resuelto') return false;
 if(!r.recordatorio) return false;
@@ -4089,7 +5140,7 @@ if(badge) badge.textContent=alertas>0?alertas:'';
 function irSeccion(tab){
 document.body.classList.remove('on-home');
 switchTab(tab,null);
-var titles={nuevo:'NUEVO REGISTRO',registros:'LISTA DE REGISTROS',recordatorios:'ALERTAS',calendario:'MI AGENDA',notas:'NOTAS RÁPIDAS',config:'CONFIGURACIÓN'};
+var titles={nuevo:'NUEVO REGISTRO',registros:'LISTA DE REGISTROS',recordatorios:'ALERTAS',calendario:'MI AGENDA',notas:'TO DO',rutinas:'MIS RUTINAS',config:'CONFIGURACIÓN'};
 document.getElementById('hdr-section-title').textContent=titles[tab]||'TAPUNTO';
 }
 function switchTab(tab,btn){
@@ -4108,6 +5159,7 @@ if(tab==='config'){renderThemes();loadPinConfig();loadSheetsToken();loadFirmaCon
 if(tab==='recordatorios'){renderReminders();renderAlertasInteligentes();}
 if(tab==='calendario') renderCalendario();
 if(tab==='notas'){if(!state.notas) state.notas=[];renderNotas();setTimeout(function(){var i=document.getElementById('nota-input');if(i)i.focus();},100);if(isPremium&&state.sheetsUrl) syncFromSheets(false).catch(function(){});}
+if(tab==='rutinas'){if(!state.rutinas) state.rutinas=[];renderRutinasHoy();}
 }
 function renderStats(){
 const R=state.records,today=new Date().toISOString().slice(0,10);
