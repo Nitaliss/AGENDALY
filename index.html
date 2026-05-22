@@ -3296,9 +3296,12 @@ localStorage.removeItem('tp_session');
 }
 async function postLogin(){ await finishLogin(); }
 function loadSheetsToken(){
-const t=localStorage.getItem('tp_sheets_token_'+currentUser)||''
-const el=document.getElementById('cfg-sheets-token');
-if(el) el.value=t;
+const t=localStorage.getItem('tp_sheets_token_'+currentUser)||'';
+const el=document.getElementById('cfg-sheets-token');if(el) el.value=t;
+const sb=document.getElementById('script-box-content');if(sb&&!sb.value) sb.value=APPS_SCRIPT_CODE;
+const su=document.getElementById('sheets-url');if(su&&state.sheetsUrl) su.value=state.sheetsUrl;
+const ss=document.getElementById('sheets-status');
+if(ss&&state.sheetsUrl) ss.innerHTML='<div class="connected-tag">✓ Google Sheets conectado</div>';
 }
 function loadPinConfig(){
 const pista=localStorage.getItem('tp_pista_'+currentUser)||'';
@@ -3364,6 +3367,41 @@ if(!raw) return '';
 return _xd(raw,currentUser||'tapunto');
 }
 
+function saveSheetsUrl(){
+var url=document.getElementById('sheets-url').value.trim();
+if(!url){alert('Introduce la URL del Apps Script.');return;}
+state.sheetsUrl=url;
+persist().catch(function(){});
+document.getElementById('sheets-status').innerHTML='<div class="connected-tag">✓ Google Sheets conectado</div>';
+startAutoSync();
+syncFromSheets(true).catch(function(){});
+}
+function saveSheetsToken(){
+var t=document.getElementById('cfg-sheets-token').value.trim();
+if(!t){alert('Introduce el token de acceso.');return;}
+localStorage.setItem('tp_sheets_token_'+currentUser,t);
+alert('Token guardado.');
+}
+function desconectarSheets(){
+if(!confirm('¿Desconectar Google Sheets? Los datos locales se conservan.')) return;
+state.sheetsUrl='';
+clearInterval(autoSyncTimer);
+persist().catch(function(){});
+var su=document.getElementById('sheets-url');if(su)su.value='';
+var ss=document.getElementById('sheets-status');if(ss)ss.innerHTML='';
+}
+function copiarScript(){
+var ta=document.getElementById('script-box-content');
+if(!ta) return;
+navigator.clipboard.writeText(ta.value).then(function(){
+var btn=event.target;
+var orig=btn.textContent;
+btn.textContent='✓ Copiado';
+setTimeout(function(){btn.textContent=orig;},2000);
+}).catch(function(){
+ta.select();document.execCommand('copy');
+});
+}
 function startAutoSync(){ clearInterval(autoSyncTimer); autoSyncTimer=setInterval(()=>syncFromSheets(false),30*60*1000); }
 function setSyncStatus(s,msg){ const dot=document.getElementById('sync-dot'),lbl=document.getElementById('sync-label'); dot.className='sync-dot'+(s==='syncing'?' syncing':s==='error'?' error':''); lbl.textContent=msg; }
 async function syncToSheets(){
