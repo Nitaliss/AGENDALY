@@ -12,7 +12,7 @@
 <meta http-equiv="X-Content-Type-Options" content="nosniff">
 <meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
 <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
-<meta name="description" content="Tu agenda personal segura: registra, comunica y sincroniza tus datos en todos tus dispositivos.">
+<meta name="description" content="Tu agenda personal de productividad. Apunta. Organiza. Comunica.">
 <link rel="manifest" href="manifest.json">
 <title>Tapunto — Tu agenda personal segura</title>
 <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
@@ -869,7 +869,7 @@ body[data-mode="escolar"][data-theme="verde"]{
 }
 .home-grid{
   display:grid;grid-template-columns:1fr 1fr;
-  gap:14px;width:100%;max-width:440px;margin:0 auto 0;
+  gap:14px;width:100%;max-width:440px;margin:0 auto 16px;
 }
 .home-btn{
   display:flex;flex-direction:column;align-items:center;justify-content:center;
@@ -896,7 +896,7 @@ body[data-mode="escolar"][data-theme="verde"]{
   box-shadow:0 8px 24px rgba(92,74,42,.35);
 }
 .home-btn-alertas{
-  flex-direction:row;
+  grid-column:1/-1;min-height:72px;flex-direction:row;
   gap:14px;font-size:13px;padding:18px 24px;justify-content:flex-start;
   background:linear-gradient(135deg,#8B3A0F,#c85d1e);
   box-shadow:0 8px 24px rgba(139,58,15,.35);
@@ -927,7 +927,7 @@ body[data-mode="escolar"][data-theme="verde"]{
 <meta http-equiv="X-Content-Type-Options" content="nosniff">
 <meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
 <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
-<meta name="description" content="Tu agenda personal segura: registra, comunica y sincroniza tus datos en todos tus dispositivos.">
+<meta name="description" content="Tu agenda personal de productividad. Apunta. Organiza. Comunica.">
 <link rel="manifest" href="manifest.json">
 <title>Tapunto — Tu agenda personal segura</title>
 <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
@@ -1778,7 +1778,7 @@ body[data-mode="escolar"][data-theme="verde"]{
 /* ── HOME SCREEN ── */
 #sec-home{display:none;}
 #sec-home.active{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:80vh;padding:24px 20px;}
-.home-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;width:100%;max-width:420px;margin:0 auto 0;}
+.home-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;width:100%;max-width:420px;margin:0 auto;}
 .home-btn{
   display:flex;flex-direction:column;align-items:center;justify-content:center;
   padding:28px 16px;border-radius:20px;border:none;cursor:pointer;
@@ -1794,7 +1794,7 @@ body[data-mode="escolar"][data-theme="verde"]{
   font-size:15px;padding:22px 28px;
 }
 .home-btn-alertas{
-  flex-direction:row;gap:14px;
+  grid-column:1/-1;min-height:80px;flex-direction:row;gap:14px;
   font-size:13px;padding:18px 24px;justify-content:flex-start;
 }
 .home-badge{
@@ -1879,32 +1879,24 @@ body[data-theme="tierra"] .home-btn-alertas{background:linear-gradient(135deg,#1
 .week-group { margin-left: 0; }
 .cfg-section { box-sizing: border-box; }
 
-/* Notas Rápidas - botón óvalo */
-.home-btn-notas{
-  display:flex;align-items:center;justify-content:center;gap:8px;
-  width:100%;max-width:420px;margin:14px auto 0;
-  padding:12px 24px;border-radius:50px;border:none;cursor:pointer;
-  font-family:'Lato',sans-serif;font-weight:800;font-size:12px;
-  letter-spacing:.5px;text-transform:uppercase;color:#fff;
-  transition:transform .15s,box-shadow .15s;
-}
+.home-btn-notas{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;max-width:420px;margin:0 auto;padding:12px 24px;border-radius:50px;border:none;cursor:pointer;font-family:'Lato',sans-serif;font-weight:800;font-size:12px;letter-spacing:.5px;text-transform:uppercase;color:#fff;background:linear-gradient(135deg,#1a5276,#2980b9);box-shadow:0 6px 20px rgba(26,82,118,.35);transition:transform .15s;}
 .home-btn-notas:active{transform:scale(.96);}
-body[data-theme="verde"] .home-btn-notas{background:linear-gradient(135deg,#1a5276,#2980b9);box-shadow:0 8px 24px rgba(26,82,118,.35);}
-body[data-theme="noche"] .home-btn-notas{background:linear-gradient(135deg,#6c3483,#9b59b6);box-shadow:0 8px 24px rgba(108,52,131,.35);}
-body[data-theme="rosa"] .home-btn-notas{background:linear-gradient(135deg,#1a5276,#2980b9);box-shadow:0 8px 24px rgba(26,82,118,.35);}
-body[data-theme="tierra"] .home-btn-notas{background:linear-gradient(135deg,#1a5276,#2980b9);box-shadow:0 8px 24px rgba(26,82,118,.35);}
-.home-btn-notas{background:linear-gradient(135deg,#1a5276,#2980b9);box-shadow:0 8px 24px rgba(26,82,118,.35);}
-/* Alertas pequeño en home */
-.home-btn-alertas{}
+.home-cfg{display:block;width:auto;margin:8px auto 0;padding:6px 16px;border-radius:20px;border:1px solid var(--bd);cursor:pointer;background:var(--bl);color:var(--tl);font-family:'Lato',sans-serif;font-size:11px;font-weight:600;text-align:center;}
+body.on-home .hdr-top{justify-content:flex-end;}
+body.on-home .btn-home{display:none!important;}
 
-/* Ocultar botón INICIO en pantalla home */
-#sec-home.active ~ * .btn-home,
-body.on-home .btn-home { display:none !important; }
-.hdr-top .btn-home { display:flex; }
-
-/* Header - acciones a la derecha siempre */
-body.on-home .hdr-top { justify-content: flex-end; }
-body.on-home .btn-home { display: none !important; }
+/* Botón config flotante abajo derecha */
+.btn-config-float{
+  position:fixed;bottom:80px;right:12px;
+  width:56px;height:56px;border-radius:14px;
+  background:var(--gm);border:none;
+  color:#fff;font-size:20px;cursor:pointer;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;
+  box-shadow:0 4px 16px rgba(0,0,0,.35);
+  transition:transform .15s;z-index:99999;
+  font-family:'Lato',sans-serif;
+}
+.btn-config-float:active{transform:scale(.92);}
 </style>
 <script>(function(){try{if(localStorage.getItem('tp_dark_mode')==='1')document.documentElement.style.background='#1a1a2e';}catch(e){};}());</script>
 </head>
@@ -1913,8 +1905,8 @@ body.on-home .btn-home { display: none !important; }
 <!-- CONFIRM DELETE -->
 <div class="confirm-ov" id="confirm-ov">
   <div class="confirm-box">
-    <h3>¿Eliminar registro?</h3>
-    <p>Esta acción no se puede deshacer.<br>¿Estás segura?</p>
+    <h3>⚠️ ¿Eliminar registro?</h3>
+    <p>Esta acción eliminará el registro de <strong>todos tus dispositivos</strong> y de Google Sheets.<br><br>No se puede deshacer.</p>
     <div class="confirm-btns">
       <button class="btn-cancel" onclick="closeConfirm()">Cancelar</button>
       <button class="btn-del" onclick="confirmDelete()">Sí, eliminar</button>
@@ -1943,15 +1935,12 @@ body.on-home .btn-home { display: none !important; }
     <h3>Función Premium</h3>
     <p style="font-size:13px;color:var(--tl);margin-bottom:4px;">Desbloquea todo Tapunto sin límites</p>
     <div class="upg-features">
+      <div class="upg-feat"><span>🎤</span> Dictado de voz inteligente</div>
+      <div class="upg-feat"><span>🤖</span> IA con Gemini para dictado y email</div>
+      <div class="upg-feat"><span>📷</span> Imágenes → Google Drive</div>
       <div class="upg-feat"><span>∞</span> Registros ilimitados</div>
-      <div class="upg-feat"><span>🔗</span> Sincronización Google Sheets</div>
-      <div class="upg-feat"><span>📱</span> Acceso desde cualquier dispositivo</div>
-      <div class="upg-feat"><span>🎨</span> Todos los temas de color</div>
-      <div class="upg-feat"><span>🖼️</span> Imagen personalizada en portada</div>
-      <div class="upg-feat"><span>📷</span> Fotos adjuntas en registros</div>
-      <div class="upg-feat"><span>📖</span> Libreta PDF profesional</div>
-      <div class="upg-feat"><span>💾</span> Backup automático semanal</div>
-    </div>
+      <div class="upg-feat"><span>📱</span> Dispositivos ilimitados</div>
+      <div class="upg-feat"><span>🎨</span> 8 temas visuales + personalización</div>
     </div>
     <hr class="upg-divider"/>
     <p style="font-size:12px;color:var(--tl);margin-bottom:8px;">Introduce tu código de activación:</p>
@@ -1987,8 +1976,8 @@ body.on-home .btn-home { display: none !important; }
 
       <h4>3. Planes y precios / Plans and pricing</h4>
       <p><strong>Plan Gratuito:</strong> hasta 20 registros, dictado básico, 2 temas visuales, 2 dispositivos.</p>
-      <p><strong>Plan Premium (12 meses):</strong> registros ilimitados, Google Sheets/Drive, todos los temas, imagen personalizada, Libreta PDF. Se activa con código de licencia personal e intransferible.</p>
-      <p style="font-size:11px;color:#888;"><em>Free Plan: up to 20 records, basic dictation, 2 themes, 2 devices. Premium Plan (12 months): unlimited records, Google Sheets/Drive, all themes, custom image, PDF Notebook.</em></p>
+      <p><strong>Plan Premium (12 meses):</strong> registros ilimitados, Gemini IA, Google Sheets/Drive, 8 temas, imagen personalizada. Se activa con código de licencia personal e intransferible.</p>
+      <p style="font-size:11px;color:#888;"><em>Free Plan: up to 20 records, basic dictation, 2 themes, 2 devices. Premium Plan (12 months): unlimited records, Gemini AI, Google Sheets/Drive, 8 themes, custom image.</em></p>
 
       <h4>4. Derecho de desistimiento / Right of withdrawal</h4>
       <p>De conformidad con la Directiva 2011/83/UE, el usuario dispone de <strong>14 días naturales</strong> desde la compra para desistir, siempre que no haya usado funciones Premium durante ese período. Para ejercerlo: hola@tapunto.app</p>
@@ -2006,9 +1995,9 @@ body.on-home .btn-home { display: none !important; }
       <p>El usuario es el único responsable de los datos de terceros que introduzca en la app y de lo que comparta fuera de ella (email, WhatsApp, etc.). El usuario declara tener el consentimiento necesario conforme al RGPD.</p>
       <p style="font-size:11px;color:#888;"><em>Users are solely responsible for third-party data they enter and share outside the app. Users declare they have the necessary consent under GDPR.</em></p>
 
-      <h4>8. Dictado de voz / Voice Dictation</h4>
-      <p>El dictado de voz utiliza la API de reconocimiento de voz del navegador (Web Speech API). Requiere conexión HTTPS y permiso del usuario para el micrófono. El audio se procesa localmente y no se envía a servidores de Tapunto.</p>
-      <p style="font-size:11px;color:#888;"><em>Voice dictation uses the browser Web Speech API. Requires HTTPS and microphone permission. Audio is processed locally and not sent to Tapunto servers.</em></p>
+      <h4>8. Inteligencia Artificial / Artificial Intelligence</h4>
+      <p>Las funciones de IA usan la API de Google Gemini. La IA puede cometer errores. El usuario es el único responsable de revisar el contenido generado antes de enviarlo. Tapunto no garantiza su exactitud ni asume responsabilidad por decisiones basadas en resultados de IA.</p>
+      <p style="font-size:11px;color:#888;"><em>AI features use Google Gemini API. AI may make errors. Users are solely responsible for reviewing AI-generated content. Tapunto does not guarantee accuracy or assume liability for decisions based on AI output.</em></p>
 
       <h4>9. Propiedad intelectual / Intellectual property</h4>
       <p>Tapunto y todos sus componentes son propiedad de Alicia Prats, protegidos por la legislación española e internacional. Marca registrada OEPM M4377915. Prohibida su copia o distribución sin autorización escrita.</p>
@@ -2172,7 +2161,7 @@ body.on-home .btn-home { display: none !important; }
 
       <!-- ══ NUEVO ══ -->
       <div id="sec-home" class="section active">
-  <div class="home-grid" style="margin-bottom:0;">
+  <div class="home-grid">
     <div style="grid-column:1/-1;display:flex;gap:10px;align-items:stretch;">
       <button class="home-btn home-btn-nuevo" onclick="irSeccion('nuevo')" style="flex:1;">
         <span class="home-icon">✏️</span>
@@ -2192,12 +2181,11 @@ body.on-home .btn-home { display: none !important; }
       <span>MI AGENDA</span>
     </button>
   </div>
-  <div style="height:28px;flex-shrink:0;"></div>
+  <div style="height:14px;flex-shrink:0;"></div>
   <button class="home-btn-notas" onclick="irSeccion('notas')" style="margin-top:0;">
-    <span style="font-size:22px;">📝</span>
+    <span style="font-size:20px;">📝</span>
     <span>NOTAS RÁPIDAS</span>
   </button>
-  <button class="home-cfg" onclick="irSeccion('config')" style="margin-top:8px;">⚙️ Configuración</button>
 </div>
 
 <div id="sec-nuevo" class="section">
@@ -2235,7 +2223,7 @@ body.on-home .btn-home { display: none !important; }
               <input id="inp-tema" list="list-temas" placeholder="Escribe o elige asunto..." autocomplete="off"
                 style="flex:1;padding:10px 12px;border:1px solid var(--bd);border-radius:6px;background:var(--bp);font-family:'Lato',sans-serif;font-size:13px;color:var(--td);outline:none;font-weight:600;"/>
               <datalist id="list-temas"></datalist>
-              <button onclick="dictarCampo('inp-tema',this)" title="🎙️ Dictado de voz · Requiere micrófono y HTTPS · El audio se procesa en tu dispositivo, nunca sale de él" style="padding:8px 10px;background:var(--gm);border:none;border-radius:6px;color:#fff;cursor:pointer;font-size:16px;flex-shrink:0;">🎙️</button>
+              <button onclick="dictarCampo('inp-tema',this)" title="Dictar asunto" style="padding:8px 10px;background:var(--gm);border:none;border-radius:6px;color:#fff;cursor:pointer;font-size:16px;flex-shrink:0;">🎙️</button>
               <button class="add-btn" onclick="addTema()" title="Nuevo asunto">+</button>
             </div>
           </div>
@@ -2247,7 +2235,7 @@ body.on-home .btn-home { display: none !important; }
               <input id="inp-contacto" list="list-contactos" placeholder="Escribe o elige contacto..." autocomplete="off"
                 style="flex:1;padding:8px 12px;border:1px solid var(--bd);border-radius:6px;background:var(--bp);font-family:'Lato',sans-serif;font-size:13px;color:var(--td);outline:none;"/>
               <datalist id="list-contactos"></datalist>
-              <button onclick="dictarCampo('inp-contacto',this)" title="🎙️ Dictado de voz · Requiere micrófono y HTTPS · El audio se procesa en tu dispositivo, nunca sale de él" style="padding:8px 10px;background:var(--gm);border:none;border-radius:6px;color:#fff;cursor:pointer;font-size:16px;flex-shrink:0;">🎙️</button>
+              <button onclick="dictarCampo('inp-contacto',this)" title="Dictar contacto" style="padding:8px 10px;background:var(--gm);border:none;border-radius:6px;color:#fff;cursor:pointer;font-size:16px;flex-shrink:0;">🎙️</button>
               <button class="add-btn" onclick="addContacto()" title="Nuevo contacto">+</button>
             </div>
           </div>
@@ -2257,7 +2245,6 @@ body.on-home .btn-home { display: none !important; }
             <label>Acción realizada</label>
             <div class="row">
               <select id="inp-accion"><option value="">Seleccionar...</option></select>
-              <button onclick="dictarCampo('inp-accion',this)" title="🎙️ Dictado de voz · Requiere micrófono y HTTPS · El audio se procesa en tu dispositivo, nunca sale de él" style="padding:6px 8px;background:var(--gm);border:none;border-radius:6px;color:#fff;cursor:pointer;font-size:14px;">🎙️</button>
               <button class="add-btn" onclick="addAccion()">+</button>
             </div>
           </div>
@@ -2265,7 +2252,6 @@ body.on-home .btn-home { display: none !important; }
             <label>Comunicado a</label>
             <div class="row">
               <select id="inp-comunicado"><option value="">Sin comunicar</option></select>
-              <button onclick="dictarCampo('inp-comunicado',this)" title="🎙️ Dictado de voz · Requiere micrófono y HTTPS · El audio se procesa en tu dispositivo, nunca sale de él" style="padding:6px 8px;background:var(--gm);border:none;border-radius:6px;color:#fff;cursor:pointer;font-size:14px;">🎙️</button>
               <button class="add-btn" onclick="addComunicado()">+</button>
             </div>
           </div>
@@ -2285,7 +2271,7 @@ body.on-home .btn-home { display: none !important; }
           <div class="field">
             <label>Notas libres</label>
             <textarea id="inp-notas" placeholder="Notas..." style="min-height:160px;width:100%;resize:vertical;"></textarea>
-            <button onclick="dictarCampo('inp-notas',this)" title="🎙️ Dictado de voz · Requiere micrófono y HTTPS · El audio se procesa en tu dispositivo, nunca sale de él" style="margin-top:6px;padding:8px 16px;background:var(--gm);border:none;border-radius:6px;color:#fff;cursor:pointer;font-size:13px;font-weight:700;font-family:'Lato',sans-serif;">🎙️ Dictar notas</button>
+            <button onclick="dictarCampo('inp-notas',this)" title="Dictar notas" style="margin-top:6px;padding:8px 16px;background:var(--gm);border:none;border-radius:6px;color:#fff;cursor:pointer;font-size:13px;font-weight:700;font-family:'Lato',sans-serif;">🎙️ Dictar notas</button>
           </div>
         </div>
 <!-- 4. IMAGEN — común a ambos modos -->
@@ -2359,7 +2345,7 @@ body.on-home .btn-home { display: none !important; }
           <button onclick="setFiltroFechaRango()" style="padding:3px 10px;border:1px solid var(--gd);border-radius:6px;font-size:12px;background:var(--gd);color:#fff;cursor:pointer;font-weight:700;">🔍</button>
           <button onclick="toggleArchivados()" id="btn-archivados" style="padding:3px 10px;border:1px solid var(--bd);border-radius:6px;font-size:12px;background:var(--bl);color:var(--td);cursor:pointer;">📥 Archivados</button>
           <button id="chip-fecha-clr" onclick="clearFiltroFecha()" style="display:none;padding:3px 8px;border:1px solid #f5c6c6;border-radius:6px;font-size:12px;background:#fff0f0;color:#c53030;cursor:pointer;">✕ Fecha</button>
-                    <button class="exp-btn" onclick="abrirLibreta()" style="background:var(--bc);border-color:var(--bc);">📖 Libreta <span style="font-size:9px;background:linear-gradient(135deg,#b8860b,#daa520);color:white;padding:1px 5px;border-radius:4px;">⭐</span></button>
+                    <button class="exp-btn" onclick="abrirLibreta()" style="background:var(--bc);border-color:var(--bc);">📖 Libreta</button>
         </div>
         <!-- Vista Calendar: solo asunto y fecha -->
         <div id="calendar-filter-view" style="display:none;margin-bottom:12px;">
@@ -2431,16 +2417,13 @@ body.on-home .btn-home { display: none !important; }
       <!-- ══ CONFIG ══ -->
       <div id="sec-notas" class="section">
   <div style="padding:12px 16px;">
-    <!-- Barra herramientas notas -->
     <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid var(--bd);">
-      <button onclick="exportNotasJSON()" title="Exportar backup de notas" style="padding:7px 12px;background:var(--gm);color:#fff;border:none;border-radius:8px;font-family:'Lato',sans-serif;font-size:12px;font-weight:700;cursor:pointer;">📥 Exportar notas</button>
-      <label title="Restaurar backup de notas" style="padding:7px 12px;background:var(--bl);color:var(--td);border:1px solid var(--bd);border-radius:8px;font-family:'Lato',sans-serif;font-size:12px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;">
-        📂 Restaurar
-        <input type="file" accept=".json" style="display:none" onchange="importNotasJSON(event)">
+      <button onclick="exportNotasJSON()" style="padding:7px 12px;background:var(--gm);color:#fff;border:none;border-radius:8px;font-family:'Lato',sans-serif;font-size:12px;font-weight:700;cursor:pointer;">📥 Exportar notas</button>
+      <label style="padding:7px 12px;background:var(--bl);color:var(--td);border:1px solid var(--bd);border-radius:8px;font-family:'Lato',sans-serif;font-size:12px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;">
+        📂 Restaurar<input type="file" accept=".json" style="display:none" onchange="importNotasJSON(event)">
       </label>
-      <button onclick="mostrarPDFNotas()" title="Exportar PDF con filtro de fechas ⭐ Premium" style="padding:7px 12px;background:var(--bc);color:#fff;border:none;border-radius:8px;font-family:'Lato',sans-serif;font-size:12px;font-weight:700;cursor:pointer;">📄 PDF <span style="font-size:9px;background:rgba(255,255,255,.25);padding:1px 4px;border-radius:4px;">⭐</span></button>
+      <button onclick="mostrarPDFNotas()" title="⭐ Premium" style="padding:7px 12px;background:var(--bc);color:#fff;border:none;border-radius:8px;font-family:'Lato',sans-serif;font-size:12px;font-weight:700;cursor:pointer;">📄 PDF <span style="font-size:9px;background:rgba(255,255,255,.25);padding:1px 4px;border-radius:4px;">⭐</span></button>
     </div>
-    <!-- Filtro fechas PDF (oculto por defecto) -->
     <div id="notas-pdf-filter" style="display:none;background:var(--bl);border:1px solid var(--bd);border-radius:8px;padding:10px;margin-bottom:12px;gap:10px;flex-wrap:wrap;align-items:center;">
       <span style="font-size:12px;font-weight:700;color:var(--td);">📅 Filtrar PDF:</span>
       <input type="date" id="notas-pdf-desde" style="padding:6px;border:1px solid var(--bd);border-radius:6px;background:var(--bp);color:var(--td);font-size:12px;"/>
@@ -2449,21 +2432,13 @@ body.on-home .btn-home { display: none !important; }
       <button onclick="generarPDFNotas()" style="padding:6px 14px;background:var(--gm);color:#fff;border:none;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;">Generar PDF</button>
       <button onclick="document.getElementById('notas-pdf-filter').style.display='none'" style="padding:6px 10px;background:none;color:var(--tl);border:1px solid var(--bd);border-radius:6px;font-size:12px;cursor:pointer;">✕</button>
     </div>
-    <!-- Nueva anotación -->
     <div style="display:flex;gap:8px;margin-bottom:16px;align-items:flex-start;">
-      <textarea id="nota-input" placeholder="Escribe o dicta una nota rápida..."
-        style="flex:1;padding:10px 12px;border:1px solid var(--bd);border-radius:10px;
-        background:var(--bp);color:var(--td);font-family:'Lato',sans-serif;font-size:14px;
-        resize:none;min-height:56px;outline:none;line-height:1.4;"></textarea>
+      <textarea id="nota-input" placeholder="Escribe o dicta una nota rápida..." style="flex:1;padding:10px 12px;border:1px solid var(--bd);border-radius:10px;background:var(--bp);color:var(--td);font-family:'Lato',sans-serif;font-size:14px;resize:none;min-height:56px;outline:none;line-height:1.4;"></textarea>
       <div style="display:flex;flex-direction:column;gap:6px;">
-        <button onclick="dictarCampo('nota-input',this)"
-          title="🎙️ Dictado de voz · Requiere micrófono y HTTPS"
-          style="padding:10px;background:var(--gm);color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:18px;">🎙️</button>
-        <button onclick="guardarNota()"
-          style="padding:10px;background:var(--gd);color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:18px;">✓</button>
+        <button onclick="dictarCampo('nota-input',this)" title="🎙️ Dictado de voz · Requiere micrófono y HTTPS · El audio se procesa en tu dispositivo" style="padding:10px;background:var(--gm);color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:18px;">🎙️</button>
+        <button onclick="guardarNota()" style="padding:10px;background:var(--gd);color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:18px;">✓</button>
       </div>
     </div>
-    <!-- Lista de notas -->
     <div id="notas-list"></div>
   </div>
 </div>
@@ -2474,7 +2449,7 @@ body.on-home .btn-home { display: none !important; }
         <div class="cfg-basic" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
           <div style="display:flex;align-items:center;gap:6px;">
             <span class="plan-badge plan-free" id="cfg-plan-badge" style="font-size:12px;padding:4px 12px;">FREE</span>
-            <span style="font-size:11px;color:var(--tl);" id="cfg-plan-desc">Hasta 20 registros</span>
+            <span style="font-size:11px;color:var(--tl);" id="cfg-plan-desc">20 registros · sin IA</span>
           </div>
           <div id="cfg-license-row">
             <button onclick="showUpgrade()" style="padding:7px 14px;background:linear-gradient(135deg,#b8860b,#daa520);color:white;border:none;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;">⭐ Activar Premium</button>
@@ -2556,7 +2531,7 @@ body.on-home .btn-home { display: none !important; }
               <button onclick="showUpgrade()" style="padding:10px 24px;background:linear-gradient(135deg,#b8860b,#daa520);color:#fff;border:none;border-radius:8px;font-family:'Lato',sans-serif;font-size:13px;font-weight:700;cursor:pointer;">⭐ Activar Premium</button>
             </div>
             <div id="sheets-premium-content" style="display:none;">
-              <p style="font-size:12px;color:var(--tl);margin-bottom:10px;">Sincroniza tus registros en tu propia hoja de Google. Tus datos nunca pasan por servidores de Tapunto.</p>
+              <p style="font-size:12px;color:var(--tl);margin-bottom:10px;">Sincroniza tus registros en tu propia hoja de Google.</p>
               <span id="sheets-status" style="font-size:12px;display:block;margin-bottom:8px;"></span>
               <input type="url" id="sheets-url" placeholder="URL del Apps Script..." style="width:100%;padding:8px;border:1px solid var(--bd);border-radius:6px;font-size:12px;background:var(--bp);color:var(--td);margin-bottom:8px;box-sizing:border-box;"/>
               <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;">
@@ -2661,7 +2636,7 @@ body.on-home .btn-home { display: none !important; }
               <div style="font-size:11px;font-weight:700;color:var(--tm);text-transform:uppercase;letter-spacing:.4px;margin-bottom:6px;">🖼 Imagen personalizada en portada</div>
               <img class="custom-img-preview" id="cover-preview-thumb" src="" alt="" style="display:none;width:80px;height:80px;object-fit:cover;border-radius:8px;margin-bottom:8px;"/>
               <div style="display:flex;gap:6px;margin-bottom:8px;flex-wrap:wrap;">
-                <button onclick="abrirCamaraPortada()" style="padding:6px 12px;background:var(--gm);color:#fff;border:none;border-radius:6px;font-family:'Lato',sans-serif;font-size:12px;font-weight:700;cursor:pointer;">📷 Cámara</button>
+                <button onclick="document.getElementById('inp-cover-camara').click()" style="padding:6px 12px;background:var(--gm);color:#fff;border:none;border-radius:6px;font-family:'Lato',sans-serif;font-size:12px;font-weight:700;cursor:pointer;">📷 Cámara</button>
                 <button onclick="document.getElementById('inp-cover-img').click()" style="padding:6px 12px;background:var(--bl);border:1px solid var(--bd);color:var(--tm);border-radius:6px;font-family:'Lato',sans-serif;font-size:12px;font-weight:600;cursor:pointer;">🖼 Galería</button>
                 <button id="remove-cover-btn" onclick="removeCoverImage()" style="display:none;padding:6px 10px;background:var(--bl);border:1px solid var(--bd);border-radius:6px;cursor:pointer;color:#c53030;font-size:12px;">✕ Quitar</button>
               </div>
@@ -2874,7 +2849,8 @@ listRows.slice(1).forEach(r=>{
 if(r[0])contactos.push(String(r[0]));
 if(r[1])temas.push(String(r[1]));
 });
-return ContentService.createTextOutput(JSON.stringify({rows,contactos,temas})).setMimeType(ContentService.MimeType.JSON);
+let notasRows=[];try{const ns=ss.getSheetByName('Notas_Rapidas');if(ns&&ns.getLastRow()>1){notasRows=ns.getDataRange().getValues().slice(1).map(r=>({id:String(r[0]),texto:String(r[1]),fecha:String(r[2]),archivado:r[3]==='1'||r[3]===true}));}}catch(ex){}
+return ContentService.createTextOutput(JSON.stringify({rows,contactos,temas,notas:notasRows})).setMimeType(ContentService.MimeType.JSON);
 } catch(err){ return ContentService.createTextOutput(JSON.stringify({ok:false,error:err.message})).setMimeType(ContentService.MimeType.JSON); }
 }`;
 const THEMES = [
@@ -3000,10 +2976,6 @@ plain=raw;
 }
 const parsedState=JSON.parse(plain);
 state=Object.assign({records:[],contactos:[],temas:[],acciones:[],comunicados:[],sheetsUrl:'',theme:'verde',coverImageData:null,modo:'trabajo'},parsedState);
-// Limpiar elementos vacíos de las listas
-['contactos','temas','acciones','comunicados'].forEach(function(k){
-if(Array.isArray(state[k])) state[k]=state[k].filter(function(v){return v&&v.toString().trim()!=='';});
-});
 const seenLoad=new Set();
 state.records=state.records.filter(r=>{if(!r.id||seenLoad.has(r.id))return false;seenLoad.add(r.id);return true;});
 }catch(e){
@@ -3026,17 +2998,19 @@ const cfgPrem = document.getElementById('cfg-premium-info');
 if(isPremium){
 badge.className='plan-badge plan-premium'; badge.textContent='⭐ PREMIUM';
 cfgBadge.className='plan-badge plan-premium'; cfgBadge.textContent='⭐ PREMIUM';
-cfgDesc.textContent='Registros ilimitados · Google Sheets · Todos los temas · Imagen personalizada · 📖 Libreta PDF · 📄 PDF Notas';
+cfgDesc.textContent='Registros ilimitados · Google Sheets · Todos los temas · Imagen · 📖 Libreta PDF · 📄 PDF Notas';
 cfgLic.style.display='none'; cfgPrem.style.display='block';
 } else {
 badge.className='plan-badge plan-free'; badge.textContent='FREE';
 cfgBadge.className='plan-badge plan-free'; cfgBadge.textContent='FREE';
-cfgDesc.textContent='Hasta 20 registros · tema Verde · funciones básicas';
+cfgDesc.textContent='Hasta 20 registros · Todo incluido · Actualiza para ilimitados';
 cfgLic.style.display='block'; cfgPrem.style.display='none';
 }
 var _ld=document.getElementById('lock-dictado'); if(_ld) _ld.style.display='none';
+// Foto portada - solo premium
 var _li=document.getElementById('lock-imagen'); if(_li) _li.style.display=isPremium?'none':'flex';
 var _cb=document.getElementById('custom-cover-block'); if(_cb) _cb.style.display=isPremium?'block':'none';
+// Sheets - candado en free, contenido en premium
 var _sl=document.getElementById('sheets-premium-lock'); if(_sl) _sl.style.display=isPremium?'none':'flex';
 var _sc=document.getElementById('sheets-premium-content'); if(_sc) _sc.style.display=isPremium?'block':'none';
 updateFreeBar();
@@ -3111,11 +3085,11 @@ function renderThemes(){
 const grid = document.getElementById('themes-grid');
 const current = state.theme || 'verde';
 grid.innerHTML = THEMES.map(t=>{
-const locked = !isPremium && t.id !== 'verde' && t.id !== 'rosa';
 const active = t.id === current ? ' active' : '';
-const lockIcon = locked ? '<span class="theme-lock">🔒</span>' : '';
-return `<div class="theme-card${active}${locked?' locked-theme':''}" onclick="${locked?'showUpgrade()':'applyTheme(\''+t.id+'\')'}">
-<div class="theme-swatch" style="background:linear-gradient(135deg,${t.s1},${t.s2})"></div>
+const locked = !isPremium && t.id !== 'verde';
+const lockIcon = locked ? '<span style="position:absolute;top:4px;right:4px;font-size:14px;">🔒</span>' : '';
+return `<div class="theme-card${active}" style="position:relative;" onclick="${locked?'showUpgrade()':'applyTheme(\''+t.id+'\')'}">
+<div class="theme-swatch" style="background:linear-gradient(135deg,${t.s1},${t.s2});${locked?'opacity:0.5':''}"></div>
 <div class="theme-name">${t.name}</div>
 ${lockIcon}
 </div>`;
@@ -3380,12 +3354,49 @@ function setSyncStatus(s,msg){ const dot=document.getElementById('sync-dot'),lbl
 async function syncToSheets(){
 if(!state.sheetsUrl) return;
 setSyncStatus('syncing','Subiendo...');
-try{ await fetch(state.sheetsUrl,{method:'POST',body:JSON.stringify({action:'sync',token:localStorage.getItem('tp_sheets_token_'+currentUser)||'',records:state.records,contactos:state.contactos,temas:state.temas})}); setSyncStatus('ok','Sincronizado'); }
-catch(e){ setSyncStatus('error','Error al subir'); }
+try{
+await fetch(state.sheetsUrl,{method:'POST',headers:{'Content-Type':'application/json'},
+body:JSON.stringify({action:'sync',token:localStorage.getItem('tp_sheets_token_'+currentUser)||'',
+records:state.records,contactos:state.contactos,temas:state.temas,
+notas:(state.notas||[]).map(function(n){return {id:n.id,texto:n.texto,fecha:n.fecha,archivado:n.archivado||false};})
+})});
+setSyncStatus('ok','Sincronizado');
+}catch(e){setSyncStatus('error','Error al subir');}
 }
 async function syncListsToSheets(){
 if(!state.sheetsUrl) return;
 try{ await fetch(state.sheetsUrl,{method:'POST',body:JSON.stringify({action:'sync_lists',contactos:state.contactos,temas:state.temas})}); }catch(e){}
+}
+async function syncConfigToSheets(){
+if(!state.sheetsUrl||!currentUser) return;
+try{
+const cfg={action:'saveConfig',token:localStorage.getItem('tp_sheets_token_'+currentUser)||'',
+user:currentUser,theme:state.theme||'verde',
+firma:JSON.stringify(getFirma()),
+coverImage:state.coverImageData?await compressCoverForSheets(state.coverImageData):''};
+fetch(state.sheetsUrl,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(cfg)}).catch(()=>{});
+}catch(e){}
+}
+async function compressCoverForSheets(dataUrl){
+return new Promise(function(resolve){
+try{
+const img=new Image();
+img.onload=function(){
+const canvas=document.createElement('canvas');
+const MAX=200;const ratio=Math.min(MAX/img.width,MAX/img.height);
+canvas.width=Math.round(img.width*ratio);canvas.height=Math.round(img.height*ratio);
+canvas.getContext('2d').drawImage(img,0,0,canvas.width,canvas.height);
+resolve(canvas.toDataURL('image/jpeg',0.7));
+};img.onerror=function(){resolve('');};img.src=dataUrl;
+}catch(e){resolve('');}
+});
+}
+async function syncConfigFromSheets(data){
+if(!data) return;
+if(data.theme&&data.theme!==state.theme){state.theme=data.theme;document.body.setAttribute('data-theme',state.theme);}
+if(data.firma){try{const f=JSON.parse(data.firma);if(f)localStorage.setItem('tp_firma_'+currentUser,JSON.stringify(f));}catch(e){}}
+if(data.coverImage&&data.coverImage.startsWith('data:')){state.coverImageData=data.coverImage;if(isPremium)applyCoverImage(data.coverImage);}
+await persist();
 }
 async function syncFromSheets(manual=false){
 if(!state.sheetsUrl){ if(manual) alert('Primero conecta Google Sheets en Config.'); return; }
@@ -3395,6 +3406,8 @@ const resp=await fetch(state.sheetsUrl+'?t='+Date.now());
 const data=await resp.json();
 if(data.rows&&data.rows.length>1){
 const hdrs=data.rows[0],i=k=>hdrs.indexOf(k);
+const blKeyRec='tp_blacklist_records_'+(currentUser||'tapunto');
+const blRec=JSON.parse(localStorage.getItem(blKeyRec)||'[]');
 const newRecs=data.rows.slice(1).map(row=>({
 id:String(row[i('ID')]||row[0]||''),fecha:String(row[i('Fecha')]||row[1]||''),
 contacto:String(row[i('Contacto')]||row[2]||''),tema:String(row[i('Tema')]||row[3]||''),
@@ -3402,7 +3415,7 @@ accion:String(row[i('Accion')]||row[4]||''),comunicado:String(row[i('Comunicado'
 estado:String(row[i('Estado')]||row[6]||'pendiente'),notas:String(row[i('Notas')]||row[7]||''),
 recordatorio:String(row[i('Recordatorio')]||row[8]||''),created:String(row[i('Creado')]||row[9]||''),
 imagenUrl:String(row[i('Imagen')]||row[10]||''),
-})).filter(r=>r.id&&r.id!=='ID');
+})).filter(r=>r.id&&r.id!=='ID'&&!blRec.includes(r.id));
 const remoteIds=new Set(newRecs.map(r=>r.id));
 // Conservar registros locales que NO están en Sheets (nunca se subieron)
 const localNoEnSheets=state.records.filter(r=>r.id&&!remoteIds.has(r.id));
@@ -3423,6 +3436,19 @@ state.records=merged.filter(r=>{
 if(!r.id||seenIds.has(r.id)) return false;
 seenIds.add(r.id); return true;
 });
+if(data.theme||data.firma||data.coverImage) syncConfigFromSheets(data).catch(()=>{});
+if(data.notas&&Array.isArray(data.notas)){
+if(!state.notas) state.notas=[];
+var blKeyN='tp_blacklist_notas_'+(currentUser||'tapunto');
+var blN=[];try{blN=JSON.parse(localStorage.getItem(blKeyN)||'[]');}catch(e){}
+var idsN=new Set(state.notas.map(function(n){return n.id;}));
+data.notas.forEach(function(n){
+if(!n.id||blN.includes(n.id)) return;
+if(!idsN.has(n.id)){state.notas.push(n);}
+else{var loc=state.notas.find(function(x){return x.id===n.id;});if(loc){loc.archivado=n.archivado;loc.texto=n.texto;}}
+});
+state.notas.sort(function(a,b){return new Date(b.fecha)-new Date(a.fecha);});
+}
 // Guardar timestamp de última sync exitosa
 localStorage.setItem('tp_last_sync_'+( currentUser||'tapunto'), Date.now().toString());
 var blKey='tp_blacklist_'+(currentUser||'tapunto');
@@ -3444,14 +3470,6 @@ document.getElementById('sheets-status').innerHTML='<div class="connected-tag">�
 startAutoSync(); syncFromSheets(false);
 }
 function initForm(){
-// Limpiar imagen explícitamente
-var prev=document.getElementById('img-preview');
-if(prev){prev.style.display='none';prev.src='';}
-var rmBtn=document.getElementById('img-remove-btn');
-if(rmBtn) rmBtn.style.display='none';
-var area=document.getElementById('img-upload-area');
-if(area) area.classList.remove('has-img');
-currentImageBase64=null;currentImageMime=null;currentImageName=null;currentImageUrl=null;
 setFechaChip('hoy',document.getElementById('chip-hoy'));
 fillSelect('inp-contacto',state.contactos);
 fillSelect('inp-tema',state.temas);
@@ -3478,60 +3496,7 @@ let aiModalData=null;
 function closeAiModal(){ document.getElementById('ai-modal-ov').style.display='none'; }
 function applyAiFields(){}
 function setDictadoStatus(msg){ var el=document.getElementById('dictado-status'); if(el) el.textContent=msg; }
-function abrirCamaraPortada(){
-var inp=document.createElement('input');
-inp.type='file';inp.accept='image/*';
-inp.setAttribute('capture','environment');
-inp.style.display='none';
-inp.onchange=function(e){onCoverImageSelected(e);if(inp.parentNode)document.body.removeChild(inp);};
-document.body.appendChild(inp);
-inp.click();
-}
-function abrirCamara(){
-var inp=document.createElement('input');
-inp.type='file';inp.accept='image/*';
-inp.setAttribute('capture','environment');
-inp.style.display='none';
-inp.onchange=function(e){onImageSelected(e);if(inp.parentNode)document.body.removeChild(inp);};
-document.body.appendChild(inp);
-inp.click();
-}
-function mostrarMenuImagen(e){
-e.stopPropagation();
-// Si ya hay imagen real, no abrir menú sino permitir eliminarla
-var prev=document.getElementById('img-preview');
-if(prev&&prev.style.display!=='none'&&prev.src&&prev.src!==window.location.href) return;
-// Crear menú emergente
-var existing=document.getElementById('img-menu-popup');
-if(existing){existing.remove();return;}
-var menu=document.createElement('div');
-menu.id='img-menu-popup';
-menu.style.cssText='position:fixed;z-index:9999;background:var(--w,#fff);border:1px solid var(--bd,#ddd);border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,.2);padding:8px;display:flex;flex-direction:column;gap:6px;min-width:160px;';
-var area=document.getElementById('img-upload-area');
-var rect=area.getBoundingClientRect();
-menu.style.top=(rect.bottom+8)+'px';
-menu.style.left=rect.left+'px';
-var b1=document.createElement('button');
-b1.textContent='📷 Cámara';
-b1.title='📷 En móvil abre la cámara directamente · En ordenador abre el selector de archivos';
-b1.style.cssText='padding:10px 16px;background:var(--gm);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;text-align:left;width:100%;';
-b1.onclick=function(){abrirCamara();var m=document.getElementById('img-menu-popup');if(m)m.remove();};
-var b2=document.createElement('button');
-b2.textContent='🖼️ Galería';
-b2.style.cssText='padding:10px 16px;background:var(--bl,#f5f5f5);color:var(--td,#333);border:1px solid var(--bd,#ddd);border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;text-align:left;width:100%;';
-b2.onclick=function(){document.getElementById('inp-imagen-galeria').click();var m=document.getElementById('img-menu-popup');if(m)m.remove();};
-menu.appendChild(b1);menu.appendChild(b2);
-document.body.appendChild(menu);
-setTimeout(function(){
-document.addEventListener('click',function close(){
-var m=document.getElementById('img-menu-popup');
-if(m) m.remove();
-document.removeEventListener('click',close);
-});
-},100);
-}
 function onImageSelected(e){
-if(!isPremium){ showUpgrade(); return; }
 if(!isPremium){ showUpgrade(); return; }
 const file=e.target.files[0]; if(!file) return;
 if(!file.type.startsWith('image/')){ document.getElementById('img-status').textContent='❌ Solo imágenes.'; return; }
@@ -3549,35 +3514,26 @@ document.getElementById('img-status').textContent='📎 Lista · Se subirá a Dr
 reader.readAsDataURL(file);
 }
 function removeImage(e){
-if(e&&e.stopPropagation) e.stopPropagation();
+e.stopPropagation();
 currentImageBase64=null; currentImageMime=null; currentImageName=null; currentImageUrl=null;
-var prev=document.getElementById('img-preview');
-if(prev){prev.style.display='none';prev.src='';}
-var rmBtn=document.getElementById('img-remove-btn');
-if(rmBtn) rmBtn.style.display='none';
-var area=document.getElementById('img-upload-area');
-if(area) area.classList.remove('has-img');
-var status=document.getElementById('img-status');
-if(status) status.textContent='';
-var inp1=document.getElementById('inp-imagen');
-if(inp1) inp1.value='';
-var inp2=document.getElementById('inp-imagen-galeria');
-if(inp2) inp2.value='';
+document.getElementById('img-preview').style.display='none';
+document.getElementById('img-preview').src='';
+document.getElementById('img-remove-btn').style.display='none';
+document.getElementById('img-upload-area').classList.remove('has-img');
+document.getElementById('img-status').textContent='';
+document.getElementById('inp-imagen').value='';
 }
 async function uploadImageToDrive(){
 if(!currentImageBase64||!state.sheetsUrl) return null;
 try{
 document.getElementById('img-status').textContent='';
 document.getElementById('img-uploading').style.display='flex';
-const resp=await fetch(state.sheetsUrl,{method:'POST',body:JSON.stringify({action:'upload_image',imageData:currentImageBase64,mimeType:currentImageMime,fileName:(function(){
-var tema=(document.getElementById('inp-tema')||{}).value||'tapunto';
-tema=tema.replace(/[^a-zA-Z0-9áéíóúÁÉÍÓÚñÑüÜ]/g,'-').replace(/-+/g,'-').slice(0,30);
-var d=new Date();
-var fecha=d.getFullYear()+''+String(d.getMonth()+1).padStart(2,'0')+''+String(d.getDate()).padStart(2,'0');
-var hora=String(d.getHours()).padStart(2,'0')+''+String(d.getMinutes()).padStart(2,'0');
-var ext=(currentImageMime||'image/jpeg').split('/')[1]||'jpg';
-return tema+'_'+fecha+'_'+hora+'.'+ext;
-})()})});
+const _tema=(document.getElementById('inp-tema').value||'tapunto').replace(/[^a-zA-Z0-9áéíóúÁÉÍÓÚñÑ]/g,'-').slice(0,25);
+const _d=new Date();
+const _fecha=_d.getFullYear()+''+String(_d.getMonth()+1).padStart(2,'0')+''+String(_d.getDate()).padStart(2,'0')+'_'+String(_d.getHours()).padStart(2,'0')+''+String(_d.getMinutes()).padStart(2,'0');
+const _ext=(currentImageMime||'image/jpeg').split('/')[1];
+const _fileName=_tema+'_'+_fecha+'.'+_ext;
+const resp=await fetch(state.sheetsUrl,{method:'POST',body:JSON.stringify({action:'upload_image',imageData:currentImageBase64,mimeType:currentImageMime,fileName:_fileName})});
 const data=await resp.json();
 document.getElementById('img-uploading').style.display='none';
 if(data.ok&&data.url){
@@ -3706,7 +3662,7 @@ setFechaChip('hoy',document.getElementById('chip-hoy'));
 document.getElementById('inp-notas').value='';
 var _rd=document.getElementById('inp-recdate');if(_rd){_rd.value='';_rd.style.display='none';}
 reminderDays=null; document.querySelectorAll('.chip').forEach(c=>c.classList.remove('on'));
-removeImage(null); setDictadoStatus('');
+removeImage({stopPropagation:()=>{}}); setDictadoStatus('');
 var _dt=document.getElementById('dictado-transcript');if(_dt){_dt.style.display='none';_dt.textContent='';}
 initForm();
 }
@@ -3809,12 +3765,24 @@ showWarn('📤 Registro restaurado.');
 }
 function askDelete(id){ pendingDelId=id; document.getElementById('confirm-ov').style.display='flex'; }
 function closeConfirm(){ pendingDelId=null; document.getElementById('confirm-ov').style.display='none'; }
-function confirmDelete(){ if(!pendingDelId) return; state.records=state.records.filter(r=>r.id!==pendingDelId); persist().catch(()=>{}); if(state.sheetsUrl) syncToSheets(); closeConfirm(); renderRecords(); renderStats(); updateFreeBar(); }
+async function confirmDelete(){
+if(!pendingDelId) return;
+const id=pendingDelId;
+const blKey='tp_blacklist_records_'+(currentUser||'tapunto');
+try{const bl=JSON.parse(localStorage.getItem(blKey)||'[]');if(!bl.includes(id)){bl.push(id);localStorage.setItem(blKey,JSON.stringify(bl));}}catch(e){}
+state.records=state.records.filter(r=>r.id!==id);
+await persist().catch(()=>{});
+if(state.sheetsUrl){
+try{await fetch(state.sheetsUrl,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'delete',token:localStorage.getItem('tp_sheets_token_'+currentUser)||'',id:id})});}catch(e){}
+syncFromSheets(false).catch(()=>{});
+}
+closeConfirm();renderRecords();renderStats();updateFreeBar();
+}
 function exportNotasJSON(){
 if(!state.notas||!state.notas.length){alert('No hay notas para exportar.');return;}
-var backup={version:'1.0',tipo:'notas',fecha:new Date().toISOString(),usuario:currentUser||'tapunto',notas:state.notas};
+var b={version:'1.0',tipo:'notas',fecha:new Date().toISOString(),notas:state.notas};
 var a=document.createElement('a');
-a.href=URL.createObjectURL(new Blob([JSON.stringify(backup,null,2)],{type:'application/json'}));
+a.href=URL.createObjectURL(new Blob([JSON.stringify(b,null,2)],{type:'application/json'}));
 a.download='Tapunto_notas_'+new Date().toISOString().slice(0,10)+'.json';
 a.click();
 }
@@ -3826,19 +3794,16 @@ try{
 var b=JSON.parse(ev.target.result);
 if(!b.notas||!Array.isArray(b.notas)){alert('Archivo inválido.');return;}
 if(!state.notas) state.notas=[];
+var blKey='tp_blacklist_notas_'+(currentUser||'tapunto');
+var bl=[];try{bl=JSON.parse(localStorage.getItem(blKey)||'[]');}catch(ex){}
 var ids=new Set(state.notas.map(function(n){return n.id;}));
 var nuevas=0;
-var blKey='tp_blacklist_notas_'+(currentUser||'tapunto');
-var bl=JSON.parse(localStorage.getItem(blKey)||'[]');
 b.notas.forEach(function(n){if(n.id&&!ids.has(n.id)&&!bl.includes(n.id)){state.notas.push(n);nuevas++;}});
-// Ordenar cronológicamente inverso
 state.notas.sort(function(a,b){return new Date(b.fecha)-new Date(a.fecha);});
-persist().catch(function(){});
-renderNotas();
+persist().catch(function(){});renderNotas();
 alert('Restauradas '+nuevas+' notas nuevas.');
 }catch(err){alert('Error: '+err.message);}
-};
-reader.readAsText(file);e.target.value='';
+};reader.readAsText(file);e.target.value='';
 }
 function mostrarPDFNotas(){
 if(!isPremium){showUpgrade();return;}
@@ -3851,42 +3816,34 @@ var desde=document.getElementById('notas-pdf-desde').value;
 var hasta=document.getElementById('notas-pdf-hasta').value;
 var notas=state.notas.filter(function(n){
 var d=new Date(n.fecha);
-if(desde&&d<new Date(desde)) return false;
+if(desde&&d<new Date(desde+'T00:00:00')) return false;
 if(hasta&&d>new Date(hasta+'T23:59:59')) return false;
 return true;
 });
-if(!notas.length){alert('No hay notas en ese rango de fechas.');return;}
-var firma=getFirma();
-var nombre=firma.nombre||currentUser.split('@')[0];
+if(!notas.length){alert('No hay notas en ese rango.');return;}
+var firma=getFirma();var nombre=firma.nombre||currentUser.split('@')[0];
 var fechaHoy=new Date().toLocaleDateString('es-ES',{day:'2-digit',month:'long',year:'numeric'});
 var filtroTxt='';
 if(desde||hasta) filtroTxt='Período: '+(desde?new Date(desde).toLocaleDateString('es-ES'):'inicio')+' — '+(hasta?new Date(hasta).toLocaleDateString('es-ES'):'hoy');
 function esc(s){return s?String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'):''}
 var filas=notas.map(function(n){
-var d=new Date(n.fecha);
-var fd=d.toLocaleDateString('es-ES',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'});
-return '<tr><td style="padding:8px 6px;font-size:11px;color:#666;white-space:nowrap;vertical-align:top;border-bottom:1px solid #eee;">'+esc(fd)+'</td>'+
-'<td style="padding:8px 6px;font-size:13px;vertical-align:top;border-bottom:1px solid #eee;">'+esc(n.texto).replace(/\n/g,'<br>')+'</td></tr>';
+var fd=new Date(n.fecha).toLocaleDateString('es-ES',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'});
+return '<tr><td style="padding:8px 6px;font-size:11px;color:#666;white-space:nowrap;border-bottom:1px solid #eee;">'+esc(fd)+'</td>'+
+'<td style="padding:8px 6px;font-size:13px;border-bottom:1px solid #eee;">'+esc(n.texto).replace(/\n/g,'<br>')+'</td></tr>';
 }).join('');
 var contenido='<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Tapunto — Notas</title>'+
-'<style>body{font-family:Arial,sans-serif;margin:0;padding:20px;color:#1a1a1a;}'+
-'.hdr{display:flex;justify-content:space-between;padding-bottom:12px;border-bottom:3px solid #2D5016;margin-bottom:8px;}'+
-'.logo{font-size:22px;font-weight:900;color:#2D5016;}.tagline{font-size:9px;color:#5A8A32;text-transform:uppercase;letter-spacing:1px;margin-top:2px;}'+
-'.meta{font-size:11px;color:#666;text-align:right;line-height:1.6;}.filtro{font-size:10px;color:#5A8A32;font-style:italic;margin-bottom:12px;}'+
-'table{width:100%;border-collapse:collapse;}thead tr{background:#2D5016;}thead th{color:white;padding:8px 6px;font-size:11px;text-align:left;}'+
-'tbody tr:nth-child(even){background:#f9f9f9;}'+
-'.footer{margin-top:16px;font-size:9px;color:#aaa;text-align:center;border-top:1px solid #eee;padding-top:8px;}'+
-'@media print{body{padding:0;}@page{margin:1.5cm;}}'+
+'<style>body{font-family:Arial,sans-serif;margin:0;padding:20px;}.hdr{display:flex;justify-content:space-between;padding-bottom:12px;border-bottom:3px solid #2D5016;margin-bottom:8px;}.logo{font-size:22px;font-weight:900;color:#2D5016;}.tagline{font-size:9px;color:#5A8A32;text-transform:uppercase;letter-spacing:1px;margin-top:2px;}.meta{font-size:11px;color:#666;text-align:right;line-height:1.6;}.filtro{font-size:10px;color:#5A8A32;font-style:italic;margin-bottom:12px;}table{width:100%;border-collapse:collapse;}thead tr{background:#2D5016;}thead th{color:white;padding:8px 6px;font-size:11px;text-align:left;}tbody tr:nth-child(even){background:#f9f9f9;}.footer{margin-top:16px;font-size:9px;color:#aaa;text-align:center;border-top:1px solid #eee;padding-top:8px;}.no-print{text-align:center;margin:16px 0;}@media print{.no-print{display:none;}body{padding:0;}@page{margin:1.5cm;}}'+
 '</style></head><body>'+
 '<div class="hdr"><div><div class="logo">📝 Tapunto — Notas Rápidas</div><div class="tagline">Tu agenda personal segura</div></div>'+
 '<div class="meta"><strong>'+esc(nombre)+'</strong><br>'+esc(fechaHoy)+'<br>'+notas.length+' nota'+(notas.length!==1?'s':'')+'</div></div>'+
 (filtroTxt?'<div class="filtro">🔍 '+esc(filtroTxt)+'</div>':'')+
 '<table><thead><tr><th style="width:130px;">Fecha</th><th>Nota</th></tr></thead><tbody>'+filas+'</tbody></table>'+
 '<div class="footer">Tu agenda personal segura · tapunto.app · © 2026 Alicia Prats</div>'+
-'<scr'+'ipt>window.onload=function(){window.print();}</'+'script>'+
+'<div class="no-print"><button onclick="window.print()" style="padding:10px 20px;background:#2D5016;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;margin-right:8px;">🖨️ Imprimir / Guardar PDF</button>'+
+'<button onclick="window.close()" style="padding:10px 20px;background:#f5f5f5;color:#333;border:1px solid #ddd;border-radius:8px;font-size:13px;cursor:pointer;">← Volver a Tapunto</button></div>'+
 '</body></html>';
 var ventana=window.open('','_blank','width=800,height=600');
-if(!ventana){showWarn('Activa ventanas emergentes para generar el PDF.');return;}
+if(!ventana){alert('Activa ventanas emergentes.');return;}
 ventana.document.write(contenido);ventana.document.close();ventana.focus();
 document.getElementById('notas-pdf-filter').style.display='none';
 }
@@ -3898,44 +3855,80 @@ var nota={id:Date.now().toString(),texto:texto,fecha:new Date().toISOString()};
 if(!state.notas) state.notas=[];
 state.notas.unshift(nota);
 persist().catch(function(){});
+if(state.sheetsUrl) syncToSheets().catch(function(){});
 inp.value='';
 renderNotas();
 }
 function eliminarNota(id){
 if(!state.notas) return;
-// Añadir a lista negra
 var blKey='tp_blacklist_notas_'+(currentUser||'tapunto');
-try{
-var bl=JSON.parse(localStorage.getItem(blKey)||'[]');
-if(!bl.includes(id)){bl.push(id);localStorage.setItem(blKey,JSON.stringify(bl));}
-}catch(e){}
+try{var bl=JSON.parse(localStorage.getItem(blKey)||'[]');if(!bl.includes(id)){bl.push(id);localStorage.setItem(blKey,JSON.stringify(bl));}}catch(e){}
 state.notas=state.notas.filter(function(n){return n.id!==id;});
 persist().catch(function(){});
+if(state.sheetsUrl){fetch(state.sheetsUrl,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'deleteNota',token:localStorage.getItem('tp_sheets_token_'+currentUser)||'',id:id})}).catch(function(){});}
 renderNotas();
+}
+function archivarNota(id){
+if(!state.notas) return;
+var nota=state.notas.find(function(n){return n.id===id;});
+if(!nota) return;
+nota.archivado=!nota.archivado;
+persist().catch(function(){});
+if(state.sheetsUrl) syncToSheets().catch(function(){});
+renderNotas();
+}
+function editarNota(id,span){
+if(!id||!span) return;
+var nota=state.notas?state.notas.find(function(n){return n.id===id;}):null;
+if(!nota) return;
+var wrap=document.createElement('div');
+wrap.style.cssText='flex:1;display:flex;flex-direction:column;gap:6px;';
+var input=document.createElement('textarea');
+input.value=nota.texto;
+input.style.cssText='font-size:14px;color:var(--td);background:var(--bp);border:1px solid var(--gm);border-radius:6px;padding:6px 8px;font-family:Lato,sans-serif;resize:vertical;min-height:60px;width:100%;box-sizing:border-box;';
+var btns=document.createElement('div');btns.style.cssText='display:flex;gap:6px;';
+var btnG=document.createElement('button');btnG.textContent='✓ Guardar';btnG.style.cssText='padding:5px 12px;background:var(--gm);color:#fff;border:none;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;font-family:Lato,sans-serif;';
+var btnC=document.createElement('button');btnC.textContent='✕ Cancelar';btnC.style.cssText='padding:5px 12px;background:var(--bl);color:var(--td);border:1px solid var(--bd);border-radius:6px;font-size:12px;cursor:pointer;font-family:Lato,sans-serif;';
+btns.appendChild(btnG);btns.appendChild(btnC);
+wrap.appendChild(input);wrap.appendChild(btns);
+span.parentNode.replaceChild(wrap,span);
+input.focus();input.select();
+function guardar(){var nuevo=input.value.trim();if(nuevo&&nuevo!==nota.texto){nota.texto=nuevo;persist().catch(function(){});if(state.sheetsUrl)syncToSheets().catch(function(){});}renderNotas();}
+function cancelar(){renderNotas();}
+btnG.addEventListener('click',guardar);btnC.addEventListener('click',cancelar);
+input.addEventListener('keydown',function(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();guardar();}if(e.key==='Escape'){cancelar();}});
 }
 function convertirNotaEnRegistro(id){
 var nota=state.notas?state.notas.find(function(n){return n.id===id;}):null;
 if(!nota) return;
 irSeccion('nuevo');
 setTimeout(function(){
-var inp=document.getElementById('inp-notas');
-if(inp) inp.value=nota.texto;
-// Mostrar botones guardar/cancelar
-var scb=document.getElementById('save-cancel-btns');
-if(scb) scb.style.display='flex';
-// Marcar que venimos de notas para que cancelar vuelva ahí
+var inp=document.getElementById('inp-notas');if(inp) inp.value=nota.texto;
+var scb=document.getElementById('save-cancel-btns');if(scb){scb.style.display='flex';scb.scrollIntoView({behavior:'smooth',block:'nearest'});}
 document.body.setAttribute('data-cancel-dest','notas');
-},100);
+},250);
 }
 function renderNotas(){
 var list=document.getElementById('notas-list');
 if(!list) return;
-var notas=state.notas||[];
+var todasNotas=state.notas||[];
+var mostrarArchivadas=list.getAttribute('data-show-arch')==='1';
+var notas=todasNotas.filter(function(n){return mostrarArchivadas?n.archivado:!n.archivado;});
+var nArchivadas=todasNotas.filter(function(n){return n.archivado;}).length;
+var toggleArch=document.getElementById('notas-arch-toggle');
+if(!toggleArch){
+toggleArch=document.createElement('button');
+toggleArch.id='notas-arch-toggle';
+toggleArch.style.cssText='font-size:11px;padding:4px 10px;background:var(--bl);color:var(--tl);border:1px solid var(--bd);border-radius:12px;cursor:pointer;margin-bottom:8px;font-family:Lato,sans-serif;';
+list.parentNode.insertBefore(toggleArch,list);
+}
+toggleArch.onclick=function(){list.setAttribute('data-show-arch',mostrarArchivadas?'0':'1');renderNotas();};
+toggleArch.textContent=mostrarArchivadas?'← Ver notas activas':'📦 Archivadas ('+nArchivadas+')';
+toggleArch.style.display=nArchivadas>0?'inline-block':'none';
 if(!notas.length){
-list.innerHTML='<div style="text-align:center;color:var(--tl);padding:32px;font-size:13px;">No hay notas aún.<br>Escribe o dicta tu primera nota.</div>';
+list.innerHTML='<div style="text-align:center;color:var(--tl);padding:32px;font-size:13px;">'+(mostrarArchivadas?'No hay notas archivadas.':'No hay notas aún.<br>Escribe o dicta tu primera nota.')+'</div>';
 return;
 }
-// Agrupar por día
 var grupos={};
 notas.forEach(function(n){
 var d=new Date(n.fecha);
@@ -3948,23 +3941,23 @@ var items=grupos[dia].map(function(n){
 var hora=new Date(n.fecha).toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'});
 return '<div style="display:flex;align-items:flex-start;gap:8px;padding:10px 0;border-bottom:1px solid var(--bd);" data-notaid="'+n.id+'">'+
 '<span style="font-size:11px;color:var(--tl);white-space:nowrap;margin-top:2px;min-width:36px;">'+hora+'</span>'+
-'<span style="flex:1;font-size:14px;color:var(--td);line-height:1.4;">'+n.texto.replace(/</g,'&lt;')+'</span>'+
+'<span class="nota-texto" data-id="'+n.id+'" style="flex:1;font-size:14px;color:var(--td);line-height:1.4;cursor:pointer;" title="Pulsa para editar">'+n.texto.replace(/</g,'&lt;')+'</span>'+
 '<div style="display:flex;gap:4px;flex-shrink:0;">'+
 '<button class="nota-to-reg" data-id="'+n.id+'" title="Convertir en registro" style="padding:4px 8px;background:var(--gm);color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:11px;">→ Reg</button>'+
+'<button class="nota-arch" data-id="'+n.id+'" title="'+(n.archivado?'Desarchivar':'Archivar')+'" style="padding:4px 8px;background:var(--bl);color:var(--td);border:1px solid var(--bd);border-radius:6px;cursor:pointer;font-size:12px;">'+(n.archivado?'↩️':'📦')+'</button>'+
 '<button class="nota-del" data-id="'+n.id+'" style="padding:4px 8px;background:none;color:#c53030;border:1px solid #f5c6c6;border-radius:6px;cursor:pointer;font-size:14px;">✕</button>'+
 '</div>'+
 '</div>';
 }).join('');
-return '<div style="margin-bottom:12px;">'+
-'<div style="font-size:11px;font-weight:800;color:var(--gm);text-transform:uppercase;letter-spacing:.5px;padding:8px 0 4px;border-bottom:2px solid var(--gm);margin-bottom:4px;">'+dia+'</div>'+
-items+'</div>';
+return '<div style="margin-bottom:12px;"><div style="font-size:11px;font-weight:800;color:var(--gm);text-transform:uppercase;letter-spacing:.5px;padding:8px 0 4px;border-bottom:2px solid var(--gm);margin-bottom:4px;">'+dia+'</div>'+items+'</div>';
 }).join('');
 list.onclick=function(e){
-var btn=e.target.closest('button');
-if(!btn) return;
-var id=btn.getAttribute('data-id');
-if(!id) return;
+var span=e.target.closest('.nota-texto');
+if(span){editarNota(span.getAttribute('data-id'),span);return;}
+var btn=e.target.closest('button');if(!btn) return;
+var id=btn.getAttribute('data-id');if(!id) return;
 if(btn.classList.contains('nota-to-reg')) convertirNotaEnRegistro(id);
+if(btn.classList.contains('nota-arch')) archivarNota(id);
 if(btn.classList.contains('nota-del')) eliminarNota(id);
 };
 }
@@ -3979,11 +3972,11 @@ if(sb) sb.style.display='none';
 var home=document.getElementById('sec-home');
 if(home){home.classList.add('active');home.style.display='flex';}
 document.body.classList.add('on-home');
+var ni=document.getElementById('nota-input');if(ni)ni.value='';
+var nat=document.getElementById('notas-arch-toggle');if(nat)nat.remove();
+var mp=document.getElementById('img-menu-popup');if(mp)mp.remove();
 document.getElementById('hdr-section-title').textContent='TAPUNTO';
 var sb=document.getElementById('save-cancel-btns');if(sb)sb.style.display='none';
-// Limpiar notas rápidas al volver al home
-var ni=document.getElementById('nota-input');if(ni)ni.value='';
-var mp=document.getElementById('img-menu-popup');if(mp)mp.remove();
 renderHomeBadges();
 }
 function renderHomeBadges(){
@@ -3994,7 +3987,7 @@ var d=new Date(r.recordatorio);
 return !isNaN(d)&&d<=new Date();
 }).length:0;
 var badge=document.getElementById('home-badge-alertas');
-if(badge) badge.textContent=alertas>0?alertas:'—';
+if(badge) badge.textContent=alertas>0?alertas:'';
 }
 function irSeccion(tab){
 document.body.classList.remove('on-home');
@@ -4012,6 +4005,7 @@ if(tab==='nuevo'){setTimeout(function(){
 var chipHoy=document.getElementById('chip-hoy');
 if(chipHoy&&!document.getElementById('inp-fecha').value) setFechaChip('hoy',chipHoy);
 },50);}
+if(tab==='nuevo'){setTimeout(function(){var c=document.getElementById('chip-hoy');if(c&&!document.getElementById('inp-fecha').value)setFechaChip('hoy',c);},50);}
 if(tab==='registros'){renderStats();renderRecords();}
 if(tab==='config'){renderThemes();loadPinConfig();loadSheetsToken();loadFirmaConfig();renderLists();}
 if(tab==='recordatorios'){renderReminders();renderAlertasInteligentes();}
@@ -4315,20 +4309,12 @@ if(!rows.length){alert('No hay registros que mostrar.');return;}
 const fcEl=document.getElementById('f-contacto');
 const ftEl=document.getElementById('f-tema');
 const feEl=document.getElementById('f-estado');
-const fc=fcEl?fcEl.value:'';
-const ft=ftEl?ftEl.value:'';
-const fe=feEl?feEl.value:'';
+const fc=fcEl?fcEl.value:'';const ft=ftEl?ftEl.value:'';const fe=feEl?feEl.value:'';
 const partes=[];
-if(fc) partes.push('Contacto: '+fc);
-if(ft) partes.push('Asunto: '+ft);
-if(fe) partes.push('Estado: '+fe);
-if(_filtroFechaDesde||_filtroFechaHasta){
-var fstr=(_filtroFechaDesde?'Desde '+_filtroFechaDesde:'')+(_filtroFechaHasta?' Hasta '+_filtroFechaHasta:'');
-partes.push(fstr.trim());
-}
+if(fc) partes.push('Contacto: '+fc);if(ft) partes.push('Asunto: '+ft);if(fe) partes.push('Estado: '+fe);
+if(_filtroFechaDesde||_filtroFechaHasta){partes.push((_filtroFechaDesde?'Desde '+_filtroFechaDesde:'')+(_filtroFechaHasta?' Hasta '+_filtroFechaHasta:''));}
 const filtroTitulo=partes.length?partes.join(' · '):'Todos los registros';
-const firma=getFirma();
-const nombre=firma.nombre||currentUser.split('@')[0];
+const firma=getFirma();const nombre=firma.nombre||currentUser.split('@')[0];
 const fecha=new Date().toLocaleDateString('es-ES',{day:'2-digit',month:'long',year:'numeric'});
 function esc(s){return s?String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'):''}
 const estadoColor={pendiente:'#856404',resuelto:'#155724','en curso':'#0c5460'};
@@ -4339,25 +4325,17 @@ var fd=isNaN(d)?r.fecha:d.toLocaleDateString('es-ES',{day:'2-digit',month:'2-dig
 var est=r.estado||'pendiente';
 var estadoSpan='<span style="padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;background:'+(estadoBg[est]||'#eee')+';color:'+(estadoColor[est]||'#333')+'">'+esc(est.toUpperCase())+'</span>';
 var notasCell=r.notas?'<div style="font-size:10px;color:#555;margin-top:3px;">'+esc(r.notas).replace(/\n/g,'<br>')+'</div>':'';
-var imgCell=r.imagenUrl?'<div style="font-size:10px;color:#1a73e8;margin-top:3px;">📷 <a href="'+esc(r.imagenUrl)+'" style="color:#1a73e8;">Ver imagen</a></div>':'';
 return '<tr style="border-bottom:1px solid #e8e8e8;">'+
 '<td style="padding:8px 6px;font-size:11px;color:#666;white-space:nowrap;vertical-align:top;">'+esc(fd)+'</td>'+
 '<td style="padding:8px 6px;font-weight:700;font-size:12px;vertical-align:top;">'+esc(r.tema||r.accion||'')+'</td>'+
 '<td style="padding:8px 6px;font-size:11px;vertical-align:top;">'+esc(r.contacto||'')+'</td>'+
 '<td style="padding:8px 6px;font-size:11px;vertical-align:top;">'+esc(r.accion||'')+'</td>'+
 '<td style="padding:8px 6px;vertical-align:top;">'+estadoSpan+'</td>'+
-'<td style="padding:8px 6px;font-size:11px;vertical-align:top;">'+notasCell+imgCell+'</td>'+
+'<td style="padding:8px 6px;font-size:11px;vertical-align:top;">'+notasCell+'</td>'+
 '</tr>';
 }).join('');
-var contenido='<!DOCTYPE html><html><head><meta charset="UTF-8">'+
-'<title>Tapunto — '+esc(filtroTitulo)+'</title>'+
-'<style>body{font-family:Arial,sans-serif;margin:0;padding:20px;color:#1a1a1a;background:#fff;}'+
-'.hdr{display:flex;justify-content:space-between;align-items:flex-start;padding-bottom:12px;border-bottom:3px solid #2D5016;margin-bottom:8px;}'+
-'.logo{font-size:24px;font-weight:900;color:#2D5016;}.tagline{font-size:9px;color:#5A8A32;letter-spacing:1px;text-transform:uppercase;margin-top:2px;}'+
-'.meta{font-size:11px;color:#666;text-align:right;line-height:1.6;}.filtros{font-size:10px;color:#5A8A32;margin-bottom:16px;font-style:italic;}'+
-'table{width:100%;border-collapse:collapse;}thead tr{background:#2D5016;}thead th{color:white;padding:8px 6px;font-size:11px;text-align:left;font-weight:700;}'+
-'tbody tr:nth-child(even){background:#f9f9f9;}.footer{margin-top:20px;font-size:9px;color:#aaa;text-align:center;border-top:1px solid #eee;padding-top:8px;}'+
-'@media print{body{padding:0;}@page{margin:1.5cm;}}'+
+var contenido='<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Tapunto — '+esc(filtroTitulo)+'</title>'+
+'<style>body{font-family:Arial,sans-serif;margin:0;padding:20px;color:#1a1a1a;background:#fff;}.hdr{display:flex;justify-content:space-between;align-items:flex-start;padding-bottom:12px;border-bottom:3px solid #2D5016;margin-bottom:8px;}.logo{font-size:24px;font-weight:900;color:#2D5016;}.tagline{font-size:9px;color:#5A8A32;letter-spacing:1px;text-transform:uppercase;margin-top:2px;}.meta{font-size:11px;color:#666;text-align:right;line-height:1.6;}.filtros{font-size:10px;color:#5A8A32;margin-bottom:16px;font-style:italic;}table{width:100%;border-collapse:collapse;}thead tr{background:#2D5016;}thead th{color:white;padding:8px 6px;font-size:11px;text-align:left;font-weight:700;}tbody tr:nth-child(even){background:#f9f9f9;}.footer{margin-top:20px;font-size:9px;color:#aaa;text-align:center;border-top:1px solid #eee;padding-top:8px;}.no-print{text-align:center;margin:16px 0;}@media print{body{padding:0;}.no-print{display:none;}@page{margin:1.5cm;}}'+
 '</style></head><body>'+
 '<div class="hdr"><div><div class="logo">📋 Tapunto</div><div class="tagline">Tu agenda personal segura</div></div>'+
 '<div class="meta"><strong>'+esc(nombre)+'</strong><br>'+esc(fecha)+'<br>'+rows.length+' registro'+(rows.length!==1?'s':'')+'</div></div>'+
@@ -4365,13 +4343,12 @@ var contenido='<!DOCTYPE html><html><head><meta charset="UTF-8">'+
 '<table><thead><tr><th>Fecha</th><th>Asunto</th><th>Contacto</th><th>Acción</th><th>Estado</th><th>Notas</th></tr></thead>'+
 '<tbody>'+filas+'</tbody></table>'+
 '<div class="footer">Tu agenda personal segura · tapunto.app · © 2026 Alicia Prats</div>'+
-'<scr'+'ipt>window.onload=function(){window.print();}</'+'script>'+
+'<div class="no-print"><button onclick="window.print()" style="padding:10px 20px;background:#2D5016;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;margin-right:8px;">🖨️ Imprimir / Guardar PDF</button>'+
+'<button onclick="window.close()" style="padding:10px 20px;background:#f5f5f5;color:#333;border:1px solid #ddd;border-radius:8px;font-size:13px;cursor:pointer;">← Volver</button></div>'+
 '</body></html>';
 var ventana=window.open('','_blank','width=900,height=700');
-if(!ventana){showWarn('Activa ventanas emergentes para generar el PDF.');return;}
-ventana.document.write(contenido);
-ventana.document.close();
-ventana.focus();
+if(!ventana){showWarn('Activa ventanas emergentes.');return;}
+ventana.document.write(contenido);ventana.document.close();ventana.focus();
 }
 function libToggleRayas(){
 const on=document.getElementById('lib-rayas').checked;
@@ -4559,7 +4536,7 @@ setTimeout(()=>document.body.removeChild(a),500);
 }
 
 function renderLists(){
-const rc=(arr,key)=>{const clean=arr.filter(v=>v&&v.toString().trim()!=='');return clean.map((v,i)=>`<div class="list-item"><span onclick="editListItem('${key}',${i},this)" style="cursor:pointer;flex:1;" title="Pulsa para editar">${x(v)}</span><button class="del-li" onclick="removeItem('${key}',${i})">×</button></div>`).join('')||'<div style="font-size:11px;color:var(--th);">Sin elementos</div>';};
+const rc=(arr,key)=>arr.map((v,i)=>`<div class="list-item"><span onclick="editListItem('${key}',${i},this)" style="cursor:pointer;flex:1;" title="Pulsa para editar">${x(v)}</span><button class="del-li" onclick="removeItem('${key}',${i})">×</button></div>`).join('')||'<div style="font-size:11px;color:var(--th);">Sin elementos</div>';
 document.getElementById('lst-contactos').innerHTML=rc(state.contactos,'contactos');
 document.getElementById('lst-temas').innerHTML=rc(state.temas,'temas');
 const elA=document.getElementById('lst-acciones');
@@ -4739,7 +4716,6 @@ checkTrial();
 checkLicenseExpiry();
 updatePortadaNombre();
 irHome();
-if(isPremium&&state.sheetsUrl) syncFromSheets(false).catch(()=>{});
 mostrarSplash();
 setTimeout(checkBackupSemanal, 5000);
 requestAnimationFrame(()=>{
@@ -4768,11 +4744,7 @@ window.addEventListener('DOMContentLoaded',()=>{
 initDarkMode();
 checkSession();
 document.getElementById('login-pin').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
-document.addEventListener('keydown',function(e){
-if(e.key==='Enter'&&!e.shiftKey&&document.activeElement&&document.activeElement.id==='nota-input'){
-e.preventDefault();guardarNota();
-}
-});
+document.addEventListener('keydown',function(e){if(e.key==='Enter'&&!e.shiftKey&&document.activeElement&&document.activeElement.id==='nota-input'){e.preventDefault();guardarNota();}});
 document.getElementById('confirm-ov').addEventListener('click',e=>{if(e.target===document.getElementById('confirm-ov'))closeConfirm();});
 document.getElementById('ai-modal-ov').addEventListener('click',e=>{if(e.target===document.getElementById('ai-modal-ov'))closeAiModal();});
 document.getElementById('upg-ov').addEventListener('click',e=>{if(e.target===document.getElementById('upg-ov'))closeUpgrade();});
@@ -5723,8 +5695,7 @@ if(panel){panel.style.display='block';panel.scrollIntoView({behavior:'smooth',bl
 var _origCancelEdit=cancelEdit;
 function dictarCampo(campoId,btn){
 var SR=window.SpeechRecognition||window.webkitSpeechRecognition;
-if(!SR){alert('Dictado no disponible. Usa Chrome.');return;}
-if(location.protocol==='file:'){alert('El dictado requiere conexión HTTPS.\nPruébalo en tapunto.app');return;}
+if(!SR){alert('Usa Chrome para el dictado.');return;}
 var isTA=document.getElementById(campoId).tagName==='TEXTAREA';
 var orig=btn.innerHTML;
 var done=false;
@@ -5753,9 +5724,6 @@ sr.onend=function(){restore();};
 try{sr.start();}catch(e){restore();}
 }
 function cancelEdit(){
-var dest=document.body.getAttribute('data-cancel-dest')||'home';
-document.body.removeAttribute('data-cancel-dest');
-
 editingId=null;
 var banner=document.getElementById('edit-banner');
 if(banner) banner.style.display='none';
@@ -5774,6 +5742,8 @@ if(btnCan) btnCan.style.display='none';
 var badgeEl=document.getElementById('ai-badge-container');
 if(badgeEl){badgeEl.style.display='none';badgeEl.innerHTML='';}
 resetForm();
+var dest=document.body.getAttribute('data-cancel-dest')||'home';
+document.body.removeAttribute('data-cancel-dest');
 if(dest==='notas') irSeccion('notas'); else irHome();
 }
 function editRecord(id){
@@ -6099,5 +6069,6 @@ if(e.key==='Escape'){renderLists();}
 
 <div id="toast-ok" style="position:fixed;bottom:30px;left:50%;transform:translateX(-50%);z-index:99999;padding:14px 28px;border-radius:12px;font-size:15px;font-weight:700;display:none;align-items:center;gap:8px;background:#1a4a1a;color:#fff;box-shadow:0 4px 20px rgba(0,0,0,.4);white-space:nowrap;">✅ Registro guardado</div>
 <div id="toast-upd" style="position:fixed;bottom:30px;left:50%;transform:translateX(-50%);z-index:99999;padding:14px 28px;border-radius:12px;font-size:15px;font-weight:700;display:none;align-items:center;gap:8px;background:#2D5016;color:#fff;box-shadow:0 4px 20px rgba(0,0,0,.4);white-space:nowrap;">✅ Registro actualizado</div>
+<button class="btn-config-float" onclick="irSeccion('config')" title="Configuración">⚙️<span style="font-size:9px;font-weight:700;letter-spacing:.3px;">Config</span></button>
 </body>
 </html>
