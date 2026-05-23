@@ -318,7 +318,7 @@ body{font-family:'Lato',sans-serif;background:var(--body-bg);min-height:100vh;
 .btn-login:hover{background:var(--gm);}
 .login-note{font-size:11px;color:var(--th);margin-top:14px;line-height:1.7;}
 
-/* ── USER BAR ── (PRUEBA)*/
+/* ── USER BAR ── */
 .user-bar{display:flex;align-items:center;justify-content:space-between;
   padding:7px 16px;background:var(--bl);border-bottom:1px solid var(--bd);
   flex-wrap:wrap;gap:6px;transition:background .3s;}
@@ -2239,6 +2239,21 @@ button{font-family:'Lato',sans-serif;}
           <div class="cover-sub">Apunta. Organiza. Comunica.</div>
           <div id="cover-user-name" style="font-size:10px;color:rgba(255,255,255,0.7);"></div>
         </div>
+      </div>
+    </div>
+
+    <!-- USER BAR -->
+    <div class="user-bar">
+      <div style="display:flex;align-items:center;gap:8px;">
+        <span class="user-greet" id="user-greet">Bienvenida 🐾</span>
+        <span class="plan-badge plan-free" id="plan-badge">FREE</span>
+      </div>
+      <div class="bar-right">
+        <div class="sync-indicator">
+          <div class="sync-dot" id="sync-dot"></div>
+          <span id="sync-label">Sincronizado</span>
+        </div>
+        
       </div>
     </div>
 
