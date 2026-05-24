@@ -2188,8 +2188,13 @@ body.on-home #sec-home { display: block !important; }
         <label class="tap-label">Correo electrónico</label>
         <div style="position:relative;">
           <span style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--tl);font-size:16px;">✉</span>
-          <input type="email" id="login-email" placeholder="tucorreo@gmail.com" autocomplete="email"
+          <input type="text" id="login-email" placeholder="tucorreo@gmail.com" autocomplete="email"
             style="width:100%;padding:10px 12px 10px 36px;border:0.5px solid var(--bd);border-radius:10px;background:var(--bl);color:var(--td);font-family:'Lato',sans-serif;font-size:14px;outline:none;box-sizing:border-box;"/>
+        </div>
+        <!-- Aviso Gmail -->
+        <div style="margin-top:8px;padding:10px 12px;background:#f0f9e8;border-radius:8px;border-left:3px solid var(--gm);font-size:11px;color:var(--td);font-family:'Lato',sans-serif;line-height:1.7;">
+          <strong>📌 Con cuenta Gmail</strong> tendrás acceso a sincronización con Google Sheets, almacenamiento de fotos en Drive, acceso desde varios dispositivos y backup automático.<br>
+          <span style="color:var(--tl);">Con otro correo puedes usar Tapunto en <strong>modo local</strong>, sin sincronización ni almacenamiento en la nube.</span>
         </div>
       </div>
 
@@ -3636,7 +3641,13 @@ return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).jo
 async function doLogin(){
 const email=document.getElementById('login-email').value.trim().toLowerCase();
 const pin=document.getElementById('login-pin').value.trim();
-if(!email||!email.includes('@')){alert('Introduce un correo válido.');return;}
+if(!email||!email.includes('@')){alert('Introduce un correo válido (ej: tunombre@gmail.com).');return;}
+var esGmail=email.endsWith('@gmail.com')||email.endsWith('@googlemail.com');
+if(!esGmail&&!window._noGmailConfirmado){
+var msg='\u26a0\ufe0f El correo introducido no es Gmail.\n\nPodrás usar Tapunto en modo local, pero NO tendrás:\n• Sincronización con Google Sheets\n• Fotos en Google Drive\n• Acceso desde varios dispositivos\n• Backup automático\n\nPulsa Aceptar para continuar sin sincronización\no Cancelar para usar tu cuenta Gmail.';
+if(!confirm(msg)){document.getElementById('login-email').focus();return;}
+window._noGmailConfirmado=true;
+}
 if(pin.length!==4||isNaN(pin)){alert('El PIN debe tener exactamente 4 dígitos.');return;}
 const pinHash=await _hp(pin);
 const stored=localStorage.getItem('tp_pin_'+email);
@@ -6797,6 +6808,7 @@ window.addEventListener('DOMContentLoaded',()=>{
 initNotificaciones();
 checkSession();
 document.getElementById('login-pin').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
+document.getElementById('login-email').addEventListener('input',function(){window._noGmailConfirmado=false;});
 document.addEventListener('keydown',function(e){if(e.key==='Enter'&&!e.shiftKey&&document.activeElement&&document.activeElement.id==='nota-input'){e.preventDefault();guardarNota();}});
 document.getElementById('confirm-ov').addEventListener('click',e=>{if(e.target===document.getElementById('confirm-ov'))closeConfirm();});
 document.getElementById('ai-modal-ov').addEventListener('click',e=>{if(e.target===document.getElementById('ai-modal-ov'))closeAiModal();});
