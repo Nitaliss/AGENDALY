@@ -2423,128 +2423,152 @@ body.on-home #sec-home { display: block !important; }
 </div><!-- /sec-home -->
 
 <div id="sec-nuevo" class="section">
-  <div class="tap-header"><button class="tap-header-btn" onclick="irHome()">&#8592;</button><span class="tap-header-title" id="nuevo-titulo">Nuevo registro</span><button onclick="cancelEdit?cancelEdit():irHome()" style="background:rgba(255,255,255,0.15);border:none;border-radius:8px;padding:6px 11px;font-size:12px;font-weight:600;color:rgba(255,255,255,0.8);cursor:pointer;">Cancelar</button><button onclick="saveRecord()" style="background:#fff;border:none;border-radius:8px;padding:6px 14px;font-size:12px;font-weight:700;color:var(--gd);cursor:pointer;">Guardar</button></div>
+  <div class="tap-header">
+    <button class="tap-header-btn" onclick="irHome()">&#8592;</button>
+    <span class="tap-header-title" id="nuevo-titulo">Nuevo registro</span>
+    <button onclick="cancelEdit?cancelEdit():irHome()" style="background:rgba(255,255,255,0.15);border:none;border-radius:8px;padding:6px 11px;font-size:12px;font-weight:600;color:rgba(255,255,255,0.8);cursor:pointer;">Cancelar</button>
+    <button id="save-btn" onclick="saveRecord()" style="background:#fff;border:none;border-radius:8px;padding:6px 14px;font-size:12px;font-weight:700;color:var(--gd);cursor:pointer;">Guardar</button>
+  </div>
 
-        <div class="trial-banner" id="trial-banner"></div>
-        <div class="renewal-banner" id="renewal-banner"></div>
-        <div class="edit-banner" id="edit-banner">
-          ✏ Editando registro
-          <button onclick="cancelEdit()">✕ Cancelar</button>
-        </div>
-        <div class="sec-title" id="form-title">Nuevo registro</div>
+  <div class="trial-banner" id="trial-banner"></div>
+  <div class="renewal-banner" id="renewal-banner"></div>
+  <div class="edit-banner" id="edit-banner">
+    ✏ Editando registro
+    <button onclick="cancelEdit()">✕ Cancelar</button>
+  </div>
+  <div class="free-bar" id="free-bar" style="display:none">
+    <span>Plan gratuito · <strong id="rec-count">0</strong>/20 registros</span>
+    <button class="upg-btn" onclick="showUpgrade()">⭐ Activar Premium</button>
+  </div>
 
-        <!-- Barra free -->
-        <div class="free-bar" id="free-bar" style="display:none">
-          <span>Plan gratuito · <strong id="rec-count">0</strong>/20 registros</span>
-          <button class="upg-btn" onclick="showUpgrade()">⭐ Activar Premium</button>
-        </div>
+  <div style="padding:14px 16px 32px;display:flex;flex-direction:column;gap:12px;">
 
-<div class="fb">
-          <div class="field">
-            <label>Fecha y hora <span style="color:#c53030;font-size:10px;">*obligatorio</span></label>
-            <div style="display:flex;gap:6px;margin-bottom:6px;flex-wrap:wrap;">
-              <button class="chip" id="chip-hoy" onclick="setFechaChip('hoy',this)">🕐 Ahora</button>
-              <button class="chip" id="chip-ayer" onclick="setFechaChip('ayer',this)">Ayer</button>
-              <button class="chip" id="chip-elegir" onclick="setFechaChip('elegir',this)">📅 Elegir</button>
-            </div>
-            <input type="datetime-local" id="inp-fecha" style="display:none;max-width:240px;"/>
-          </div>
-        </div>
+    <!-- FECHA -->
+    <div>
+      <label class="tap-label">Fecha y hora <span style="color:#c53030;">*</span></label>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:6px;">
+        <button class="chip" id="chip-hoy" onclick="setFechaChip('hoy',this)">🕐 Ahora</button>
+        <button class="chip" id="chip-ayer" onclick="setFechaChip('ayer',this)">Ayer</button>
+        <button class="chip" id="chip-elegir" onclick="setFechaChip('elegir',this)">📅 Elegir</button>
+      </div>
+      <input type="datetime-local" id="inp-fecha" style="display:none;max-width:240px;padding:8px 10px;border:1px solid var(--bd);border-radius:8px;background:var(--bp);font-family:'Lato',sans-serif;font-size:13px;color:var(--td);"/>
+    </div>
 
-        <!-- FORMULARIO ÚNICO -->
-        <div class="fb">
-          <div class="field">
-            <label style="font-size:13px;font-weight:700;">Asunto <span style="color:#c53030;font-size:10px;">*obligatorio</span></label>
-            <div class="row">
-              <input id="inp-tema" list="list-temas" placeholder="Escribe o elige asunto..." autocomplete="off"
-                style="flex:1;padding:10px 12px;border:1px solid var(--bd);border-radius:6px;background:var(--bp);font-family:'Lato',sans-serif;font-size:13px;color:var(--td);outline:none;font-weight:600;"/>
-              <datalist id="list-temas"></datalist>
-              <button onclick="dictarCampo('inp-tema',this)" title="Dictar asunto" style="padding:8px 10px;background:var(--gm);border:none;border-radius:6px;color:#fff;cursor:pointer;font-size:16px;flex-shrink:0;">🎙️</button>
-              <button class="add-btn" onclick="addTema()" title="Nuevo asunto">+</button>
-            </div>
-          </div>
-        </div>
-        <div class="fb">
-          <div class="field">
-            <label>Contacto / Proveedor</label>
-            <div class="row">
-              <input id="inp-contacto" list="list-contactos" placeholder="Escribe o elige contacto..." autocomplete="off"
-                style="flex:1;padding:8px 12px;border:1px solid var(--bd);border-radius:6px;background:var(--bp);font-family:'Lato',sans-serif;font-size:13px;color:var(--td);outline:none;"/>
-              <datalist id="list-contactos"></datalist>
-              <button onclick="dictarCampo('inp-contacto',this)" title="Dictar contacto" style="padding:8px 10px;background:var(--gm);border:none;border-radius:6px;color:#fff;cursor:pointer;font-size:16px;flex-shrink:0;">🎙️</button>
-              <button class="add-btn" onclick="addContacto()" title="Nuevo contacto">+</button>
-            </div>
-          </div>
-        </div>
-        <div class="fb"><div class="fr">
-          <div class="field">
-            <label>Acción realizada</label>
-            <div class="row">
-              <select id="inp-accion"><option value="">Seleccionar...</option></select>
+    <!-- ICONO + ASUNTO -->
+    <div>
+      <label class="tap-label">Asunto <span style="color:#c53030;">*</span></label>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <button id="btn-icono-emoji" onclick="mostrarSelectorIcono()" title="Elegir icono"
+          style="width:46px;height:46px;border-radius:10px;border:1px solid var(--bd);background:var(--bp);font-size:22px;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;">📋</button>
+        <input type="hidden" id="inp-icono" value="📋"/>
+        <input id="inp-tema" list="list-temas" placeholder="Escribe o elige asunto..." autocomplete="off"
+          style="flex:1;padding:10px 12px;border:1px solid var(--bd);border-radius:8px;background:var(--bp);font-family:'Lato',sans-serif;font-size:13px;color:var(--td);outline:none;font-weight:600;"/>
+        <datalist id="list-temas"></datalist>
+        <button onclick="dictarCampo('inp-tema',this)" title="Dictar" style="width:40px;height:46px;border-radius:8px;background:var(--gm);border:none;color:#fff;cursor:pointer;font-size:16px;flex-shrink:0;">🎙️</button>
+      </div>
+    </div>
+
+    <!-- CONTACTO -->
+    <div>
+      <label class="tap-label">Contacto / Proveedor</label>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <input id="inp-contacto" list="list-contactos" placeholder="Escribe o elige contacto..." autocomplete="off"
+          style="flex:1;padding:10px 12px;border:1px solid var(--bd);border-radius:8px;background:var(--bp);font-family:'Lato',sans-serif;font-size:13px;color:var(--td);outline:none;"/>
+        <datalist id="list-contactos"></datalist>
+        <button onclick="dictarCampo('inp-contacto',this)" title="Dictar" style="width:40px;height:46px;border-radius:8px;background:var(--gm);border:none;color:#fff;cursor:pointer;font-size:16px;flex-shrink:0;">🎙️</button>
+      </div>
+    </div>
+
+    <!-- ESTADO - 3 botones táctiles -->
+    <div>
+      <label class="tap-label">Estado</label>
+      <input type="hidden" id="inp-estado" value="pendiente"/>
+      <div style="display:flex;gap:8px;">
+        <button id="estado-btn-pendiente" onclick="selEstado('pendiente',this)"
+          style="flex:1;padding:10px 6px;border-radius:10px;border:2px solid #E24B4A;background:#FCEBEB;color:#A32D2D;font-size:12px;font-weight:700;cursor:pointer;font-family:'Lato',sans-serif;">
+          ⏳ Pendiente
+        </button>
+        <button id="estado-btn-curso" onclick="selEstado('en curso',this)"
+          style="flex:1;padding:10px 6px;border-radius:10px;border:1.5px solid #c8d8e8;background:var(--bp);color:var(--tl);font-size:12px;font-weight:600;cursor:pointer;font-family:'Lato',sans-serif;">
+          🔄 En curso
+        </button>
+        <button id="estado-btn-resuelto" onclick="selEstado('resuelto',this)"
+          style="flex:1;padding:10px 6px;border-radius:10px;border:1.5px solid #c8d8e8;background:var(--bp);color:var(--tl);font-size:12px;font-weight:600;cursor:pointer;font-family:'Lato',sans-serif;">
+          ✅ Resuelto
+        </button>
+      </div>
+    </div>
+
+    <!-- NOTAS -->
+    <div>
+      <label class="tap-label">Notas</label>
+      <textarea id="inp-notas" placeholder="Notas libres..." rows="4"
+        style="width:100%;padding:10px 12px;border:1px solid var(--bd);border-radius:8px;background:var(--bp);font-family:'Lato',sans-serif;font-size:13px;color:var(--td);outline:none;resize:vertical;box-sizing:border-box;"></textarea>
+      <button onclick="dictarCampo('inp-notas',this)" style="margin-top:6px;padding:9px 16px;background:var(--gm);border:none;border-radius:8px;color:#fff;cursor:pointer;font-size:13px;font-weight:700;font-family:'Lato',sans-serif;">
+        🎙️ Dictar notas
+      </button>
+    </div>
+
+    <!-- MÁS OPCIONES colapsable -->
+    <div>
+      <button onclick="toggleMasOpciones()" id="btn-mas-opciones"
+        style="width:100%;padding:10px 14px;background:var(--bp);border:1px solid var(--bd);border-radius:10px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;font-family:'Lato',sans-serif;font-size:13px;color:var(--tl);font-weight:600;">
+        <span>⊕ Más opciones (alerta, foto, acción...)</span>
+        <span id="mas-opciones-arrow">▼</span>
+      </button>
+      <div id="mas-opciones-body" style="display:none;flex-direction:column;gap:12px;margin-top:10px;">
+
+        <!-- Acción y Comunicado -->
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          <div style="flex:1;min-width:140px;">
+            <label class="tap-label">Acción realizada</label>
+            <div style="display:flex;gap:4px;">
+              <select id="inp-accion" style="flex:1;padding:8px;border:1px solid var(--bd);border-radius:8px;background:var(--bp);font-family:'Lato',sans-serif;font-size:13px;color:var(--td);"><option value="">Seleccionar...</option></select>
               <button class="add-btn" onclick="addAccion()">+</button>
             </div>
           </div>
-          <div class="field">
-            <label>Comunicado a</label>
-            <div class="row">
-              <select id="inp-comunicado"><option value="">Sin comunicar</option></select>
+          <div style="flex:1;min-width:140px;">
+            <label class="tap-label">Comunicado a</label>
+            <div style="display:flex;gap:4px;">
+              <select id="inp-comunicado" style="flex:1;padding:8px;border:1px solid var(--bd);border-radius:8px;background:var(--bp);font-family:'Lato',sans-serif;font-size:13px;color:var(--td);"><option value="">Sin comunicar</option></select>
               <button class="add-btn" onclick="addComunicado()">+</button>
             </div>
           </div>
-        </div></div>
-        <div class="fb">
-          <div class="field">
-            <label>Estado <button class="tip-btn" onclick="showTip('tip-estado')">ⓘ</button></label>
-            <select id="inp-estado">
-              <option value="">— Sin estado —</option>
-              <option value="pendiente">⏳ Pendiente</option>
-              <option value="en curso">🔄 En curso</option>
-              <option value="resuelto">✅ Resuelto</option>
-            </select>
-          </div>
         </div>
-        <div class="fb">
-          <div class="field">
-            <label>Notas libres</label>
-            <textarea id="inp-notas" placeholder="Notas..." style="min-height:160px;width:100%;resize:vertical;"></textarea>
-            <button onclick="dictarCampo('inp-notas',this)" title="Dictar notas" style="margin-top:6px;padding:8px 16px;background:var(--gm);border:none;border-radius:6px;color:#fff;cursor:pointer;font-size:13px;font-weight:700;font-family:'Lato',sans-serif;">🎙️ Dictar notas</button>
-          </div>
+
+        <!-- Alerta -->
+        <div>
+          <label class="tap-label">🔔 Alerta / Recordatorio</label>
+          <input type="datetime-local" id="inp-alerta"
+            style="width:100%;padding:10px 12px;border:1px solid var(--bd);border-radius:8px;background:var(--bp);font-family:'Lato',sans-serif;font-size:13px;color:var(--td);outline:none;box-sizing:border-box;"/>
         </div>
-<!-- 4. IMAGEN — común a ambos modos -->
-        <div class="fb">
-          <div class="field">
-            <label>📷 Imagen / Foto <button class="tip-btn" onclick="showTip('tip-imagen')">ⓘ</button></label>
-            <div class="premium-lock-wrap">
-              <div class="img-upload-area" id="img-upload-area" onclick="mostrarMenuImagen(event)">
-                <div style="font-size:24px;">📷</div>
-                <div class="img-upload-label">Toca para adjuntar imagen o foto</div>
-                <img class="img-preview" id="img-preview" src="" alt="preview" style="display:none;"/>
-                <button class="img-remove-btn" id="img-remove-btn" onclick="removeImage(event)" style="display:none;">✕</button>
-              </div>
-              <input type="file" id="inp-imagen-galeria" accept="image/*" style="display:none" onchange="onImageSelected(event)"/>
-              <div class="img-status" id="img-status"></div>
-              <div class="img-uploading" id="img-uploading" style="display:none;">
-                <div class="spin"></div><span>⏳ Subiendo imagen...</span>
-              </div>
+
+        <!-- Foto -->
+        <div>
+          <label class="tap-label">📷 Imagen / Foto</label>
+          <div class="premium-lock-wrap">
+            <div class="img-upload-area" id="img-upload-area" onclick="mostrarMenuImagen(event)">
+              <div style="font-size:24px;">📷</div>
+              <div class="img-upload-label">Toca para adjuntar imagen</div>
+              <img class="img-preview" id="img-preview" src="" alt="preview" style="display:none;"/>
+              <button class="img-remove-btn" id="img-remove-btn" onclick="removeImage(event)" style="display:none;">✕</button>
+            </div>
+            <input type="file" id="inp-imagen-galeria" accept="image/*" style="display:none" onchange="onImageSelected(event)"/>
+            <div class="img-status" id="img-status"></div>
+            <div class="img-uploading" id="img-uploading" style="display:none;">
+              <div class="spin"></div><span>Subiendo imagen...</span>
             </div>
           </div>
         </div>
-<!-- 5. RECORDATORIO — común a ambos modos -->
-        <div>
-          <div>
 
-        
+      </div>
+    </div>
 
-        </div><!-- /campos-opcionales -->
-</div>
+    <!-- Botones guardar/cancelar (modo edición) -->
 
-        <!-- BOTONES GUARDAR / CANCELAR -->
-        <div id="save-cancel-btns" style="display:none;gap:8px;margin-top:12px;">
-          <button class="save-btn" id="save-btn" onclick="saveRecord()" style="flex:1;">💾 Guardar registro</button>
-          <button id="btn-cancelar-edit" onclick="cancelEdit()" style="padding:12px 16px;background:var(--bl);color:#c53030;border:1px solid #f5c6c6;border-radius:6px;font-family:'Lato',sans-serif;font-size:14px;font-weight:700;cursor:pointer;">✕ Cancelar</button>
-        </div>
 
-      </div><!-- /sec-nuevo -->
+  </div>
+</div><!-- /sec-nuevo -->
 
       <!-- ══ REGISTROS ══ -->
       <div id="sec-registros" class="section">
@@ -3908,6 +3932,7 @@ accion:String(row[i('Accion')]||row[4]||''),comunicado:String(row[i('Comunicado'
 estado:String(row[i('Estado')]||row[6]||'pendiente'),notas:String(row[i('Notas')]||row[7]||''),
 recordatorio:String(row[i('Recordatorio')]||row[8]||''),created:String(row[i('Creado')]||row[9]||''),
 imagenUrl:String(row[i('Imagen')]||row[10]||''),
+icono:String(row[i('Icono')]||row[11]||''),
 })).filter(r=>r.id&&r.id!=='ID'&&!blRec.includes(r.id));
 const remoteIds=new Set(newRecs.map(r=>r.id));
 // Conservar registros locales que NO están en Sheets (nunca se subieron)
@@ -3921,7 +3946,11 @@ if(!local) return remote;
 // Comparar por fecha de creación/modificación
 const tRemote=new Date(remote.created||0).getTime();
 const tLocal=new Date(local.created||0).getTime();
-return tLocal>tRemote?local:remote;
+const winner=tLocal>tRemote?local:remote;
+// Preservar siempre el icono local (Sheets no lo sincroniza aún)
+if(!winner.icono&&local.icono) winner.icono=local.icono;
+if(!winner.icono&&remote.icono) winner.icono=remote.icono;
+return winner;
 });
 const merged=[...localNoEnSheets,...fusionados];
 const seenIds=new Set();
@@ -3970,7 +3999,153 @@ state.sheetsUrl=url; persist().catch(()=>{});
 document.getElementById('sheets-status').innerHTML='<div class="connected-tag">✓ Google Sheets conectado</div>';
 startAutoSync(); syncFromSheets(false);
 }
+
+/* ══ SELECTOR ICONO Y ESTADO TACTIL ══ */
+function selEstado(estado, btn){
+  var btns = {
+    'pendiente': document.getElementById('estado-btn-pendiente'),
+    'en curso':  document.getElementById('estado-btn-curso'),
+    'resuelto':  document.getElementById('estado-btn-resuelto')
+  };
+  var estilos = {
+    'pendiente': {border:'2px solid #E24B4A', background:'#FCEBEB', color:'#A32D2D', weight:'700'},
+    'en curso':  {border:'2px solid #378ADD', background:'#E6F1FB', color:'#185FA5', weight:'700'},
+    'resuelto':  {border:'2px solid #1D9E75', background:'#E1F5EE', color:'#0F6E56', weight:'700'}
+  };
+  var inactivo = {border:'1.5px solid #c8d8e8', background:'var(--bp)', color:'var(--tl)', weight:'600'};
+  Object.keys(btns).forEach(function(k){
+    var b = btns[k];
+    if(!b) return;
+    var s = k===estado ? estilos[k] : inactivo;
+    b.style.border=s.border; b.style.background=s.background;
+    b.style.color=s.color; b.style.fontWeight=s.weight;
+  });
+  var inp = document.getElementById('inp-estado');
+  if(inp) inp.value = estado;
+}
+
+function toggleMasOpciones(){
+  var body = document.getElementById('mas-opciones-body');
+  var arrow = document.getElementById('mas-opciones-arrow');
+  if(!body) return;
+  var open = body.style.display === 'flex';
+  body.style.display = open ? 'none' : 'flex';
+  body.style.flexDirection = 'column';
+  body.style.gap = '12px';
+  if(arrow) arrow.textContent = open ? '▼' : '▲';
+}
+
+function mostrarSelectorIcono(){
+  var emojis = [
+    '📋','💼','🏥','🏠','🚗','💰','⚖️','🔑','📄','📞',
+    '✉️','🤝','🏦','🔧','💊','🎓','✈️','📦','🛒','💻',
+    '🎯','📅','⏰','🔔','📌','❤️','⭐','🔴','🟡','🟢',
+    '😊','😟','😤','🙏','💪','👀','🎉','🚨','⚡','🌱',
+    '🍎','☕','🎵','📚','🏋️','🧘','🌞','🌙','🔥','💧'
+  ];
+  var existing = document.getElementById('emoji-picker-ov');
+  if(existing){existing.remove();return;}
+  var ov = document.createElement('div');
+  ov.id = 'emoji-picker-ov';
+  ov.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:9500;display:flex;align-items:flex-end;justify-content:center;';
+  var panel = document.createElement('div');
+  panel.style.cssText = 'background:var(--w,#fff);border-radius:20px 20px 0 0;padding:16px;width:100%;max-width:480px;max-height:70vh;overflow-y:auto;box-sizing:border-box;';
+  var title = document.createElement('div');
+  title.style.cssText = 'font-size:14px;font-weight:700;color:var(--td);margin-bottom:12px;font-family:Lato,sans-serif;';
+  title.textContent = 'Elige un icono';
+  var grid = document.createElement('div');
+  grid.style.cssText = 'display:grid;grid-template-columns:repeat(8,1fr);gap:8px;';
+  emojis.forEach(function(e){
+    var b = document.createElement('button');
+    b.textContent = e;
+    b.style.cssText = 'font-size:24px;padding:8px;background:var(--bp);border:1px solid var(--bd);border-radius:8px;cursor:pointer;';
+    b.onclick = function(ev){ev.stopPropagation();elegirIcono(e);};
+    grid.appendChild(b);
+  });
+  var libreRow = document.createElement('div');
+  libreRow.style.cssText = 'margin-top:12px;display:flex;gap:8px;';
+  var inpLibre = document.createElement('input');
+  inpLibre.placeholder = 'O escribe emoji...';
+  inpLibre.style.cssText = 'flex:1;padding:8px 10px;border:1px solid var(--bd);border-radius:8px;font-size:18px;font-family:Lato,sans-serif;background:var(--bp);color:var(--td);';
+  var btnOk = document.createElement('button');
+  btnOk.textContent = 'OK';
+  btnOk.style.cssText = 'padding:8px 14px;background:var(--gm);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:Lato,sans-serif;';
+  btnOk.onclick = function(ev){ev.stopPropagation();if(inpLibre.value.trim())elegirIcono(inpLibre.value.trim());};
+  libreRow.appendChild(inpLibre);libreRow.appendChild(btnOk);
+  panel.appendChild(title);panel.appendChild(grid);panel.appendChild(libreRow);
+  ov.appendChild(panel);
+  ov.onclick = function(e){if(e.target===ov)ov.remove();};
+  document.body.appendChild(ov);
+}
+
+function elegirIcono(emoji){
+  if(!emoji||!emoji.trim()) return;
+  var btn = document.getElementById('btn-icono-emoji');
+  var inp = document.getElementById('inp-icono');
+  if(btn) btn.textContent = emoji.trim();
+  if(inp) inp.value = emoji.trim();
+  var ov = document.getElementById('emoji-picker-ov');
+  if(ov) ov.remove();
+}
+
+function mostrarSelectorIconoRutina(targetBtn, inpId){
+  var emojis = [
+    '🌱','💊','💧','🏃','🧘','😴','🥗','🏋️','📚','✍️',
+    '🎯','⏰','🚶','🧹','💰','🎵','🧠','❤️','🌞','🌙',
+    '🔥','⚡','🌊','🍎','☕','💪','🎨','🏊','🚴','🐾',
+    '😊','🙏','👀','📖','🎉','🌿','⭐','🔔','🍵','🧩'
+  ];
+  var existing = document.getElementById('emoji-picker-rut-ov');
+  if(existing){existing.remove();return;}
+  var ov = document.createElement('div');
+  ov.id = 'emoji-picker-rut-ov';
+  ov.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:9600;display:flex;align-items:flex-end;justify-content:center;';
+  var panel = document.createElement('div');
+  panel.style.cssText = 'background:var(--w,#fff);border-radius:20px 20px 0 0;padding:16px;width:100%;max-width:480px;max-height:60vh;overflow-y:auto;box-sizing:border-box;';
+  var title = document.createElement('div');
+  title.style.cssText = 'font-size:14px;font-weight:700;color:var(--td);margin-bottom:12px;font-family:Lato,sans-serif;';
+  title.textContent = 'Elige un icono para la rutina';
+  var grid = document.createElement('div');
+  grid.style.cssText = 'display:grid;grid-template-columns:repeat(8,1fr);gap:8px;';
+  emojis.forEach(function(e){
+    var b = document.createElement('button');
+    b.textContent = e;
+    b.style.cssText = 'font-size:24px;padding:8px;background:var(--bp);border:1px solid var(--bd);border-radius:8px;cursor:pointer;';
+    b.onclick = function(ev){
+      ev.stopPropagation();
+      if(targetBtn) targetBtn.textContent = e;
+      var inp = inpId ? document.getElementById(inpId) : null;
+      if(inp) inp.value = e;
+      ov.remove();
+    };
+    grid.appendChild(b);
+  });
+  panel.appendChild(title);panel.appendChild(grid);
+  ov.appendChild(panel);
+  ov.onclick = function(e){if(e.target===ov)ov.remove();};
+  document.body.appendChild(ov);
+}
+/* ══ FIN SELECTOR ICONO ══ */
+
 function initForm(){
+  // Si hay edición en curso, no resetear campos
+  if(window._pendingEditId) return;
+  // Reset icono
+  var icoBtn=document.getElementById('btn-icono-emoji');
+  var icoInp=document.getElementById('inp-icono');
+  if(icoBtn) icoBtn.textContent='📋';
+  if(icoInp) icoInp.value='📋';
+  // Reset estado táctil
+  selEstado('pendiente',null);
+  // Cerrar más opciones
+  var masBody=document.getElementById('mas-opciones-body');
+  if(masBody){masBody.style.display='none';}
+  var masArrow=document.getElementById('mas-opciones-arrow');
+  if(masArrow) masArrow.textContent='▼';
+  // Reset alerta
+  var alertaEl=document.getElementById('inp-alerta');
+  if(alertaEl) alertaEl.value='';
+
 // Limpiar imagen al abrir nuevo registro
 var _prev=document.getElementById('img-preview');if(_prev){_prev.style.display='none';_prev.src='';}
 var _rmBtn=document.getElementById('img-remove-btn');if(_rmBtn)_rmBtn.style.display='none';
@@ -4036,9 +4211,10 @@ if(!currentImageBase64||!state.sheetsUrl) return null;
 try{
 document.getElementById('img-status').textContent='';
 document.getElementById('img-uploading').style.display='flex';
-const _tema=(document.getElementById('inp-tema').value||'tapunto').replace(/[^a-zA-Z0-9áéíóúÁÉÍÓÚñÑ]/g,'-').slice(0,25);
+const _temaClean=(document.getElementById('inp-tema').value||'tapunto').replace(/[^a-zA-Z0-9áéíóúÁÉÍÓÚñÑ]/g,'-').replace(/-+/g,'-').slice(0,25);
 const _d=new Date();
-const _fecha=_d.getFullYear()+''+String(_d.getMonth()+1).padStart(2,'0')+''+String(_d.getDate()).padStart(2,'0')+'_'+String(_d.getHours()).padStart(2,'0')+''+String(_d.getMinutes()).padStart(2,'0');
+const _fecha=_d.getFullYear()+''+String(_d.getMonth()+1).padStart(2,'0')+''+String(_d.getDate()).padStart(2,'0');
+const _hora=String(_d.getHours()).padStart(2,'0')+''+String(_d.getMinutes()).padStart(2,'0');
 const _ext=(currentImageMime||'image/jpeg').split('/')[1]||'jpg';
 const _fileName=_temaClean+'_'+_fecha+'_'+_hora+'.'+_ext;
 const resp=await fetch(state.sheetsUrl,{method:'POST',body:JSON.stringify({action:'upload_image',imageData:currentImageBase64,mimeType:currentImageMime,fileName:_fileName})});
@@ -4097,7 +4273,8 @@ if(idx===-1){if(saveBtn){saveBtn.disabled=false;}return;}
 const orig=state.records[idx];
 const di=document.getElementById('inp-recdate');
 const finalRec=(di&&di.style.display!=='none'&&di.value)?di.value:reminderDays?calcReminder(fecha):orig.recordatorio||'';
-state.records[idx]=Object.assign({},orig,{fecha,contacto,tema,accion,comunicado,estado,notas,recordatorio:finalRec,imagenUrl:imagenUrl||orig.imagenUrl||''});
+var iconoEdit=(document.getElementById('inp-icono')||{value:''}).value||orig.icono||'📋';
+state.records[idx]=Object.assign({},orig,{fecha,contacto,tema,accion,comunicado,estado,notas,icono:iconoEdit,recordatorio:finalRec,imagenUrl:imagenUrl||orig.imagenUrl||''});
 await persist();
 editingId=null;
 var banner=document.getElementById('edit-banner');
@@ -4127,7 +4304,8 @@ const confidencial=getConfidencial();
 // Guardar tema y contacto nuevos en las listas
 if(tema&&!state.temas.includes(tema)){state.temas.push(tema);fillSelect('inp-tema',state.temas);}
 if(contacto&&!state.contactos.includes(contacto)){state.contactos.push(contacto);fillSelect('inp-contacto',state.contactos);}
-const rec={id:newId,fecha,contacto,tema,accion,comunicado,estado,notas,
+const icono=(document.getElementById('inp-icono')||{value:'📋'}).value||'📋';
+const rec={id:newId,fecha,contacto,tema,accion,comunicado,estado,notas,icono,
 recordatorio:calcReminder(fecha),created:new Date().toISOString(),
 imagenUrl:imagenUrl||'',confidencial:confidencial};
 if(state.records.find(r=>r.id===rec.id)){
@@ -4177,6 +4355,7 @@ initForm();
 function _editRecordOrig(id){
 const r=state.records.find(rec=>rec.id===id); if(!r) return;
 editingId=id;
+window._pendingEditId=id;
 irSeccion('nuevo');
 document.getElementById('edit-banner').style.display='flex';
 document.getElementById('form-title').textContent='Editando registro';
@@ -4205,6 +4384,19 @@ fillSelect('inp-tema',state.temas); document.getElementById('inp-tema').value=r.
 fillAcciones(); document.getElementById('inp-accion').value=r.accion||'';
 fillComunicados(); document.getElementById('inp-comunicado').value=r.comunicado||'';
 document.getElementById('inp-estado').value=r.estado||'';
+selEstado(r.estado||'pendiente',null);
+var icoBtn=document.getElementById('btn-icono-emoji');
+var icoInp=document.getElementById('inp-icono');
+if(icoBtn) icoBtn.textContent=r.icono||'📋';
+if(icoInp) icoInp.value=r.icono||'📋';
+// Abrir más opciones si hay alerta o imagen
+if(r.recordatorio||r.imagenUrl){
+  var masBody=document.getElementById('mas-opciones-body');
+  if(masBody){masBody.style.display='flex';masBody.style.flexDirection='column';masBody.style.gap='12px';}
+  var masArrow=document.getElementById('mas-opciones-arrow');
+  if(masArrow) masArrow.textContent='▲';
+  if(r.recordatorio){var alertaEl=document.getElementById('inp-alerta');if(alertaEl)alertaEl.value=r.recordatorio;}
+}
 document.getElementById('inp-notas').value=r.notas||'';
 if(r.imagenUrl){ currentImageUrl=r.imagenUrl; const prev=document.getElementById('img-preview'); prev.src=r.imagenUrl; prev.style.display='block'; document.getElementById('img-upload-area').classList.add('has-img'); document.getElementById('img-remove-btn').style.display='flex'; document.getElementById('img-status').innerHTML=r.imagenUrl.startsWith('data:')?'📎 Imagen local':(`📎 <a class="img-drive-link" href="${r.imagenUrl}" target="_blank">🔗 Ver en Drive</a>`); }
 if(r.recordatorio){ const di=document.getElementById('inp-recdate'); if(di){di.value=r.recordatorio; di.style.display='block';} }
@@ -4216,6 +4408,7 @@ document.body.scrollTop=0;
 document.documentElement.scrollTop=0;
 var firstField=document.getElementById('inp-tema');
 if(firstField) firstField.focus();
+window._pendingEditId=null;
 },200);
 }
 function cancelForm(){
@@ -4416,140 +4609,198 @@ inp.click();
 // ═══════════════════════════════════════
 function abrirNuevaRutina(){
 var existing=document.getElementById('nueva-rutina-ov');
-if(existing){existing.style.display='flex';return;}
+if(existing){existing.remove();}
 var overlay=document.createElement('div');
 overlay.id='nueva-rutina-ov';
-overlay.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:9000;display:flex;align-items:center;justify-content:center;padding:16px;';
+overlay.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:9000;display:flex;align-items:center;justify-content:center;padding:16px;box-sizing:border-box;';
 var box=document.createElement('div');
-box.style.cssText='background:var(--w,#fff);border-radius:16px;max-width:400px;width:100%;padding:20px;position:relative;';
-
-// Título
-var title=document.createElement('div');
-title.style.cssText='font-size:16px;font-weight:800;color:var(--gm);margin-bottom:16px;';
-title.textContent='🌱 Nueva Rutina';
-
-// Botón cerrar
+box.style.cssText='background:var(--w,#fff);border-radius:16px;max-width:400px;width:100%;padding:20px;position:relative;max-height:90vh;overflow-y:auto;box-sizing:border-box;';
+// Cerrar
 var btnClose=document.createElement('button');
 btnClose.textContent='✕';
-btnClose.style.cssText='position:absolute;top:12px;right:12px;background:none;border:none;font-size:22px;cursor:pointer;color:var(--tl);';
+btnClose.style.cssText='position:absolute;top:12px;right:12px;background:none;border:none;font-size:20px;cursor:pointer;color:var(--tl);line-height:1;';
 btnClose.onclick=function(){overlay.remove();};
-
-// Campo nombre
-var labelNombre=document.createElement('label');
-labelNombre.style.cssText='font-size:12px;font-weight:700;color:var(--td);display:block;margin-bottom:4px;';
-labelNombre.textContent='Nombre';
-var inpNombre=document.createElement('input');
-inpNombre.type='text';inpNombre.id='nr-nombre';
-inpNombre.placeholder='Ej: Vasos de agua, Medicación, Gym...';
-inpNombre.style.cssText='width:100%;padding:8px;border:1px solid var(--bd);border-radius:8px;font-size:14px;background:var(--bp);color:var(--td);box-sizing:border-box;margin-bottom:12px;';
-
-// Campo tipo
-var labelTipo=document.createElement('label');
-labelTipo.style.cssText='font-size:12px;font-weight:700;color:var(--td);display:block;margin-bottom:4px;';
-labelTipo.textContent='Tipo de registro';
-var selTipo=document.createElement('select');
-selTipo.id='nr-tipo';
-selTipo.style.cssText='width:100%;padding:8px;border:1px solid var(--bd);border-radius:8px;font-size:14px;background:var(--bp);color:var(--td);margin-bottom:12px;';
-[['bool','✓ Sí / No'],['num','🔢 Número (vasos, km, minutos...)'],['time','⏰ Hora']].forEach(function(o){
-var opt=document.createElement('option');opt.value=o[0];opt.textContent=o[1];selTipo.appendChild(opt);
+// Título
+var titleEl=document.createElement('div');
+titleEl.style.cssText='font-size:16px;font-weight:800;color:var(--gm);margin-bottom:16px;padding-right:30px;';
+titleEl.textContent='🌱 Nueva Rutina';
+// Icono
+var labelIco=document.createElement('label');
+labelIco.style.cssText='font-size:12px;font-weight:700;color:var(--td);display:block;margin-bottom:4px;font-family:Lato,sans-serif;';
+labelIco.textContent='Icono';
+var btnIco=document.createElement('button');
+btnIco.textContent='🌱';
+btnIco.style.cssText='font-size:24px;width:48px;height:48px;border-radius:10px;border:1px solid var(--bd);background:var(--bp);cursor:pointer;margin-bottom:12px;display:block;';
+btnIco.onclick=function(e){e.preventDefault();mostrarSelectorIconoRutina(btnIco,'');};
+// Nombre
+var labelN=document.createElement('label');
+labelN.style.cssText='font-size:12px;font-weight:700;color:var(--td);display:block;margin-bottom:4px;font-family:Lato,sans-serif;';
+labelN.textContent='Nombre';
+var inpN=document.createElement('input');
+inpN.type='text';
+inpN.placeholder='Ej: Vasos de agua, Medicación, Gym...';
+inpN.style.cssText='width:100%;padding:9px;border:1px solid var(--bd);border-radius:8px;font-size:14px;background:var(--bp);color:var(--td);box-sizing:border-box;margin-bottom:12px;font-family:Lato,sans-serif;';
+// Tipo
+var labelT=document.createElement('label');
+labelT.style.cssText='font-size:12px;font-weight:700;color:var(--td);display:block;margin-bottom:4px;font-family:Lato,sans-serif;';
+labelT.textContent='Tipo de registro';
+var selT=document.createElement('select');
+selT.style.cssText='width:100%;padding:9px;border:1px solid var(--bd);border-radius:8px;font-size:14px;background:var(--bp);color:var(--td);margin-bottom:12px;font-family:Lato,sans-serif;';
+[['sino','✓ Sí / No'],['num','🔢 Número'],['hora','🕐 Hora']].forEach(function(op){
+var o=document.createElement('option');o.value=op[0];o.textContent=op[1];selT.appendChild(o);
 });
-
-// Campo meta
-var metaWrap=document.createElement('div');
-metaWrap.id='nr-meta-wrap';
-metaWrap.style.marginBottom='12px';
-var labelMeta=document.createElement('label');
-labelMeta.style.cssText='font-size:12px;font-weight:700;color:var(--td);display:block;margin-bottom:4px;';
-labelMeta.innerHTML='Meta diaria <span style="font-weight:400;color:var(--tl);">(opcional)</span>';
-var inpMeta=document.createElement('input');
-inpMeta.type='number';inpMeta.id='nr-meta';inpMeta.min='0';
-inpMeta.placeholder='Ej: 8 vasos, 30 minutos...';
-inpMeta.style.cssText='width:100%;padding:8px;border:1px solid var(--bd);border-radius:8px;font-size:14px;background:var(--bp);color:var(--td);box-sizing:border-box;';
-metaWrap.appendChild(labelMeta);metaWrap.appendChild(inpMeta);
-
-// Campo frecuencia
-var labelFreq=document.createElement('label');
-labelFreq.style.cssText='font-size:12px;font-weight:700;color:var(--td);display:block;margin-bottom:4px;';
-labelFreq.textContent='Frecuencia';
-var selFreq=document.createElement('select');
-selFreq.id='nr-freq';
-selFreq.style.cssText='width:100%;padding:8px;border:1px solid var(--bd);border-radius:8px;font-size:14px;background:var(--bp);color:var(--td);margin-bottom:16px;';
-[['daily','📅 Diaria'],['weekly','📆 Semanal'],['monthly','🗓️ Mensual']].forEach(function(o){
-var opt=document.createElement('option');opt.value=o[0];opt.textContent=o[1];selFreq.appendChild(opt);
+// Meta
+var labelM=document.createElement('label');
+labelM.style.cssText='font-size:12px;font-weight:700;color:var(--td);display:block;margin-bottom:4px;font-family:Lato,sans-serif;';
+labelM.textContent='Meta (opcional)';
+var inpM=document.createElement('input');
+inpM.type='number';inpM.min='0';
+inpM.placeholder='Ej: 8, 30, 10000...';
+inpM.style.cssText='width:100%;padding:9px;border:1px solid var(--bd);border-radius:8px;font-size:14px;background:var(--bp);color:var(--td);box-sizing:border-box;margin-bottom:12px;font-family:Lato,sans-serif;';
+// Frecuencia
+var labelF=document.createElement('label');
+labelF.style.cssText='font-size:12px;font-weight:700;color:var(--td);display:block;margin-bottom:4px;font-family:Lato,sans-serif;';
+labelF.textContent='Frecuencia';
+var selF=document.createElement('select');
+selF.style.cssText='width:100%;padding:9px;border:1px solid var(--bd);border-radius:8px;font-size:14px;background:var(--bp);color:var(--td);margin-bottom:16px;font-family:Lato,sans-serif;';
+[['diaria','Diaria'],['semanal','Semanal'],['mensual','Mensual']].forEach(function(op){
+var o=document.createElement('option');o.value=op[0];o.textContent=op[1];selF.appendChild(o);
 });
-
 // Botones
 var btnsDiv=document.createElement('div');
 btnsDiv.style.cssText='display:flex;gap:8px;';
-var btnGuardar=document.createElement('button');
-btnGuardar.textContent='💾 Guardar';
-btnGuardar.style.cssText='flex:1;padding:10px;background:var(--gm);color:#fff;border:none;border-radius:8px;font-family:Lato,sans-serif;font-size:13px;font-weight:700;cursor:pointer;';
-btnGuardar.onclick=function(){guardarNuevaRutina();};
-var btnCancel=document.createElement('button');
-btnCancel.textContent='Cancelar';
-btnCancel.style.cssText='padding:10px 16px;background:var(--bl);color:var(--td);border:1px solid var(--bd);border-radius:8px;font-size:13px;cursor:pointer;';
-btnCancel.onclick=function(){overlay.remove();};
-btnsDiv.appendChild(btnGuardar);btnsDiv.appendChild(btnCancel);
-
-// Mostrar/ocultar meta según tipo
-selTipo.onchange=function(){
-metaWrap.style.display=this.value==='bool'?'none':'block';
-};
-selTipo.dispatchEvent(new Event('change'));
-
-// Ensamblar
-box.appendChild(btnClose);box.appendChild(title);
-box.appendChild(labelNombre);box.appendChild(inpNombre);
-box.appendChild(labelTipo);box.appendChild(selTipo);
-box.appendChild(metaWrap);
-box.appendChild(labelFreq);box.appendChild(selFreq);
-box.appendChild(btnsDiv);
-overlay.appendChild(box);
-document.body.appendChild(overlay);
-inpNombre.focus();
-}
-
-function editarRutina(id){
-var r=state.rutinas?state.rutinas.find(function(x){return x.id===id;}):null;
-if(!r) return;
-var ov=document.getElementById('nueva-rutina-ov');
-if(ov) ov.remove();
-var overlay=document.createElement('div');
-overlay.id='nueva-rutina-ov';
-overlay.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:9000;display:flex;align-items:center;justify-content:center;padding:16px;';
-var box=document.createElement('div');
-box.style.cssText='background:var(--w,#fff);border-radius:16px;max-width:400px;width:100%;padding:20px;position:relative;';
-box.innerHTML='<button id="btn-cerrar-edit-rutina" style="position:absolute;top:12px;right:12px;background:none;border:none;font-size:22px;cursor:pointer;color:var(--tl);">✕</button>'+
-'<div style="font-size:16px;font-weight:800;color:var(--gm);margin-bottom:16px;">✏️ Editar Rutina</div>'+
-'<div style="margin-bottom:12px;"><label style="font-size:12px;font-weight:700;color:var(--td);display:block;margin-bottom:4px;">Nombre</label>'+
-'<input type="text" id="nr-nombre" value="'+r.nombre+'" style="width:100%;padding:8px;border:1px solid var(--bd);border-radius:8px;font-size:14px;background:var(--bp);color:var(--td);box-sizing:border-box;"/></div>'+
-'<div style="margin-bottom:12px;"><label style="font-size:12px;font-weight:700;color:var(--td);display:block;margin-bottom:4px;">Meta diaria</label>'+
-'<input type="number" id="nr-meta" value="'+(r.meta||'')+'" min="0" style="width:100%;padding:8px;border:1px solid var(--bd);border-radius:8px;font-size:14px;background:var(--bp);color:var(--td);box-sizing:border-box;"/></div>'+
-'<div style="margin-bottom:16px;"><label style="font-size:12px;font-weight:700;color:var(--td);display:block;margin-bottom:4px;">Frecuencia</label>'+
-'<select id="nr-freq" style="width:100%;padding:8px;border:1px solid var(--bd);border-radius:8px;font-size:14px;background:var(--bp);color:var(--td);">'+
-'<option value="daily"'+(r.freq==='daily'?' selected':'')+'>📅 Diaria</option>'+
-'<option value="weekly"'+(r.freq==='weekly'?' selected':'')+'>📆 Semanal</option>'+
-'<option value="monthly"'+(r.freq==='monthly'?' selected':'')+'>🗓️ Mensual</option>'+
-'</select></div>'+
-'<div style="display:flex;gap:8px;">'+
-'<button id="btn-guardar-edit-rutina" style="flex:1;padding:10px;background:var(--gm);color:#fff;border:none;border-radius:8px;font-family:Lato,sans-serif;font-size:13px;font-weight:700;cursor:pointer;">💾 Guardar</button>'+
-'<button id="btn-cancel-edit-rutina" style="padding:10px 16px;background:var(--bl);color:var(--td);border:1px solid var(--bd);border-radius:8px;font-size:13px;cursor:pointer;">Cancelar</button>'+
-'</div>';
-overlay.appendChild(box);
-document.body.appendChild(overlay);
-document.getElementById('btn-cerrar-edit-rutina').onclick=function(){overlay.remove();};
-document.getElementById('btn-cancel-edit-rutina').onclick=function(){overlay.remove();};
-document.getElementById('btn-guardar-edit-rutina').onclick=function(){
-var nombre=document.getElementById('nr-nombre').value.trim();
-if(!nombre){alert('Introduce un nombre.');return;}
-r.nombre=nombre;
-r.meta=document.getElementById('nr-meta').value||null;
-r.freq=document.getElementById('nr-freq').value;
+var btnG=document.createElement('button');
+btnG.textContent='💾 Guardar';
+btnG.style.cssText='flex:1;padding:11px;background:var(--gm);color:#fff;border:none;border-radius:8px;font-family:Lato,sans-serif;font-size:14px;font-weight:700;cursor:pointer;';
+btnG.onclick=function(){
+var nombre=inpN.value.trim();
+if(!nombre){alert('El nombre es obligatorio.');inpN.focus();return;}
+var icoVal=btnIco.textContent||'🌱';
+var nueva={id:Date.now().toString(),icono:icoVal,nombre:nombre,tipo:selT.value,
+meta:inpM.value||null,freq:selF.value,creada:new Date().toISOString(),registros:{}};
+if(!state.rutinas) state.rutinas=[];
+state.rutinas.push(nueva);
 persist().catch(function(){});
 overlay.remove();
 renderRutinasHoy();
 };
+var btnC=document.createElement('button');
+btnC.textContent='Cancelar';
+btnC.style.cssText='flex:1;padding:11px;background:var(--bp);color:var(--td);border:1px solid var(--bd);border-radius:8px;font-family:Lato,sans-serif;font-size:14px;cursor:pointer;';
+btnC.onclick=function(){overlay.remove();};
+btnsDiv.appendChild(btnG);btnsDiv.appendChild(btnC);
+box.appendChild(btnClose);box.appendChild(titleEl);
+box.appendChild(labelIco);box.appendChild(btnIco);
+box.appendChild(labelN);box.appendChild(inpN);
+box.appendChild(labelT);box.appendChild(selT);
+box.appendChild(labelM);box.appendChild(inpM);
+box.appendChild(labelF);box.appendChild(selF);
+box.appendChild(btnsDiv);
+overlay.appendChild(box);
+overlay.onclick=function(e){if(e.target===overlay)overlay.remove();};
+document.body.appendChild(overlay);
+setTimeout(function(){inpN.focus();},100);
 }
+
+
+function editarRutina(id){
+var r=state.rutinas?state.rutinas.find(function(x){return x.id===id;}):null;
+if(!r) return;
+var existing=document.getElementById('nueva-rutina-ov');
+if(existing){existing.remove();}
+var overlay=document.createElement('div');
+overlay.id='nueva-rutina-ov';
+overlay.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:9000;display:flex;align-items:center;justify-content:center;padding:16px;box-sizing:border-box;';
+var box=document.createElement('div');
+box.style.cssText='background:var(--w,#fff);border-radius:16px;max-width:400px;width:100%;padding:20px;position:relative;max-height:90vh;overflow-y:auto;box-sizing:border-box;';
+var btnClose=document.createElement('button');
+btnClose.textContent='✕';
+btnClose.style.cssText='position:absolute;top:12px;right:12px;background:none;border:none;font-size:20px;cursor:pointer;color:var(--tl);';
+btnClose.onclick=function(){overlay.remove();};
+var titleEl=document.createElement('div');
+titleEl.style.cssText='font-size:16px;font-weight:800;color:var(--gm);margin-bottom:16px;padding-right:30px;';
+titleEl.textContent='✏️ Editar Rutina';
+// Icono - prellenado con el valor actual
+var labelIco=document.createElement('label');
+labelIco.style.cssText='font-size:12px;font-weight:700;color:var(--td);display:block;margin-bottom:4px;font-family:Lato,sans-serif;';
+labelIco.textContent='Icono';
+var btnIco=document.createElement('button');
+btnIco.textContent=r.icono||'🌱';
+btnIco.style.cssText='font-size:24px;width:48px;height:48px;border-radius:10px;border:1px solid var(--bd);background:var(--bp);cursor:pointer;margin-bottom:12px;display:block;';
+btnIco.onclick=function(e){e.preventDefault();mostrarSelectorIconoRutina(btnIco,'');};
+// Nombre - prellenado
+var labelN=document.createElement('label');
+labelN.style.cssText='font-size:12px;font-weight:700;color:var(--td);display:block;margin-bottom:4px;font-family:Lato,sans-serif;';
+labelN.textContent='Nombre';
+var inpN=document.createElement('input');
+inpN.type='text';
+inpN.value=r.nombre||'';
+inpN.style.cssText='width:100%;padding:9px;border:1px solid var(--bd);border-radius:8px;font-size:14px;background:var(--bp);color:var(--td);box-sizing:border-box;margin-bottom:12px;font-family:Lato,sans-serif;';
+// Tipo - prellenado
+var labelT=document.createElement('label');
+labelT.style.cssText='font-size:12px;font-weight:700;color:var(--td);display:block;margin-bottom:4px;font-family:Lato,sans-serif;';
+labelT.textContent='Tipo';
+var selT=document.createElement('select');
+selT.style.cssText='width:100%;padding:9px;border:1px solid var(--bd);border-radius:8px;font-size:14px;background:var(--bp);color:var(--td);margin-bottom:12px;font-family:Lato,sans-serif;';
+[['sino','✓ Sí / No'],['num','🔢 Número'],['hora','🕐 Hora']].forEach(function(op){
+var o=document.createElement('option');o.value=op[0];o.textContent=op[1];
+if(r.tipo===op[0]) o.selected=true;
+selT.appendChild(o);
+});
+// Meta - prellenada
+var labelM=document.createElement('label');
+labelM.style.cssText='font-size:12px;font-weight:700;color:var(--td);display:block;margin-bottom:4px;font-family:Lato,sans-serif;';
+labelM.textContent='Meta (opcional)';
+var inpM=document.createElement('input');
+inpM.type='number';inpM.min='0';
+inpM.value=r.meta||'';
+inpM.style.cssText='width:100%;padding:9px;border:1px solid var(--bd);border-radius:8px;font-size:14px;background:var(--bp);color:var(--td);box-sizing:border-box;margin-bottom:12px;font-family:Lato,sans-serif;';
+// Frecuencia - prellenada
+var labelF=document.createElement('label');
+labelF.style.cssText='font-size:12px;font-weight:700;color:var(--td);display:block;margin-bottom:4px;font-family:Lato,sans-serif;';
+labelF.textContent='Frecuencia';
+var selF=document.createElement('select');
+selF.style.cssText='width:100%;padding:9px;border:1px solid var(--bd);border-radius:8px;font-size:14px;background:var(--bp);color:var(--td);margin-bottom:16px;font-family:Lato,sans-serif;';
+[['diaria','Diaria'],['semanal','Semanal'],['mensual','Mensual']].forEach(function(op){
+var o=document.createElement('option');o.value=op[0];o.textContent=op[1];
+if(r.freq===op[0]) o.selected=true;
+selF.appendChild(o);
+});
+// Botones
+var btnsDiv=document.createElement('div');
+btnsDiv.style.cssText='display:flex;gap:8px;';
+var btnG=document.createElement('button');
+btnG.textContent='💾 Guardar cambios';
+btnG.style.cssText='flex:1;padding:11px;background:var(--gm);color:#fff;border:none;border-radius:8px;font-family:Lato,sans-serif;font-size:14px;font-weight:700;cursor:pointer;';
+btnG.onclick=function(){
+var nombre=inpN.value.trim();
+if(!nombre){alert('El nombre es obligatorio.');inpN.focus();return;}
+var icoVal=btnIco.textContent||r.icono||'🌱';
+r.nombre=nombre;r.tipo=selT.value;r.meta=inpM.value||null;
+r.freq=selF.value;r.icono=icoVal;
+var idx2=state.rutinas.findIndex(function(x){return x.id===id;});
+if(idx2>-1) state.rutinas[idx2]=r;
+persist().catch(function(){});
+overlay.remove();
+renderRutinasHoy();
+};
+var btnC=document.createElement('button');
+btnC.textContent='Cancelar';
+btnC.style.cssText='flex:1;padding:11px;background:var(--bp);color:var(--td);border:1px solid var(--bd);border-radius:8px;font-family:Lato,sans-serif;font-size:14px;cursor:pointer;';
+btnC.onclick=function(){overlay.remove();};
+btnsDiv.appendChild(btnG);btnsDiv.appendChild(btnC);
+box.appendChild(btnClose);box.appendChild(titleEl);
+box.appendChild(labelIco);box.appendChild(btnIco);
+box.appendChild(labelN);box.appendChild(inpN);
+box.appendChild(labelT);box.appendChild(selT);
+box.appendChild(labelM);box.appendChild(inpM);
+box.appendChild(labelF);box.appendChild(selF);
+box.appendChild(btnsDiv);
+overlay.appendChild(box);
+overlay.onclick=function(e){if(e.target===overlay)overlay.remove();};
+document.body.appendChild(overlay);
+}
+
 function guardarNuevaRutina(){
 var nombre=document.getElementById('nr-nombre').value.trim();
 if(!nombre){alert('Introduce un nombre para la rutina.');return;}
@@ -4728,7 +4979,15 @@ var row1=document.createElement('div');
 row1.style.cssText='display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;';
 var nombre=document.createElement('div');
 nombre.style.cssText='font-size:14px;font-weight:700;color:var(--td);';
-nombre.textContent=r.nombre+(r.meta&&r.tipo==='num'?' (meta: '+r.meta+')':'');
+// Icono + nombre
+nombre.innerHTML='';
+var spanIco=document.createElement('span');
+spanIco.textContent=(r.icono||'🌱')+' ';
+spanIco.style.cssText='font-size:16px;margin-right:3px;flex-shrink:0;';
+var spanNom=document.createElement('span');
+spanNom.textContent=r.nombre+(r.meta&&r.tipo==='num'?' (meta: '+r.meta+')':'');
+nombre.appendChild(spanIco);
+nombre.appendChild(spanNom);
 var acciones=document.createElement('div');
 acciones.style.cssText='display:flex;gap:4px;';
 
@@ -5739,6 +5998,8 @@ var fh=isNaN(d)?'':d.toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'
 var bc=r.estado==='resuelto'?'b-done':r.estado==='en curso'?'b-prog':r.estado==='pendiente'?'b-pend':'';
 var bl=r.estado==='resuelto'?'Resuelto':r.estado==='en curso'?'En curso':r.estado==='pendiente'?'Pendiente':'';
 var titulo=x(r.tema)||x(r.accion)||'Sin título';
+var icono=r.icono||'📋';
+var fotoIcon=r.imagenUrl?'<span style="font-size:11px;margin-left:4px;" title="Tiene imagen">📷</span>':'';
 var subtitulo=r.contacto?x(r.contacto):(r.accion&&r.tema?x(r.accion):'');
 var confIcon=r.confidencial?'<span style="font-size:10px;margin-left:3px">🔒</span>':'';
 var tagT=r.tema?'<span class="tag">'+x(r.tema)+'</span>':'';
@@ -5773,7 +6034,7 @@ var actions='<div class="rec-actions" id="ra-'+id+'">'+btnEdit+btnDup+btnArch+bt
 return '<div class="record" data-id="'+id+'" onclick="toggleRecActions(\'' +id+ '\')">'
 +'<div class="rec-date">'+fd+'<br>'+fh+'</div>'
 +'<div style="flex:1;min-width:0;">'
-+'<div class="rec-title">'+titulo+confIcon+'</div>'
++'<div style="display:flex;align-items:center;gap:5px;"><span style="font-size:18px;flex-shrink:0;">'+icono+'</span><div class="rec-title">'+titulo+confIcon+fotoIcon+'</div></div>'
 +(subtitulo?'<div style="font-size:11px;color:var(--tl);margin-top:1px;">'+subtitulo+'</div>':'')
 +'<div class="rec-meta">'+meta+'</div>'
 +nota
@@ -6760,13 +7021,15 @@ var body='';
 for(var i=0;i<offset;i++) body+='<div class="cal-day empty"></div>';
 for(var d=1;d<=diasMes;d++){
 var recs=porDia[d]||[];
-var dots=recs.slice(0,3).map(function(r){
-var cls=r.estado==='resuelto'?'resuelto':r.estado==='en curso'?'en-curso':r.estado==='pendiente'?'pendiente':'sin-estado';
-return '<div class="cal-dot '+cls+'"></div>';
-}).join('');
-var asuntos=recs.slice(0,2).map(function(r){
-return '<div class="cal-day-note" onclick="event.stopPropagation();calVerDia('+d+')">'+( r.tema||r.accion||'—')+'</div>';
-}).join('');
+var maxI=2;
+var iconos=recs.slice(0,maxI).map(function(r){
+var ico=r.icono||'📋';
+var sz=recs.length===1?'14px':'11px';
+return '<span style="font-size:'+sz+';line-height:1.2;">'+ico+'</span>';
+});
+if(recs.length>maxI) iconos.push('<span style="font-size:9px;background:var(--gd);color:#fff;border-radius:4px;padding:0 3px;font-weight:700;line-height:1.4;">+'+(recs.length-maxI)+'</span>');
+var dots='<div style="display:flex;flex-wrap:wrap;gap:1px;margin-top:2px;align-items:center;">'+iconos.join('')+'</div>';
+var asuntos='';
 body+='<div class="cal-day'+(esHoy(d)?' today':'')+'" onclick="calVerDia('+d+')">'
 +'<div class="cal-day-num">'+d+'</div>'
 +'<div class="cal-dots">'+dots+'</div>'
