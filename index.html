@@ -2019,6 +2019,17 @@ body.on-home #sec-home { display: block !important; }
 /* ═══ SECTION DISPLAY - managed by JS ═══ */
 .section { display: none; }
 .section.active { display: block; }
+
+/* ══ ESPACIADO SUPERIOR MÓVIL ══ */
+.notebook {
+  padding-top: 24px !important;
+}
+.tap-header {
+  margin-top: 0;
+}
+#sec-home > div:first-child {
+  padding-top: 24px !important;
+}
 </style>
 <script>(function(){try{if(localStorage.getItem('tp_dark_mode')==='1')document.documentElement.style.background='#1a1a2e';}catch(e){};}());</script>
 </head>
@@ -2299,7 +2310,7 @@ body.on-home #sec-home { display: block !important; }
   <button class="btn-home" style="display:none!important;" onclick="irHome()" title="Página principal">⬅ INICIO</button>
   <div class="hdr-actions">
     <button class="sync-btn" onclick="syncFromSheets(true)" title="Sincronizar" style="font-size:22px;padding:2px 10px;line-height:1;">⟳</button>
-    <button id="dark-toggle" onclick="toggleDarkMode()" title="Modo oscuro">🌙</button>
+    <button id="btn-notif-cfg" onclick="toggleNotificaciones()" title="Notificaciones">🔔</button>
     <button class="logout-btn" onclick="doLogout()">Salir</button>
   </div>
 </div>
@@ -2313,7 +2324,7 @@ body.on-home #sec-home { display: block !important; }
       <!-- ══ NUEVO ══ -->
       <div id="sec-home" class="section active">
 
-  <div style="background:var(--gd);padding:16px 16px 12px;">
+  <div style="background:var(--gd);padding:24px 16px 14px;">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
       <!-- Logo izquierda -->
       <div style="display:flex;align-items:center;gap:10px;">
@@ -2338,9 +2349,9 @@ body.on-home #sec-home { display: block !important; }
       </div>
     </div>
     <div style="display:flex;align-items:center;justify-content:flex-end;gap:6px;">
-      <button onclick="toggleDarkMode()" style="background:rgba(255,255,255,0.15);border:none;border-radius:8px;padding:5px 10px;display:flex;align-items:center;gap:5px;cursor:pointer;">
-        <span id="home-dark-icon" style="font-size:13px;">&#127769;</span>
-        <span id="home-dark-label" style="font-size:11px;color:rgba(255,255,255,0.85);font-weight:600;font-family:'Lato',sans-serif;">Oscuro</span>
+      <button id="btn-notif" onclick="toggleNotificaciones()" style="background:rgba(255,255,255,0.15);border:none;border-radius:8px;padding:5px 10px;display:flex;align-items:center;gap:5px;cursor:pointer;">
+        <span id="home-notif-icon" style="font-size:13px;">🔔</span>
+        <span id="home-notif-label" style="font-size:11px;color:rgba(255,255,255,0.85);font-weight:600;font-family:'Lato',sans-serif;">Alertas</span>
       </button>
       <button onclick="var b=this;b.style.opacity='0.5';syncFromSheets(true).then(function(){b.style.opacity='1';}).catch(function(){b.style.opacity='1';})" id="home-sync-btn" style="background:rgba(255,255,255,0.15);border:none;border-radius:8px;padding:5px 10px;align-items:center;gap:5px;cursor:pointer;display:none;">
         <span style="font-size:13px;">&#10227;</span>
@@ -2620,7 +2631,7 @@ body.on-home #sec-home { display: block !important; }
             <button onclick="window.open('https://calendar.google.com','_blank')" title="Abrir Google Calendar" style="background:none;border:1px solid var(--bd);border-radius:8px;padding:6px 10px;cursor:pointer;font-size:15px;">📅</button>
           </div>
         </div>
-        <div class="filters">
+        <div class="filters" style="display:none;">
           <select id="f-tema" onchange="renderRecords()"><option value="">Todos los asuntos</option></select>
           <select id="f-contacto" onchange="renderRecords();renderContactoStats(this.value)"><option value="">Todos los contactos</option></select>
           <select id="f-estado" onchange="renderRecords()">
@@ -5008,6 +5019,7 @@ return;
 }
 
 list.innerHTML='';
+list.style.cssText='display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:4px 0 80px;';
 rutinas.forEach(function(r){
 // Inicializar fecha si no existe
 if(!rutinasFechaActual[r.id]) rutinasFechaActual[r.id]=today;
@@ -5022,7 +5034,7 @@ var esHoy=fechaKey===today;
 
 // Card de rutina
 var card=document.createElement('div');
-card.style.cssText='background:var(--bl);border:1px solid '+(hecho?'#28a745':'var(--bd)')+';border-radius:12px;padding:12px 14px;margin-bottom:10px;';
+card.style.cssText='background:var(--bl);border:1px solid '+(hecho?'#28a745':'var(--bd)')+';border-radius:12px;padding:10px 12px;';
 
 // Fila 1: nombre + botones acción
 var row1=document.createElement('div');
@@ -5776,6 +5788,31 @@ document.querySelectorAll('.section').forEach(function(s){s.classList.remove('ac
 var homeEl=document.getElementById('sec-home');
 if(homeEl) homeEl.classList.add('active');
 }
+/* ══ NOTIFICACIONES ══ */
+function toggleNotificaciones(){
+  var activas=localStorage.getItem('tp_notif')!=='0';
+  var nuevas=!activas;
+  localStorage.setItem('tp_notif',nuevas?'1':'0');
+  actualizarBtnNotif(nuevas);
+  showOk(nuevas?'Alertas activadas 🔔':'Alertas silenciadas 🔕');
+  if(nuevas&&'Notification' in window&&Notification.permission==='default'){
+    Notification.requestPermission();
+  }
+}
+function actualizarBtnNotif(activas){
+  var icon=document.getElementById('home-notif-icon');
+  var label=document.getElementById('home-notif-label');
+  if(icon) icon.textContent=activas?'🔔':'🔕';
+  if(label) label.textContent=activas?'Alertas':'Silenciado';
+  var btnCfg=document.getElementById('btn-notif-cfg');
+  if(btnCfg) btnCfg.textContent=activas?'🔔':'🔕';
+}
+function initNotificaciones(){
+  var activas=localStorage.getItem('tp_notif')!=='0';
+  actualizarBtnNotif(activas);
+}
+/* ══ FIN NOTIFICACIONES ══ */
+
 function irHome(){
 var secs=['home','nuevo','registros','recordatorios','calendario','notas','rutinas','config'];
 secs.forEach(function(s){
@@ -6021,6 +6058,14 @@ function toggleVistaRegistros(){
   renderRecords();
 }
 
+var _ordenCarpetas = localStorage.getItem('tp_orden_carpetas') || 'alpha';
+
+function cambiarOrdenCarpetas(orden){
+  _ordenCarpetas = orden;
+  localStorage.setItem('tp_orden_carpetas', orden);
+  renderCarpetas();
+}
+
 function renderCarpetas(){
   var el = document.getElementById('rec-list');
   if(!el) return;
@@ -6043,9 +6088,21 @@ function renderCarpetas(){
     return Object.keys(freq).sort(function(a,b){return freq[b]-freq[a];})[0]||'📋';
   }
   // Ordenar temas por número de registros desc
-  var temas = Object.keys(grupos).sort(function(a,b){return grupos[b].length-grupos[a].length;});
+  var temas = Object.keys(grupos);
+  _ordenCarpetas = localStorage.getItem('tp_orden_carpetas') || 'alpha';
+  if(_ordenCarpetas==='alpha'){
+    temas.sort(function(a,b){return a.localeCompare(b,'es',{sensitivity:'base'});});
+  } else if(_ordenCarpetas==='cantidad'){
+    temas.sort(function(a,b){return grupos[b].length-grupos[a].length;});
+  } else if(_ordenCarpetas==='reciente'){
+    temas.sort(function(a,b){
+      var fa=Math.max.apply(null,grupos[a].map(function(r){return new Date(r.fecha||0).getTime();}));
+      var fb=Math.max.apply(null,grupos[b].map(function(r){return new Date(r.fecha||0).getTime();}));
+      return fb-fa;
+    });
+  }
   var grid2 = document.createElement('div');
-  grid2.style.cssText = 'display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:14px 14px 80px;';
+  grid2.style.cssText = 'display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;padding:14px 10px 80px;';
   temas.forEach(function(tema){
     var recs = grupos[tema];
     var ico = iconoMasFrecuente(recs);
@@ -6058,7 +6115,21 @@ function renderCarpetas(){
     btn.onclick = (function(t){ return function(){ abrirCarpeta(t); }; })(tema);
     grid2.appendChild(btn);
   });
+  // Barra de orden
+  var ordenBar = document.createElement('div');
+  ordenBar.style.cssText = 'display:flex;gap:6px;padding:8px 10px 0;';
+  [['alpha','🔤 A-Z'],['cantidad','📊 Cantidad'],['reciente','🕐 Reciente']].forEach(function(op){
+    var b = document.createElement('button');
+    b.textContent = op[1];
+    b.style.cssText = 'padding:5px 10px;border-radius:20px;border:1px solid var(--bd);background:'
+      +(_ordenCarpetas===op[0]?'var(--gm)':'var(--bp)')
+      +';color:'+(_ordenCarpetas===op[0]?'#fff':'var(--tl)')
+      +';font-size:11px;font-weight:600;cursor:pointer;font-family:Lato,sans-serif;';
+    b.onclick = (function(o){ return function(){ cambiarOrdenCarpetas(o); }; })(op[0]);
+    ordenBar.appendChild(b);
+  });
   el.innerHTML = '';
+  el.appendChild(ordenBar);
   el.appendChild(grid2);
 }
 
@@ -6673,7 +6744,6 @@ document.getElementById('inp-tipo-tarea').value=n.trim();
 }
 }
 async function finishLogin(){
-initDarkMode();
 initNotificaciones();
 const _firma=getFirma();
 const _dispName=(_firma.nombre||currentUser.split('@')[0]).split(' ')[0];
@@ -6724,7 +6794,7 @@ function resetEscolarForm(){
 const _origInitForm = initForm;
 function x(s){ if(!s) return ''; return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 window.addEventListener('DOMContentLoaded',()=>{
-initDarkMode();
+initNotificaciones();
 checkSession();
 document.getElementById('login-pin').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
 document.addEventListener('keydown',function(e){if(e.key==='Enter'&&!e.shiftKey&&document.activeElement&&document.activeElement.id==='nota-input'){e.preventDefault();guardarNota();}});
@@ -7945,29 +8015,8 @@ tag:'tapunto-rec-'+r.id
 function checkNotifPermiso(){
 if(Notification.permission==='granted') programarNotificaciones();
 }
-function toggleDarkMode(){
-var body=document.body;
-var current=body.getAttribute('data-theme');
-var isDark=current==='oscuro';
-if(isDark){
-body.setAttribute('data-theme',state.theme||'verde');
-localStorage.setItem('tp_dark_mode','0');
-} else {
-body.setAttribute('data-theme','oscuro');
-localStorage.setItem('tp_dark_mode','1');
-}
-var btn=document.getElementById('dark-toggle');
-if(btn) btn.textContent=!isDark?'☀️':'🌙';
-renderHomeBadges();
-}
-function initDarkMode(){
-var saved=localStorage.getItem('tp_dark_mode');
-if(saved==='1'){
-document.body.classList.add('dark-mode');
-var btn=document.getElementById('dark-toggle');
-if(btn) btn.textContent='☀️';
-}
-}
+
+
 function mostrarSplash(){
 var splash=document.getElementById('splash-screen');
 if(!splash) return;
