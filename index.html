@@ -2568,6 +2568,17 @@ body.on-home #sec-home { display: block !important; }
 
 
   </div>
+
+  <!-- BOTONES FIJOS AL PIE -->
+  <div style="position:sticky;bottom:0;background:var(--w,#fff);border-top:1px solid var(--bd);padding:12px 16px;display:flex;gap:10px;z-index:10;">
+    <button onclick="irHome()" style="flex:1;padding:12px;background:var(--bp);border:1px solid var(--bd);border-radius:10px;font-family:'Lato',sans-serif;font-size:14px;font-weight:600;color:var(--tl);cursor:pointer;">
+      ← Volver
+    </button>
+    <button onclick="saveRecord()" style="flex:2;padding:12px;background:var(--gm);border:none;border-radius:10px;font-family:'Lato',sans-serif;font-size:14px;font-weight:700;color:#fff;cursor:pointer;">
+      💾 Guardar registro
+    </button>
+  </div>
+
 </div><!-- /sec-nuevo -->
 
       <!-- ══ REGISTROS ══ -->
@@ -2575,10 +2586,11 @@ body.on-home #sec-home { display: block !important; }
 
   <!-- HEADER REGISTROS -->
   <div class="tap-header">
-    <button class="tap-header-btn" onclick="irHome()" title="Inicio">←</button>
-    <span class="tap-header-title">Registros</span>
+    <button class="tap-header-btn" id="btn-back-registros" onclick="irHome()" title="Inicio">←</button>
+    <span class="tap-header-title" id="rec-header-title">Registros</span>
     <button class="tap-header-btn" onclick="toggleSearch()" title="Buscar" id="btn-search">🔍</button>
     <button class="tap-header-btn" onclick="toggleFiltros()" title="Filtros" id="btn-filtros">⚙️</button>
+    <button class="tap-header-btn" id="btn-vista-toggle" onclick="toggleVistaRegistros()" title="Cambiar vista">⊞</button>
   </div>
 
   <!-- Pills de estado con contadores -->
@@ -4357,60 +4369,75 @@ const r=state.records.find(rec=>rec.id===id); if(!r) return;
 editingId=id;
 window._pendingEditId=id;
 irSeccion('nuevo');
-document.getElementById('edit-banner').style.display='flex';
-document.getElementById('form-title').textContent='Editando registro';
-const btn=document.getElementById('save-btn');
-if(btn){btn.textContent='💾 Guardar cambios';btn.classList.add('editing');btn.disabled=false;}
-var campos=document.getElementById('modo-manual-content');
-var arrow=document.getElementById('campos-arrow');
-if(campos) campos.style.display='block';
-if(arrow) arrow.style.transform='rotate(90deg)';
+setTimeout(function(){
+// Fecha
 var fechaInp=document.getElementById('inp-fecha');
-if(fechaInp){
-fechaInp.style.display='block';
-fechaInp.value=r.fecha||'';
-}
+if(fechaInp){fechaInp.style.display='block';fechaInp.value=r.fecha||'';}
 var chips=['chip-hoy','chip-ayer','chip-elegir'];
-chips.forEach(function(id){
-var c=document.getElementById(id);
-if(c){c.style.background='';c.style.color='';c.style.borderColor='';}
-});
+chips.forEach(function(cid){var c=document.getElementById(cid);if(c){c.style.background='';c.style.color='';c.style.borderColor='';}});
 var elegir=document.getElementById('chip-elegir');
 if(elegir){elegir.style.background='var(--gm)';elegir.style.color='#fff';elegir.style.borderColor='var(--gm)';}
-if(r.contacto&&!state.contactos.includes(r.contacto)){state.contactos.push(r.contacto);persist().catch(()=>{});}
-if(r.tema&&!state.temas.includes(r.tema)){state.temas.push(r.tema);persist().catch(()=>{});}
-fillSelect('inp-contacto',state.contactos); document.getElementById('inp-contacto').value=r.contacto||'';
-fillSelect('inp-tema',state.temas); document.getElementById('inp-tema').value=r.tema||'';
-fillAcciones(); document.getElementById('inp-accion').value=r.accion||'';
-fillComunicados(); document.getElementById('inp-comunicado').value=r.comunicado||'';
-document.getElementById('inp-estado').value=r.estado||'';
+// Listas y campos principales
+if(r.contacto&&!state.contactos.includes(r.contacto)){state.contactos.push(r.contacto);}
+if(r.tema&&!state.temas.includes(r.tema)){state.temas.push(r.tema);}
+fillSelect('inp-contacto',state.contactos);
+var inpC=document.getElementById('inp-contacto');if(inpC) inpC.value=r.contacto||'';
+fillSelect('inp-tema',state.temas);
+var inpT=document.getElementById('inp-tema');if(inpT) inpT.value=r.tema||'';
+fillAcciones();
+var inpA=document.getElementById('inp-accion');if(inpA) inpA.value=r.accion||'';
+fillComunicados();
+var inpCom=document.getElementById('inp-comunicado');if(inpCom) inpCom.value=r.comunicado||'';
+// Estado táctil
+var inpE=document.getElementById('inp-estado');if(inpE) inpE.value=r.estado||'pendiente';
 selEstado(r.estado||'pendiente',null);
+// Icono
 var icoBtn=document.getElementById('btn-icono-emoji');
 var icoInp=document.getElementById('inp-icono');
 if(icoBtn) icoBtn.textContent=r.icono||'📋';
 if(icoInp) icoInp.value=r.icono||'📋';
-// Abrir más opciones si hay alerta o imagen
+// Notas
+var inpN=document.getElementById('inp-notas');if(inpN) inpN.value=r.notas||'';
+// Alerta - abrir Más opciones si hay alerta o imagen
 if(r.recordatorio||r.imagenUrl){
-  var masBody=document.getElementById('mas-opciones-body');
-  if(masBody){masBody.style.display='flex';masBody.style.flexDirection='column';masBody.style.gap='12px';}
-  var masArrow=document.getElementById('mas-opciones-arrow');
-  if(masArrow) masArrow.textContent='▲';
-  if(r.recordatorio){var alertaEl=document.getElementById('inp-alerta');if(alertaEl)alertaEl.value=r.recordatorio;}
+var masBody=document.getElementById('mas-opciones-body');
+if(masBody){masBody.style.display='flex';masBody.style.flexDirection='column';masBody.style.gap='12px';}
+var masArrow=document.getElementById('mas-opciones-arrow');
+if(masArrow) masArrow.textContent='▲';
 }
-document.getElementById('inp-notas').value=r.notas||'';
-if(r.imagenUrl){ currentImageUrl=r.imagenUrl; const prev=document.getElementById('img-preview'); prev.src=r.imagenUrl; prev.style.display='block'; document.getElementById('img-upload-area').classList.add('has-img'); document.getElementById('img-remove-btn').style.display='flex'; document.getElementById('img-status').innerHTML=r.imagenUrl.startsWith('data:')?'📎 Imagen local':(`📎 <a class="img-drive-link" href="${r.imagenUrl}" target="_blank">🔗 Ver en Drive</a>`); }
-if(r.recordatorio){ const di=document.getElementById('inp-recdate'); if(di){di.value=r.recordatorio; di.style.display='block';} }
-setTimeout(function(){
+if(r.recordatorio){
+var alertaEl=document.getElementById('inp-alerta');
+if(alertaEl) alertaEl.value=r.recordatorio;
+}
+// Imagen
+if(r.imagenUrl){
+currentImageUrl=r.imagenUrl;
+var prev=document.getElementById('img-preview');
+if(prev){prev.src=r.imagenUrl;prev.style.display='block';}
+var area=document.getElementById('img-upload-area');if(area) area.classList.add('has-img');
+var rmBtn=document.getElementById('img-remove-btn');if(rmBtn) rmBtn.style.display='flex';
+var imgSt=document.getElementById('img-status');
+if(imgSt) imgSt.innerHTML=r.imagenUrl.startsWith('data:')?'📎 Imagen local':('📎 <a class="img-drive-link" href="'+r.imagenUrl+'" target="_blank">🔗 Ver en Drive</a>');
+var masBody2=document.getElementById('mas-opciones-body');
+if(masBody2){masBody2.style.display='flex';masBody2.style.flexDirection='column';masBody2.style.gap='12px';}
+var masArrow2=document.getElementById('mas-opciones-arrow');
+if(masArrow2) masArrow2.textContent='▲';
+}
+// Banner edición y botón guardar
+var editBanner=document.getElementById('edit-banner');
+if(editBanner) editBanner.style.display='flex';
+var saveBtn2=document.getElementById('save-btn');
+if(saveBtn2){saveBtn2.textContent='💾 Guardar cambios';saveBtn2.classList.add('editing');saveBtn2.disabled=false;}
+// Scroll arriba y foco
 var page=document.querySelector('.page');
-if(page){page.scrollTop=0;}
+if(page) page.scrollTop=0;
 window.scrollTo({top:0,behavior:'instant'});
-document.body.scrollTop=0;
-document.documentElement.scrollTop=0;
 var firstField=document.getElementById('inp-tema');
 if(firstField) firstField.focus();
 window._pendingEditId=null;
-},200);
+},300);
 }
+
 function cancelForm(){
 if(editingId){
 cancelEdit();
@@ -4575,8 +4602,31 @@ menu.id='img-menu-popup';
 menu.style.cssText='position:fixed;z-index:9999;background:var(--w,#fff);border:1px solid var(--bd,#ddd);border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,.2);padding:8px;display:flex;flex-direction:column;gap:6px;min-width:180px;';
 var area=document.getElementById('img-upload-area');
 var rect=area.getBoundingClientRect();
-menu.style.top=(rect.bottom+8)+'px';
-menu.style.left=rect.left+'px';
+var menuH=120; // altura estimada del menú
+var spaceBelow=window.innerHeight-rect.bottom;
+var spaceAbove=rect.top;
+if(spaceBelow>=menuH+16){
+  menu.style.top=(rect.bottom+8)+'px';
+  menu.style.left=rect.left+'px';
+} else if(spaceAbove>=menuH+16){
+  // No sabemos altura exacta aún - usar bottom desde arriba
+  menu.style.top=(rect.top-menuH-8)+'px';
+  menu.style.left=rect.left+'px';
+} else {
+  // Centrado en pantalla como último recurso
+  menu.style.top='50%';
+  menu.style.left='50%';
+  menu.style.transform='translate(-50%,-50%)';
+}
+// Asegurar que no se sale por la derecha
+setTimeout(function(){
+  var m=document.getElementById('img-menu-popup');
+  if(!m) return;
+  var mr=m.getBoundingClientRect();
+  if(mr.right>window.innerWidth-8) m.style.left=(window.innerWidth-mr.width-8)+'px';
+  if(mr.top<8) m.style.top='8px';
+  if(mr.bottom>window.innerHeight-8) m.style.top=(window.innerHeight-mr.height-8)+'px';
+},0);
 var b1=document.createElement('button');
 b1.textContent='📷 Cámara';
 b1.title='En móvil abre la cámara directamente · En ordenador abre el selector de archivos';
@@ -5953,8 +6003,98 @@ if(key==='__esta_semana__') return '📅 Esta semana';
 if(key==='__semana_anterior__') return '📅 Semana anterior';
 return '📅 '+key.charAt(0).toUpperCase()+key.slice(1);
 }
+
+/* ══ VISTA CARPETAS ══ */
+var _vistaRegistros = localStorage.getItem('tp_vista_reg') || 'lista'; // 'lista' o 'carpetas'
+var _carpetaActual = null; // tema seleccionado
+
+function toggleVistaRegistros(){
+  _vistaRegistros = _vistaRegistros==='lista' ? 'carpetas' : 'lista';
+  localStorage.setItem('tp_vista_reg', _vistaRegistros);
+  _carpetaActual = null;
+  var btn = document.getElementById('btn-vista-toggle');
+  if(btn) btn.textContent = _vistaRegistros==='lista' ? '⊞' : '☰';
+  var btnBack = document.getElementById('btn-back-registros');
+  if(btnBack) btnBack.onclick = function(){ irHome(); };
+  var title = document.getElementById('rec-header-title');
+  if(title) title.textContent = 'Registros';
+  renderRecords();
+}
+
+function renderCarpetas(){
+  var el = document.getElementById('rec-list');
+  if(!el) return;
+  var filtered = getFiltered();
+  if(!filtered.length){
+    el.innerHTML='<div class="empty">No hay registros 🐾</div>';
+    return;
+  }
+  // Agrupar por tema
+  var grupos = {};
+  filtered.forEach(function(r){
+    var tema = r.tema || 'Sin asunto';
+    if(!grupos[tema]) grupos[tema] = [];
+    grupos[tema].push(r);
+  });
+  // Para cada grupo: icono más frecuente
+  function iconoMasFrecuente(recs){
+    var freq = {};
+    recs.forEach(function(r){ var ico=r.icono||'📋'; freq[ico]=(freq[ico]||0)+1; });
+    return Object.keys(freq).sort(function(a,b){return freq[b]-freq[a];})[0]||'📋';
+  }
+  // Ordenar temas por número de registros desc
+  var temas = Object.keys(grupos).sort(function(a,b){return grupos[b].length-grupos[a].length;});
+  var grid2 = document.createElement('div');
+  grid2.style.cssText = 'display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:14px 14px 80px;';
+  temas.forEach(function(tema){
+    var recs = grupos[tema];
+    var ico = iconoMasFrecuente(recs);
+    var n = recs.length;
+    var btn = document.createElement('button');
+    btn.style.cssText = 'background:var(--w,#fff);border:1px solid var(--bd);border-radius:14px;padding:16px 12px;display:flex;flex-direction:column;align-items:center;gap:8px;cursor:pointer;box-shadow:0 2px 6px rgba(0,0,0,.06);text-align:center;';
+    btn.innerHTML = '<div style="font-size:32px;">'+ico+'</div>'
+      + '<div style="font-size:13px;font-weight:700;color:var(--td);font-family:Lato,sans-serif;line-height:1.3;word-break:break-word;">'+tema+'</div>'
+      + '<div style="font-size:11px;color:var(--tl);font-family:Lato,sans-serif;">'+n+' registro'+(n!==1?'s':'')+'</div>';
+    btn.onclick = (function(t){ return function(){ abrirCarpeta(t); }; })(tema);
+    grid2.appendChild(btn);
+  });
+  el.innerHTML = '';
+  el.appendChild(grid2);
+}
+
+function abrirCarpeta(tema){
+  _carpetaActual = tema;
+  // Cambiar header
+  var title = document.getElementById('rec-header-title');
+  if(title) title.textContent = tema;
+  var btnBack = document.getElementById('btn-back-registros');
+  if(btnBack) btnBack.onclick = function(){
+    _carpetaActual = null;
+    var t2 = document.getElementById('rec-header-title');
+    if(t2) t2.textContent = 'Registros';
+    btnBack.onclick = function(){ irHome(); };
+    renderRecords();
+  };
+  // Renderizar registros del tema en orden cronológico
+  var el = document.getElementById('rec-list');
+  if(!el) return;
+  var recs = getFiltered().filter(function(r){ return (r.tema||'Sin asunto')===tema; });
+  recs.sort(function(a,b){ return new Date(b.fecha)-new Date(a.fecha); });
+  if(!recs.length){
+    el.innerHTML='<div class="empty">No hay registros en esta carpeta 🐾</div>';
+    return;
+  }
+  el.innerHTML = '<div style="padding:8px 14px 80px;">' + recs.map(function(r){ return recHTML(r); }).join('') + '</div>';
+}
+/* ══ FIN VISTA CARPETAS ══ */
+
 function renderRecords(){
 actualizarPillsCounts();
+// Vista carpetas
+var btnV=document.getElementById('btn-vista-toggle');
+if(btnV) btnV.textContent=_vistaRegistros==='lista'?'⊞':'☰';
+if(_vistaRegistros==='carpetas'&&!_carpetaActual){ renderCarpetas(); return; }
+if(_vistaRegistros==='carpetas'&&_carpetaActual){ abrirCarpeta(_carpetaActual); return; }
 const selC=document.getElementById('f-contacto'),selT=document.getElementById('f-tema');
 const cc=selC.value,ct=selT.value;
 selC.innerHTML='<option value="">Todos los contactos</option>'+state.contactos.map(c=>`<option${c===cc?' selected':''}>${x(c)}</option>`).join('');
