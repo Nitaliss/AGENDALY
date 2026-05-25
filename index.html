@@ -2354,12 +2354,16 @@ body.on-home #sec-home { display: block !important; }
       </div>
     </div>
     <div style="display:flex;align-items:center;justify-content:flex-end;gap:6px;">
+      <button onclick="mostrarAyuda()" style="background:#0078D4;border:none;border-radius:8px;padding:5px 10px;display:flex;align-items:center;gap:5px;cursor:pointer;">
+        <span style="font-size:13px;color:#fff;">❓</span>
+        <span style="font-size:11px;color:#fff;font-weight:700;font-family:'Lato',sans-serif;">Ayuda</span>
+      </button>
       <button id="btn-notif" onclick="toggleNotificaciones()" style="background:rgba(255,255,255,0.15);border:none;border-radius:8px;padding:5px 10px;display:flex;align-items:center;gap:5px;cursor:pointer;">
         <span id="home-notif-icon" style="font-size:13px;">🔔</span>
         <span id="home-notif-label" style="font-size:11px;color:rgba(255,255,255,0.85);font-weight:600;font-family:'Lato',sans-serif;">Alertas</span>
       </button>
-      <button onclick="var b=this;b.style.opacity='0.5';syncFromSheets(true).then(function(){b.style.opacity='1';}).catch(function(){b.style.opacity='1';})" id="home-sync-btn" style="background:rgba(255,255,255,0.15);border:none;border-radius:8px;padding:5px 10px;align-items:center;gap:5px;cursor:pointer;display:none;">
-        <span style="font-size:13px;">&#10227;</span>
+      <button onclick="var b=this;b.style.opacity='0.5';syncFromSheets(true).then(function(){b.style.opacity='1';}).catch(function(){b.style.opacity='1';})" style="background:rgba(255,255,255,0.15);border:none;border-radius:8px;padding:5px 10px;display:flex;align-items:center;gap:5px;cursor:pointer;">
+        <span style="font-size:20px;color:#fff;line-height:1;">&#10227;</span>
         <span style="font-size:11px;color:rgba(255,255,255,0.85);font-weight:600;font-family:'Lato',sans-serif;">Sync</span>
       </button>
     </div>
@@ -2424,15 +2428,7 @@ body.on-home #sec-home { display: block !important; }
 
     <div style="border-top:0.5px solid var(--bd);"></div>
 
-    <div style="display:flex;gap:8px;">
-      <button onclick="irSeccion('config')" style="flex:1;background:var(--w,#fff);border:0.5px solid var(--bd);border-radius:10px;padding:9px 12px;display:flex;align-items:center;gap:7px;cursor:pointer;">
-        <span style="font-size:15px;">&#9881;</span>
-        <span style="font-size:12px;color:var(--tl);font-weight:600;font-family:'Lato',sans-serif;">Configuracion</span>
-      </button>
-      <button onclick="mostrarAyuda()" style="flex:1;background:#0078D4;border:none;border-radius:10px;padding:9px 12px;display:flex;align-items:center;gap:7px;cursor:pointer;">
-        <span style="font-size:12px;color:#fff;font-weight:700;font-family:'Lato',sans-serif;letter-spacing:.3px;">AYUDA</span>
-      </button>
-    </div>
+
 
   </div>
 
@@ -2837,7 +2833,7 @@ body.on-home #sec-home { display: block !important; }
             </div>
           </div>
         </div>
-<div class="cfg-block">
+<div class="cfg-block" id="cfg-block-firma">
           <div class="cfg-hdr" onclick="toggleCfg(this)">
             <span class="cfg-hdr-title">✍️ Firma y perfil</span>
             <span class="cfg-arrow">▶</span>
@@ -5767,7 +5763,18 @@ emailDiv.style.cssText='padding:12px 14px;border-bottom:0.5px solid var(--bd);';
 emailDiv.innerHTML='<div style="font-size:12px;font-weight:700;color:var(--td);font-family:Lato,sans-serif;">'+(currentUser||'—')+'</div>'+(isPremium?'<div style="font-size:11px;color:#EF9F27;font-weight:600;">⭐ Premium activo</div>':'<div style="font-size:11px;color:var(--tl);">Plan Free</div>');
 menu.appendChild(emailDiv);
 var items=[
-{icon:'👤',label:'Mis datos',fn:function(){menu.remove();irSeccion('config');setTimeout(function(){var perfil=document.getElementById('card-perfil');if(perfil){perfil.open=true;perfil.scrollIntoView({behavior:'smooth'});}},400);}},
+{icon:'👤',label:'Mis datos',fn:function(){
+menu.remove();
+irSeccion('config');
+setTimeout(function(){
+var firma=document.getElementById('cfg-block-firma');
+if(!firma) return;
+firma.scrollIntoView({behavior:'smooth',block:'start'});
+var hdr=firma.querySelector('.cfg-hdr');
+var body=firma.querySelector('.cfg-body');
+if(hdr&&body&&!body.classList.contains('open')){toggleCfg(hdr);}
+},450);
+}},
 {icon:'⚙️',label:'Configuración',fn:function(){menu.remove();irSeccion('config');}},
 {icon:'🚪',label:'Cerrar sesión',fn:function(){menu.remove();doLogout();},red:true}
 ];
