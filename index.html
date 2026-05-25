@@ -2354,8 +2354,7 @@ body.on-home #sec-home { display: block !important; }
       </div>
     </div>
     <div style="display:flex;align-items:center;justify-content:flex-end;gap:6px;">
-      <button onclick="mostrarAyuda()" style="background:#0078D4;border:none;border-radius:8px;padding:5px 10px;display:flex;align-items:center;gap:5px;cursor:pointer;">
-        <span style="font-size:13px;color:#fff;">❓</span>
+      <button onclick="mostrarAyuda()" style="background:#0078D4;border:none;border-radius:8px;padding:5px 14px;display:flex;align-items:center;gap:5px;cursor:pointer;">
         <span style="font-size:11px;color:#fff;font-weight:700;font-family:'Lato',sans-serif;">Ayuda</span>
       </button>
       <button id="btn-notif" onclick="toggleNotificaciones()" style="background:rgba(255,255,255,0.15);border:none;border-radius:8px;padding:5px 10px;display:flex;align-items:center;gap:5px;cursor:pointer;">
@@ -2386,7 +2385,7 @@ body.on-home #sec-home { display: block !important; }
     </button>
 
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
-      <button onclick="irSeccion('registros')" style="background:var(--w,#fff);border:0.5px solid var(--bd);border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:8px;cursor:pointer;text-align:left;">
+      <button onclick="irSeccion('registros')" style="background:var(--w,#fff);border:2px solid var(--gd);border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:8px;cursor:pointer;text-align:left;box-shadow:0 3px 0 var(--gd);">
         <div style="width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;background:#EAF3DE;">
           <span style="font-size:17px;">&#128203;</span>
         </div>
@@ -2395,7 +2394,7 @@ body.on-home #sec-home { display: block !important; }
           <div id="home-info-registros" style="font-size:11px;color:var(--tl);font-family:'Lato',sans-serif;margin-top:1px;"></div>
         </div>
       </button>
-      <button onclick="irSeccion('calendario')" style="background:var(--w,#fff);border:0.5px solid var(--bd);border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:8px;cursor:pointer;text-align:left;">
+      <button onclick="irSeccion('calendario')" style="background:var(--w,#fff);border:2px solid var(--gd);border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:8px;cursor:pointer;text-align:left;box-shadow:0 3px 0 var(--gd);">
         <div style="width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;background:#E6F1FB;">
           <span style="font-size:17px;">&#128197;</span>
         </div>
@@ -2407,7 +2406,7 @@ body.on-home #sec-home { display: block !important; }
     </div>
 
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
-      <button onclick="irSeccion('notas')" style="background:var(--w,#fff);border:0.5px solid var(--bd);border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:8px;cursor:pointer;text-align:left;">
+      <button onclick="irSeccion('notas')" style="background:var(--w,#fff);border:2px solid var(--gd);border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:8px;cursor:pointer;text-align:left;box-shadow:0 3px 0 var(--gd);">
         <div style="width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;background:#FAEEDA;">
           <span style="font-size:17px;">&#128221;</span>
         </div>
@@ -2416,7 +2415,7 @@ body.on-home #sec-home { display: block !important; }
           <div id="home-info-notas" style="font-size:11px;color:var(--tl);font-family:'Lato',sans-serif;margin-top:1px;"></div>
         </div>
       </button>
-      <button onclick="irSeccion('rutinas')" style="background:var(--w,#fff);border:0.5px solid var(--bd);border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:8px;cursor:pointer;text-align:left;">
+      <button onclick="irSeccion('rutinas')" style="background:var(--w,#fff);border:2px solid var(--gd);border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:8px;cursor:pointer;text-align:left;box-shadow:0 3px 0 var(--gd);">
         <div style="width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;background:#EEEDFE;">
           <span style="font-size:17px;">&#127807;</span>
         </div>
@@ -2601,6 +2600,8 @@ body.on-home #sec-home { display: block !important; }
     <button class="tap-header-btn" onclick="toggleSearch()" title="Buscar" id="btn-search">🔍</button>
     <button class="tap-header-btn" onclick="toggleFiltros()" title="Filtros" id="btn-filtros">⚙️</button>
     <button class="tap-header-btn" id="btn-vista-toggle" onclick="toggleVistaRegistros()" title="Cambiar vista">⊞</button>
+  
+    <button onclick="var b=this;b.style.opacity='0.5';syncFromSheets(true).then(function(){b.style.opacity='1';}).catch(function(){b.style.opacity='1';})" class="tap-header-btn" title="Sincronizar">&#10227;</button>
   </div>
 
   <!-- Pills de estado con contadores -->
@@ -2681,6 +2682,8 @@ body.on-home #sec-home { display: block !important; }
   <div class="tap-header">
     <button class="tap-header-btn" onclick="irHome()">←</button>
     <span class="tap-header-title">Mi agenda</span>
+  
+    <button onclick="var b=this;b.style.opacity='0.5';syncFromSheets(true).then(function(){b.style.opacity='1';}).catch(function(){b.style.opacity='1';})" class="tap-header-btn" title="Sincronizar">&#10227;</button>
   </div>
 
         <div class="cal-nav">
@@ -2736,6 +2739,8 @@ body.on-home #sec-home { display: block !important; }
     <button class="tap-header-btn" onclick="exportNotasJSON()" title="Exportar">📥</button>
     <label class="tap-header-btn" style="cursor:pointer;" title="Restaurar">📂<input type="file" accept=".json" style="display:none" onchange="importNotasJSON(event)"></label>
     <button class="tap-header-btn" onclick="mostrarPDFNotas()" title="PDF ⭐">📄</button>
+  
+    <button onclick="var b=this;b.style.opacity='0.5';syncFromSheets(true).then(function(){b.style.opacity='1';}).catch(function(){b.style.opacity='1';})" class="tap-header-btn" title="Sincronizar">&#10227;</button>
   </div>
 
   <div style="padding:12px 16px;">
@@ -2770,6 +2775,8 @@ body.on-home #sec-home { display: block !important; }
   <div class="tap-header">
     <button class="tap-header-btn" onclick="irHome()">←</button>
     <span class="tap-header-title">Mis rutinas</span>
+  
+    <button onclick="var b=this;b.style.opacity='0.5';syncFromSheets(true).then(function(){b.style.opacity='1';}).catch(function(){b.style.opacity='1';})" class="tap-header-btn" title="Sincronizar">&#10227;</button>
   </div>
 
   <div style="padding:12px 16px;">
@@ -2798,7 +2805,9 @@ body.on-home #sec-home { display: block !important; }
 
 <div id="sec-config" class="section">
   <!-- HEADER CONFIGURACIÓN -->
-  <div class="tap-header"><button class="tap-header-btn" onclick="irHome()">←</button><span class="tap-header-title">Configuración</span></div>
+  <div class="tap-header"><button class="tap-header-btn" onclick="irHome()">←</button><span class="tap-header-title">Configuración</span>
+    <button onclick="var b=this;b.style.opacity='0.5';syncFromSheets(true).then(function(){b.style.opacity='1';}).catch(function(){b.style.opacity='1';})" class="tap-header-btn" title="Sincronizar">&#10227;</button>
+  </div>
 
 
         <!-- BÁSICO: siempre visible -->
@@ -2843,7 +2852,7 @@ body.on-home #sec-home { display: block !important; }
             <div style="display:grid;gap:8px;">
               <div>
                 <label style="font-size:11px;font-weight:700;color:var(--tm);text-transform:uppercase;letter-spacing:.4px;display:block;margin-bottom:3px;">Nombre y apellidos</label>
-                <input type="text" id="cfg-firma-nombre" placeholder="Alicia Prats" maxlength="60"
+                <input type="text" id="cfg-firma-nombre" placeholder="" maxlength="60"
                   style="width:100%;padding:8px 12px;border:1px solid var(--bd);border-radius:6px;background:var(--bp);font-family:'Lato',sans-serif;font-size:13px;color:var(--td);outline:none;"/>
               </div>
               <div>
@@ -3121,12 +3130,12 @@ return ContentService.createTextOutput(JSON.stringify({ok:false,error:'Unauthori
 }
 const sheet=getOrCreateSheet(ss,'Tapunto_Trabajo');
 const lists=getOrCreateSheet(ss,'Listas');
-const HDRS=['ID','Fecha','Contacto','Tema','Accion','Comunicado','Estado','Notas','Recordatorio','Creado','Imagen'];
+const HDRS=['ID','Fecha','Contacto','Tema','Accion','Comunicado','Estado','Notas','Recordatorio','Creado','Imagen','Icono'];
 if(data.action==='sync'){
 sheet.clearContents();
 sheet.appendRow(HDRS);
 (data.records||[]).forEach(r=>{
-sheet.appendRow([r.id,r.fecha,r.contacto,r.tema,r.accion,r.comunicado,r.estado,r.notas,r.recordatorio,r.created,r.imagenUrl||'']);
+sheet.appendRow([r.id,r.fecha,r.contacto,r.tema,r.accion,r.comunicado,r.estado,r.notas,r.recordatorio,r.created,r.imagenUrl||'',r.icono||'']);
 });
 lists.clearContents();
 lists.appendRow(['Contactos','Temas']);
@@ -3889,13 +3898,14 @@ async function syncToSheets(){
 if(!state.sheetsUrl) return;
 setSyncStatus('syncing','Subiendo...');
 try{
-await fetch(state.sheetsUrl,{method:'POST',
+const resp=await fetch(state.sheetsUrl,{method:'POST',
 body:JSON.stringify({action:'sync',token:localStorage.getItem('tp_sheets_token_'+currentUser)||'',
 records:state.records,contactos:state.contactos,temas:state.temas,
 notas:(state.notas||[]).map(function(n){return {id:n.id,texto:n.texto,fecha:n.fecha,archivado:n.archivado||false};})
 })});
+const data=await resp.json();
 setSyncStatus('ok','Sincronizado');
-if(data.sheetName){var ss_el=document.getElementById('sheets-status');if(ss_el)ss_el.innerHTML='<div class="connected-tag">✓ Conectado · 📊 '+data.sheetName+'</div>';}
+if(data&&data.sheetName){var ss_el=document.getElementById('sheets-status');if(ss_el)ss_el.innerHTML='<div class="connected-tag">✓ Conectado · 📊 '+data.sheetName+'</div>';}
 }catch(e){setSyncStatus('error','Error al subir');}
 }
 async function syncNotasToSheets(){
@@ -5003,6 +5013,173 @@ ov.appendChild(box);document.body.appendChild(ov);
 }
 
 function verHoy(){renderRutinasHoy();}
+
+// Nueva función: renderRutinasGrid - vista cuadrícula 3 por fila
+function renderRutinasGrid(){
+  var list=document.getElementById('rutinas-list');
+  if(!list) return;
+  if(!state.rutinas||!state.rutinas.length){
+    list.innerHTML='<div class="empty" style="padding:30px;text-align:center;color:var(--tl);">No hay rutinas. Pulsa + para crear una.</div>';
+    list.style.cssText='';
+    return;
+  }
+  list.style.cssText='display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:12px 12px 80px;';
+  list.innerHTML='';
+  var today=new Date();
+  var todayKey=today.getFullYear()+'-'+String(today.getMonth()+1).padStart(2,'0')+'-'+String(today.getDate()).padStart(2,'0');
+  state.rutinas.forEach(function(r){
+    var hecho=r.registros&&r.registros[todayKey]!==undefined&&r.registros[todayKey]!==null&&r.registros[todayKey]!=='';
+    var card=document.createElement('button');
+    card.style.cssText='background:var(--w,#fff);border:2px solid '+(hecho?'#1D9E75':'var(--bd)')+';border-radius:14px;padding:12px 8px;display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer;position:relative;box-shadow:'+(hecho?'0 3px 0 #1D9E75':'0 2px 4px rgba(0,0,0,.06)')+';';
+    // Indicador hecho
+    if(hecho){
+      var tick=document.createElement('div');
+      tick.style.cssText='position:absolute;top:6px;right:6px;width:16px;height:16px;background:#1D9E75;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;color:#fff;';
+      tick.textContent='✓';
+      card.appendChild(tick);
+    }
+    var ico=document.createElement('div');
+    ico.style.cssText='font-size:28px;line-height:1;';
+    ico.textContent=r.icono||'🌱';
+    var nom=document.createElement('div');
+    nom.style.cssText='font-size:10px;font-weight:700;color:var(--td);font-family:Lato,sans-serif;text-align:center;line-height:1.3;word-break:break-word;';
+    nom.textContent=r.nombre||'Rutina';
+    card.appendChild(ico);card.appendChild(nom);
+    card.onclick=(function(rutina){return function(){abrirDetalleRutina(rutina.id);};})(r);
+    list.appendChild(card);
+  });
+}
+
+// Nueva función: abrirDetalleRutina - hoja detalle
+function abrirDetalleRutina(id){
+  var r=state.rutinas?state.rutinas.find(function(x){return x.id===id;}):null;
+  if(!r) return;
+  // Guardar la función de renderizado anterior
+  window._rutinaPrevRender=renderRutinasHoy;
+  // Cambiar el header de rutinas
+  var title=document.querySelector('#sec-rutinas .tap-header-title');
+  if(title) title.textContent=(r.icono||'🌱')+' '+r.nombre;
+  var btnBack=document.querySelector('#sec-rutinas .tap-header .tap-header-btn');
+  if(btnBack){
+    btnBack._prevOnclick=btnBack.onclick;
+    btnBack.onclick=function(){
+      cerrarDetalleRutina();
+    };
+  }
+  // Renderizar el detalle
+  var list=document.getElementById('rutinas-list');
+  if(!list) return;
+  list.style.cssText='padding:12px 14px 80px;';
+  list.innerHTML='';
+  // Hoy
+  var today=new Date();
+  var todayKey=today.getFullYear()+'-'+String(today.getMonth()+1).padStart(2,'0')+'-'+String(today.getDate()).padStart(2,'0');
+  var hecho=r.registros&&r.registros[todayKey]!==undefined&&r.registros[todayKey]!=='';
+  // Bloque de registro hoy
+  var bloqHoy=document.createElement('div');
+  bloqHoy.style.cssText='background:var(--bl);border-radius:14px;padding:16px;margin-bottom:16px;border:1px solid var(--bd);';
+  var labelHoy=document.createElement('div');
+  labelHoy.style.cssText='font-size:12px;font-weight:700;color:var(--tl);font-family:Lato,sans-serif;text-transform:uppercase;letter-spacing:.5px;margin-bottom:12px;';
+  labelHoy.textContent='— HOY —';
+  bloqHoy.appendChild(labelHoy);
+  // Controles según tipo
+  var ctrl=document.createElement('div');
+  ctrl.style.cssText='display:flex;gap:10px;align-items:center;';
+  if(r.tipo==='sino'){
+    var bSi=document.createElement('button');
+    bSi.style.cssText='flex:1;padding:12px;background:'+(hecho&&r.registros[todayKey]==='si'?'#1D9E75':'var(--bp)')+';border:2px solid '+(hecho&&r.registros[todayKey]==='si'?'#1D9E75':'var(--bd)')+';border-radius:10px;font-size:14px;font-weight:700;color:'+(hecho&&r.registros[todayKey]==='si'?'#fff':'var(--td)')+';cursor:pointer;font-family:Lato,sans-serif;';
+    bSi.textContent='✓ Sí';
+    bSi.onclick=function(){registrarRutinaDetalle(r,todayKey,'si',list,id);};
+    var bNo=document.createElement('button');
+    bNo.style.cssText='flex:1;padding:12px;background:'+(hecho&&r.registros[todayKey]==='no'?'#E24B4A':'var(--bp)')+';border:2px solid '+(hecho&&r.registros[todayKey]==='no'?'#E24B4A':'var(--bd)')+';border-radius:10px;font-size:14px;font-weight:700;color:'+(hecho&&r.registros[todayKey]==='no'?'#fff':'var(--td)')+';cursor:pointer;font-family:Lato,sans-serif;';
+    bNo.textContent='✗ No';
+    bNo.onclick=function(){registrarRutinaDetalle(r,todayKey,'no',list,id);};
+    ctrl.appendChild(bSi);ctrl.appendChild(bNo);
+  } else if(r.tipo==='num'){
+    var inp=document.createElement('input');
+    inp.type='number';inp.min='0';
+    inp.value=hecho?r.registros[todayKey]:'';
+    inp.placeholder='Valor'+(r.meta?' (meta: '+r.meta+')':'');
+    inp.style.cssText='flex:1;padding:12px;border:1px solid var(--bd);border-radius:10px;font-size:16px;font-family:Lato,sans-serif;background:var(--bp);color:var(--td);';
+    var bGuardar=document.createElement('button');
+    bGuardar.textContent='Guardar';
+    bGuardar.style.cssText='padding:12px 18px;background:var(--gm);color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;font-family:Lato,sans-serif;';
+    bGuardar.onclick=function(){if(inp.value!=='')registrarRutinaDetalle(r,todayKey,inp.value,list,id);};
+    ctrl.appendChild(inp);ctrl.appendChild(bGuardar);
+  } else if(r.tipo==='hora'){
+    var inpH=document.createElement('input');
+    inpH.type='time';
+    inpH.value=hecho?r.registros[todayKey]:'';
+    inpH.style.cssText='flex:1;padding:12px;border:1px solid var(--bd);border-radius:10px;font-size:16px;font-family:Lato,sans-serif;background:var(--bp);color:var(--td);';
+    var bGuardarH=document.createElement('button');
+    bGuardarH.textContent='Guardar';
+    bGuardarH.style.cssText='padding:12px 18px;background:var(--gm);color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;font-family:Lato,sans-serif;';
+    bGuardarH.onclick=function(){if(inpH.value)registrarRutinaDetalle(r,todayKey,inpH.value,list,id);};
+    ctrl.appendChild(inpH);ctrl.appendChild(bGuardarH);
+  }
+  bloqHoy.appendChild(ctrl);
+  list.appendChild(bloqHoy);
+  // Historial últimos 3 meses
+  var historial=Object.entries(r.registros||{}).filter(function(e){
+    var d=new Date(e[0]);
+    var hace3m=new Date();hace3m.setMonth(hace3m.getMonth()-3);
+    return d>=hace3m;
+  }).sort(function(a,b){return b[0].localeCompare(a[0]);});
+  if(historial.length){
+    var bloqHist=document.createElement('div');
+    var labelHist=document.createElement('div');
+    labelHist.style.cssText='font-size:12px;font-weight:700;color:var(--tl);font-family:Lato,sans-serif;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;';
+    labelHist.textContent='— ÚLTIMOS 3 MESES —';
+    bloqHist.appendChild(labelHist);
+    // Stats rápidas
+    var total=historial.length;
+    var cumplidos=historial.filter(function(e){return e[1]==='si'||e[1]==='1'||(r.tipo!=='sino'&&e[1]!=='no'&&e[1]!=='');}).length;
+    var pct=total>0?Math.round(cumplidos/total*100):0;
+    var stats=document.createElement('div');
+    stats.style.cssText='display:flex;gap:10px;margin-bottom:12px;';
+    stats.innerHTML='<div style="flex:1;background:var(--bl);border-radius:10px;padding:10px;text-align:center;"><div style="font-size:18px;font-weight:800;color:var(--gm);">'+pct+'%</div><div style="font-size:10px;color:var(--tl);font-family:Lato,sans-serif;">Cumplimiento</div></div>'
+      +'<div style="flex:1;background:var(--bl);border-radius:10px;padding:10px;text-align:center;"><div style="font-size:18px;font-weight:800;color:var(--gm);">'+total+'</div><div style="font-size:10px;color:var(--tl);font-family:Lato,sans-serif;">Registros</div></div>';
+    bloqHist.appendChild(stats);
+    // Lista fechas
+    historial.forEach(function(entry){
+      var fecha=entry[0],val=entry[1];
+      var d=new Date(fecha+'T12:00:00');
+      var fechaStr=d.toLocaleDateString('es-ES',{weekday:'short',day:'numeric',month:'short'});
+      var row=document.createElement('div');
+      var ok=val==='si'||val==='1'||(r.tipo!=='sino'&&val!=='no'&&val!=='');
+      row.style.cssText='display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:0.5px solid var(--bd);';
+      row.innerHTML='<span style="font-size:13px;color:var(--td);font-family:Lato,sans-serif;">'+fechaStr+'</span>'
+        +'<span style="font-size:13px;font-weight:700;color:'+(ok?'#1D9E75':'#E24B4A')+';font-family:Lato,sans-serif;">'
+        +(r.tipo==='sino'?(val==='si'?'✓ Sí':'✗ No'):val)+'</span>';
+      bloqHist.appendChild(row);
+    });
+    list.appendChild(bloqHist);
+  } else {
+    var noHist=document.createElement('div');
+    noHist.style.cssText='text-align:center;color:var(--tl);font-family:Lato,sans-serif;font-size:13px;padding:20px;';
+    noHist.textContent='Sin registros en los últimos 3 meses';
+    list.appendChild(noHist);
+  }
+}
+
+function registrarRutinaDetalle(r,key,val,list,id){
+  if(!r.registros) r.registros={};
+  r.registros[key]=val;
+  var idx=state.rutinas.findIndex(function(x){return x.id===r.id;});
+  if(idx>-1) state.rutinas[idx]=r;
+  persist().catch(function(){});
+  abrirDetalleRutina(id);
+}
+
+function cerrarDetalleRutina(){
+  var title=document.querySelector('#sec-rutinas .tap-header-title');
+  if(title) title.textContent='Mis rutinas';
+  var btnBack=document.querySelector('#sec-rutinas .tap-header .tap-header-btn');
+  if(btnBack){
+    btnBack.onclick=function(){irHome();};
+  }
+  renderRutinasGrid();
+}
 
 function renderRutinasHoy(){
 var list=document.getElementById('rutinas-list');
