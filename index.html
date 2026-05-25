@@ -2442,8 +2442,6 @@ body.on-home #sec-home { display: block !important; }
   <div class="tap-header">
     <button class="tap-header-btn" onclick="irHome()">&#8592;</button>
     <span class="tap-header-title" id="nuevo-titulo">Nuevo registro</span>
-    <button onclick="cancelEdit?cancelEdit():irHome()" style="background:rgba(255,255,255,0.15);border:none;border-radius:8px;padding:6px 11px;font-size:12px;font-weight:600;color:rgba(255,255,255,0.8);cursor:pointer;">Cancelar</button>
-    <button id="save-btn" onclick="saveRecord()" style="background:#fff;border:none;border-radius:8px;padding:6px 14px;font-size:12px;font-weight:700;color:var(--gd);cursor:pointer;">Guardar</button>
   </div>
 
   <div class="trial-banner" id="trial-banner"></div>
@@ -2587,10 +2585,10 @@ body.on-home #sec-home { display: block !important; }
 
   <!-- BOTONES FIJOS AL PIE -->
   <div style="position:sticky;bottom:0;background:var(--w,#fff);border-top:1px solid var(--bd);padding:12px 16px;display:flex;gap:10px;z-index:10;">
-    <button onclick="irHome()" style="flex:1;padding:12px;background:var(--bp);border:1px solid var(--bd);border-radius:10px;font-family:'Lato',sans-serif;font-size:14px;font-weight:600;color:var(--tl);cursor:pointer;">
-      ← Volver
+    <button id="btn-cancelar-nuevo" onclick="cancelEdit?cancelEdit():irHome()" style="flex:1;padding:12px;background:var(--bp);border:1px solid var(--bd);border-radius:10px;font-family:'Lato',sans-serif;font-size:14px;font-weight:600;color:var(--tl);cursor:pointer;">
+      ← Cancelar
     </button>
-    <button onclick="saveRecord()" style="flex:2;padding:12px;background:var(--gm);border:none;border-radius:10px;font-family:'Lato',sans-serif;font-size:14px;font-weight:700;color:#fff;cursor:pointer;">
+    <button id="save-btn" onclick="saveRecord()" style="flex:2;padding:12px;background:var(--gm);border:none;border-radius:10px;font-family:'Lato',sans-serif;font-size:14px;font-weight:700;color:#fff;cursor:pointer;">
       💾 Guardar registro
     </button>
   </div>
@@ -2603,7 +2601,7 @@ body.on-home #sec-home { display: block !important; }
   <!-- HEADER REGISTROS -->
   <div class="tap-header">
     <button class="tap-header-btn" id="btn-back-registros" onclick="irHome()" title="Inicio">←</button>
-    <span class="tap-header-title" id="rec-header-title">Registros</span>
+    <span class="tap-header-title" id="rec-header-title">Mis registros</span>
     <button class="tap-header-btn" onclick="toggleSearch()" title="Buscar" id="btn-search">🔍</button>
     <button class="tap-header-btn" onclick="toggleFiltros()" title="Filtros" id="btn-filtros">⚙️</button>
     <button class="tap-header-btn" id="btn-vista-toggle" onclick="toggleVistaRegistros()" title="Cambiar vista">⊞</button>
@@ -4457,7 +4455,7 @@ window.scrollTo({top:0,behavior:'instant'});
 var firstField=document.getElementById('inp-tema');
 if(firstField) firstField.focus();
 window._pendingEditId=null;
-},300);
+},400);
 }
 
 function cancelForm(){
@@ -5769,7 +5767,8 @@ emailDiv.style.cssText='padding:12px 14px;border-bottom:0.5px solid var(--bd);';
 emailDiv.innerHTML='<div style="font-size:12px;font-weight:700;color:var(--td);font-family:Lato,sans-serif;">'+(currentUser||'—')+'</div>'+(isPremium?'<div style="font-size:11px;color:#EF9F27;font-weight:600;">⭐ Premium activo</div>':'<div style="font-size:11px;color:var(--tl);">Plan Free</div>');
 menu.appendChild(emailDiv);
 var items=[
-{icon:'🌙',label:'Modo oscuro',fn:function(){toggleDarkMode();menu.remove();}},
+{icon:'👤',label:'Mis datos',fn:function(){menu.remove();irSeccion('config');setTimeout(function(){var perfil=document.getElementById('card-perfil');if(perfil){perfil.open=true;perfil.scrollIntoView({behavior:'smooth'});}},400);}},
+{icon:'⚙️',label:'Configuración',fn:function(){menu.remove();irSeccion('config');}},
 {icon:'🚪',label:'Cerrar sesión',fn:function(){menu.remove();doLogout();},red:true}
 ];
 items.forEach(function(item){
@@ -5912,13 +5911,11 @@ function switchTab(tab,btn){
 document.querySelectorAll('.section').forEach(function(s){s.classList.remove('active');s.style.display='none';});
 var _st=document.getElementById('sec-'+tab);
 if(_st){_st.classList.add('active');_st.style.display='block';}
-var _sb=document.getElementById('save-cancel-btns');
-if(_sb) _sb.style.display=(tab==='nuevo')?'flex':'none';
-if(tab==='nuevo'){setTimeout(function(){
+// save-cancel-btns eliminado - botones en pie sticky
+if(tab==='nuevo'&&!window._pendingEditId){setTimeout(function(){
 var chipHoy=document.getElementById('chip-hoy');
 if(chipHoy&&!document.getElementById('inp-fecha').value) setFechaChip('hoy',chipHoy);
 },50);}
-if(tab==='nuevo'){setTimeout(function(){var c=document.getElementById('chip-hoy');if(c&&!document.getElementById('inp-fecha').value)setFechaChip('hoy',c);},50);}
 if(tab==='registros'){renderStats();renderRecords();}
 if(tab==='config'){renderThemes();loadPinConfig();loadSheetsToken();loadFirmaConfig();renderLists();}
 if(tab==='recordatorios'){renderReminders();renderAlertasInteligentes();}
