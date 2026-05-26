@@ -1892,7 +1892,7 @@ body.on-home .btn-home{display:none!important;}
 :root{--tap-radius-card:14px;--tap-radius-btn:10px;--tap-radius-pill:20px;--tap-border:rgba(0,0,0,0.08);}
 .tap-header{background:var(--gd);padding:14px 16px;display:flex;align-items:center;gap:10px;}
 .tap-header-title{flex:1;font-size:17px;font-weight:700;color:#fff;font-family:'Lato',sans-serif;}
-.tap-header-btn{width:32px;height:32px;border-radius:8px;background:rgba(255,255,255,0.15);border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#fff;font-size:16px;flex-shrink:0;}
+.tap-header-btn{min-width:40px;height:40px;border-radius:8px;background:rgba(255,255,255,0.15);border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#fff;font-size:16px;flex-shrink:0;}
 .tap-card{background:var(--w,#fff);border:0.5px solid var(--bd);border-radius:var(--tap-radius-card);padding:12px 14px;}
 .tap-pill{display:inline-flex;align-items:center;gap:4px;padding:4px 11px;border-radius:var(--tap-radius-pill);font-size:11px;font-weight:600;font-family:'Lato',sans-serif;white-space:nowrap;cursor:pointer;}
 .tap-pill-active{background:var(--gd);color:#fff;border:none;}
@@ -2422,17 +2422,9 @@ body.on-home #sec-home { display: block !important; }
       </button>
     </div>
 
-    <div style="border-top:0.5px solid var(--bd);"></div>
 
-    <div style="display:flex;gap:8px;">
-      <button onclick="irSeccion('config')" style="flex:1;background:var(--w,#fff);border:0.5px solid var(--bd);border-radius:10px;padding:9px 12px;display:flex;align-items:center;gap:7px;cursor:pointer;">
-        <span style="font-size:15px;">&#9881;</span>
-        <span style="font-size:12px;color:var(--tl);font-weight:600;font-family:'Lato',sans-serif;">Configuracion</span>
-      </button>
-      <button onclick="mostrarAyuda()" style="flex:1;background:#0078D4;border:none;border-radius:10px;padding:9px 12px;display:flex;align-items:center;gap:7px;cursor:pointer;">
-        <span style="font-size:12px;color:#fff;font-weight:700;font-family:'Lato',sans-serif;letter-spacing:.3px;">AYUDA</span>
-      </button>
-    </div>
+
+
 
   </div>
 
@@ -2440,19 +2432,13 @@ body.on-home #sec-home { display: block !important; }
 
 <div id="sec-nuevo" class="section">
   <div class="tap-header">
-    <button class="tap-header-btn" onclick="irHome()">&#8592;</button>
+    <button class="tap-header-btn" onclick="irHome()" style="flex-direction:column;gap:1px;"><span style="font-size:22px;line-height:1;color:#fff;font-weight:900;">&#8592;</span><span style="font-size:9px;color:#fff;font-weight:700;font-family:'Lato',sans-serif;letter-spacing:.3px;">Inicio</span></button>
     <span class="tap-header-title" id="nuevo-titulo">Nuevo registro</span>
   </div>
 
-  <div class="trial-banner" id="trial-banner"></div>
-  <div class="renewal-banner" id="renewal-banner"></div>
   <div class="edit-banner" id="edit-banner">
     ✏ Editando registro
     <button onclick="cancelEdit()">✕ Cancelar</button>
-  </div>
-  <div class="free-bar" id="free-bar" style="display:none">
-    <span>Plan gratuito · <strong id="rec-count">0</strong>/20 registros</span>
-    <button class="upg-btn" onclick="showUpgrade()">⭐ Activar Premium</button>
   </div>
 
   <div style="padding:14px 16px 32px;display:flex;flex-direction:column;gap:12px;">
@@ -2600,13 +2586,13 @@ body.on-home #sec-home { display: block !important; }
 
   <!-- HEADER REGISTROS -->
   <div class="tap-header">
-    <button class="tap-header-btn" id="btn-back-registros" onclick="irHome()" title="Inicio">←</button>
+    <button class="tap-header-btn" id="btn-back-registros" onclick="irHome()" style="flex-direction:column;gap:1px;"><span style="font-size:22px;line-height:1;color:#fff;font-weight:900;">&#8592;</span><span style="font-size:9px;color:#fff;font-weight:700;font-family:'Lato',sans-serif;letter-spacing:.3px;">Inicio</span></button>
     <span class="tap-header-title" id="rec-header-title">Mis registros</span>
     <button class="tap-header-btn" onclick="toggleSearch()" title="Buscar" id="btn-search">🔍</button>
     <button class="tap-header-btn" onclick="toggleFiltros()" title="Filtros" id="btn-filtros">⚙️</button>
     <button class="tap-header-btn" id="btn-vista-toggle" onclick="toggleVistaRegistros()" title="Cambiar vista">⊞</button>
   
-    <button onclick="var b=this;b.style.opacity='0.5';syncFromSheets(true).then(function(){b.style.opacity='1';}).catch(function(){b.style.opacity='1';})" class="tap-header-btn" title="Sincronizar" style="font-size:18px;">&#10227;</button>
+    <button onclick="var b=this;b.style.opacity='0.5';syncFromSheets(true).then(function(){b.style.opacity='1';}).catch(function(){b.style.opacity='1';})" class="tap-header-btn" title="Sincronizar" style="font-size:22px;color:#fff;line-height:1;">&#10227;</button>
   </div>
 
   <!-- Pills de estado con contadores -->
@@ -2685,10 +2671,10 @@ body.on-home #sec-home { display: block !important; }
       <div id="sec-calendario" class="section">
   <!-- HEADER MI AGENDA -->
   <div class="tap-header">
-    <button class="tap-header-btn" onclick="irHome()">←</button>
+    <button class="tap-header-btn" onclick="irHome()" style="flex-direction:column;gap:1px;"><span style="font-size:22px;line-height:1;color:#fff;font-weight:900;">&#8592;</span><span style="font-size:9px;color:#fff;font-weight:700;font-family:'Lato',sans-serif;letter-spacing:.3px;">Inicio</span></button>
     <span class="tap-header-title">Mi agenda</span>
   
-    <button onclick="var b=this;b.style.opacity='0.5';syncFromSheets(true).then(function(){b.style.opacity='1';}).catch(function(){b.style.opacity='1';})" class="tap-header-btn" title="Sincronizar" style="font-size:18px;">&#10227;</button>
+    <button onclick="var b=this;b.style.opacity='0.5';syncFromSheets(true).then(function(){b.style.opacity='1';}).catch(function(){b.style.opacity='1';})" class="tap-header-btn" title="Sincronizar" style="font-size:22px;color:#fff;line-height:1;">&#10227;</button>
   </div>
 
         <div class="cal-nav">
@@ -2734,13 +2720,13 @@ body.on-home #sec-home { display: block !important; }
       <div id="sec-notas" class="section">
   <!-- HEADER TO DO -->
   <div class="tap-header">
-    <button class="tap-header-btn" onclick="irHome()">←</button>
+    <button class="tap-header-btn" onclick="irHome()" style="flex-direction:column;gap:1px;"><span style="font-size:22px;line-height:1;color:#fff;font-weight:900;">&#8592;</span><span style="font-size:9px;color:#fff;font-weight:700;font-family:'Lato',sans-serif;letter-spacing:.3px;">Inicio</span></button>
     <span class="tap-header-title">TO DO</span>
     <button class="tap-header-btn" onclick="exportNotasJSON()" title="Exportar">📥</button>
     <label class="tap-header-btn" style="cursor:pointer;" title="Restaurar">📂<input type="file" accept=".json" style="display:none" onchange="importNotasJSON(event)"></label>
     <button class="tap-header-btn" onclick="mostrarPDFNotas()" title="PDF ⭐">📄</button>
   
-    <button onclick="var b=this;b.style.opacity='0.5';syncFromSheets(true).then(function(){b.style.opacity='1';}).catch(function(){b.style.opacity='1';})" class="tap-header-btn" title="Sincronizar" style="font-size:18px;">&#10227;</button>
+    <button onclick="var b=this;b.style.opacity='0.5';syncFromSheets(true).then(function(){b.style.opacity='1';}).catch(function(){b.style.opacity='1';})" class="tap-header-btn" title="Sincronizar" style="font-size:22px;color:#fff;line-height:1;">&#10227;</button>
   </div>
 
   <div style="padding:12px 16px;">
@@ -2773,10 +2759,10 @@ body.on-home #sec-home { display: block !important; }
 <div id="sec-rutinas" class="section">
   <!-- HEADER MIS RUTINAS -->
   <div class="tap-header">
-    <button class="tap-header-btn" onclick="irHome()">←</button>
+    <button class="tap-header-btn" onclick="irHome()" style="flex-direction:column;gap:1px;"><span style="font-size:22px;line-height:1;color:#fff;font-weight:900;">&#8592;</span><span style="font-size:9px;color:#fff;font-weight:700;font-family:'Lato',sans-serif;letter-spacing:.3px;">Inicio</span></button>
     <span class="tap-header-title">Mis rutinas</span>
   
-    <button onclick="var b=this;b.style.opacity='0.5';syncFromSheets(true).then(function(){b.style.opacity='1';}).catch(function(){b.style.opacity='1';})" class="tap-header-btn" title="Sincronizar" style="font-size:18px;">&#10227;</button>
+    <button onclick="var b=this;b.style.opacity='0.5';syncFromSheets(true).then(function(){b.style.opacity='1';}).catch(function(){b.style.opacity='1';})" class="tap-header-btn" title="Sincronizar" style="font-size:22px;color:#fff;line-height:1;">&#10227;</button>
   </div>
 
   <div style="padding:12px 16px;">
@@ -2805,8 +2791,8 @@ body.on-home #sec-home { display: block !important; }
 
 <div id="sec-config" class="section">
   <!-- HEADER CONFIGURACIÓN -->
-  <div class="tap-header"><button class="tap-header-btn" onclick="irHome()">←</button><span class="tap-header-title">Configuración</span>
-    <button onclick="var b=this;b.style.opacity='0.5';syncFromSheets(true).then(function(){b.style.opacity='1';}).catch(function(){b.style.opacity='1';})" class="tap-header-btn" title="Sincronizar" style="font-size:18px;">&#10227;</button>
+  <div class="tap-header"><button class="tap-header-btn" onclick="irHome()" style="flex-direction:column;gap:1px;"><span style="font-size:22px;line-height:1;color:#fff;font-weight:900;">&#8592;</span><span style="font-size:9px;color:#fff;font-weight:700;font-family:'Lato',sans-serif;letter-spacing:.3px;">Inicio</span></button><span class="tap-header-title">Configuración</span>
+    <button onclick="var b=this;b.style.opacity='0.5';syncFromSheets(true).then(function(){b.style.opacity='1';}).catch(function(){b.style.opacity='1';})" class="tap-header-btn" title="Sincronizar" style="font-size:22px;color:#fff;line-height:1;">&#10227;</button>
   </div>
 
 
