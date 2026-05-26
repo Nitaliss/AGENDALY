@@ -2021,14 +2021,13 @@ body.on-home #sec-home { display: block !important; }
 .section.active { display: block; }
 
 /* ══ ESPACIADO SUPERIOR MÓVIL ══ */
-.notebook {
-  padding-top: 24px !important;
-}
 .tap-header {
   margin-top: 0;
 }
-#sec-home > div:first-child {
-  padding-top: 24px !important;
+#sec-home {
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
 }
 </style>
 <script>(function(){try{if(localStorage.getItem('tp_dark_mode')==='1')document.documentElement.style.background='#1a1a2e';}catch(e){};}());</script>
@@ -2329,7 +2328,7 @@ body.on-home #sec-home { display: block !important; }
       <!-- ══ NUEVO ══ -->
       <div id="sec-home" class="section active">
 
-  <div style="background:var(--gd);padding:24px 16px 14px;">
+  <div style="background:var(--gd);padding:24px 16px 14px;width:100%;box-sizing:border-box;">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
       <!-- Logo izquierda -->
       <div style="display:flex;align-items:center;gap:10px;">
@@ -2356,9 +2355,9 @@ body.on-home #sec-home { display: block !important; }
     <div style="display:flex;align-items:center;justify-content:flex-end;gap:6px;">
       <button id="btn-notif" onclick="toggleNotificaciones()" style="background:rgba(255,255,255,0.15);border:none;border-radius:8px;padding:5px 10px;display:flex;align-items:center;gap:5px;cursor:pointer;">
         <span id="home-notif-icon" style="font-size:13px;">🔔</span>
-        <span id="home-notif-label" style="font-size:11px;color:rgba(255,255,255,0.85);font-weight:600;font-family:'Lato',sans-serif;">Alertas</span>
+        <span id="home-notif-label" style="font-size:11px;color:rgba(255,255,255,0.85);font-weight:600;font-family:'Lato',sans-serif;">Notif. ON</span>
       </button>
-      <button onclick="var b=this;b.style.opacity='0.5';syncFromSheets(true).then(function(){b.style.opacity='1';}).catch(function(){b.style.opacity='1';})" id="home-sync-btn" style="background:rgba(255,255,255,0.15);border:none;border-radius:8px;padding:5px 10px;align-items:center;gap:5px;cursor:pointer;display:none;">
+      <button onclick="var b=this;b.style.opacity='0.5';syncFromSheets(true).then(function(){b.style.opacity='1';}).catch(function(){b.style.opacity='1';})" id="home-sync-btn" style="background:rgba(255,255,255,0.15);border:none;border-radius:8px;padding:5px 10px;align-items:center;gap:5px;cursor:pointer;display:flex;">
         <span style="font-size:13px;">&#10227;</span>
         <span style="font-size:11px;color:rgba(255,255,255,0.85);font-weight:600;font-family:'Lato',sans-serif;">Sync</span>
       </button>
@@ -5707,106 +5706,55 @@ var ov=document.getElementById('ayuda-ov');
 if(ov){ov.style.display='flex';return;}
 var overlay=document.createElement('div');
 overlay.id='ayuda-ov';
-overlay.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:9000;display:flex;align-items:flex-start;justify-content:center;padding:16px;overflow-y:auto;';
-overlay.innerHTML=`
-<div style="background:var(--w,#fff);border-radius:16px;max-width:480px;width:100%;padding:20px;position:relative;margin:auto;">
-  <button onclick="document.getElementById('ayuda-ov').style.display='none'" style="position:absolute;top:12px;right:12px;background:none;border:none;font-size:22px;cursor:pointer;color:var(--tl);">✕</button>
-  <div style="font-size:20px;font-weight:900;color:var(--gm);margin-bottom:4px;">❓ Ayuda — Tapunto</div>
-  <div style="font-size:11px;color:var(--tl);margin-bottom:16px;">Tu agenda personal segura</div>
-  
-  <!-- ÍNDICE -->
-  <div style="background:var(--bl);border-radius:10px;padding:12px;margin-bottom:20px;border:1px solid var(--bd);">
-    <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:var(--gm);margin-bottom:8px;">Índice</div>
-    <div style="display:flex;flex-direction:column;gap:4px;">
-      <a onclick="document.getElementById('ayuda-s1').scrollIntoView({behavior:'smooth'})" style="font-size:12px;color:var(--gm);cursor:pointer;text-decoration:none;">🚀 Primeros pasos</a>
-      <a onclick="document.getElementById('ayuda-s2').scrollIntoView({behavior:'smooth'})" style="font-size:12px;color:var(--gm);cursor:pointer;text-decoration:none;">📋 Crear un registro</a>
-      <a onclick="document.getElementById('ayuda-s3').scrollIntoView({behavior:'smooth'})" style="font-size:12px;color:var(--gm);cursor:pointer;text-decoration:none;">📝 Notas Rápidas</a>
-      <a onclick="document.getElementById('ayuda-s4').scrollIntoView({behavior:'smooth'})" style="font-size:12px;color:var(--gm);cursor:pointer;text-decoration:none;">🔗 Google Sheets — Configuración</a>
-      <a onclick="document.getElementById('ayuda-s5').scrollIntoView({behavior:'smooth'})" style="font-size:12px;color:var(--gm);cursor:pointer;text-decoration:none;">⭐ Plan Premium</a>
-      <a onclick="document.getElementById('ayuda-s6').scrollIntoView({behavior:'smooth'})" style="font-size:12px;color:var(--gm);cursor:pointer;text-decoration:none;">🔧 Problemas frecuentes</a>
-    </div>
-  </div>
-
-  <div id="ayuda-s1" style="margin-bottom:20px;">
-    <div style="font-size:14px;font-weight:800;color:var(--gm);margin-bottom:8px;padding-bottom:4px;border-bottom:2px solid var(--gm);">🚀 Primeros pasos</div>
-    <div style="font-size:12px;color:var(--td);line-height:1.7;">
-      1. Introduce tu email y un PIN de 4 dígitos para crear tu cuenta.<br>
-      2. Acepta los términos de uso.<br>
-      3. Empieza a registrar tus gestiones con el botón <strong>✏️ Nuevo Registro</strong>.<br>
-      4. Tus datos se guardan de forma segura en tu dispositivo.
-    </div>
-  </div>
-
-  <div id="ayuda-s2" style="margin-bottom:20px;">
-    <div style="font-size:14px;font-weight:800;color:var(--gm);margin-bottom:8px;padding-bottom:4px;border-bottom:2px solid var(--gm);">📋 Crear un registro</div>
-    <div style="font-size:12px;color:var(--td);line-height:1.7;">
-      · <strong>Asunto:</strong> tema o motivo de la gestión.<br>
-      · <strong>Contacto:</strong> persona o empresa relacionada.<br>
-      · <strong>Acción:</strong> qué se hizo (llamada, email, reunión…).<br>
-      · <strong>Estado:</strong> pendiente, en curso o resuelto.<br>
-      · <strong>Imagen:</strong> adjunta una foto desde cámara o galería.<br>
-      · El botón 🎙️ permite dictar por voz (requiere HTTPS).<br>
-      · Puedes añadir una alerta de recordatorio con fecha y hora.
-    </div>
-  </div>
-
-  <div id="ayuda-s3" style="margin-bottom:20px;">
-    <div style="font-size:14px;font-weight:800;color:var(--gm);margin-bottom:8px;padding-bottom:4px;border-bottom:2px solid var(--gm);">📝 Notas Rápidas</div>
-    <div style="font-size:12px;color:var(--td);line-height:1.7;">
-      · Escribe o dicta anotaciones rápidas sin formulario.<br>
-      · Pulsa el texto de una nota para <strong>editarla</strong>.<br>
-      · Botón <strong>→ Reg</strong> convierte la nota en un registro completo.<br>
-      · Botón 📦 archiva la nota (se puede recuperar).<br>
-      · <strong>Exportar/Restaurar:</strong> copia de seguridad en JSON.<br>
-      · <strong>PDF ⭐:</strong> exporta las notas con filtro de fechas (Premium).
-    </div>
-  </div>
-
-  <div id="ayuda-s4" style="margin-bottom:20px;">
-    <div style="font-size:14px;font-weight:800;color:var(--gm);margin-bottom:8px;padding-bottom:4px;border-bottom:2px solid var(--gm);">🔗 Google Sheets — Configuración</div>
-    <div style="font-size:12px;color:var(--td);line-height:1.7;">
-      <strong>Instalación del Apps Script:</strong><br>
-      1. Abre Google Sheets → Extensiones → Apps Script.<br>
-      2. Borra el código existente y pega el código de Tapunto.<br>
-      3. Ejecuta la función <code style="background:var(--bl);padding:1px 4px;border-radius:3px;">inicializar</code>.<br>
-      4. Implementar → Nueva implementación → App web → Cualquiera.<br>
-      5. Copia la URL y pégala en Configuración → Google Sheets.<br><br>
-      <strong>Token de acceso:</strong> contraseña opcional para proteger tu script. Para uso personal puedes dejarlo vacío.<br><br>
-      <strong>Sincronización:</strong> automática al entrar (Premium) o manual con el botón ⟳.
-    </div>
-  </div>
-
-  <div id="ayuda-s5" style="margin-bottom:20px;">
-    <div style="font-size:14px;font-weight:800;color:var(--gm);margin-bottom:8px;padding-bottom:4px;border-bottom:2px solid var(--gm);">⭐ Plan Premium</div>
-    <div style="font-size:12px;color:var(--td);line-height:1.7;">
-      · Registros ilimitados (Free: 20).<br>
-      · Sincronización automática con Google Sheets.<br>
-      · Todos los temas de color.<br>
-      · Imagen personalizada en portada.<br>
-      · 📖 Libreta PDF profesional con filtros.<br>
-      · 📄 PDF de Notas Rápidas con filtro de fechas.<br>
-      · Backup automático semanal.<br><br>
-      Introduce tu código en <strong>Configuración → Plan</strong>.
-    </div>
-  </div>
-
-  <div id="ayuda-s6" style="margin-bottom:8px;">
-    <div style="font-size:14px;font-weight:800;color:var(--gm);margin-bottom:8px;padding-bottom:4px;border-bottom:2px solid var(--gm);">🔧 Problemas frecuentes</div>
-    <div style="font-size:12px;color:var(--td);line-height:1.7;">
-      <strong>El dictado no funciona:</strong> requiere HTTPS. Prueba desde tapunto.app.<br><br>
-      <strong>No sincroniza:</strong> verifica que la URL del Apps Script es correcta y que la implementación es pública (Cualquiera).<br><br>
-      <strong>Error al subir imagen:</strong> comprueba que el Apps Script está instalado y tiene permisos de Google Drive.<br><br>
-      <strong>Olvidé mi PIN:</strong> no es posible recuperarlo (seguridad). Crea una nueva cuenta con otro email.<br><br>
-      <strong>Los datos no aparecen en otro dispositivo:</strong> asegúrate de tener Google Sheets configurado y pulsa ⟳ Sincronizar.
-    </div>
-  </div>
-
-  <div style="text-align:center;margin-top:16px;">
-    <button onclick="document.getElementById('ayuda-ov').style.display='none'" style="padding:10px 28px;background:var(--gm);color:#fff;border:none;border-radius:8px;font-family:'Lato',sans-serif;font-size:13px;font-weight:700;cursor:pointer;">Cerrar</button>
-  </div>
-</div>`;
+overlay.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:9000;display:flex;align-items:flex-end;justify-content:center;';
+var panel=document.createElement('div');
+panel.style.cssText='background:var(--w,#fff);border-radius:20px 20px 0 0;max-width:480px;width:100%;max-height:90vh;display:flex;flex-direction:column;overflow:hidden;';
+var hdr=document.createElement('div');
+hdr.style.cssText='display:flex;align-items:center;justify-content:space-between;padding:16px 20px 12px;border-bottom:1px solid var(--bd);flex-shrink:0;';
+hdr.innerHTML='<div><div style="font-size:18px;font-weight:900;color:var(--gm);font-family:Lato,sans-serif;">Ayuda — Tapunto</div><div style="font-size:11px;color:var(--tl);font-family:Lato,sans-serif;">Tu agenda personal segura · tapunto.app</div></div>';
+var btnX=document.createElement('button');
+btnX.textContent='✕';
+btnX.style.cssText='background:none;border:none;font-size:22px;cursor:pointer;color:var(--tl);padding:4px;';
+btnX.onclick=function(){overlay.style.display='none';};
+hdr.appendChild(btnX);
+var body=document.createElement('div');
+body.style.cssText='overflow-y:auto;padding:16px 20px 32px;flex:1;';
+var secciones=[
+{id:'s1',titulo:'🚀 Primeros pasos',texto:'<b>Crea tu cuenta</b> con tu correo Gmail para acceder a todas las funciones (sincronización, fotos en Drive, varios dispositivos). Con otro correo puedes usar Tapunto en modo local.<br><br><b>PIN de acceso:</b> elige 4 dígitos que recuerdes. Guarda una pista que solo tú entiendas.<br><br><b>Navegación:</b> usa los botones del menú principal. En cada pantalla, la flecha <b>← Inicio</b> te devuelve a la portada.'},
+{id:'s2',titulo:'📋 Nuevo registro',texto:'<b>Icono:</b> toca el botón emoji para elegir entre más de 200 iconos en 10 categorías. Puedes dejarlo vacío con ∅.<br><br><b>Asunto:</b> escribe o elige de tus asuntos anteriores. Usa 🎙️ para dictar.<br><br><b>Estado:</b> 3 botones táctiles — ⏳ Pendiente · 🔄 En curso · ✅ Resuelto.<br><br><b>Más opciones:</b> despliega para añadir Acción, Comunicado, 🔔 Alerta/Recordatorio y 📷 Foto.<br><br><b>Guardar:</b> botón 💾 al pie de la pantalla. Para cancelar usa ← Cancelar.'},
+{id:'s3',titulo:'📁 Mis registros',texto:'<b>Vista lista ☰:</b> todos los registros ordenados por fecha.<br><br><b>Vista carpetas ⊞:</b> agrupados por asunto. Ordena por 🔤 A-Z · 📊 Cantidad · 🕐 Reciente.<br><br><b>Foto en tarjeta:</b> si un registro tiene foto aparece una miniatura. Tócala para ampliarla a pantalla completa. Si está en Drive puedes abrirla directamente.<br><br><b>Buscar y filtrar:</b> usa 🔍 para buscar o ⚙️ para filtrar por estado, fecha o contacto.'},
+{id:'s4',titulo:'🌱 Mis rutinas',texto:'Las rutinas aparecen como tarjetas compactas con icono y nombre, 3 por fila.<br><br><b>✓ verde</b> = registrado hoy · borde gris = pendiente.<br><br><b>Al tocar una rutina</b> se abre la hoja de detalle con:<br>• 📅 Selector de fecha — puedes registrar días pasados<br>• Campo Sí/No, número u hora según el tipo<br>• Historial de los últimos 3 meses (máx 30 registros)<br>• % de cumplimiento y total<br><br><b>Nueva rutina:</b> botón + para crear. Elige icono, nombre, tipo y frecuencia.'},
+{id:'s5',titulo:'📅 Mi agenda',texto:'Vista mensual con los emojis de tus registros en cada día.<br><br>Toca un día para ver sus registros. Badge +N si hay más de 2.<br><br>Navega entre meses con ◀ ▶. Puedes alternar entre vista mensual y semanal.'},
+{id:'s6',titulo:'✅ TO DO',texto:'Lista de tareas rápidas con dictado de voz.<br><br>Toca 📦 para archivar una tarea completada. Botón "📦 Archivadas" para ver el histórico. Si no hay archivadas, usa "← Notas activas" para volver.<br><br>Exporta tus notas en JSON o genera un PDF (Premium).'},
+{id:'s7',titulo:'🔄 Sincronización',texto:'El botón <b>⟳ Sync</b> aparece en el encabezado de todas las pantallas.<br><br>Sincroniza con Google Sheets. Necesitas configurar la URL del script en Configuración → 🔗 Google Sheets.<br><br>La sincronización requiere cuenta Gmail. Los datos se guardan siempre en local aunque no haya conexión.<br><br>El sync automático ocurre cada 30 minutos si tienes conexión.'},
+{id:'s8',titulo:'🔐 Seguridad y PIN',texto:'<b>Cambiar PIN:</b> Configuración → 🔐 Mi PIN y seguridad. Introduce el PIN actual, el nuevo (4 dígitos) y confírmalo.<br><br><b>Recordatorio:</b> si llevan más de 90 días sin cambiar el PIN, aparecerá un aviso en portada. Puedes ignorarlo 30 días o cambiarlo directamente.<br><br><b>Pista del PIN:</b> guarda una pista para poder recuperarlo. Solo visible para ti.'},
+{id:'s9',titulo:'🔔 Notificaciones',texto:'El botón 🔔/🔕 en el encabezado de la portada activa o silencia las notificaciones.<br><br><b>Notif. ON</b> = recibirás avisos de tus recordatorios aunque la app esté cerrada.<br><br><b>Notif. OFF</b> = notificaciones silenciadas.<br><br>El estado se muestra también en Configuración → 🔔 Notificaciones.'},
+{id:'s10',titulo:'⭐ Plan Premium',texto:'Con Premium desbloqueas:<br>• 🎤 Dictado de voz en todos los campos<br>• ∞ Registros ilimitados (Free = 20)<br>• 📷 Fotos en Google Drive<br>• 📊 Sincronización con Google Sheets<br>• 📱 Acceso desde varios dispositivos<br>• 🔄 Backup automático<br>• 📁 Vista de carpetas<br>• 🌱 Mis rutinas completo<br>• 🎨 Temas y personalización<br><br><b>Activar:</b> Configuración → ⭐ Activar Premium → introduce tu código de licencia.'},
+{id:'s11',titulo:'📞 Contacto',texto:'¿Tienes dudas o sugerencias?<br><br>🌐 <b>tapunto.app</b><br><br>Tapunto © 2026 Alicia Prats · Todos los derechos reservados.'}
+];
+secciones.forEach(function(sec){
+var blk=document.createElement('div');
+blk.style.cssText='border:1px solid var(--bd);border-radius:12px;margin-bottom:8px;overflow:hidden;';
+var secHdr=document.createElement('div');
+secHdr.style.cssText='padding:12px 14px;display:flex;justify-content:space-between;align-items:center;cursor:pointer;background:var(--bl);';
+secHdr.innerHTML='<div style="font-size:13px;font-weight:700;color:var(--td);font-family:Lato,sans-serif;">'+sec.titulo+'</div><span style="color:var(--tl);font-size:14px;transition:transform .2s;">▶</span>';
+var secBody=document.createElement('div');
+secBody.style.cssText='display:none;padding:12px 14px;font-size:12px;color:var(--td);font-family:Lato,sans-serif;line-height:1.7;border-top:1px solid var(--bd);';
+secBody.innerHTML=sec.texto;
+secHdr.onclick=function(){
+var open=secBody.style.display==='block';
+secBody.style.display=open?'none':'block';
+secHdr.querySelector('span').textContent=open?'▶':'▼';
+};
+blk.appendChild(secHdr);blk.appendChild(secBody);
+body.appendChild(blk);
+});
+panel.appendChild(hdr);panel.appendChild(body);
+overlay.appendChild(panel);
+overlay.onclick=function(e){if(e.target===overlay)overlay.style.display='none';};
 document.body.appendChild(overlay);
 }
+
 
 function mostrarSelectorPDFRutina(){
 if(!state.rutinas||!state.rutinas.length){alert('No hay rutinas creadas.');return;}
@@ -5924,7 +5872,8 @@ emailDiv.style.cssText='padding:12px 14px;border-bottom:0.5px solid var(--bd);';
 emailDiv.innerHTML='<div style="font-size:12px;font-weight:700;color:var(--td);font-family:Lato,sans-serif;">'+(currentUser||'—')+'</div>'+(isPremium?'<div style="font-size:11px;color:#EF9F27;font-weight:600;">⭐ Premium activo</div>':'<div style="font-size:11px;color:var(--tl);">Plan Free</div>');
 menu.appendChild(emailDiv);
 var items=[
-{icon:'👤',label:'Mis datos',fn:function(){menu.remove();irSeccion('config');setTimeout(function(){var perfil=document.getElementById('card-perfil');if(perfil){perfil.open=true;perfil.scrollIntoView({behavior:'smooth'});}},400);}},
+{icon:'❓',label:'Ayuda',fn:function(){menu.remove();mostrarAyuda();}},
+{icon:'👤',label:'Mis datos',fn:function(){menu.remove();irSeccion('config');setTimeout(function(){var c=document.getElementById('cfg-block-firma');if(c){c.scrollIntoView({behavior:'smooth',block:'start'});var hdr=c.querySelector('.cfg-hdr');var body=c.querySelector('.cfg-body');if(hdr&&body&&body.style.display==='none')toggleCfg(hdr);}},450);}},
 {icon:'⚙️',label:'Configuración',fn:function(){menu.remove();irSeccion('config');}},
 {icon:'🚪',label:'Cerrar sesión',fn:function(){menu.remove();doLogout();},red:true}
 ];
@@ -6995,6 +6944,17 @@ function resetEscolarForm(){
 const _origInitForm = initForm;
 function x(s){ if(!s) return ''; return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 window.addEventListener('DOMContentLoaded',()=>{
+// Forzar ancho completo desde el primer frame - evita encabezado estrecho
+(function(){
+  var nb=document.querySelector('.notebook');
+  var pg=document.querySelector('.page');
+  var sh=document.getElementById('sec-home');
+  if(nb){nb.style.cssText+='width:100%!important;max-width:100%!important;box-sizing:border-box!important;';}
+  if(pg){pg.style.cssText+='width:100%!important;max-width:100%!important;';}
+  if(sh){sh.style.width='100%';}
+  var hdrVerde=sh?sh.querySelector('div[style*="background:var(--gd)"]'):null;
+  if(hdrVerde){hdrVerde.style.width='100%';hdrVerde.style.boxSizing='border-box';}
+})();
 initNotificaciones();
 checkSession();
 document.getElementById('login-pin').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
