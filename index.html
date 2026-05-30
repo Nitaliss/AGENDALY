@@ -579,9 +579,9 @@ body[data-theme="noche"] .free-bar{background:#2a1f00;border-color:#6b5000;color
 /* Menú acciones registro */
 .rec-menu-ov{position:fixed;inset:0;z-index:400;background:transparent;}
 /* Registro expandible */
-.record{cursor:pointer;transition:box-shadow .15s;box-sizing:border-box;width:100%;}
+.record{cursor:pointer;transition:box-shadow .15s;box-sizing:border-box;width:100%;display:flex;flex-direction:column;}
 .record:active{opacity:.95;}
-.rec-actions{display:none;padding:8px 10px 4px;border-top:1px solid var(--bd);gap:6px;flex-wrap:wrap;}
+.rec-actions{display:none;padding:8px 10px 4px;border-top:1px solid var(--bd);gap:6px;flex-wrap:wrap;flex-direction:row;}
 .rec-actions.show{display:flex;}
 .rec-action-btn{flex:1;min-width:50px;padding:6px 3px;border:none;border-radius:8px;font-family:'Lato',sans-serif;font-size:11px;font-weight:700;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px;background:var(--bl);color:var(--tm);border:1px solid var(--bd);}
 .rec-action-btn:active{opacity:.8;}
@@ -1919,7 +1919,8 @@ body.on-home .btn-home{display:none!important;}
 .h-filled:active{filter:brightness(1.18);transform:scale(1.05);}
 .h-empty{background:transparent;border:1px dashed rgba(150,150,150,.3);}
 
-.h-cell-inp{width:100%;border:none;background:transparent;text-align:center;font-family:'Lato',sans-serif;font-size:9px;font-weight:700;outline:none;padding:0;color:#222;}.h-edit-cell{border:1px solid rgba(180,180,180,.4);cursor:pointer;border-radius:4px;background:rgba(200,200,200,.15);}
+.h-cell-inp{width:100%;border:none;background:transparent;text-align:center;font-family:'Lato',sans-serif;font-size:9px;font-weight:700;outline:none;padding:0;color:#222;}
+.h-cell-inp.white-txt{color:#fff!important;}.h-edit-cell{border:1px solid rgba(180,180,180,.4);cursor:pointer;border-radius:4px;background:rgba(200,200,200,.15);}
 .h-cell-inp::placeholder{color:rgba(160,160,160,.9);font-weight:400;font-size:8px;}
 .h-arr-btn{background:none;border:none;color:var(--gd);font-size:22px;cursor:pointer;padding:0 3px;line-height:1;font-weight:900;}
 .home-compact-btn{background:var(--w,#fff);border:1px solid var(--bd);border-radius:8px;padding:5px 5px;display:flex;align-items:center;gap:4px;cursor:pointer;text-align:left;transition:all .12s;box-sizing:border-box;width:100%;}
@@ -1979,6 +1980,25 @@ body.on-home .btn-home{display:none!important;}
 .alb-fullimg-close{position:absolute;top:12px;right:16px;background:none;border:none;color:#fff;font-size:28px;cursor:pointer;}
 .fechaEvento-field label{font-size:10px;font-weight:700;color:var(--tm);font-family:'Lato',sans-serif;letter-spacing:.5px;text-transform:uppercase;display:block;margin-bottom:4px;}
 .cal-evento-dot{width:7px;height:7px;border-radius:50%;background:#c0392b;margin:1px auto 0;display:block;}
+.home-sq-btn{display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:8px;border:2px solid;background:var(--w);cursor:pointer;gap:2px;padding:4px 2px;transition:all .12s;width:100%;box-sizing:border-box;}
+.home-sq-btn:active{transform:scale(.93);filter:brightness(.95);}
+.home-sq-btn .sq-ico{font-size:15px;line-height:1;}
+.home-sq-btn .sq-lbl{font-size:7px;font-weight:700;font-family:'Lato',sans-serif;color:var(--td);text-align:center;line-height:1.2;word-break:break-word;max-width:50px;}
+/* Mi Estudio */
+.est-tab{padding:8px 14px;font-size:13px;font-weight:700;font-family:'Lato',sans-serif;cursor:pointer;border:none;background:none;color:var(--tl);border-bottom:3px solid transparent;transition:all .15s;}
+.est-tab.active{color:var(--gd);border-bottom-color:var(--gd);}
+.pom-circle-wrap{position:relative;width:160px;height:160px;margin:0 auto;}
+.pom-circle-svg{transform:rotate(-90deg);}
+.pom-time-display{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.pom-time{font-family:'Caveat',cursive;font-size:40px;font-weight:700;color:var(--td);line-height:1;}
+.pom-mode{font-size:11px;font-family:'Lato',sans-serif;color:var(--tl);margin-top:2px;}
+.pom-btn{padding:10px 20px;border-radius:24px;border:none;font-family:'Lato',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:all .12s;}
+.pom-btn-primary{background:var(--gd);color:#fff;}
+.pom-btn-secondary{background:var(--bl);color:var(--tm);}
+.pom-btn:active{transform:scale(.95);}
+.plan-exam-card{background:var(--w);border:1px solid var(--bd);border-radius:12px;padding:12px;margin-bottom:8px;}
+.plan-day-row{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--bd);}
+.plan-day-row:last-child{border-bottom:none;}
 #rec-view-modal{position:fixed;inset:0;background:rgba(0,0,0,.55);display:none;align-items:flex-end;justify-content:center;z-index:9995;}
 .rvm-sheet{background:var(--w);border-radius:18px 18px 0 0;padding:18px 16px 30px;width:100%;max-width:540px;box-shadow:0 -8px 32px rgba(0,0,0,.2);max-height:80vh;overflow-y:auto;}
 .rvm-tag{display:inline-block;padding:3px 10px;border-radius:12px;font-size:11px;font-weight:700;font-family:'Lato',sans-serif;margin-bottom:8px;}
@@ -2450,68 +2470,63 @@ body.on-home #sec-home { display: block !important; }
         <span id="home-notif-icon" style="font-size:12px;">&#128276;</span>
         <span id="home-notif-label" style="font-size:9px;color:rgba(255,255,255,0.85);font-weight:600;font-family:'Lato',sans-serif;">Notif. ON</span>
       </button>
-      <button onclick="var b=this;b.style.opacity='0.5';syncFromSheets(true).then(function(){b.style.opacity='1';}).catch(function(){b.style.opacity='1';})" id="home-sync-btn" style="background:rgba(255,255,255,0.15);border:none;border-radius:8px;padding:3px 8px;align-items:center;gap:4px;cursor:pointer;display:none;">
-        <span style="font-size:16px;color:#fff;line-height:1;">&#10227;</span>
-        <span style="font-size:9px;color:rgba(255,255,255,0.85);font-weight:600;font-family:'Lato',sans-serif;">Sync</span>
-      </button>
     </div>
   </div>
-  <div style="padding:7px 9px 3px;">
-    <div style="display:flex;gap:6px;align-items:flex-start;">
-      <div style="flex:1;min-width:0;">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
+  <div style="padding:7px 9px 6px;">
+    <!-- Schedule + right strip -->
+    <div style="display:flex;gap:5px;align-items:stretch;">
+
+      <!-- Schedule (left, flexible) -->
+      <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:4px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;">
           <div style="display:flex;align-items:center;gap:1px;">
             <button onclick="switchHorario(-1)" class="h-arr-btn">&#8249;</button>
             <span id="home-horario-nombre" style="font-family:'Caveat',cursive;font-size:16px;font-weight:700;color:var(--gd);min-width:80px;text-align:center;"></span>
             <button onclick="switchHorario(1)" class="h-arr-btn">&#8250;</button>
             <span id="home-horario-idx" style="font-size:9px;color:var(--th);margin-left:2px;font-family:'Lato',sans-serif;"></span>
           </div>
-          <button onclick="toggleHorarioEditMode()" id="btn-edit-horario" style="background:var(--bl);border:1px solid var(--bd);border-radius:14px;padding:4px 10px;font-size:10px;font-family:'Lato',sans-serif;font-weight:700;color:var(--tm);cursor:pointer;display:flex;align-items:center;gap:4px;">&#9998; Editar</button>
+          <button onclick="toggleHorarioEditMode()" id="btn-edit-horario" style="background:var(--bl);border:1px solid var(--bd);border-radius:14px;padding:3px 9px;font-size:10px;font-family:'Lato',sans-serif;font-weight:700;color:var(--tm);cursor:pointer;">&#9998; Editar</button>
         </div>
-        <div id="home-horario-wrap" style="overflow-x:auto;border-radius:8px;border:1px solid var(--bd);background:var(--w);"></div>
-        <div id="home-h-add-slot" style="display:none;margin-top:5px;text-align:center;">
-          <button onclick="hAgregarSlot()" style="background:var(--gd);color:#fff;border:none;border-radius:6px;padding:5px 14px;font-size:11px;cursor:pointer;font-family:'Lato',sans-serif;font-weight:700;">+ Añadir franja horaria</button>
+        <div id="home-horario-wrap" style="overflow-x:auto;border-radius:8px;border:1px solid var(--bd);background:var(--w);flex:1;"></div>
+        <div id="home-h-add-slot" style="display:none;text-align:center;">
+          <button onclick="hAgregarSlot()" style="background:var(--gd);color:#fff;border:none;border-radius:6px;padding:4px 12px;font-size:11px;cursor:pointer;font-family:'Lato',sans-serif;font-weight:700;">+ Añadir franja</button>
+          <button onclick="hOrdenarSlots()" style="background:var(--bl);color:var(--tm);border:1px solid var(--bd);border-radius:6px;padding:4px 10px;font-size:11px;cursor:pointer;font-family:'Lato',sans-serif;font-weight:700;margin-left:6px;">&#8597; Ordenar</button>
         </div>
-        <div id="home-h-color-tip" style="display:none;font-size:9px;color:var(--th);font-family:'Lato',sans-serif;text-align:center;margin-top:3px;">Toca celda rellena para cambiar su color</div>
+        <div id="home-h-color-tip" style="display:none;font-size:9px;color:var(--th);font-family:'Lato',sans-serif;text-align:center;">Toca celda rellena para cambiar color</div>
       </div>
-      <div id="home-alertas-panel" style="width:96px;flex-shrink:0;min-width:0;"></div>
+
+      <!-- Right strip: 6 square nav buttons -->
+      <div style="display:flex;flex-direction:column;gap:3px;width:52px;flex-shrink:0;">
+        <button class="home-sq-btn" style="border-color:#2D8A5A;flex:1;" onclick="irSeccion('nuevo')">
+          <span class="sq-ico">&#10133;</span>
+          <span class="sq-lbl">Nuevo</span>
+        </button>
+        <button class="home-sq-btn" style="border-color:#1A7B8C;flex:1;" onclick="irSeccion('registros')">
+          <span class="sq-ico">&#128203;</span>
+          <span class="sq-lbl">Registros</span>
+        </button>
+        <button class="home-sq-btn" style="border-color:#4A90D9;flex:1;" onclick="irSeccion('albumes')">
+          <span class="sq-ico">&#128247;</span>
+          <span class="sq-lbl">&#193;lbumes</span>
+        </button>
+        <button class="home-sq-btn" style="border-color:#D4851A;flex:1;" onclick="irSeccion('calendario')">
+          <span class="sq-ico">&#128197;</span>
+          <span class="sq-lbl">Agenda</span>
+        </button>
+        <button class="home-sq-btn" style="border-color:#F39C12;flex:1;" onclick="irSeccion('notas')">
+          <span class="sq-ico">&#128221;</span>
+          <span class="sq-lbl">To Do</span>
+        </button>
+        <button class="home-sq-btn" style="border-color:#8E44AD;flex:1;" onclick="irSeccion('estudio')">
+          <span class="sq-ico">&#128218;</span>
+          <span class="sq-lbl">Estudio</span>
+        </button>
+      </div>
+
     </div>
-  </div>
-  <div style="padding:6px 9px 4px;">
-    <button onclick="irSeccion('nuevo')" style="width:100%;padding:12px 16px;background:var(--gd);border:none;border-radius:13px;display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;box-shadow:0 4px 12px rgba(45,80,22,.25);box-sizing:border-box;position:relative;">
-      <span style="font-size:22px;font-weight:900;color:#fff;line-height:1;">+</span>
-      <span style="font-size:14px;font-weight:700;color:#fff;font-family:'Lato',sans-serif;">Nuevo registro libre</span>
-      <button onclick="event.stopPropagation();irSeccion('recordatorios')" id="home-alertas-btn" style="display:none;background:rgba(255,255,255,0.2);border:none;border-radius:8px;padding:4px 9px;align-items:center;gap:4px;cursor:pointer;position:absolute;right:10px;">
-        <span style="font-size:13px;">&#128276;</span>
-        <span id="home-badge-alertas" style="font-size:11px;font-weight:700;color:#fff;font-family:'Lato',sans-serif;"></span>
-      </button>
-    </button>
-  </div>
-  <div style="padding:4px 9px 18px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px;">
-    <button onclick="irSeccion('registros')" class="home-compact-btn" style="flex-direction:column;align-items:center;text-align:center;padding:7px 4px;gap:3px;">
-      <div class="home-compact-icon" style="background:#EAF3DE;">&#128203;</div>
-      <div class="home-compact-text" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:100%;text-align:center;">Registros</div>
-      <div class="home-compact-sub" id="home-info-registros" style="text-align:center;"></div>
-    </button>
-    <button onclick="irSeccion('calendario')" class="home-compact-btn" style="flex-direction:column;align-items:center;text-align:center;padding:7px 4px;gap:3px;">
-      <div class="home-compact-icon" style="background:#E6F1FB;">&#128197;</div>
-      <div class="home-compact-text" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:100%;text-align:center;">Mi agenda</div>
-      <div class="home-compact-sub" id="home-info-agenda" style="text-align:center;"></div>
-    </button>
-    <button onclick="irSeccion('albumes')" class="home-compact-btn" style="flex-direction:column;align-items:center;text-align:center;padding:7px 4px;gap:3px;">
-      <div class="home-compact-icon" style="background:#E8F4FD;">&#128247;</div>
-      <div class="home-compact-text" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:100%;text-align:center;">Álbumes</div>
-      <div class="home-compact-sub" id="home-info-albumes" style="text-align:center;"></div>
-    </button>
-    <button onclick="irSeccion('notas')" class="home-compact-btn" style="flex-direction:column;align-items:center;text-align:center;padding:7px 4px;gap:3px;">
-      <div class="home-compact-icon" style="background:#FAEEDA;">&#128221;</div>
-      <div class="home-compact-text" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:100%;text-align:center;">To do</div>
-      <div class="home-compact-sub" id="home-info-notas" style="text-align:center;"></div>
-    </button>
-    <button onclick="irSeccion('rutinas')" class="home-compact-btn" style="flex-direction:column;align-items:center;text-align:center;padding:7px 4px;gap:3px;">
-      <div class="home-compact-icon" style="background:#EEEDFE;">&#127807;</div>
-      <div class="home-compact-text" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:100%;text-align:center;">Rutinas</div>
-    </button>
+
+    <!-- Alerts panel (full width, below) -->
+    <div id="home-alertas-panel" style="margin-top:5px;border-radius:8px;border:1px solid var(--bd);background:var(--w);"></div>
   </div>
 </div><!-- /sec-home -->
 
@@ -2532,11 +2547,17 @@ body.on-home #sec-home { display: block !important; }
       <button class="h-tipo-chip" onclick="hSelTipo(this,'Otro')">&#128172; Otro</button>
     </div>
     <!-- Foto adjunta -->
-    <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-      <label style="flex:1;display:flex;align-items:center;justify-content:center;gap:6px;padding:8px;background:var(--bl);border:1.5px dashed var(--bd);border-radius:8px;cursor:pointer;font-size:12px;font-family:'Lato',sans-serif;color:var(--tl);font-weight:600;position:relative;">
-        &#128247; Adjuntar foto
-        <input type="file" accept="image/*" id="h-task-foto-inp" style="position:absolute;inset:0;opacity:0;cursor:pointer;" onchange="hTaskFotoSeleccionada(this)" />
-      </label>
+    <div style="margin-bottom:8px;">
+      <div style="display:flex;gap:6px;margin-bottom:5px;">
+        <label style="flex:1;display:flex;align-items:center;justify-content:center;gap:5px;padding:8px;background:var(--bl);border:1.5px dashed var(--bd);border-radius:8px;cursor:pointer;font-size:12px;font-family:'Lato',sans-serif;color:var(--tl);font-weight:600;position:relative;">
+          &#128247; C&#225;mara
+          <input type="file" accept="image/*" capture="environment" id="h-task-foto-inp" style="position:absolute;inset:0;opacity:0;cursor:pointer;" onchange="hTaskFotoSeleccionada(this)" />
+        </label>
+        <label style="flex:1;display:flex;align-items:center;justify-content:center;gap:5px;padding:8px;background:var(--bl);border:1.5px dashed var(--bd);border-radius:8px;cursor:pointer;font-size:12px;font-family:'Lato',sans-serif;color:var(--tl);font-weight:600;position:relative;">
+          &#128444;&#65039; Galería
+          <input type="file" accept="image/*" id="h-task-foto-gal" style="position:absolute;inset:0;opacity:0;cursor:pointer;" onchange="hTaskFotoSeleccionada(this)" />
+        </label>
+      </div>
       <div id="h-task-foto-preview" style="display:none;width:52px;height:52px;border-radius:8px;overflow:hidden;flex-shrink:0;position:relative;">
         <img id="h-task-foto-img" src="" alt="" style="width:100%;height:100%;object-fit:cover;" />
         <button onclick="hTaskFotoQuitar()" style="position:absolute;top:2px;right:2px;background:rgba(0,0,0,.6);color:#fff;border:none;border-radius:50%;width:16px;height:16px;font-size:9px;cursor:pointer;display:flex;align-items:center;justify-content:center;">&#215;</button>
@@ -2570,6 +2591,122 @@ body.on-home #sec-home { display: block !important; }
   <div id="albumes-filtro" style="padding:8px 14px 4px;display:flex;gap:6px;overflow-x:auto;background:var(--bl);border-bottom:1px solid var(--bd);"></div>
   <div id="albumes-list" style="padding:10px 14px 32px;"></div>
 </div><!-- /sec-albumes -->
+
+<!-- ══ MI ESTUDIO ══ -->
+<div id="sec-estudio" class="section">
+  <div class="tap-header">
+    <button class="tap-header-btn" onclick="irHome()" style="flex-direction:column;gap:1px;">
+      <span style="font-size:22px;line-height:1;color:#fff;font-weight:900;">&#8592;</span>
+      <span style="font-size:9px;color:#fff;font-weight:700;font-family:'Lato',sans-serif;">Inicio</span>
+    </button>
+    <span class="tap-header-title">Mi Estudio</span>
+    <div style="width:44px;"></div>
+  </div>
+
+  <!-- Tab bar -->
+  <div style="display:flex;border-bottom:1px solid var(--bd);background:var(--w);padding:0 14px;">
+    <button class="est-tab active" id="est-tab-pom" onclick="estSwitchTab('pom')">&#9201; Pomodoro</button>
+    <button class="est-tab" id="est-tab-plan" onclick="estSwitchTab('plan')">&#128203; Planificador</button>
+  </div>
+
+  <!-- POMODORO -->
+  <div id="est-pom" style="padding:16px 14px 32px;display:block;">
+
+    <!-- Subject selector -->
+    <div style="margin-bottom:14px;">
+      <label style="font-size:11px;font-weight:700;color:var(--tm);font-family:'Lato',sans-serif;text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:5px;">Estudiando:</label>
+      <div style="display:flex;gap:6px;align-items:center;">
+        <select id="pom-asig" style="flex:1;padding:8px 10px;border:1.5px solid var(--bd);border-radius:8px;font-size:14px;font-family:'Lato',sans-serif;background:var(--bp);color:var(--td);outline:none;">
+          <option value="">Asignatura...</option>
+        </select>
+        <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;">
+          <button onclick="pomSetWork(25)" id="pom-preset-25" style="padding:6px 10px;border-radius:18px;border:1.5px solid var(--gd);background:var(--gd);color:#fff;font-size:11px;font-weight:700;cursor:pointer;font-family:'Lato',sans-serif;">25'</button>
+          <button onclick="pomSetWork(50)" id="pom-preset-50" style="padding:6px 10px;border-radius:18px;border:1.5px solid var(--bd);background:var(--bl);color:var(--tm);font-size:11px;font-weight:700;cursor:pointer;font-family:'Lato',sans-serif;">50'</button>
+          <div style="display:flex;align-items:center;gap:4px;">
+            <input type="number" id="pom-custom-min" min="1" max="180" value="25" style="width:48px;padding:5px 6px;border:1.5px solid var(--bd);border-radius:8px;font-size:12px;font-family:'Lato',sans-serif;background:var(--bp);color:var(--td);text-align:center;"/>
+            <span style="font-size:10px;color:var(--tl);font-family:'Lato',sans-serif;">min</span>
+            <button onclick="var m=parseInt(document.getElementById('pom-custom-min').value)||25;pomSetWork(m)" style="padding:5px 8px;border-radius:8px;border:1.5px solid var(--gm);background:var(--gm);color:#fff;font-size:10px;font-weight:700;cursor:pointer;font-family:'Lato',sans-serif;">OK</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Timer circle -->
+    <div class="pom-circle-wrap" id="pom-circle-wrap">
+      <svg class="pom-circle-svg" width="160" height="160" viewBox="0 0 160 160">
+        <circle cx="80" cy="80" r="70" fill="none" stroke="var(--bd)" stroke-width="10"/>
+        <circle id="pom-circle-arc" cx="80" cy="80" r="70" fill="none" stroke="var(--gd)" stroke-width="10"
+          stroke-dasharray="439.82" stroke-dashoffset="0" stroke-linecap="round"/>
+      </svg>
+      <div class="pom-time-display">
+        <div class="pom-time" id="pom-display">25:00</div>
+        <div class="pom-mode" id="pom-mode-lbl">Sesión de trabajo</div>
+      </div>
+    </div>
+
+    <!-- Controls -->
+    <div style="display:flex;gap:10px;justify-content:center;margin-top:18px;">
+      <button class="pom-btn pom-btn-secondary" onclick="pomReset()">&#8635; Reset</button>
+      <button class="pom-btn pom-btn-primary" id="pom-start-btn" onclick="pomToggle()" style="min-width:100px;">&#9654; Iniciar</button>
+      <button class="pom-btn pom-btn-secondary" onclick="pomSkip()">&#9193; Saltar</button>
+    </div>
+
+    <!-- Sound toggle -->
+    <div style="display:flex;align-items:center;justify-content:center;gap:8px;margin-top:12px;">
+      <label style="display:flex;align-items:center;gap:6px;font-size:12px;font-family:'Lato',sans-serif;color:var(--tl);cursor:pointer;">
+        <input type="checkbox" id="pom-sound-on" checked style="width:16px;height:16px;cursor:pointer;"/>
+        &#128266; Sonido al terminar
+      </label>
+    </div>
+
+    <!-- Sessions today -->
+    <div style="margin-top:18px;border-top:1px solid var(--bd);padding-top:12px;">
+      <div style="font-size:11px;font-weight:700;color:var(--tm);font-family:'Lato',sans-serif;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">Sesiones de hoy</div>
+      <div id="pom-sessions-list" style="font-size:13px;color:var(--tl);font-family:'Lato',sans-serif;">Sin sesiones aún</div>
+    </div>
+
+  </div><!-- /est-pom -->
+
+  <!-- PLANIFICADOR -->
+  <div id="est-plan" style="padding:14px;display:none;">
+
+    <div style="font-size:13px;color:var(--tl);font-family:'Lato',sans-serif;margin-bottom:12px;line-height:1.5;">
+      Configura tus próximos ex&#225;menes o entregas para generar un plan de estudio.
+    </div>
+
+    <!-- Exam list from records -->
+    <div id="plan-exams-list"></div>
+
+    <!-- Generate button -->
+    <button onclick="planGenerar()" style="width:100%;padding:12px;background:var(--gd);border:none;border-radius:10px;font-family:'Lato',sans-serif;font-size:14px;font-weight:700;color:#fff;cursor:pointer;margin-top:8px;">
+      &#128197; Generar plan de estudio
+    </button>
+
+    <!-- Generated plan output -->
+    <div id="plan-output" style="margin-top:14px;"></div>
+
+    <!-- Action buttons (shown after plan is generated) -->
+    <div id="plan-actions" style="display:none;gap:8px;margin-top:10px;">
+      <button onclick="planGuardar()" style="flex:1;padding:10px;background:var(--gd);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Lato',sans-serif;">
+        &#128190; Guardar plan
+      </button>
+      <button onclick="planDescargarPDF()" style="flex:1;padding:10px;background:#2D5016;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Lato',sans-serif;">
+        &#128196; Descargar PDF
+      </button>
+    </div>
+
+    <!-- Saved plans history -->
+    <div id="plan-guardados-wrap" style="margin-top:18px;display:none;">
+      <div style="font-size:11px;font-weight:700;color:var(--tm);font-family:'Lato',sans-serif;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;display:flex;align-items:center;justify-content:space-between;">
+        <span>Planes guardados</span>
+        <button onclick="planLimpiarHistorial()" style="font-size:10px;color:var(--tl);background:none;border:none;cursor:pointer;font-family:'Lato',sans-serif;">Limpiar todo</button>
+      </div>
+      <div id="plan-guardados-list"></div>
+    </div>
+
+  </div><!-- /est-plan -->
+
+</div><!-- /sec-estudio -->
 
 <!-- Modal crear álbum -->
 <div id="alb-modal">
@@ -2687,6 +2824,7 @@ body.on-home #sec-home { display: block !important; }
         <button type="button" class="tipo-chip-nuevo" onclick="selTipoNuevo(this,'Otro')">&#128172; Otro</button>
       </div>
       <input type="hidden" id="inp-tipo-nuevo" value="Examen"/>
+      <input type="hidden" id="inp-contacto" value=""/>
     </div>
 
     <input type="hidden" id="inp-estado" value="pendiente"/>
@@ -4418,7 +4556,7 @@ const buf=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(atob('dG
 return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('').slice(0,32);
 }
 const APP_KEY = 'tapunto_v1';
-let state = {records:[],contactos:[],temas:[],acciones:[],comunicados:[],notas:[],rutinas:[],sheetsUrl:'',theme:'verde',coverImageData:null,modo:'trabajo',horario:{activo:0,schedules:[{nombre:'Horario 1',slots:['8:00','9:00','10:00','11:00','12:00','13:00','14:00'],grid:{},colores:{}},{nombre:'Horario 2',slots:['8:00','9:00','10:00','11:00','12:00','13:00','14:00'],grid:{},colores:{}}]},albums:[]};
+let state = {records:[],contactos:[],temas:[],acciones:[],comunicados:[],notas:[],rutinas:[],sheetsUrl:'',theme:'verde',coverImageData:null,modo:'trabajo',horario:{activo:0,schedules:[{nombre:'Horario 1',slots:['8:00','9:00','10:00','11:00','12:00','13:00','14:00'],grid:{},colores:{}},{nombre:'Horario 2',slots:['8:00','9:00','10:00','11:00','12:00','13:00','14:00'],grid:{},colores:{}}]},albums:[],planesEstudio:[]};
 var rutinasFechaActual = {}; // {id: fechaKey} fecha seleccionada por cada rutina
 let currentUser = null;
 let editingId   = null;
@@ -4523,7 +4661,7 @@ plain=raw;
 plain=raw;
 }
 const parsedState=JSON.parse(plain);
-state=Object.assign({records:[],contactos:[],temas:[],acciones:[],comunicados:[],notas:[],rutinas:[],sheetsUrl:'',theme:'verde',coverImageData:null,modo:'trabajo',horario:{activo:0,schedules:[{nombre:'Horario 1',slots:['8:00','9:00','10:00','11:00','12:00','13:00','14:00'],grid:{},colores:{}},{nombre:'Horario 2',slots:['8:00','9:00','10:00','11:00','12:00','13:00','14:00'],grid:{},colores:{}}]},albums:[]},parsedState);
+state=Object.assign({records:[],contactos:[],temas:[],acciones:[],comunicados:[],notas:[],rutinas:[],sheetsUrl:'',theme:'verde',coverImageData:null,modo:'trabajo',horario:{activo:0,schedules:[{nombre:'Horario 1',slots:['8:00','9:00','10:00','11:00','12:00','13:00','14:00'],grid:{},colores:{}},{nombre:'Horario 2',slots:['8:00','9:00','10:00','11:00','12:00','13:00','14:00'],grid:{},colores:{}}]},albums:[],planesEstudio:[]},parsedState);
 // Garantizar arrays aunque vengan undefined del estado guardado
 if(!Array.isArray(state.notas)) state.notas=[];
 if(!Array.isArray(state.rutinas)) state.rutinas=[];
@@ -7026,7 +7164,7 @@ function initNotificaciones(){
 /* ══ FIN NOTIFICACIONES ══ */
 
 function irHome(){
-var secs=['home','nuevo','registros','recordatorios','calendario','notas','rutinas','config','albumes'];
+var secs=['home','nuevo','registros','recordatorios','calendario','notas','rutinas','config','albumes','estudio'];
 secs.forEach(function(s){
 var el=document.getElementById('sec-'+s);
 if(el){el.classList.remove('active');el.style.display='none';}
@@ -7108,7 +7246,7 @@ if(darkLabel) darkLabel.textContent=isDark?'Claro':'Oscuro';
 function irSeccion(tab){
 document.body.classList.remove('on-home');
 switchTab(tab,null);
-var titles={nuevo:'NUEVO REGISTRO',registros:'LISTA DE REGISTROS',recordatorios:'ALERTAS',calendario:'MI AGENDA',notas:'TO DO',rutinas:'MIS RUTINAS',config:'CONFIGURACIÓN',albumes:'MIS ÁLBUMES'};
+var titles={nuevo:'NUEVO REGISTRO',registros:'LISTA DE REGISTROS',recordatorios:'ALERTAS',calendario:'MI AGENDA',notas:'TO DO',rutinas:'MIS RUTINAS',config:'CONFIGURACIÓN',albumes:'MIS ÁLBUMES',estudio:'MI ESTUDIO'};
 document.getElementById('hdr-section-title').textContent=titles[tab]||'TAPUNTO';
 }
 function switchTab(tab,btn){
@@ -7456,58 +7594,46 @@ var fd=isNaN(d)?r.fecha:d.toLocaleDateString('es-ES',{day:'2-digit',month:'short
 var fh=isNaN(d)?'':d.toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'});
 var bc=r.estado==='resuelto'?'b-done':r.estado==='en curso'?'b-prog':r.estado==='pendiente'?'b-pend':'';
 var bl=r.estado==='resuelto'?'Resuelto':r.estado==='en curso'?'En curso':r.estado==='pendiente'?'Pendiente':'';
-var titulo=x(r.tema)||x(r.accion)||'Sin título';
-var icono=r.icono||'📋';
-var fotoIcon='';
-if(r.imagenUrl){
-  var imgSrc=r.imagenUrl;
-  if(imgSrc.indexOf('drive.google.com/file/d/')>-1){var fid=imgSrc.match(/\/d\/([^\/]+)/);if(fid)imgSrc='https://drive.google.com/thumbnail?id='+fid[1]+'&sz=w80';}
-  var isDrv=r.imagenUrl.indexOf('drive.google.com')>-1;
-  var drvUrl=isDrv?r.imagenUrl:'';
-  fotoIcon='<img src="'+imgSrc+'" style="width:40px;height:40px;border-radius:8px;object-fit:cover;flex-shrink:0;border:1px solid var(--bd);cursor:pointer;" loading="lazy" onclick="event.stopPropagation();mostrarFotoAmpliada(\''+imgSrc+'\','+isDrv+',\''+drvUrl+'\')" />';
+var icono=r.icono||'\uD83D\uDCCB';
+var titulo=x(r.tema)||x(r.accion)||'Sin t\u00EDtulo';
+var confIcon=r.confidencial?'<span style="font-size:10px">\uD83D\uDD12</span>':'';
+var nota=r.notas?x(r.notas).slice(0,70)+(r.notas.length>70?'\u2026':''):'';
+var fechaEvt='';
+if(r.fechaEvento){
+  var evd=new Date(r.fechaEvento+'T00:00:00');
+  if(!isNaN(evd)){var hoy0=new Date();hoy0.setHours(0,0,0,0);var diff=Math.ceil((evd-hoy0)/86400000);var diffTxt=diff<0?'Vencido':diff===0?'HOY':diff===1?'Ma\u00F1':diff+'d';fechaEvt='<span style="font-size:9px;background:'+(diff<=2?'rgba(192,57,43,.1)':'rgba(45,138,90,.1)')+';color:'+(diff<=2?'#c0392b':'#2D8A5A')+';border-radius:4px;padding:1px 5px;font-weight:700;">\uD83D\uDCC5 '+diffTxt+'</span>';}
 }
-var subtitulo=r.contacto?x(r.contacto):(r.accion&&r.tema?x(r.accion):'');
-var confIcon=r.confidencial?'<span style="font-size:10px;margin-left:3px">🔒</span>':'';
-var tagT=r.tema?'<span class="tag">'+x(r.tema)+'</span>':'';
-var tagC=r.comunicado?'<span class="tag">'+x(r.comunicado)+'</span>':'';
-var remFecha='';
-if(r.recordatorio){var rd=new Date(r.recordatorio);remFecha=isNaN(rd)?r.recordatorio:rd.toLocaleDateString('es-ES',{day:'2-digit',month:'short'});}
-var rem=remFecha?'<span style="font-size:10px;color:var(--th)">🔔 '+remFecha+'</span>':'';
-var meta=tagT+tagC+rem;
-var nota=r.notas?'<div class="rec-note">'+x(r.notas).slice(0,80)+(r.notas.length>80?'…':'')+'</div>':'';
+var fotoThumb='';
+if(r.imagenUrl){var imgSrc=r.imagenUrl;if(imgSrc.indexOf('drive.google.com/file/d/')>-1){var fid=imgSrc.match(/\/d\/([^\/]+)/);if(fid)imgSrc='https://drive.google.com/thumbnail?id='+fid[1]+'&sz=w60';}fotoThumb='<img src="'+imgSrc+'" style="width:34px;height:34px;border-radius:6px;object-fit:cover;flex-shrink:0;border:1px solid var(--bd);" loading="lazy" onclick="event.stopPropagation();mostrarFotoAmpliada(\''+imgSrc+'\',false,\'\')" />';}
+var badge=bl?('<span class="badge '+bc+'" onclick="event.stopPropagation();cycleEstado(\''+r.id+'\')" style="flex-shrink:0;">'+bl+'</span>'):'';
 var id=r.id;
-var rid2=id;
-var badge=bl?('<span class="badge '+bc+'" onclick="event.stopPropagation();cycleEstado(\'' +id+ '\')" title="Toca para cambiar estado">'+bl+'</span>'):'';
-var mailIcon='<span class="comm-icon'+(r.mailSent?' sent':'')+'">'+( r.mailSent?'✉ Enviado':'✉')+'</span>';
-var waIcon='<span class="comm-icon'+(r.waEnviado?' sent':'')+'">'+( r.waEnviado?'💬 Enviado':'💬')+'</span>';
-var calIcon=r.calGuardado?'<span class="comm-icon sent">📅 Calendar</span>':'';
-var commRow='<div class="comm-icons">'+mailIcon+waIcon+calIcon+'</div>';
-function btn(icon,label,fn){
-return '<button class="rec-action-btn" onclick="event.stopPropagation();'+fn+'(\'' +id+ '\')"><span>'+icon+'</span>'+label+'</button>';
-}
-function btnStop(icon,label,fn){
-return '<button class="rec-action-btn" onclick="event.stopPropagation();'+fn+'()"><span>'+icon+'</span>'+label+'</button>';
-}
-var btnEdit=btn('✏️','Editar','editRecord');
-var btnEmail=btn('✉','Email','abrirEmailModal');
-var btnEmailIA='';
-var btnWA=btn('💬','WhatsApp','abrirWhatsApp');
-var btnCal=btn('📅','Calendar','abrirGoogleCalendarConConfirm');
-var btnDup=btn('📋','Duplicar','duplicarRegistro');
-var btnArch=r.archivado?btn('📤','Restaurar','restaurarRegistro'):btn('📥','Archivar','archivarRegistro');
-var btnDel='<button class="rec-action-btn danger" onclick="event.stopPropagation();askDelete(\'' +id+ '\')"><span>🗑</span>Eliminar</button>';
-var actions='<div class="rec-actions" id="ra-'+id+'">'+btnEdit+btnDup+btnArch+btnEmail+btnEmailIA+btnWA+btnCal+btnDel+'</div>';
-return '<div class="record" data-id="'+id+'" onclick="toggleRecActions(\'' +id+ '\')">'
-+'<div class="rec-date">'+fd+'<br>'+fh+'</div>'
+function btn(icon,label,fn){return '<button class="rec-action-btn" onclick="event.stopPropagation();'+fn+'(\''+id+'\')"><span>'+icon+'</span>'+label+'</button>';}
+var btnEdit=btn('\u270F\uFE0F','Editar','editRecord');
+var btnEmail=btn('\u2709','Email','abrirEmailModal');
+var btnWA=btn('\uD83D\uDCAC','WhatsApp','abrirWhatsApp');
+var btnCal=btn('\uD83D\uDCC5','Calendar','abrirGoogleCalendarConConfirm');
+var btnDup=btn('\uD83D\uDCCB','Duplicar','duplicarRegistro');
+var btnArch=r.archivado?btn('\uD83D\uDCE4','Restaurar','restaurarRegistro'):btn('\uD83D\uDCE5','Archivar','archivarRegistro');
+var btnDel='<button class="rec-action-btn danger" onclick="event.stopPropagation();askDelete(\''+id+'\')"><span>\uD83D\uDDD1</span>Eliminar</button>';
+var actions='<div class="rec-actions" id="ra-'+id+'">'+btnEdit+btnDup+btnArch+btnEmail+btnWA+btnCal+btnDel+'</div>';
+return '<div class="record" data-id="'+id+'" onclick="toggleRecActions(\''+id+'\')">'
++'<div style="display:flex;flex-direction:row;align-items:center;gap:7px;padding:1px 0;">'
++'<span style="font-size:17px;flex-shrink:0;line-height:1;">'+icono+'</span>'
 +'<div style="flex:1;min-width:0;">'
-+'<div style="display:flex;align-items:center;gap:8px;">'+(icono?'<span style="font-size:18px;flex-shrink:0;">'+icono+'</span>':'')+'<div class="rec-title" style="flex:1;min-width:0;">'+titulo+confIcon+'</div>'+(fotoIcon?'<div style="flex-shrink:0;margin-left:6px;">'+fotoIcon+'</div>':'')+' </div>'
-+(subtitulo?'<div style="font-size:11px;color:var(--tl);margin-top:1px;">'+subtitulo+'</div>':'')
-+'<div class="rec-meta">'+meta+'</div>'
-+nota
++'<div style="display:flex;flex-direction:row;align-items:center;flex-wrap:wrap;gap:4px;line-height:1.3;">'
++'<span style="font-size:13px;font-weight:700;color:var(--td);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:140px;">'+titulo+'</span>'
++confIcon
++(r.accion?'<span style="font-size:9px;background:var(--bl);color:var(--tm);border-radius:4px;padding:1px 5px;flex-shrink:0;">'+x(r.accion)+'</span>':'')
++fechaEvt
++'<span style="font-size:10px;color:var(--tl);margin-left:auto;white-space:nowrap;flex-shrink:0;">'+fd+(fh?' '+fh:'')+'</span>'
 +'</div>'
-+'<div class="rec-right">'+badge+commRow+'</div>'
++(nota?'<div style="font-size:11px;color:var(--tl);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'+nota+'</div>':'')
 +'</div>'
-+actions;
++(fotoThumb?fotoThumb:'')
++(badge?badge:'')
++'</div>'
++actions
++'</div>';
 }
 function showImgModal(id){ const r=state.records.find(rec=>rec.id===id); if(!r||!r.imagenUrl) return; const w=window.open('','_blank','width=600,height=500'); w.document.write(`<html><body style="margin:0;background:#000;display:flex;align-items:center;justify-content:center;height:100vh"><img src="${r.imagenUrl}" style="max-width:100%;max-height:100%"/>
 <div id="toast-warn" style="position:fixed;bottom:80px;left:50%;transform:translateX(-50%);z-index:9999;padding:12px 20px;border-radius:10px;font-size:13px;display:none;align-items:center;gap:8px;background:#fff8e1;color:#7B3F00;box-shadow:0 4px 16px rgba(0,0,0,.2);min-width:220px;justify-content:center;border:1px solid #f0c040;"></div>
@@ -8086,7 +8212,25 @@ initFAB();
 irHome();
 });
 
-setTimeout(function(){renderHorarioHome();renderAlertas();},200);
+setTimeout(function(){renderHorarioHome();renderAlertas();},350);
+setTimeout(function(){renderHorarioHome();},700);
+window.addEventListener('resize',function(){
+  var sh=document.getElementById('sec-home');
+  if(sh&&sh.classList.contains('active'))renderHorarioHome();
+},{once:false,passive:true});
+// MutationObserver: re-render whenever sec-home becomes visible
+(function(){
+  var _secHome=document.getElementById('sec-home');
+  if(!_secHome||typeof MutationObserver==='undefined') return;
+  var _obs=new MutationObserver(function(mutations){
+    mutations.forEach(function(m){
+      if(m.attributeName==='class'&&_secHome.classList.contains('active')){
+        setTimeout(function(){renderHorarioHome();renderAlertas();},60);
+      }
+    });
+  });
+  _obs.observe(_secHome,{attributes:true,attributeFilter:['class']});
+})();
 }
 function getEscolarData(){
 return {
@@ -8909,11 +9053,11 @@ var inp=document.getElementById('inp-fecha');
 var now=new Date();
 var offset=now.getTimezoneOffset()*60000;
 if(tipo==='hoy'){
-inp.value=new Date(now-offset).toISOString().slice(0,16);
+var _y=now.getFullYear(),_mo=String(now.getMonth()+1).padStart(2,'0'),_d=String(now.getDate()).padStart(2,'0'),_h=String(now.getHours()).padStart(2,'0'),_mi=String(now.getMinutes()).padStart(2,'0');
+inp.value=_y+'-'+_mo+'-'+_d+'T'+_h+':'+_mi;
 inp.style.display='none';
 } else if(tipo==='ayer'){
-var ayer=new Date(now-offset-86400000);
-inp.value=ayer.toISOString().slice(0,16);
+var ayer=new Date(now.getFullYear(),now.getMonth(),now.getDate()-1);inp.value=ayer.getFullYear()+'-'+String(ayer.getMonth()+1).padStart(2,'0')+'-'+String(ayer.getDate()).padStart(2,'0')+'T'+String(now.getHours()).padStart(2,'0')+':'+String(now.getMinutes()).padStart(2,'0');
 inp.style.display='none';
 } else if(tipo==='elegir'){
 inp.style.display='block';
@@ -9449,7 +9593,8 @@ function hAutoColor(asig,sch){
   if(!sch.colores)sch.colores={};
   if(sch.colores[asig]===undefined){
     var used=Object.values(sch.colores);
-    var idx=Object.keys(sch.colores).length%8;
+    var idx=0,tries=0;
+    while(used.includes(idx)&&tries<8){idx=(idx+1)%8;tries++;}
     sch.colores[asig]=idx;
   }
   return sch.colores[asig];
@@ -9458,7 +9603,9 @@ function hEsc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;')
 
 function renderHorarioHome(){
   var wrap0=document.getElementById('home-horario-wrap');
-  if(wrap0&&wrap0.offsetWidth===0){requestAnimationFrame(renderHorarioHome);return;}
+  if(wrap0&&wrap0.offsetWidth===0){
+    setTimeout(renderHorarioHome,80);return;
+  }
   var h=getHS(),sch=getSch();
   var nEl=document.getElementById('home-horario-nombre');
   if(nEl){
@@ -9490,7 +9637,7 @@ function renderHorarioHome(){
       var txColor=cIdx>=0?H_COLORS[cIdx].tx:'var(--td)';
       html+='<td class="h-td">';
       if(_hEdit){
-        html+='<div class="h-cell h-edit-cell" data-key="'+hEsc(key)+'" style="position:relative;'+bgStyle+'"><input type="text" class="h-cell-inp" data-key="'+hEsc(key)+'" value="'+hEsc(asig)+'" placeholder="..." maxlength="16" style="color:'+txColor+';" />'+(asig?'<button class="h-cell-clr" data-key="'+hEsc(key)+'" style="position:absolute;top:1px;right:1px;background:rgba(0,0,0,.45);color:#fff;border:none;border-radius:50%;width:12px;height:12px;font-size:8px;cursor:pointer;padding:0;">&#215;</button>':'')+'</div>';
+        html+='<div class="h-cell h-edit-cell" data-key="'+hEsc(key)+'" style="position:relative;'+bgStyle+'"><input type="text" class="h-cell-inp'+(cIdx>=0&&H_COLORS[cIdx].tx==="#fff"?" white-txt":"")+'" data-key="'+hEsc(key)+'" value="'+hEsc(asig)+'" placeholder="..." maxlength="16" />'+(asig?'<button class="h-cell-clr" data-key="'+hEsc(key)+'" style="position:absolute;top:1px;right:1px;background:rgba(0,0,0,.45);color:#fff;border:none;border-radius:50%;width:12px;height:12px;font-size:8px;cursor:pointer;padding:0;">&#215;</button>':'')+'</div>';
       } else {
         if(asig){html+='<div class="h-cell h-filled" data-asig="'+hEsc(asig)+'" data-dia="'+dia+'" data-hora="'+hEsc(slot)+'" style="'+bgStyle+'">'+hEsc(asig)+'</div>';}
         else{html+='<div class="h-cell h-empty"></div>';}
@@ -9514,6 +9661,16 @@ function renderHorarioHome(){
     });
     wrap.querySelectorAll('.h-del-slot').forEach(function(btn){
       btn.addEventListener('click',function(){hEliminarSlot(parseInt(this.dataset.si));});
+    });
+    wrap.querySelectorAll('.h-cell-clr').forEach(function(btn){
+      btn.addEventListener('click',function(e){
+        e.stopPropagation();
+        var key=this.dataset.key;
+        var sch2=getSch();
+        delete sch2.grid[key];
+        persist().catch(function(){});
+        renderHorarioHome();
+      });
     });
     wrap.querySelectorAll('.h-edit-cell').forEach(function(div){
       div.addEventListener('click',function(e){
@@ -9543,8 +9700,16 @@ function renderHorarioHome(){
 
 function hInputLive(inp,key){
   var val=(inp.value||'').trim(),sch=getSch(),div=inp.parentElement;
-  if(val){var cIdx=hAutoColor(val,sch);div.style.background=H_COLORS[cIdx].bg;div.style.color=H_COLORS[cIdx].tx;inp.style.color=H_COLORS[cIdx].tx;}
-  else{div.style.background='';div.style.color='';inp.style.color='var(--td)';}
+  if(val){
+    var cIdx=hAutoColor(val,sch);
+    div.style.background=H_COLORS[cIdx].bg;
+    inp.classList.toggle('white-txt', H_COLORS[cIdx].tx==='#fff');
+    inp.style.removeProperty('color');
+  } else {
+    div.style.background='rgba(200,200,200,.12)';
+    inp.classList.remove('white-txt');
+    inp.style.removeProperty('color');
+  }
 }
 function hGuardarCelda(key,val){
   var sch=getSch();val=(val||'').trim();
@@ -9623,8 +9788,38 @@ function hGuardarTarea(){
 function toggleHorarioEditMode(){_hEdit=!_hEdit;if(!_hEdit){hSincronizarAsig();persist().catch(function(){});}renderHorarioHome();}
 function switchHorario(dir){var h=getHS();h.activo=(h.activo+dir+2)%2;persist().catch(function(){});renderHorarioHome();}
 function hRenombrar(nombre){getSch().nombre=nombre;}
-function hEditSlot(si,val){var sch=getSch();if(val&&val.trim())sch.slots[si]=val.trim();persist().catch(function(){});}
-function hAgregarSlot(){var sch=getSch();var last=sch.slots[sch.slots.length-1]||'8:00';var hh=parseInt((last.split(':')[0])||8)+1;sch.slots.push(hh+':00');persist().catch(function(){});renderHorarioHome();}
+function hEditSlot(si,val){
+  var sch=getSch();
+  if(val&&val.trim()){
+    var v=val.trim();
+    var dup=sch.slots.findIndex(function(s,i){return s===v&&i!==si;});
+    if(dup>=0){
+      var inp=document.querySelector('.h-slot-inp[data-si="'+si+'"]');
+      if(inp){inp.style.borderColor='#c0392b';inp.title='Franja duplicada';}
+      return;
+    }
+    sch.slots[si]=v;
+  }
+  persist().catch(function(){});
+}
+function hAgregarSlot(){
+  var sch=getSch();
+  var last=sch.slots[sch.slots.length-1]||'8:00';
+  var hh=parseInt((last.split(':')[0])||8)+1;
+  var newSlot=hh+':00';
+  if(sch.slots.includes(newSlot)){newSlot=(hh<23?(hh+1):hh)+':30';}
+  if(!sch.slots.includes(newSlot)){sch.slots.push(newSlot);}
+  persist().catch(function(){});renderHorarioHome();
+}
+function hOrdenarSlots(){
+  var sch=getSch();
+  sch.slots.sort(function(a,b){
+    var ta=parseInt(a.split(':')[0])*60+(parseInt(a.split(':')[1])||0);
+    var tb=parseInt(b.split(':')[0])*60+(parseInt(b.split(':')[1])||0);
+    return ta-tb;
+  });
+  persist().catch(function(){});renderHorarioHome();
+}
 function hEliminarSlot(si){
   var sch=getSch();if(sch.slots.length<=1)return;
   sch.slots.splice(si,1);H_DAYS.forEach(function(d){delete sch.grid[d+'-'+si];});
@@ -9652,6 +9847,7 @@ function selTipoNuevo(btn,tipo){
   btn.classList.add('sel');
   var inp=document.getElementById('inp-tipo-nuevo');if(inp)inp.value=tipo;
   var inpA=document.getElementById('inp-accion');if(inpA)inpA.value=tipo;
+  var inpC=document.getElementById('inp-contacto');if(inpC)inpC.value='';
 }
 
 /* ── renderAlertas ── */
@@ -9971,6 +10167,505 @@ function albCerrarFull(){var el=document.getElementById('alb-fullimg');if(el)el.
   var _origSR=saveRecord;
   saveRecord=function(){_origSR();setTimeout(function(){try{renderAlertas();}catch(e){}},200);};
 })();
+
+/* ════════════════════════════════════════════
+   MI ESTUDIO: POMODORO + PLANIFICADOR
+════════════════════════════════════════════ */
+
+/* ── Tab switcher ── */
+/* ════ PLANNER UPGRADE: debounce + save + PDF ════ */
+
+/* Override planUpdate with debounce */
+var _planDebounce = null;
+function planUpdate(el){
+  var id = el.dataset.id, field = el.dataset.field;
+  if(!_planData[id]) _planData[id]={topics:5,diff:2};
+  _planData[id][field] = parseInt(el.value)||1;
+  // Debounce: regenerate after 600ms of inactivity
+  clearTimeout(_planDebounce);
+  _planDebounce = setTimeout(function(){
+    planGenerar(false); // false = don't scroll, just update
+  }, 600);
+}
+
+/* Override planGenerar to read inputs directly + show action buttons */
+function planGenerar(doScroll){
+  if(doScroll===undefined) doScroll=true;
+  var hoy = new Date(); hoy.setHours(0,0,0,0);
+
+  // Read inputs directly (fix: don't rely only on _planData)
+  document.querySelectorAll('[data-field="topics"]').forEach(function(inp){
+    var id=inp.dataset.id;
+    if(!_planData[id]) _planData[id]={topics:5,diff:2};
+    _planData[id].topics = parseInt(inp.value)||1;
+  });
+  document.querySelectorAll('[data-field="diff"]').forEach(function(sel){
+    var id=sel.dataset.id;
+    if(!_planData[id]) _planData[id]={topics:5,diff:2};
+    _planData[id].diff = parseInt(sel.value)||2;
+  });
+
+  var exams = (state.records||[]).filter(function(r){
+    if(!r.fechaEvento||r.archivado) return false;
+    var d = new Date(r.fechaEvento+'T00:00:00');
+    return d >= hoy;
+  }).sort(function(a,b){ return a.fechaEvento.localeCompare(b.fechaEvento); });
+
+  if(!exams.length){ return; }
+
+  var dayPlan = {};
+  var _lastPlanData = []; // for saving
+
+  exams.forEach(function(r){
+    var data = _planData[r.id]||{topics:5,diff:2};
+    _lastPlanData.push({id:r.id, tema:r.tema, accion:r.accion, fechaEvento:r.fechaEvento, topics:data.topics, diff:data.diff});
+    var examDate = new Date(r.fechaEvento+'T00:00:00');
+    var daysAvail = Math.max(1, Math.ceil((examDate-hoy)/86400000)-1);
+    var reviewDays = Math.min(2, Math.floor(daysAvail*0.3));
+    var studyDays = Math.max(1, daysAvail - reviewDays);
+    var topicsPerDay = Math.ceil(data.topics / studyDays);
+
+    for(var i=0; i<studyDays && i<data.topics; i++){
+      var d = new Date(hoy);
+      d.setDate(d.getDate()+i);
+      var key = d.toISOString().slice(0,10);
+      if(!dayPlan[key]) dayPlan[key]=[];
+      var t = Math.min(topicsPerDay, data.topics - i*topicsPerDay);
+      if(t>0) dayPlan[key].push({asig:r.tema,text:'Estudiar '+t+' tema'+(t!==1?'s':'')+' ('+r.accion+')',type:'study',color:'var(--gd)',bg:'rgba(45,138,90,.1)'});
+    }
+    for(var j=1; j<=reviewDays; j++){
+      var rd=new Date(examDate); rd.setDate(rd.getDate()-j);
+      if(rd>=hoy){
+        var rkey=rd.toISOString().slice(0,10);
+        if(!dayPlan[rkey]) dayPlan[rkey]=[];
+        dayPlan[rkey].push({asig:r.tema,text:'Repaso '+r.tema+' ('+r.accion+')',type:'review',color:'#e74c3c',bg:'rgba(231,76,60,.1)'});
+      }
+    }
+  });
+
+  var keys = Object.keys(dayPlan).sort();
+  var out = document.getElementById('plan-output');
+  if(!out) return;
+
+  if(!keys.length){
+    out.innerHTML='<div style="color:var(--tl);font-size:13px;padding:8px;">Ajusta los par\u00e1metros para generar el plan.</div>';
+    return;
+  }
+
+  // Store for saving
+  out._planSnapshot = {dayPlan:dayPlan, exams:_lastPlanData, hoyStr:hoy.toISOString().slice(0,10)};
+
+  out.innerHTML = planBuildHTML(dayPlan, hoy.toISOString().slice(0,10));
+
+  // Show action buttons
+  var acts = document.getElementById('plan-actions');
+  if(acts) acts.style.display='flex';
+
+  if(doScroll) out.scrollIntoView({behavior:'smooth',block:'nearest'});
+
+  planRenderGuardados();
+}
+
+function planBuildHTML(dayPlan, todayStr){
+  var keys = Object.keys(dayPlan).sort();
+  var html = '<div style="background:var(--w);border:1px solid var(--bd);border-radius:12px;overflow:hidden;">';
+  keys.forEach(function(key){
+    var d = new Date(key+'T00:00:00');
+    var isToday = key===todayStr;
+    var dateStr = d.toLocaleDateString('es',{weekday:'short',day:'2-digit',month:'short'});
+    html += '<div class="plan-day-row" style="'+(isToday?'background:rgba(45,138,90,.08);':'')+'padding:8px 12px;">';
+    html += '<div style="width:70px;flex-shrink:0;font-size:11px;font-weight:700;color:'+(isToday?'var(--gd)':'var(--td)')+';font-family:\'Lato\',sans-serif;">'+(isToday?'HOY <br>':'')+dateStr+'</div>';
+    html += '<div style="flex:1;">';
+    dayPlan[key].forEach(function(item){
+      html += '<div style="background:'+item.bg+';border-radius:6px;padding:4px 8px;margin-bottom:3px;font-size:11px;font-family:\'Lato\',sans-serif;">';
+      html += '<span style="font-weight:700;color:'+item.color+';">'+(item.type==='review'?'&#128260; ':'&#128214; ')+item.asig+'</span>';
+      html += '<span style="color:var(--tl);"> \u00b7 '+item.text+'</span>';
+      html += '</div>';
+    });
+    html += '</div></div>';
+  });
+  html += '</div>';
+  return html;
+}
+
+/* Save current plan */
+function planGuardar(){
+  var out = document.getElementById('plan-output');
+  if(!out||!out._planSnapshot) return;
+  var snap = out._planSnapshot;
+  if(!state.planesEstudio) state.planesEstudio=[];
+  var saved = {
+    id: 'plan'+Date.now(),
+    fecha: new Date().toISOString(),
+    exams: snap.exams,
+    dayPlan: snap.dayPlan,
+    todayStr: snap.hoyStr
+  };
+  state.planesEstudio.unshift(saved);
+  if(state.planesEstudio.length > 8) state.planesEstudio = state.planesEstudio.slice(0,8);
+  try{persist().catch(function(){});}catch(e){}
+  planRenderGuardados();
+  // Toast
+  var t=document.getElementById('toast-ok');
+  if(t){t.textContent='\u2705 Plan guardado';t.style.display='flex';setTimeout(function(){t.style.display='none';t.textContent='\u2705 Registro guardado';},2000);}
+}
+
+/* Render saved plans list */
+function planRenderGuardados(){
+  var wrap=document.getElementById('plan-guardados-wrap');
+  var list=document.getElementById('plan-guardados-list');
+  if(!wrap||!list) return;
+  var plans=state.planesEstudio||[];
+  if(!plans.length){wrap.style.display='none';return;}
+  wrap.style.display='block';
+  list.innerHTML='';
+  plans.forEach(function(p){
+    var d=new Date(p.fecha);
+    var dateStr=d.toLocaleDateString('es',{day:'2-digit',month:'short',year:'numeric'})+' '+d.toLocaleTimeString('es',{hour:'2-digit',minute:'2-digit'});
+    var examNames=(p.exams||[]).map(function(e){return e.tema;}).join(', ');
+    var nDays=Object.keys(p.dayPlan||{}).length;
+    var card=document.createElement('div');
+    card.style.cssText='background:var(--w);border:1px solid var(--bd);border-radius:10px;margin-bottom:8px;overflow:hidden;';
+    var header=document.createElement('div');
+    header.style.cssText='display:flex;align-items:center;justify-content:space-between;padding:9px 12px;cursor:pointer;';
+    header.innerHTML='<div>'
+      +'<div style="font-size:12px;font-weight:700;color:var(--td);font-family:\'Lato\',sans-serif;">'+dateStr+'</div>'
+      +'<div style="font-size:10px;color:var(--tl);font-family:\'Lato\',sans-serif;margin-top:2px;">'+examNames+' \u00b7 '+nDays+' d\u00edas</div>'
+      +'</div>'
+      +'<div style="display:flex;gap:6px;align-items:center;">'
+      +'<span style="font-size:16px;color:var(--tl);" class="plan-saved-arrow">&#9660;</span>'
+      +'</div>';
+    var body=document.createElement('div');
+    body.style.cssText='display:none;padding:0 12px 10px;';
+    body.innerHTML=planBuildHTML(p.dayPlan, p.todayStr);
+    // PDF button inside saved plan
+    var pdfBtn=document.createElement('button');
+    pdfBtn.style.cssText='margin-top:8px;padding:7px 12px;background:#2D5016;color:#fff;border:none;border-radius:7px;font-size:12px;font-weight:700;cursor:pointer;font-family:\'Lato\',sans-serif;';
+    pdfBtn.textContent='\u{1F4C4} PDF';
+    (function(plan){pdfBtn.onclick=function(){planDescargarPDFGuardado(plan);};})(p);
+    body.appendChild(pdfBtn);
+    // Delete button
+    var delBtn=document.createElement('button');
+    delBtn.style.cssText='margin-top:8px;margin-left:6px;padding:7px 12px;background:rgba(192,57,43,.1);color:#c0392b;border:1px solid rgba(192,57,43,.3);border-radius:7px;font-size:12px;cursor:pointer;font-family:\'Lato\',sans-serif;';
+    delBtn.textContent='\u00D7 Eliminar';
+    (function(pid){delBtn.onclick=function(){state.planesEstudio=(state.planesEstudio||[]).filter(function(x){return x.id!==pid;});try{persist().catch(function(){});}catch(e){}planRenderGuardados();};})(p.id);
+    body.appendChild(delBtn);
+    // Toggle on header click
+    header.addEventListener('click',function(){
+      var isOpen=body.style.display!=='none';
+      body.style.display=isOpen?'none':'block';
+      var arrow=header.querySelector('.plan-saved-arrow');
+      if(arrow) arrow.innerHTML=isOpen?'&#9660;':'&#9650;';
+    });
+    card.appendChild(header);
+    card.appendChild(body);
+    list.appendChild(card);
+  });
+}
+
+function planLimpiarHistorial(){
+  if(!confirm('?\u00BFEliminar todos los planes guardados?')) return;
+  state.planesEstudio=[];
+  try{persist().catch(function(){});}catch(e){}
+  planRenderGuardados();
+}
+
+/* PDF download - current plan */
+function planDescargarPDF(){
+  var out=document.getElementById('plan-output');
+  if(!out||!out._planSnapshot) return;
+  planAbrirPDF(out._planSnapshot.dayPlan, out._planSnapshot.exams, out._planSnapshot.hoyStr, new Date().toLocaleDateString('es',{day:'2-digit',month:'long',year:'numeric'}));
+}
+
+/* PDF download - saved plan */
+function planDescargarPDFGuardado(plan){
+  var d=new Date(plan.fecha);
+  planAbrirPDF(plan.dayPlan, plan.exams, plan.todayStr, d.toLocaleDateString('es',{day:'2-digit',month:'long',year:'numeric'}));
+}
+
+/* Build and open PDF window */
+function planAbrirPDF(dayPlan, exams, todayStr, dateLabel){
+  var keys=Object.keys(dayPlan).sort();
+  if(!keys.length) return;
+  var rows='';
+  keys.forEach(function(key){
+    var d=new Date(key+'T00:00:00');
+    var isToday=key===todayStr;
+    var dateStr=d.toLocaleDateString('es',{weekday:'long',day:'2-digit',month:'long'});
+    var items='';
+    dayPlan[key].forEach(function(item){
+      var color=item.type==='review'?'#c0392b':'#2D8A5A';
+      var bg=item.type==='review'?'#fdf2f2':'#f0f9f4';
+      items+='<div style="background:'+bg+';border-left:3px solid '+color+';padding:4px 8px;margin-bottom:4px;border-radius:0 4px 4px 0;">'
+        +'<strong style="color:'+color+';">'+(item.type==='review'?'Repaso':'Estudio')+': '+item.asig+'</strong>'
+        +' &mdash; '+item.text+'</div>';
+    });
+    rows+='<tr style="'+(isToday?'background:#e8f5e9;':'')+'border-bottom:1px solid #e0e0e0;">'
+      +'<td style="padding:8px 12px;font-weight:'+(isToday?'700':'400')+';color:'+(isToday?'#2D8A5A':'#333')+';white-space:nowrap;vertical-align:top;font-size:12px;">'+dateStr+'</td>'
+      +'<td style="padding:8px 12px;">'+items+'</td>'
+      +'</tr>';
+  });
+  var examSummary=exams.map(function(e){
+    return '<span style="display:inline-block;background:#f0f9f4;border:1px solid #2D8A5A;border-radius:12px;padding:3px 10px;font-size:11px;margin:3px;color:#2D5016;">'+e.tema+' &mdash; '+e.accion+'</span>';
+  }).join('');
+  var html='<!DOCTYPE html><html lang="es"><head>'
+    +'<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">'
+    +'<title>Plan de Estudio</title>'
+    +'<style>body{font-family:Georgia,serif;color:#222;margin:0;padding:20px;}@media print{.no-print{display:none;}body{padding:0;}}h1{font-size:22px;color:#2D5016;margin-bottom:4px;}h2{font-size:13px;font-weight:normal;color:#666;margin-top:0;}table{width:100%;border-collapse:collapse;}th{background:#2D5016;color:#fff;padding:8px 12px;text-align:left;font-size:12px;}tr:hover{background:#f9f9f9;}.legend{display:flex;gap:16px;margin:12px 0;font-size:11px;}.legend span{display:flex;align-items:center;gap:5px;}.dot{width:10px;height:10px;border-radius:50%;}</style>'
+    +'</head><body>'
+    +'<div class="no-print" style="margin-bottom:16px;">'
+    +'<button onclick="window.print()" style="padding:10px 20px;background:#2D5016;color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;">&#128424; Imprimir / Guardar PDF</button>'
+    +'<button onclick="window.close()" style="margin-left:8px;padding:10px 20px;background:#f5f5f5;border:1px solid #ddd;border-radius:8px;font-size:14px;cursor:pointer;">&larr; Volver</button>'
+    +'</div>'
+    +'<h1>&#128218; Plan de Estudio</h1>'
+    +'<h2>Generado el '+dateLabel+'</h2>'
+    +'<div style="margin-bottom:12px;"><strong style="font-size:12px;color:#666;">EX&Aacute;MENES / ENTREGAS:</strong><br>'+examSummary+'</div>'
+    +'<div class="legend">'
+    +'<span><div class="dot" style="background:#2D8A5A;"></div> Sesion de estudio</span>'
+    +'<span><div class="dot" style="background:#c0392b;"></div> Repaso</span>'
+    +'</div>'
+    +'<table><thead><tr><th style="width:140px;">D&iacute;a</th><th>Actividades</th></tr></thead><tbody>'+rows+'</tbody></table>'
+    +'<p style="font-size:10px;color:#aaa;margin-top:20px;text-align:center;">Generado con Tapunto &bull; tapunto.app</p>'
+    +'</body></html>';
+  var w=window.open('','_blank');
+  if(!w){alert('Activa ventanas emergentes para descargar el PDF.');return;}
+  w.document.write(html);
+  w.document.close();
+  w.focus();
+}
+
+function estSwitchTab(tab){
+  document.getElementById('est-tab-pom').classList.toggle('active', tab==='pom');
+  document.getElementById('est-tab-plan').classList.toggle('active', tab==='plan');
+  document.getElementById('est-pom').style.display = tab==='pom'?'block':'none';
+  document.getElementById('est-plan').style.display = tab==='plan'?'block':'none';
+  if(tab==='plan') planRenderExams();
+}
+
+/* ════ POMODORO ════ */
+var _pom = {
+  running: false,
+  mode: 'work',     // 'work' | 'break'
+  timeLeft: 25*60,
+  totalWork: 25*60,
+  totalBreak: 5*60,
+  interval: null,
+  sessions: JSON.parse(localStorage.getItem('tp_pom_sessions_'+new Date().toDateString())||'[]')
+};
+
+var POM_CIRCUMFERENCE = 2 * Math.PI * 70; // 439.82
+
+function pomSetWork(min){
+  if(_pom.running) return;
+  _pom.totalWork = min*60;
+  _pom.totalBreak = min===25 ? 5*60 : 10*60;
+  _pom.timeLeft = _pom.totalWork;
+  _pom.mode = 'work';
+  pomRenderDisplay();
+  document.getElementById('pom-preset-25').style.background = min===25?'var(--gd)':'var(--bl)';
+  document.getElementById('pom-preset-25').style.color = min===25?'#fff':'var(--tm)';
+  document.getElementById('pom-preset-25').style.borderColor = min===25?'var(--gd)':'var(--bd)';
+  document.getElementById('pom-preset-50').style.background = min===50?'var(--gd)':'var(--bl)';
+  document.getElementById('pom-preset-50').style.color = min===50?'#fff':'var(--tm)';
+  document.getElementById('pom-preset-50').style.borderColor = min===50?'var(--gd)':'var(--bd)';
+}
+
+function pomToggle(){
+  if(_pom.running){ pomPause(); } else { pomStart(); }
+}
+
+function pomStart(){
+  _pom.running = true;
+  document.getElementById('pom-start-btn').innerHTML = '&#9646;&#9646; Pausar';
+  _pom.interval = setInterval(pomTick, 1000);
+}
+
+function pomPause(){
+  _pom.running = false;
+  clearInterval(_pom.interval);
+  document.getElementById('pom-start-btn').innerHTML = '&#9654; Continuar';
+}
+
+function pomReset(){
+  pomPause();
+  _pom.mode = 'work';
+  _pom.timeLeft = _pom.totalWork;
+  document.getElementById('pom-start-btn').innerHTML = '&#9654; Iniciar';
+  pomRenderDisplay();
+}
+
+function pomSkip(){
+  pomPause();
+  _pom.mode = _pom.mode==='work' ? 'break' : 'work';
+  _pom.timeLeft = _pom.mode==='work' ? _pom.totalWork : _pom.totalBreak;
+  document.getElementById('pom-start-btn').innerHTML = '&#9654; Iniciar';
+  pomRenderDisplay();
+}
+
+function pomTick(){
+  if(_pom.timeLeft <= 0){
+    pomComplete();
+    return;
+  }
+  _pom.timeLeft--;
+  pomRenderDisplay();
+}
+
+function pomComplete(){
+  pomPause();
+  pomBeep();
+  if(navigator.vibrate) navigator.vibrate([300,100,300]);
+
+  // Flash animation on circle
+  var wrap = document.getElementById('pom-circle-wrap');
+  if(wrap){
+    wrap.style.animation = 'pomFlash 0.4s ease 3';
+    setTimeout(function(){ wrap.style.animation=''; }, 1200);
+  }
+
+  if(_pom.mode==='work'){
+    // Log session
+    var asig = (document.getElementById('pom-asig') && document.getElementById('pom-asig').value) || 'Sin asignatura';
+    var sess = {asig:asig, min:Math.round(_pom.totalWork/60), time:new Date().toLocaleTimeString('es',{hour:'2-digit',minute:'2-digit'})};
+    _pom.sessions.push(sess);
+    try{ localStorage.setItem('tp_pom_sessions_'+new Date().toDateString(), JSON.stringify(_pom.sessions)); }catch(e){}
+    pomRenderSessions();
+  }
+
+  // Auto switch mode
+  _pom.mode = _pom.mode==='work' ? 'break' : 'work';
+  _pom.timeLeft = _pom.mode==='work' ? _pom.totalWork : _pom.totalBreak;
+  document.getElementById('pom-start-btn').innerHTML = '&#9654; Iniciar';
+  pomRenderDisplay();
+}
+
+function pomBeep(){
+  var soundOn = document.getElementById('pom-sound-on');
+  if(soundOn && !soundOn.checked) return;
+  try{
+    var ctx = new (window.AudioContext || window.webkitAudioContext)();
+    [0, 0.35, 0.7].forEach(function(t){
+      var osc = ctx.createOscillator();
+      var gain = ctx.createGain();
+      osc.connect(gain); gain.connect(ctx.destination);
+      osc.frequency.value = t===0 ? 880 : t===0.35 ? 1100 : 880;
+      gain.gain.setValueAtTime(0.25, ctx.currentTime+t);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime+t+0.28);
+      osc.start(ctx.currentTime+t);
+      osc.stop(ctx.currentTime+t+0.3);
+    });
+  }catch(e){}
+}
+
+function pomRenderDisplay(){
+  var m = Math.floor(_pom.timeLeft/60);
+  var s = _pom.timeLeft%60;
+  var disp = document.getElementById('pom-display');
+  if(disp) disp.textContent = String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
+  var lbl = document.getElementById('pom-mode-lbl');
+  if(lbl) lbl.textContent = _pom.mode==='work' ? 'Sesion de trabajo' : 'Descanso';
+  var arc = document.getElementById('pom-circle-arc');
+  if(arc){
+    var total = _pom.mode==='work' ? _pom.totalWork : _pom.totalBreak;
+    var pct = _pom.timeLeft / total;
+    arc.style.stroke = _pom.mode==='work' ? 'var(--gd)' : '#3498db';
+    arc.setAttribute('stroke-dashoffset', POM_CIRCUMFERENCE*(1-pct));
+  }
+}
+
+function pomRenderSessions(){
+  var el = document.getElementById('pom-sessions-list');
+  if(!el) return;
+  if(!_pom.sessions.length){ el.textContent='Sin sesiones aun'; return; }
+  var byAsig = {};
+  _pom.sessions.forEach(function(s){
+    byAsig[s.asig] = (byAsig[s.asig]||0) + s.min;
+  });
+  var html = '';
+  Object.keys(byAsig).forEach(function(asig){
+    html += '<div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--bd);">';
+    html += '<span style="font-weight:700;color:var(--td);">'+asig+'</span>';
+    html += '<span style="color:var(--gd);font-weight:700;">'+byAsig[asig]+'min</span></div>';
+  });
+  el.innerHTML = html;
+}
+
+function pomInitAsig(){
+  var sel = document.getElementById('pom-asig');
+  if(!sel) return;
+  sel.innerHTML = '<option value="">Asignatura...</option>';
+  (state.temas||[]).forEach(function(t){
+    var o = document.createElement('option'); o.value=t; o.textContent=t;
+    sel.appendChild(o);
+  });
+}
+
+/* ════ PLANIFICADOR ════ */
+var _planData = {}; // examId -> {topics, diff}
+
+function planRenderExams(){
+  var list = document.getElementById('plan-exams-list');
+  if(!list) return;
+  var hoy = new Date(); hoy.setHours(0,0,0,0);
+  var exams = (state.records||[]).filter(function(r){
+    if(!r.fechaEvento||r.archivado) return false;
+    var d = new Date(r.fechaEvento+'T00:00:00');
+    return d >= hoy;
+  }).sort(function(a,b){ return a.fechaEvento.localeCompare(b.fechaEvento); });
+
+  if(!exams.length){
+    list.innerHTML = '<div style="color:var(--tl);font-size:13px;font-family:\'Lato\',sans-serif;padding:8px 0;">No tienes examenes o entregas pr\u00f3ximas.<br>A\u00f1ade una fecha de evento en tus registros.</div>';
+    return;
+  }
+
+  list.innerHTML = '';
+  exams.forEach(function(r){
+    var d = new Date(r.fechaEvento+'T00:00:00');
+    var diff = Math.ceil((d-hoy)/86400000);
+    var data = _planData[r.id]||{topics:5,diff:2};
+    _planData[r.id] = data;
+
+    var card = document.createElement('div');
+    card.className = 'plan-exam-card';
+    card.innerHTML =
+      '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">'
+      +'<div><div style="font-size:14px;font-weight:700;color:var(--td);font-family:\'Lato\',sans-serif;">'+r.tema+'</div>'
+      +'<div style="font-size:11px;color:var(--tl);font-family:\'Lato\',sans-serif;">'+(r.accion||'Evento')+' \u00b7 '+d.toLocaleDateString('es',{day:'2-digit',month:'short'})+' ('+diff+'d)</div></div>'
+      +'<div style="width:12px;height:12px;border-radius:50%;background:'+(diff<=3?'#c0392b':diff<=7?'#e67e22':'#27ae60')+';flex-shrink:0;"></div>'
+      +'</div>'
+      +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">'
+      +'<div><div style="font-size:10px;font-weight:700;color:var(--tm);font-family:\'Lato\',sans-serif;margin-bottom:3px;">TEMAS/BLOQUES</div>'
+      +'<input type="number" min="1" max="50" value="'+data.topics+'" data-id="'+r.id+'" data-field="topics" oninput="planUpdate(this)" style="width:100%;padding:6px 8px;border:1px solid var(--bd);border-radius:6px;font-size:14px;font-family:\'Lato\',sans-serif;background:var(--bp);color:var(--td);box-sizing:border-box;"/></div>'
+      +'<div><div style="font-size:10px;font-weight:700;color:var(--tm);font-family:\'Lato\',sans-serif;margin-bottom:3px;">DIFICULTAD</div>'
+      +'<select data-id="'+r.id+'" data-field="diff" onchange="planUpdate(this)" style="width:100%;padding:6px 8px;border:1px solid var(--bd);border-radius:6px;font-size:13px;font-family:\'Lato\',sans-serif;background:var(--bp);color:var(--td);">'
+      +'<option value="1"'+(data.diff==1?' selected':'')+'>Facil</option>'
+      +'<option value="2"'+(data.diff==2?' selected':'')+'>Media</option>'
+      +'<option value="3"'+(data.diff==3?' selected':'')+'>Dificil</option>'
+      +'</select></div></div>';
+    list.appendChild(card);
+  });
+  // Auto-generate plan after rendering exam inputs
+  if(exams.length) planGenerar(false);
+}
+
+
+
+
+
+/* CSS keyframe for pom flash */
+(function(){
+  var st=document.createElement('style');
+  st.textContent='@keyframes pomFlash{0%,100%{opacity:1;}50%{opacity:.2;}}';
+  document.head.appendChild(st);
+})();
+
+/* Hook: when switching to estudio, populate asig dropdown */
+var _origSwitchTabEst=switchTab;
+switchTab=function(tab,btn){
+  _origSwitchTabEst(tab,btn);
+  if(tab==='estudio'){ pomInitAsig(); pomRenderSessions(); estSwitchTab('pom'); }
+};
+
 
 /* ── irHome / switchTab hooks ── */
 var _origIrHomeH=irHome;
