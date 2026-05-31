@@ -2075,7 +2075,7 @@ button{font-family:Lato,sans-serif;}
   min-width:120px;
 }
 
-/* Lista de registros */
+/* Mis tareas */
 #registros-list{padding:10px 14px 20px;}
 
 /* Cal nav mejorado */
@@ -2128,6 +2128,30 @@ body.on-home #sec-home { display: block !important; }
   width: 100% !important;
   max-width: 100% !important;
   box-sizing: border-box !important;
+}
+
+/* ── BOTTOM NAV ── */
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;height:58px;background:var(--w);border-top:1.5px solid var(--bd);display:flex;z-index:500;box-shadow:0 -2px 12px rgba(0,0,0,.08);}
+.bnav-btn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;background:none;border:1.5px solid transparent;cursor:pointer;padding:4px 2px;transition:all .12s;color:var(--tl);border-radius:8px;margin:4px 3px;min-width:0;}
+.bnav-btn.active{background:rgba(45,138,90,.08);}
+#bnav-home.active{border-color:#2D8A5A;color:#2D8A5A;background:rgba(45,138,90,.07);}
+#bnav-tareas.active{border-color:#1A7B8C;color:#1A7B8C;background:rgba(26,123,140,.07);}
+#bnav-todo.active{border-color:#E67E22;color:#E67E22;background:rgba(230,126,34,.07);}
+#bnav-agenda.active{border-color:#D4851A;color:#D4851A;background:rgba(212,133,26,.07);}
+#bnav-estudio.active{border-color:#8E44AD;color:#8E44AD;background:rgba(142,68,173,.07);}
+.bnav-btn:active{transform:scale(.92);}
+.bnav-ico{font-size:20px;line-height:1;}
+.bnav-lbl{font-size:9px;font-weight:700;font-family:Lato,sans-serif;letter-spacing:.3px;}
+.bnav-fab{position:fixed;bottom:70px;right:18px;width:52px;height:52px;border-radius:50%;background:var(--gd);border:none;color:#fff;font-size:26px;font-weight:900;cursor:pointer;box-shadow:0 4px 16px rgba(45,80,22,.4);z-index:501;display:flex;align-items:center;justify-content:center;transition:transform .12s;}
+.bnav-fab:active{transform:scale(.9);}
+.section{padding-bottom:68px !important;}
+
+/* Hide back-to-home arrow in nav sections */
+#sec-registros .tap-header-btn[onclick="irHome()"],
+#sec-notas .tap-header-btn[onclick="irHome()"],
+#sec-calendario .tap-header-btn[onclick="irHome()"],
+#sec-estudio .tap-header-btn[onclick="irHome()"] {
+  display: none !important;
 }
 </style>
 <script>(function(){try{if(localStorage.getItem('tp_dark_mode')==='1')document.documentElement.style.background='#1a1a2e';}catch(e){};}());</script>
@@ -2377,7 +2401,7 @@ body.on-home #sec-home { display: block !important; }
     <div class="splash-name" id="splash-name" style="font-size:18px;font-weight:700;color:#fff;font-family:Lato,sans-serif;margin-bottom:32px;"></div>
 
     <!-- Botón entrar -->
-    <button onclick="cerrarSplash()" style="background:#fff;color:var(--gd);border:none;border-radius:12px;padding:14px 40px;font-size:15px;font-weight:700;cursor:pointer;font-family:Lato,sans-serif;letter-spacing:.5px;">Entrar a la agenda</button>
+    
 
   </div>
 
@@ -2451,6 +2475,7 @@ body.on-home #sec-home { display: block !important; }
 
       <!-- ══ NUEVO ══ -->
       <div id="sec-home" class="section active">
+
   <div style="background:var(--gd);padding:0 16px;width:100%;box-sizing:border-box;display:flex;flex-direction:column;">
     <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0 4px;">
       <div style="display:flex;align-items:center;gap:10px;">
@@ -2480,62 +2505,59 @@ body.on-home #sec-home { display: block !important; }
       </button>
     </div>
   </div>
-  <div style="padding:7px 9px 6px;">
-    <!-- Schedule + right strip -->
-    <div style="display:flex;gap:5px;align-items:stretch;">
 
-      <!-- Schedule (left, flexible) -->
-      <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:4px;">
-        <div style="display:flex;align-items:center;justify-content:space-between;">
-          <div style="display:flex;align-items:center;gap:1px;">
-            <button onclick="switchHorario(-1)" class="h-arr-btn">&#8249;</button>
-            <span id="home-horario-nombre" style="font-family:'Caveat',cursive;font-size:16px;font-weight:700;color:var(--gd);min-width:80px;text-align:center;"></span>
-            <button onclick="switchHorario(1)" class="h-arr-btn">&#8250;</button>
-            <span id="home-horario-idx" style="font-size:9px;color:var(--th);margin-left:2px;font-family:Lato,sans-serif;"></span>
-          </div>
-          <button onclick="toggleHorarioEditMode()" id="btn-edit-horario" style="background:var(--bl);border:1px solid var(--bd);border-radius:14px;padding:3px 9px;font-size:10px;font-family:Lato,sans-serif;font-weight:700;color:var(--tm);cursor:pointer;">&#9998; Editar</button>
-        </div>
-        <div id="home-horario-wrap" style="overflow-x:auto;border-radius:8px;border:1px solid var(--bd);background:var(--w);flex:1;"></div>
-        <div id="home-h-add-slot" style="display:none;text-align:center;">
-          <button onclick="hAgregarSlot()" style="background:var(--gd);color:#fff;border:none;border-radius:6px;padding:4px 12px;font-size:11px;cursor:pointer;font-family:Lato,sans-serif;font-weight:700;">+ Añadir franja</button>
-          <button onclick="hOrdenarSlots()" style="background:var(--bl);color:var(--tm);border:1px solid var(--bd);border-radius:6px;padding:4px 10px;font-size:11px;cursor:pointer;font-family:Lato,sans-serif;font-weight:700;margin-left:6px;">&#8597; Ordenar</button>
-        </div>
-        <div id="home-h-color-tip" style="display:none;font-size:9px;color:var(--th);font-family:Lato,sans-serif;text-align:center;">Toca celda rellena para cambiar color</div>
-      </div>
-
-      <!-- Right strip: 6 square nav buttons -->
-      <div style="display:flex;flex-direction:column;gap:3px;width:52px;flex-shrink:0;">
-        <button class="home-sq-btn" style="border-color:#2D8A5A;flex:1;" onclick="irSeccion('nuevo')">
-          <span class="sq-ico">&#10133;</span>
-          <span class="sq-lbl">Nuevo</span>
-        </button>
-        <button class="home-sq-btn" style="border-color:#1A7B8C;flex:1;" onclick="irSeccion('registros')">
-          <span class="sq-ico">&#128203;</span>
-          <span class="sq-lbl">Registros</span>
-        </button>
-        <button class="home-sq-btn" style="border-color:#4A90D9;flex:1;" onclick="irSeccion('albumes')">
-          <span class="sq-ico">&#128247;</span>
-          <span class="sq-lbl">&#193;lbumes</span>
-        </button>
-        <button class="home-sq-btn" style="border-color:#D4851A;flex:1;" onclick="irSeccion('calendario')">
-          <span class="sq-ico">&#128197;</span>
-          <span class="sq-lbl">Agenda</span>
-        </button>
-        <button class="home-sq-btn" style="border-color:#F39C12;flex:1;" onclick="irSeccion('notas')">
-          <span class="sq-ico">&#128221;</span>
-          <span class="sq-lbl">To Do</span>
-        </button>
-        <button class="home-sq-btn" style="border-color:#8E44AD;flex:1;" onclick="irSeccion('estudio')">
-          <span class="sq-ico">&#128218;</span>
-          <span class="sq-lbl">Estudio</span>
-        </button>
-      </div>
-
-    </div>
-
-    <!-- Alerts panel (full width, below) -->
-    <div id="home-alertas-panel" style="margin-top:5px;border-radius:8px;border:1px solid var(--bd);background:var(--w);"></div>
+  <!-- ── HOME TABS ── -->
+  <div style="display:flex;border-bottom:1.5px solid var(--bd);background:var(--w);padding:0 16px;">
+    <button id="home-tab-resumen" onclick="homeTab('resumen')" style="padding:10px 16px 8px;font-size:13px;font-weight:700;font-family:Lato,sans-serif;background:none;border:none;cursor:pointer;color:var(--gd);border-bottom:2.5px solid var(--gd);margin-bottom:-1.5px;">Resumen</button>
+    <button id="home-tab-horario" onclick="homeTab('horario')" style="padding:10px 16px 8px;font-size:13px;font-weight:700;font-family:Lato,sans-serif;background:none;border:none;cursor:pointer;color:var(--tl);border-bottom:2.5px solid transparent;margin-bottom:-1.5px;">Mi Horario</button>
   </div>
+
+  <!-- ── TAB RESUMEN ── -->
+  <div id="home-tab-resumen-panel" style="padding:12px 14px 8px;display:block;">
+    <!-- Greeting card -->
+    <div style="background:var(--w);border:1px solid var(--bd);border-radius:12px;padding:14px 16px;margin-bottom:10px;">
+      <div id="home-resumen-saludo" style="font-family:Caveat,cursive;font-size:26px;font-weight:700;color:var(--gd);margin-bottom:2px;">Hola!</div>
+      <div id="home-resumen-fecha" style="font-size:12px;color:var(--tl);font-family:Lato,sans-serif;"></div>
+    </div>
+    <!-- Quick cards row -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">
+      <!-- Next deadline -->
+      <div id="home-next-deadline" style="background:var(--w);border:1px solid var(--bd);border-radius:10px;padding:10px 12px;cursor:pointer;" onclick="irSeccion('registros')">
+        <div style="font-size:10px;font-weight:700;color:var(--tm);text-transform:uppercase;letter-spacing:.5px;font-family:Lato,sans-serif;margin-bottom:4px;">&#128197; Pr&#243;ximo</div>
+        <div id="home-next-deadline-text" style="font-size:12px;font-weight:700;color:var(--td);font-family:Lato,sans-serif;line-height:1.3;">Sin exámenes</div>
+      </div>
+      <!-- Pomodoro today -->
+      <div style="background:var(--w);border:1px solid var(--bd);border-radius:10px;padding:10px 12px;cursor:pointer;" onclick="irSeccion('estudio')">
+        <div style="font-size:10px;font-weight:700;color:var(--tm);text-transform:uppercase;letter-spacing:.5px;font-family:Lato,sans-serif;margin-bottom:4px;">&#9201; Hoy</div>
+        <div id="home-pom-today" style="font-size:12px;font-weight:700;color:var(--td);font-family:Lato,sans-serif;line-height:1.3;">0 sesiones</div>
+      </div>
+    </div>
+    <!-- Alerts panel -->
+    <div id="home-alertas-panel" style="border-radius:8px;border:1px solid var(--bd);background:var(--w);"></div>
+  </div>
+
+  <!-- ── TAB HORARIO ── -->
+  <div id="home-tab-horario-panel" style="padding:8px 9px 6px;display:none;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
+      <div style="display:flex;align-items:center;gap:1px;">
+        <button onclick="switchHorario(-1)" class="h-arr-btn">&#8249;</button>
+        <span id="home-horario-nombre" style="font-family:Caveat,cursive;font-size:16px;font-weight:700;color:var(--gd);min-width:80px;text-align:center;"></span>
+        <button onclick="switchHorario(1)" class="h-arr-btn">&#8250;</button>
+        <span id="home-horario-idx" style="font-size:9px;color:var(--th);margin-left:2px;font-family:Lato,sans-serif;"></span>
+      </div>
+      <div style="display:flex;gap:5px;">
+        <button onclick="toggleHorarioEditMode()" id="btn-edit-horario" style="background:var(--bl);border:1px solid var(--bd);border-radius:14px;padding:3px 9px;font-size:10px;font-family:Lato,sans-serif;font-weight:700;color:var(--tm);cursor:pointer;">&#9998; Editar</button>
+        <button onclick="horarioPDF()" style="background:var(--bl);border:1px solid var(--bd);border-radius:14px;padding:3px 9px;font-size:10px;font-family:Lato,sans-serif;font-weight:700;color:var(--tm);cursor:pointer;" title="Descargar PDF">&#128196; PDF</button>
+      </div>
+    </div>
+    <div id="home-horario-wrap" style="overflow-x:auto;border-radius:8px;border:1px solid var(--bd);background:var(--w);"></div>
+    <div id="home-h-add-slot" style="display:none;text-align:center;margin-top:4px;">
+      <button onclick="hAgregarSlot()" style="background:var(--gd);color:#fff;border:none;border-radius:6px;padding:4px 12px;font-size:11px;cursor:pointer;font-family:Lato,sans-serif;font-weight:700;">+ A&#241;adir franja</button>
+      <button onclick="hOrdenarSlots()" style="background:var(--bl);color:var(--tm);border:1px solid var(--bd);border-radius:6px;padding:4px 10px;font-size:11px;cursor:pointer;font-family:Lato,sans-serif;font-weight:700;margin-left:6px;">&#8597; Ordenar</button>
+    </div>
+    <div id="home-h-color-tip" style="display:none;font-size:9px;color:var(--th);font-family:Lato,sans-serif;text-align:center;margin-top:3px;">Toca celda rellena para cambiar color</div>
+  </div>
+
 </div><!-- /sec-home -->
 
 <!-- Modal tarea horario -->
@@ -2559,15 +2581,15 @@ body.on-home #sec-home { display: block !important; }
       <div style="display:flex;gap:5px;margin-bottom:5px;flex-wrap:wrap;">
         <label style="flex:1;min-width:60px;display:flex;align-items:center;justify-content:center;gap:4px;padding:7px 4px;background:var(--bl);border:1.5px dashed var(--bd);border-radius:8px;cursor:pointer;font-size:11px;font-family:Lato,sans-serif;color:var(--tl);font-weight:600;position:relative;">
           &#128247; C&#225;mara
-          <input type="file" accept="image/*" capture="environment" id="h-task-foto-inp" style="position:absolute;inset:0;opacity:0;cursor:pointer;" onchange="hTaskFotoSeleccionada(this)" />
+          <input type="file" accept="image/*" capture="environment" multiple id="h-task-foto-inp" style="position:absolute;inset:0;opacity:0;cursor:pointer;" onchange="hTaskFotoSeleccionada(this)" />
         </label>
         <label style="flex:1;min-width:60px;display:flex;align-items:center;justify-content:center;gap:4px;padding:7px 4px;background:var(--bl);border:1.5px dashed var(--bd);border-radius:8px;cursor:pointer;font-size:11px;font-family:Lato,sans-serif;color:var(--tl);font-weight:600;position:relative;">
           &#128444;&#65039; Galer&#237;a
-          <input type="file" accept="image/*" id="h-task-foto-gal" style="position:absolute;inset:0;opacity:0;cursor:pointer;" onchange="hTaskFotoSeleccionada(this)" />
+          <input type="file" accept="image/*" multiple id="h-task-foto-gal" style="position:absolute;inset:0;opacity:0;cursor:pointer;" onchange="hTaskFotoSeleccionada(this)" />
         </label>
         <label style="flex:1;min-width:60px;display:flex;align-items:center;justify-content:center;gap:4px;padding:7px 4px;background:var(--bl);border:1.5px dashed var(--bd);border-radius:8px;cursor:pointer;font-size:11px;font-family:Lato,sans-serif;color:var(--tl);font-weight:600;position:relative;">
           &#128206; Docs
-          <input type="file" accept=".pdf,.doc,.docx,.ppt,.pptx,.txt,image/*" id="h-task-doc-inp" style="position:absolute;inset:0;opacity:0;cursor:pointer;" onchange="hTaskDocSeleccionado(this)" />
+          <input type="file" accept=".pdf,.doc,.docx,.ppt,.pptx,.txt,image/*" multiple id="h-task-doc-inp" style="position:absolute;inset:0;opacity:0;cursor:pointer;" onchange="hTaskDocSeleccionado(this)" />
         </label>
       </div>
       <div id="h-task-docs-preview" style="display:flex;flex-direction:column;gap:3px;"></div>
@@ -2597,7 +2619,7 @@ body.on-home #sec-home { display: block !important; }
 <!-- ══ ÁLBUMES DE FOTOS ══ -->
 <div id="sec-albumes" class="section">
   <div class="tap-header">
-    <button class="tap-header-btn" onclick="irHome()" style="flex-direction:column;gap:1px;"><span style="font-size:22px;line-height:1;color:#fff;font-weight:900;">&#8592;</span><span style="font-size:9px;color:#fff;font-weight:700;font-family:Lato,sans-serif;letter-spacing:.3px;">Inicio</span></button>
+    
     <span class="tap-header-title">Mis álbumes</span>
     <button class="tap-header-btn" onclick="albNuevo()" style="font-size:22px;color:#fff;font-weight:900;line-height:1;">+</button>
   </div>
@@ -2792,7 +2814,7 @@ body.on-home #sec-home { display: block !important; }
 
 <div id="sec-nuevo" class="section">
   <div class="tap-header">
-    <button class="tap-header-btn" onclick="irHome()" style="flex-direction:column;gap:1px;"><span style="font-size:22px;line-height:1;color:#fff;font-weight:900;">&#8592;</span><span style="font-size:9px;color:#fff;font-weight:700;font-family:Lato,sans-serif;letter-spacing:.3px;">Inicio</span></button>
+    
     <span class="tap-header-title" id="nuevo-titulo">Nuevo registro</span>
   
     <button onclick="var b=this;b.style.opacity='0.5';syncFromSheets(true).then(function(){b.style.opacity='1';}).catch(function(){b.style.opacity='1';})" class="tap-header-btn" title="Sincronizar" style="font-size:22px;color:#fff;line-height:1;">&#10227;</button>
@@ -2898,7 +2920,7 @@ body.on-home #sec-home { display: block !important; }
         <div>
           <label style="display:flex;align-items:center;justify-content:center;gap:8px;padding:10px;background:var(--bl);border:1.5px dashed var(--bd);border-radius:8px;cursor:pointer;font-size:13px;font-family:Lato,sans-serif;color:var(--tl);font-weight:600;position:relative;">
             &#128206; Adjuntar documento (PDF, Word...)
-            <input type="file" accept=".pdf,.doc,.docx,.ppt,.pptx,.txt,image/*" style="position:absolute;inset:0;opacity:0;cursor:pointer;" onchange="nuevoRegistroDocSeleccionado(this)" />
+            <input type="file" accept=".pdf,.doc,.docx,.ppt,.pptx,.txt,image/*" multiple style="position:absolute;inset:0;opacity:0;cursor:pointer;" onchange="nuevoRegistroDocSeleccionado(this)" />
           </label>
           <div id="nuevo-docs-preview" style="display:flex;flex-direction:column;gap:3px;margin-top:5px;"></div>
         </div>
@@ -2936,7 +2958,7 @@ body.on-home #sec-home { display: block !important; }
   <!-- HEADER REGISTROS -->
   <div class="tap-header">
     <button class="tap-header-btn" id="btn-back-registros" onclick="irHome()" style="flex-direction:column;gap:1px;"><span style="font-size:22px;line-height:1;color:#fff;font-weight:900;">&#8592;</span><span style="font-size:9px;color:#fff;font-weight:700;font-family:Lato,sans-serif;letter-spacing:.3px;">Inicio</span></button>
-    <span class="tap-header-title" id="rec-header-title">Mis registros</span>
+    <span class="tap-header-title" id="rec-header-title">Mis tareas</span>
     <button class="tap-header-btn" onclick="toggleSearch()" title="Buscar" id="btn-search">🔍</button>
     <button class="tap-header-btn" onclick="toggleFiltros()" title="Filtros" id="btn-filtros">⚙️</button>
     <button class="tap-header-btn" id="btn-vista-toggle" onclick="toggleVistaRegistros()" title="Cambiar vista">⊞</button>
@@ -3498,7 +3520,7 @@ body.on-home #sec-home { display: block !important; }
 <div class="stats-modal-ov" id="stats-modal">
   <div class="stats-modal">
     <div class="stats-modal-hdr">
-      <h3 id="stats-modal-title">Mis registros</h3>
+      <h3 id="stats-modal-title">Mis tareas</h3>
       <button onclick="document.getElementById('stats-modal').classList.remove('show')"
         style="background:none;border:none;font-size:18px;cursor:pointer;color:var(--tl);padding:4px 8px;">✕</button>
     </div>
@@ -5459,7 +5481,7 @@ function initForm(){
   var alertaEl=document.getElementById('inp-alerta');
   if(alertaEl) alertaEl.value='';
 
-// Limpiar imagen al abrir nuevo registro
+// Limpiar imagen al abrir nueva tarea
 var _prev=document.getElementById('img-preview');if(_prev){_prev.style.display='none';_prev.src='';}
 var _rmBtn=document.getElementById('img-remove-btn');if(_rmBtn)_rmBtn.style.display='none';
 var _area=document.getElementById('img-upload-area');if(_area)_area.classList.remove('has-img');
@@ -7197,7 +7219,7 @@ function initNotificaciones(){
 /* ══ FIN NOTIFICACIONES ══ */
 
 function irHome(){
-var secs=['home','nuevo','registros','recordatorios','calendario','notas','rutinas','config','albumes','estudio'];
+var secs=['home','nuevo','registros','recordatorios','calendario','notas','config','albumes','estudio'];
 secs.forEach(function(s){
 var el=document.getElementById('sec-'+s);
 if(el){el.classList.remove('active');el.style.display='none';}
@@ -7279,7 +7301,7 @@ if(darkLabel) darkLabel.textContent=isDark?'Claro':'Oscuro';
 function irSeccion(tab){
 document.body.classList.remove('on-home');
 switchTab(tab,null);
-var titles={nuevo:'NUEVO REGISTRO',registros:'LISTA DE REGISTROS',recordatorios:'ALERTAS',calendario:'MI AGENDA',notas:'TO DO',rutinas:'MIS RUTINAS',config:'CONFIGURACIÓN',albumes:'MIS ÁLBUMES',estudio:'MI ESTUDIO'};
+var titles={nuevo:'NUEVA TAREA',registros:'MIS TAREAS',recordatorios:'ALERTAS',calendario:'MI AGENDA',notas:'TO DO',config:'CONFIGURACIÓN',albumes:'MIS ÁLBUMES',estudio:'MI ESTUDIO'};
 document.getElementById('hdr-section-title').textContent=titles[tab]||'TAPUNTO';
 }
 function switchTab(tab,btn){
@@ -7681,6 +7703,8 @@ return '<div class="record record-compact" data-id="'+id+'" onclick="toggleRecAc
 // Status badge
 +(badge?'<div style="flex-shrink:0;">'+badge+'</div>':'')
 +'</div>'
+// Album icon (if subject has albums)
++(r.tema&&(typeof getAlbums==='function')&&getAlbums().some(function(a){return a.asig===r.tema&&a.fotos&&a.fotos.length>0;})?'<button class="rec-alb-btn" data-tema="'+x(r.tema)+'" onclick="event.stopPropagation();recAbrirAlbum(this)" style="background:rgba(230,173,0,.12);border:1px solid rgba(230,173,0,.4);border-radius:6px;cursor:pointer;font-size:13px;padding:2px 6px;flex-shrink:0;color:#b8860b;" title="Fotos y archivos de esta tarea">&#128193;</button>':'')
 +actions;
 }
 function showImgModal(id){ const r=state.records.find(rec=>rec.id===id); if(!r||!r.imagenUrl) return; const w=window.open('','_blank','width=600,height=500'); w.document.write(`<html><body style="margin:0;background:#000;display:flex;align-items:center;justify-content:center;height:100vh"><img src="${r.imagenUrl}" style="max-width:100%;max-height:100%"/>
@@ -8251,6 +8275,7 @@ syncFromSheets(false).catch(()=>{});
 setTimeout(function(){syncConfigToSheets();},3000);
 }
 mostrarSplash();
+setTimeout(cerrarSplash, 2500);
 setTimeout(checkBackupSemanal, 5000);
 requestAnimationFrame(()=>{
 applyMode('trabajo');
@@ -9350,7 +9375,7 @@ if(dest==='notas') irSeccion('notas'); else irHome();
 function editRecord(id){
 var calPanel=document.getElementById('cal-day-panel');
 if(calPanel) calPanel.style.display='none';
-document.getElementById('hdr-section-title').textContent='NUEVO REGISTRO';
+document.getElementById('hdr-section-title').textContent='NUEVA TAREA';
 _editRecordOrig(id);
 }
 var _recExpandido=null;
@@ -10217,9 +10242,22 @@ function viewRecord(id){
   // Edit button
   var editBtn=document.createElement('button');
   editBtn.setAttribute('style','width:100%;padding:11px;background:var(--bl);border:1px solid var(--bd);border-radius:10px;font-size:13px;font-weight:600;color:var(--tm);cursor:pointer;margin-top:4px;');
-  editBtn.textContent='\u270F\uFE0F Editar este registro';
+  editBtn.textContent='\u270F\uFE0F Editar esta tarea';
   editBtn.onclick=function(){modal.remove();irSeccion('registros');setTimeout(function(){try{editRecord(id);}catch(e){}},300);};
   sheet.appendChild(editBtn);
+  // Album link
+  var albBtn=document.createElement('button');
+  albBtn.setAttribute('style','width:100%;padding:10px;background:var(--bl);border:1px solid var(--bd);border-radius:10px;font-size:13px;font-weight:600;color:var(--tm);cursor:pointer;margin-top:6px;');
+  albBtn.textContent='\uD83D\uDCF7 Fotos y archivos de esta tarea';
+  albBtn.onclick=function(){
+    modal.remove();
+    irSeccion('albumes');
+    setTimeout(function(){
+      _albFiltroAsig=r.tema||'';
+      renderAlbumes();
+    },200);
+  };
+  sheet.appendChild(albBtn);
   modal.appendChild(sheet);
   modal.onclick=function(e){if(e.target===modal)modal.remove();};
   document.body.appendChild(modal);
@@ -12216,6 +12254,204 @@ function planInlineEdit(block, item, key, dayPlan, container, todayStr){
 }
 
 
+
+/* ── Bottom nav active state ── */
+/* bnavSetActive defined above */
+var _origIrHomeNav=irHome;
+irHome=function(){_origIrHomeNav();bnavSetActive('home');};
+var _origSwitchTabNav=switchTab;
+switchTab=function(tab,btn){_origSwitchTabNav(tab,btn);bnavSetActive(tab);};
+/* ════ HOME TABS ════ */
+function homeTab(tab){
+  var isHorario = tab === 'horario';
+  document.getElementById('home-tab-resumen-panel').style.display = isHorario ? 'none' : 'block';
+  document.getElementById('home-tab-horario-panel').style.display = isHorario ? 'block' : 'none';
+  var btnRes = document.getElementById('home-tab-resumen');
+  var btnHor = document.getElementById('home-tab-horario');
+  if(btnRes){
+    btnRes.style.color = isHorario ? 'var(--tl)' : 'var(--gd)';
+    btnRes.style.borderBottomColor = isHorario ? 'transparent' : 'var(--gd)';
+  }
+  if(btnHor){
+    btnHor.style.color = isHorario ? 'var(--gd)' : 'var(--tl)';
+    btnHor.style.borderBottomColor = isHorario ? 'var(--gd)' : 'transparent';
+  }
+  if(isHorario){
+    // Render schedule now that the tab is visible
+    setTimeout(function(){ renderHorarioHome(); }, 30);
+  }
+}
+
+/* ════ HOME RESUMEN DATA ════ */
+function renderResumen(){
+  // Greeting + date
+  var saludo = document.getElementById('home-resumen-saludo');
+  var fechaEl = document.getElementById('home-resumen-fecha');
+  var now = new Date();
+  var h = now.getHours();
+  var greeting = h < 13 ? 'Buenos días' : h < 20 ? 'Buenas tardes' : 'Buenas noches';
+  var firma = (typeof getFirma === 'function') ? getFirma() : {};
+  var nombre = (firma.nombre || (typeof currentUser !== 'undefined' ? (currentUser||'').split('@')[0] : '')) || '';
+  if(saludo) saludo.textContent = greeting + (nombre ? ', ' + nombre.split(' ')[0] + '!' : '!');
+  var dias = ['domingo','lunes','martes','miércoles','jueves','viernes','sábado'];
+  var meses = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+  if(fechaEl) fechaEl.textContent = dias[now.getDay()] + ', ' + now.getDate() + ' de ' + meses[now.getMonth()] + ' de ' + now.getFullYear();
+
+  // Next deadline
+  var hoy = new Date(); hoy.setHours(0,0,0,0);
+  var nextEl = document.getElementById('home-next-deadline-text');
+  if(nextEl){
+    var upcoming = (state.records||[]).filter(function(r){
+      if(!r.fechaEvento||r.archivado) return false;
+      return new Date(r.fechaEvento+'T00:00:00') >= hoy;
+    }).sort(function(a,b){ return a.fechaEvento.localeCompare(b.fechaEvento); });
+    if(upcoming.length){
+      var r = upcoming[0];
+      var d = new Date(r.fechaEvento+'T00:00:00');
+      var diff = Math.ceil((d-hoy)/86400000);
+      var diffTxt = diff===0?'HOY':diff===1?'Mañana':'En '+diff+'d';
+      nextEl.innerHTML = '<span style="font-weight:700;color:var(--gd);">'+r.tema+'</span><br><span style="font-size:10px;color:var(--tl);">'+r.accion+' · '+diffTxt+'</span>';
+    } else {
+      nextEl.textContent = 'Sin exámenes próximos';
+    }
+  }
+
+  // Pomodoro sessions today
+  var pomEl = document.getElementById('home-pom-today');
+  if(pomEl){
+    var sessions = typeof _pom !== 'undefined' ? (_pom.sessions||[]) : [];
+    var totalMin = sessions.reduce(function(acc,s){return acc+(s.min||0);},0);
+    pomEl.innerHTML = sessions.length + ' sesi' + (sessions.length===1?'ón':'ones') + (totalMin>0?'<br><span style="font-size:10px;color:var(--tl);">'+totalMin+'min</span>':'');
+  }
+
+  renderAlertas();
+}
+
+/* Override irHome to render resumen */
+var _origIrHomeResumen = irHome;
+irHome = function(){
+  _origIrHomeResumen();
+  homeTab('resumen');
+  setTimeout(renderResumen, 50);
+};
+
+/* ════ BNAVSETACTIVE: add todo ════ */
+function bnavSetActive(tab){
+  var map = {home:'bnav-home', registros:'bnav-tareas', notas:'bnav-todo', calendario:'bnav-agenda', estudio:'bnav-estudio'};
+  document.querySelectorAll('.bnav-btn').forEach(function(b){ b.classList.remove('active'); });
+  var id = map[tab] || (tab==='home'?'bnav-home':null);
+  if(id){ var el=document.getElementById(id); if(el) el.classList.add('active'); }
+}
+
+/* ════ SCROLL TO TOP button ════ */
+(function(){
+  var fab = document.createElement('button');
+  fab.id = 'scroll-top-btn';
+  fab.innerHTML = '&#8679;';
+  fab.setAttribute('style','position:fixed;bottom:130px;right:18px;width:40px;height:40px;border-radius:50%;background:var(--gd);color:#fff;border:none;font-size:22px;cursor:pointer;box-shadow:0 3px 10px rgba(0,0,0,.25);z-index:502;display:none;align-items:center;justify-content:center;line-height:1;');
+  fab.title = 'Subir arriba';
+  fab.addEventListener('click', function(){ window.scrollTo({top:0,behavior:'smooth'}); });
+  // Add to body when ready
+  if(document.body) document.body.appendChild(fab);
+  else document.addEventListener('DOMContentLoaded', function(){ document.body.appendChild(fab); });
+  window.addEventListener('scroll', function(){
+    fab.style.display = window.scrollY > 200 ? 'flex' : 'none';
+  }, {passive:true});
+})();
+
+/* ════ REMOVE BACK ARROWS from tap-headers (handled by bottom nav) ════ */
+/* CSS: hide the tap-header-btn that call irHome() on non-essential sections */
+
+/* ════ HORARIO PDF ════ */
+function horarioPDF(){
+  var sch = getSch();
+  var H_DAYS_LABELS = ['Lunes','Martes','Miércoles','Jueves','Viernes'];
+  var H_DAYS = ['lun','mar','mie','jue','vie'];
+  var palette = typeof H_COLORS_EXT !== 'undefined' ? H_COLORS_EXT : H_COLORS;
+
+  var thead = '<tr><th style="background:#2D5016;color:#fff;padding:8px;font-size:12px;width:60px;">Hora</th>';
+  H_DAYS_LABELS.forEach(function(d){ thead += '<th style="background:#2D5016;color:#fff;padding:8px;font-size:12px;">'+d+'</th>'; });
+  thead += '</tr>';
+
+  var tbody = '';
+  (sch.slots||[]).forEach(function(slot, si){
+    tbody += '<tr>';
+    tbody += '<td style="padding:6px 8px;font-weight:700;font-size:11px;background:#f5f5f5;text-align:center;border:1px solid #e0e0e0;">'+slot+'</td>';
+    H_DAYS.forEach(function(dia){
+      var key = dia+'-'+si;
+      var asig = (sch.grid||{})[key]||'';
+      var cIdx = asig && sch.colores && sch.colores[asig]!==undefined ? sch.colores[asig] : -1;
+      var c = cIdx>=0 ? palette[cIdx]||palette[cIdx%8] : null;
+      var bg = c ? c.bg : '#fff';
+      var tx = c ? '#222' : '#aaa';
+      tbody += '<td style="padding:6px 8px;background:'+bg+';color:'+tx+';font-size:11px;font-weight:'+(asig?'700':'400')+';text-align:center;border:1px solid #e0e0e0;">'+(asig||'')+'</td>';
+    });
+    tbody += '</tr>';
+  });
+
+  var firma = typeof getFirma==='function' ? getFirma() : {};
+  var nombre = firma.nombre || (typeof currentUser!=='undefined' ? (currentUser||'').split('@')[0] : 'Estudiante');
+  var hoy = new Date().toLocaleDateString('es',{weekday:'long',day:'2-digit',month:'long',year:'numeric'});
+
+  var html = '<!DOCTYPE html><html lang="es"><head><meta charset="utf-8"><title>Mi Horario - '+sch.nombre+'</title>'
+    +'<style>body{font-family:Arial,sans-serif;margin:20px;color:#222;}h1{color:#2D5016;font-size:20px;margin-bottom:4px;}h2{color:#666;font-size:13px;font-weight:normal;margin-top:0;}table{width:100%;border-collapse:collapse;margin-top:12px;}th,td{border:1px solid #e0e0e0;}@media print{.no-print{display:none;}}</style>'
+    +'</head><body>'
+    +'<div class="no-print" style="margin-bottom:16px;"><button onclick="window.print()" style="padding:10px 20px;background:#2D5016;color:#fff;border:none;border-radius:8px;font-size:14px;cursor:pointer;font-weight:700;">&#128424; Imprimir / PDF</button><button onclick="window.close()" style="margin-left:8px;padding:10px 16px;background:#f5f5f5;border:1px solid #ddd;border-radius:8px;font-size:14px;cursor:pointer;">&larr; Volver</button></div>'
+    +'<h1>&#128197; '+sch.nombre+'</h1>'
+    +'<h2>'+nombre+' &bull; '+hoy+'</h2>'
+    +'<table><thead>'+thead+'</thead><tbody>'+tbody+'</tbody></table>'
+    +'<p style="font-size:10px;color:#aaa;margin-top:16px;text-align:center;">Generado con Tapunto &bull; tapunto.app</p>'
+    +'</body></html>';
+
+  var w = window.open('','_blank');
+  if(!w){ alert('Activa ventanas emergentes para descargar el PDF.'); return; }
+  w.document.write(html);
+  w.document.close();
+  w.focus();
+}
+
+/* ════ PLANNER EXAMS COLLAPSED BY DEFAULT ════ */
+var _origPlanRenderExams = planRenderExams;
+planRenderExams = function(){
+  _origPlanRenderExams();
+  // Collapse all exam cards after rendering
+  setTimeout(function(){
+    document.querySelectorAll('#plan-exams-list .plan-exam-card').forEach(function(card, i){
+      var grid = card.querySelector('div[style*="grid-template-columns"]');
+      if(!grid) return;
+      var toggle = card.querySelector('.plan-exam-toggle');
+      if(!toggle){
+        // Create toggle button and collapse
+        var header = card.querySelector('div:first-child');
+        if(!header) return;
+        var btn = document.createElement('button');
+        btn.className = 'plan-exam-toggle';
+        btn.style.cssText = 'background:none;border:none;cursor:pointer;font-size:14px;color:var(--tl);padding:2px 4px;';
+        btn.innerHTML = '&#9660;';
+        btn.title = 'Expandir/colapsar';
+        btn.addEventListener('click', function(e){
+          e.stopPropagation();
+          var isCollapsed = grid.style.display === 'none';
+          grid.style.display = isCollapsed ? 'grid' : 'none';
+          btn.innerHTML = isCollapsed ? '&#9650;' : '&#9660;';
+        });
+        header.appendChild(btn);
+        grid.style.display = 'none'; // collapsed by default
+        btn.innerHTML = '&#9660;';
+      }
+    });
+  }, 200);
+};
+
+/* album icon integrated in recHTML directly */
+
+
+function recAbrirAlbum(btn){
+  var tema = btn ? btn.dataset.tema : '';
+  if(!tema) return;
+  irSeccion('albumes');
+  setTimeout(function(){_albFiltroAsig=tema;renderAlbumes();},250);
+}
 /* ── irHome / switchTab hooks ── */
 var _origIrHomeH=irHome;
 irHome=function(){_origIrHomeH();setTimeout(function(){renderHorarioHome();renderAlertas();},0);var hi=document.getElementById('home-info-albumes');if(hi){var n=getAlbums().length;hi.textContent=n>0?n+(n===1?' álbum':' álbumes'):'Guarda fotos por asignatura';}};
@@ -12226,6 +12462,31 @@ switchTab=function(tab,btn){_origSwitchTabA(tab,btn);if(tab==='albumes')renderAl
 <div id="toast-ok" style="position:fixed;bottom:30px;left:50%;transform:translateX(-50%);z-index:99999;padding:14px 28px;border-radius:12px;font-size:15px;font-weight:700;display:none;align-items:center;gap:8px;background:#1a4a1a;color:#fff;box-shadow:0 4px 20px rgba(0,0,0,.4);white-space:nowrap;">✅ Registro guardado</div>
 <div id="toast-upd" style="position:fixed;bottom:30px;left:50%;transform:translateX(-50%);z-index:99999;padding:14px 28px;border-radius:12px;font-size:15px;font-weight:700;display:none;align-items:center;gap:8px;background:#2D5016;color:#fff;box-shadow:0 4px 20px rgba(0,0,0,.4);white-space:nowrap;">✅ Registro actualizado</div>
 <button class="btn-config-float" onclick="irSeccion('config')" title="Configuración">⚙️<span style="font-size:9px;font-weight:700;letter-spacing:.3px;">Config</span></button>
+
+<!-- ── BOTTOM NAVIGATION ── -->
+<nav class="bottom-nav" id="bottom-nav">
+  <button class="bnav-btn active" id="bnav-home" onclick="irHome()">
+    <span class="bnav-ico">&#127968;</span>
+    <span class="bnav-lbl">Inicio</span>
+  </button>
+  <button class="bnav-btn" id="bnav-tareas" onclick="irSeccion('registros')">
+    <span class="bnav-ico">&#128203;</span>
+    <span class="bnav-lbl">Tareas</span>
+  </button>
+  <button class="bnav-btn" id="bnav-todo" onclick="irSeccion('notas')">
+    <span class="bnav-ico">&#10003;</span>
+    <span class="bnav-lbl">To Do</span>
+  </button>
+  <button class="bnav-btn" id="bnav-agenda" onclick="irSeccion('calendario')">
+    <span class="bnav-ico">&#128197;</span>
+    <span class="bnav-lbl">Agenda</span>
+  </button>
+  <button class="bnav-btn" id="bnav-estudio" onclick="irSeccion('estudio')">
+    <span class="bnav-ico">&#127891;</span>
+    <span class="bnav-lbl">Estudio</span>
+  </button>
+</nav>
+<button class="bnav-fab" onclick="irSeccion('nuevo')" title="Nueva tarea">&#43;</button>
 </body>
 </html>
 <script>
