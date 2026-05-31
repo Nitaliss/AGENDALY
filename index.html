@@ -9895,29 +9895,41 @@ function hCeldaTap(asig,dia,slot){
   _hTipo='Examen';
   document.querySelectorAll('.h-tipo-chip').forEach(function(c){c.classList.remove('sel');});
   var fc=document.querySelector('.h-tipo-chip');if(fc)fc.classList.add('sel');
+  // Reset file attachments for fresh task
+  window._hTaskDocs=[];
+  window._hTaskFotoData=null;
+  var docsPreview=document.getElementById('h-task-docs-preview');
+  if(docsPreview) docsPreview.innerHTML='';
   var modal=document.getElementById('h-task-modal');if(modal)modal.style.display='flex';
 }
 function hCerrarModal(){var m=document.getElementById('h-task-modal');if(m)m.style.display='none';hPararMic();}
 function hSelTipo(btn,tipo){_hTipo=tipo;document.querySelectorAll('.h-tipo-chip').forEach(function(c){c.classList.remove('sel');});btn.classList.add('sel');}
 var _hTaskFotoData=null;
 function hTaskFotoSeleccionada(inp){
-  var file=inp.files[0];if(!file)return;
-  var reader=new FileReader();
-  reader.onload=function(e){
-    var img=new Image();
-    img.onload=function(){
-      var MAX=600;var scale=Math.min(1,MAX/Math.max(img.width,img.height));
-      var c=document.createElement('canvas');c.width=Math.round(img.width*scale);c.height=Math.round(img.height*scale);
-      c.getContext('2d').drawImage(img,0,0,c.width,c.height);
-      _hTaskFotoData=c.toDataURL('image/jpeg',0.75);
-      var prev=document.getElementById('h-task-foto-preview');
-      var imgEl=document.getElementById('h-task-foto-img');
-      if(prev)prev.style.display='flex';
-      if(imgEl)imgEl.src=_hTaskFotoData;
-    };
-    img.src=e.target.result;
-  };
-  reader.readAsDataURL(file);
+  if(!inp.files||!inp.files.length) return;
+  if(!window._hTaskDocs) window._hTaskDocs=[];
+  var preview=document.getElementById('h-task-docs-preview');
+  Array.from(inp.files).forEach(function(file){
+    albComprimirImagen(file,600,0.75,function(data){
+      if(!data) return;
+      var docItem={data:data,nombre:file.name,tipo:'image'};
+      window._hTaskDocs.push(docItem);
+      // Also set first photo as imagenUrl for quick preview in record card
+      if(!_hTaskFotoData) _hTaskFotoData=data;
+      // Show thumbnail preview
+      if(preview){
+        var item=document.createElement('div');
+        item.style.cssText='display:flex;align-items:center;gap:6px;background:var(--bl);border-radius:6px;padding:4px 8px;';
+        var img=document.createElement('img');img.src=data;img.style.cssText='width:28px;height:28px;border-radius:4px;object-fit:cover;';
+        var name=document.createElement('span');name.style.cssText='font-size:11px;color:var(--td);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;';name.textContent=file.name;
+        var del=document.createElement('button');del.textContent='×';del.style.cssText='background:none;border:none;cursor:pointer;color:var(--tl);font-size:14px;';
+        del.addEventListener('click',function(){window._hTaskDocs=window._hTaskDocs.filter(function(d){return d.data!==data;});item.remove();if(_hTaskFotoData===data)_hTaskFotoData=null;});
+        item.appendChild(img);item.appendChild(name);item.appendChild(del);
+        preview.appendChild(item);
+      }
+    });
+  });
+  inp.value='';
 }
 function hTaskFotoQuitar(){
   _hTaskFotoData=null;
@@ -11235,7 +11247,7 @@ function docGetIcon(tipo){
 /* ── h-task-modal: add document upload ── */
 function hTaskDocSeleccionado(input){
   if(!input.files||!input.files.length) return;
-  var file=input.files[0];
+  Array.from(input.files).forEach(function(file){
   docComprimir(file,function(docItem){
     if(!docItem) return;
     // Store for saving with record
@@ -11251,7 +11263,7 @@ function hTaskDocSeleccionado(input){
       preview.appendChild(item);
     }
     input.value='';
-  });
+  });});
 }
 
 /* ── Override hGuardarTarea to save docs to album ── */
@@ -11280,20 +11292,28 @@ hGuardarTarea=function(){
 (function(){
   var _origSR2=saveRecord;
   saveRecord=function(){
-    var docs=window._nuevoRegistroDocs||[];
+    // Capture BEFORE _origSR2 resets the form
+    var docs=(window._nuevoRegistroDocs||[]).slice();
+    var imgEl=document.getElementById('inp-imagen-preview');
+    var imgUrl=(imgEl&&imgEl.src&&imgEl.src.startsWith('data:'))?imgEl.src:'';
+    var temaCap=(document.getElementById('inp-tema')&&document.getElementById('inp-tema').value)||'';
+    var fechaCap=(document.getElementById('inp-fecha')&&document.getElementById('inp-fecha').value)||new Date().toISOString().slice(0,10);
     _origSR2();
-    if(docs.length>0){
-      // Attach docs to most recently created record
+    window._nuevoRegistroDocs=[];
+    if(docs.length>0||imgUrl){
       setTimeout(function(){
-        var r=state.records&&state.records[0];
-        if(!r) return;
-        var asig=r.tema;var fecha=r.fecha||new Date().toISOString().slice(0,10);
+        var asig=temaCap||((state.records&&state.records[0]&&state.records[0].tema)||'Sin asignatura');
+        var fecha=fechaCap.slice(0,10);
         var albs=getAlbums();
         var alb=albs.find(function(a){return a.asig===asig&&a.fecha===fecha;});
         if(!alb){alb={id:'alb'+Date.now(),asig:asig,fecha:fecha,notas:'',fotos:[],created:new Date().toISOString()};albs.unshift(alb);}
+        if(imgUrl&&!alb.fotos.some(function(f){return f.data===imgUrl;})){
+          alb.fotos.push({id:'f'+Date.now()+Math.random(),data:imgUrl,nombre:'foto_tarea.jpg',tipo:'image'});
+        }
         docs.forEach(function(d){alb.fotos.push({id:'f'+Date.now()+Math.random(),data:d.data,nombre:d.nombre,tipo:d.tipo});});
-        window._nuevoRegistroDocs=[];
         try{persist().catch(function(){});}catch(e){}
+        // Refresh records list if visible
+        try{renderRecords();}catch(e){}
       },300);
     }
   };
@@ -11301,7 +11321,7 @@ hGuardarTarea=function(){
 
 function nuevoRegistroDocSeleccionado(input){
   if(!input.files||!input.files.length) return;
-  var file=input.files[0];
+  Array.from(input.files).forEach(function(file){
   docComprimir(file,function(docItem){
     if(!docItem) return;
     if(!window._nuevoRegistroDocs) window._nuevoRegistroDocs=[];
@@ -11309,12 +11329,13 @@ function nuevoRegistroDocSeleccionado(input){
     var preview=document.getElementById('nuevo-docs-preview');
     if(preview){
       var item=document.createElement('div');
-      item.style.cssText='display:flex;align-items:center;gap:6px;background:var(--bl);border-radius:6px;padding:4px 8px;font-size:11px;font-family:\'Lato\',sans-serif;color:var(--td);';
+      item.style.cssText='display:flex;align-items:center;gap:6px;background:var(--bl);border-radius:6px;padding:4px 8px;font-size:11px;font-family:Lato,sans-serif;color:var(--td);';
       item.innerHTML='<span>'+docGetIcon(docItem.tipo)+'</span><span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">'+docItem.nombre+'</span>'
         +'<button onclick="this.parentElement.remove()" style="background:none;border:none;cursor:pointer;color:var(--tl);font-size:14px;">&#215;</button>';
       preview.appendChild(item);
     }
-    input.value='';
+  });
+  input.value='';
   });
 }
 
