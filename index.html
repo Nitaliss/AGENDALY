@@ -364,7 +364,7 @@ body{font-family:Lato,sans-serif;background:var(--body-bg);min-height:100vh;
 #sec-calendario>div:first-child,
 #sec-config>div:first-child{margin-top:0!important;}
 
-#sec-registros.section,#sec-recordatorios.section,#sec-calendario.section,#sec-config.section{display:none;width:100%;min-height:100vh;background:var(--body-bg,#FAFAF8);}
+#sec-registros.section,#sec-recordatorios.section,#sec-calendario.section,#sec-config.section{display:none;width:100%;min-height:0;background:var(--body-bg,#FAFAF8);}
 
 .stats-bar{margin-top:0!important;padding-top:4px!important;}
 .rec-filters{margin-top:0!important;padding-top:4px!important;}
@@ -9589,7 +9589,10 @@ splash.classList.add('fade-out');
 setTimeout(function(){
 splash.style.display='none';
 splash.classList.remove('fade-out');
-},500);
+// Render schedule NOW - home is truly visible
+renderHorarioHome();
+renderAlertas();
+},520);
 }
 
 function addAccionDirect(){
@@ -9698,9 +9701,16 @@ function hEsc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;')
 
 function renderHorarioHome(){
   var wrap0=document.getElementById('home-horario-wrap');
-  var _parent=wrap0&&wrap0.parentElement;
-  if(!_parent||_parent.offsetWidth===0){
-    requestAnimationFrame(function(){requestAnimationFrame(function(){renderHorarioHome();});});return;
+  if(!wrap0) return;
+  // Force layout read - if section not visible yet, defer
+  var secHome=document.getElementById('sec-home');
+  if(!secHome||!secHome.classList.contains('active')){
+    setTimeout(renderHorarioHome,100);return;
+  }
+  // Read offsetWidth (forces reflow)
+  var w=wrap0.offsetWidth||wrap0.parentElement&&wrap0.parentElement.offsetWidth||0;
+  if(w===0){
+    setTimeout(renderHorarioHome,80);return;
   }
   var h=getHS(),sch=getSch();
   var nEl=document.getElementById('home-horario-nombre');
@@ -10587,9 +10597,13 @@ function estSwitchTab(tab){
     // Restore saved plan if exists
     setTimeout(function(){
       var out=document.getElementById('plan-output');
-      if(out&&!out._planSnapshot&&state.currentPlanSnapshot){
-        out._planSnapshot=state.currentPlanSnapshot;
-        planRenderDom(out,state.currentPlanSnapshot.dayPlan,state.currentPlanSnapshot.hoyStr);
+      if(!out) return;
+      // Always restore from state if we have a snapshot (DOM property may be lost)
+      if(state.currentPlanSnapshot && state.currentPlanSnapshot.dayPlan){
+        // Restore mutable dayPlan from snapshot
+        var snap=JSON.parse(JSON.stringify(state.currentPlanSnapshot));
+        out._planSnapshot=snap;
+        planRenderDom(out,snap.dayPlan,snap.hoyStr);
         var acts=document.getElementById('plan-actions');
         if(acts) acts.style.display='flex';
       }
@@ -12003,6 +12017,13 @@ function planRenderDom(container, dayPlan, todayStr){
   container.appendChild(planWrap);
 }
 
+function planSaveSnap(container,dayPlan,todayStr){
+  if(!container) return;
+  var snap={dayPlan:JSON.parse(JSON.stringify(dayPlan)),exams:(container._planSnapshot&&container._planSnapshot.exams)||[],hoyStr:todayStr};
+  container._planSnapshot=snap;
+  state.currentPlanSnapshot=JSON.parse(JSON.stringify(snap));
+  try{persist().catch(function(){});}catch(e){}
+}
 function planMakeBlock(item, key, dayPlan, container, todayStr){
   var status = item.status || (item.completed ? 'done' : 'pending');
   item.status = status;
@@ -12055,6 +12076,7 @@ function planMakeBlock(item, key, dayPlan, container, todayStr){
     if(!dayPlan[key].length) delete dayPlan[key];
     if(!dayPlan[nd]) dayPlan[nd]=[];
     dayPlan[nd].push(item);
+    planSaveSnap(container,dayPlan,todayStr);
     planRenderDom(container,dayPlan,todayStr);
   });
   mainRow.appendChild(moveBtn);
@@ -12065,6 +12087,7 @@ function planMakeBlock(item, key, dayPlan, container, todayStr){
     e.stopPropagation();
     dayPlan[key]=dayPlan[key].filter(function(b){return b.id!==item.id;});
     if(!dayPlan[key].length) delete dayPlan[key];
+    planSaveSnap(container,dayPlan,todayStr);
     planRenderDom(container,dayPlan,todayStr);
   });
   mainRow.appendChild(delBtn);
@@ -12106,7 +12129,8 @@ function planShowStatusPicker(block, item, key, dayPlan, container, todayStr){
       item.status = s.key;
       item.completed = s.key==='done';
       picker.remove();
-      // Show nota input if done or progress
+      planSaveSnap(container,dayPlan,todayStr);
+      planRefreshProgress(container,dayPlan);
       if(s.key==='done'||s.key==='progress'){
         var newBlock = planMakeBlock(item,key,dayPlan,container,todayStr);
         block.parentNode.replaceChild(newBlock, block);
@@ -12115,7 +12139,6 @@ function planShowStatusPicker(block, item, key, dayPlan, container, todayStr){
         var newBlock2 = planMakeBlock(item,key,dayPlan,container,todayStr);
         block.parentNode.replaceChild(newBlock2, block);
       }
-      planRefreshProgress(container,dayPlan);
     });
     picker.appendChild(btn);
   });
@@ -12148,6 +12171,7 @@ function planShowNotaInput(block, item, key, dayPlan, container, todayStr){
   saveBtn.innerHTML='&#10003; Guardar nota';
   saveBtn.addEventListener('click',function(){
     item.nota=ta.value.trim();
+    planSaveSnap(container,dayPlan,todayStr);
     var newBlock=planMakeBlock(item,key,dayPlan,container,todayStr);
     block.parentNode.replaceChild(newBlock,block);
   });
@@ -12180,6 +12204,7 @@ function planInlineEdit(block, item, key, dayPlan, container, todayStr){
     item.type=typeEl.value; item.text=textEl.value; item.mins=parseInt(minsEl.value)||45;
     item.color=item.type==='review'?'#e74c3c':'var(--gd)';
     item.bg=item.type==='review'?'rgba(231,76,60,.1)':'rgba(45,138,90,.1)';
+    planSaveSnap(container,dayPlan,todayStr);
     var newBlock=planMakeBlock(item,key,dayPlan,container,todayStr);
     block.parentNode.replaceChild(newBlock,block);
   });
@@ -12193,7 +12218,7 @@ function planInlineEdit(block, item, key, dayPlan, container, todayStr){
 
 /* ── irHome / switchTab hooks ── */
 var _origIrHomeH=irHome;
-irHome=function(){_origIrHomeH();renderAlertas();var hi=document.getElementById('home-info-albumes');if(hi){var n=getAlbums().length;hi.textContent=n>0?n+(n===1?' álbum':' álbumes'):'Guarda fotos por asignatura';}};
+irHome=function(){_origIrHomeH();setTimeout(function(){renderHorarioHome();renderAlertas();},0);var hi=document.getElementById('home-info-albumes');if(hi){var n=getAlbums().length;hi.textContent=n>0?n+(n===1?' álbum':' álbumes'):'Guarda fotos por asignatura';}};
 var _origSwitchTabA=switchTab;
 switchTab=function(tab,btn){_origSwitchTabA(tab,btn);if(tab==='albumes')renderAlbumes();if(tab==='calendario')setTimeout(function(){try{renderAlertas();}catch(e){}},200);};
 </script>
