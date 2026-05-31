@@ -3529,7 +3529,7 @@ body.on-home #sec-home { display: block !important; }
 /* ══ GOOGLE DRIVE SYNC ══ */
 // Sincronización con Google Drive del usuario (Option C)
 // DRIVE_CLIENT_ID se obtiene de Google Cloud Console > OAuth 2.0
-var DRIVE_CLIENT_ID = ''; // ← Configurar con Client ID de Google Cloud Console
+var DRIVE_CLIENT_ID = '388356757097-46k0lt1ighir45osunfrv7ko2nth7h7a.apps.googleusercontent.com'; // Google Cloud Console
 var DRIVE_SCOPE = 'https://www.googleapis.com/auth/drive.file';
 var DRIVE_FILE_NAME = 'tapunto-datos.json';
 var _driveFileId = null;
@@ -3584,7 +3584,7 @@ function actualizarEstadoDrive(estado){
 
 function conectarGoogleDrive(){
   if(!DRIVE_CLIENT_ID){
-    showToast('⚠️ Google Drive estará disponible próximamente. Usa la sincronización QR mientras tanto.');
+    showToast('⚠️ Error al conectar con Google Drive. Revisa la configuración.');
     return;
   }
   if(!isPremium){
@@ -3777,7 +3777,7 @@ function driveSyncAutoOnOpen(){
 /* ══ SINCRONIZACIÓN GOOGLE DRIVE ══ */
 var _driveAccessToken=null;
 var _driveFileId=null;
-var _DRIVE_CLIENT_ID=''; // Se configura al registrar en Google Cloud
+var _DRIVE_CLIENT_ID='388356757097-46k0lt1ighir45osunfrv7ko2nth7h7a.apps.googleusercontent.com'; // Google Cloud Console
 var _DRIVE_FILE_NAME='tapunto-datos.json';
 
 // Inicializar estado de Drive al arrancar
@@ -3825,12 +3825,7 @@ function actualizarUIDrive(conectado){
 }
 
 function conectarGoogleDrive(){
-  if(!_DRIVE_CLIENT_ID||_DRIVE_CLIENT_ID===''){
-    // Modo demo - mostrar instrucciones
-    showToast('⚙️ Configura el Client ID de Google Cloud en Configuración → Google Drive');
-    _mostrarConfigDriveClientId();
-    return;
-  }
+  // Client ID configurado
   // OAuth 2.0 implicit flow
   var redirectUri=window.location.origin+window.location.pathname;
   var scope='https://www.googleapis.com/auth/drive.file';
@@ -3877,7 +3872,7 @@ function conectarGoogleDrive(){
 }
 
 function _mostrarConfigDriveClientId(){
-  alert('Para usar Google Drive necesitas registrar Tapunto en Google Cloud Console y obtener un Client ID. Te guiamos paso a paso en tapunto.app. Por ahora puedes usar QR o exportar JSON para sincronizar.');
+  // Client ID ya configurado - esta función ya no es necesaria
 }
 
 async function _verificarTokenDrive(){
