@@ -3194,25 +3194,26 @@ body.on-home #sec-home { display: block !important; }
               <button onclick="exportarDatosCompletos()" style="padding:10px 18px;background:var(--bc);color:var(--bct);border:1px solid var(--bd);border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;">📦 Backup completo JSON</button>
             </div>
             <!-- Google Drive Sync -->
-            <div style="margin-top:14px;padding:12px;background:var(--bl);border-radius:10px;border:1px solid var(--bd);">
-              <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
-                <div style="font-size:12px;font-weight:700;color:var(--td);font-family:Lato,sans-serif;">☁️ Google Drive</div>
-                <span id="drive-status-badge" style="font-size:10px;background:#e8f5e9;color:#2D5016;padding:2px 7px;border-radius:8px;display:none;">✓ Conectado</span>
+            <div style="margin-top:14px;padding:14px;background:linear-gradient(135deg,rgba(66,133,244,.08),rgba(66,133,244,.04));border-radius:10px;border:1.5px solid rgba(66,133,244,.25);">
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+                <span style="font-size:20px;">☁️</span>
+                <div style="font-size:14px;font-weight:700;color:var(--td);font-family:Lato,sans-serif;">Google Drive</div>
+                <span id="drive-status-badge" style="font-size:10px;background:#e8f5e9;color:#2D5016;padding:2px 8px;border-radius:8px;display:none;font-weight:700;">✓ Conectado</span>
               </div>
-              <p style="font-size:12px;color:var(--tl);margin-bottom:10px;">Sincroniza automáticamente tus datos en Google Drive. Sin configuración técnica.</p>
+              <p style="font-size:12px;color:var(--tl);margin-bottom:12px;line-height:1.5;">Sincroniza automáticamente tus datos entre dispositivos usando <b>tu propio Google Drive</b>. Tus datos nunca pasan por servidores de Tapunto.</p>
               <div id="drive-disconnected" style="display:flex;flex-direction:column;gap:8px;">
-                <button onclick="conectarGoogleDrive()" style="padding:10px 16px;background:#4285F4;color:#fff;border:none;border-radius:8px;font-family:Lato,sans-serif;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+                <button onclick="conectarGoogleDrive()" style="padding:12px 16px;background:#4285F4;color:#fff;border:none;border-radius:10px;font-family:Lato,sans-serif;font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
                   Conectar con Google
                 </button>
-                <div style="font-size:11px;color:var(--tl);text-align:center;">Solo accede a archivos creados por Tapunto en tu Drive</div>
+                <div style="font-size:11px;color:var(--tl);text-align:center;">Solo accede al archivo de Tapunto en tu Drive</div>
               </div>
               <div id="drive-connected" style="display:none;flex-direction:column;gap:8px;">
-                <div style="font-size:12px;color:var(--tl);font-family:Lato,sans-serif;" id="drive-last-sync-label">Última sync: —</div>
+                <div style="font-size:12px;color:#2D5016;background:#e8f5e9;border-radius:6px;padding:8px 10px;font-family:Lato,sans-serif;" id="drive-last-sync-label">✓ Última sync: —</div>
                 <div style="display:flex;gap:8px;flex-wrap:wrap;">
-                  <button onclick="subirADrive()" style="padding:8px 14px;background:var(--gm);color:#fff;border:none;border-radius:8px;font-family:Lato,sans-serif;font-size:12px;font-weight:700;cursor:pointer;">☁️ Subir ahora</button>
-                  <button onclick="descargarDeDrive()" style="padding:8px 14px;background:var(--bl);color:var(--td);border:1px solid var(--bd);border-radius:8px;font-family:Lato,sans-serif;font-size:12px;font-weight:700;cursor:pointer;">⬇️ Descargar</button>
-                  <button onclick="desconectarDrive()" style="padding:8px 14px;background:none;color:#E24B4A;border:1px solid #E24B4A;border-radius:8px;font-family:Lato,sans-serif;font-size:11px;cursor:pointer;">Desconectar</button>
+                  <button onclick="subirADrive()" style="flex:1;padding:10px;background:var(--gm);color:#fff;border:none;border-radius:8px;font-family:Lato,sans-serif;font-size:13px;font-weight:700;cursor:pointer;">☁️ Subir ahora</button>
+                  <button onclick="descargarDeDrive()" style="flex:1;padding:10px;background:var(--bl);color:var(--td);border:1px solid var(--bd);border-radius:8px;font-family:Lato,sans-serif;font-size:13px;font-weight:700;cursor:pointer;">⬇️ Descargar</button>
+                  <button onclick="desconectarDrive()" style="padding:10px 14px;background:none;color:#E24B4A;border:1px solid #E24B4A;border-radius:8px;font-family:Lato,sans-serif;font-size:12px;cursor:pointer;">Desconectar</button>
                 </div>
               </div>
             </div>
@@ -3257,42 +3258,7 @@ body.on-home #sec-home { display: block !important; }
           </div>
         </div>
 
-<div class="cfg-block" id="cfg-block-drive">
-          <div class="cfg-hdr" onclick="toggleCfg(this)">
-            <span class="cfg-hdr-title">☁️ Google Drive
-              <span style="font-size:10px;background:linear-gradient(135deg,#b8860b,#daa520);color:white;padding:1px 6px;border-radius:6px;margin-left:4px;">Premium</span>
-            </span>
-            <span class="cfg-arrow">▶</span>
-          </div>
-          <div class="cfg-body">
-            <div id="drive-premium-lock" style="display:none;flex-direction:column;align-items:center;padding:20px;text-align:center;gap:12px;">
-              <div style="font-size:36px;">🔒</div>
-              <div style="font-size:14px;font-weight:700;color:var(--td);">Sincronización Google Drive</div>
-              <div style="font-size:12px;color:var(--tl);">Disponible en Plan Premium</div>
-              <button onclick="showUpgrade()" style="padding:10px 20px;background:linear-gradient(135deg,#b8860b,#daa520);color:#fff;border:none;border-radius:10px;font-family:Lato,sans-serif;font-size:13px;font-weight:700;cursor:pointer;">⭐ Activar Premium</button>
-            </div>
-            <div id="drive-content">
-              <p style="font-size:13px;color:var(--td);margin-bottom:12px;">Sincroniza automáticamente tus datos entre dispositivos usando tu propio Google Drive. Tus datos nunca pasan por servidores de Tapunto.</p>
-              <!-- Estado conexión -->
-              <div id="drive-status" style="padding:10px 12px;background:var(--bl);border-radius:8px;border:1px solid var(--bd);margin-bottom:12px;font-size:12px;font-family:Lato,sans-serif;color:var(--tl);">
-                ⚪ No conectado
-              </div>
-              <!-- Botones -->
-              <div style="display:flex;flex-direction:column;gap:8px;">
-                <button id="btn-drive-connect" onclick="conectarGoogleDrive()" style="padding:11px;background:var(--gm);color:#fff;border:none;border-radius:10px;font-family:Lato,sans-serif;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;">
-                  <span style="font-size:16px;">☁️</span> Conectar con Google Drive
-                </button>
-                <button id="btn-drive-sync-now" onclick="driveSyncManual()" style="padding:11px;background:var(--bl);color:var(--td);border:1px solid var(--bd);border-radius:10px;font-family:Lato,sans-serif;font-size:13px;font-weight:700;cursor:pointer;display:none;">
-                  ⟳ Sincronizar ahora
-                </button>
-                <button id="btn-drive-disconnect" onclick="desconectarGoogleDrive()" style="padding:11px;background:var(--bl);color:#E24B4A;border:1px solid #E24B4A;border-radius:10px;font-family:Lato,sans-serif;font-size:13px;font-weight:600;cursor:pointer;display:none;">
-                  Desconectar Drive
-                </button>
-              </div>
-              <p style="font-size:11px;color:var(--tl);margin-top:10px;">⚠️ Configuración en proceso de verificación por Google. Mientras tanto puedes usar la sincronización QR.</p>
-            </div>
-          </div>
-        </div>
+
 <div class="cfg-block">
           <div class="cfg-hdr" onclick="toggleCfg(this)">
             <span class="cfg-hdr-title">🔗 Google Sheets
