@@ -22,7 +22,7 @@
   ============================================================
   TAPUNTO v1 — Agenda Personal de Productividad
   Modelo Freemium:
-    · Gratuita : 20 registros, 2 dispositivos, sin IA ni imágenes
+    · Gratuita : 20 tareas, sin IA ni imágenes
     · Premium  : ilimitado + IA + imágenes + dictado + temas
   © 2026 Alicia Prats · Todos los derechos reservados
   Licencia propietaria. Prohibida su copia o redistribución.
@@ -931,7 +931,7 @@ body[data-mode="escolar"][data-theme="verde"]{
   ============================================================
   TAPUNTO v1 — Agenda Personal de Productividad
   Modelo Freemium:
-    · Gratuita : 20 registros, 2 dispositivos, sin IA ni imágenes
+    · Gratuita : 20 tareas, sin IA ni imágenes
     · Premium  : ilimitado + IA + imágenes + dictado + temas
   © 2026 Alicia Prats · Todos los derechos reservados
   Licencia propietaria. Prohibida su copia o redistribución.
@@ -3157,7 +3157,7 @@ body.on-home #sec-home { display: block !important; }
         <div class="cfg-basic" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
           <div style="display:flex;align-items:center;gap:6px;">
             <span class="plan-badge plan-free" id="cfg-plan-badge" style="font-size:12px;padding:4px 12px;">FREE</span>
-            <span style="font-size:11px;color:var(--tl);" id="cfg-plan-desc">20 registros · sin IA</span>
+            <span style="font-size:11px;color:var(--tl);" id="cfg-plan-desc">20 tareas · sin IA</span>
           </div>
           <div id="cfg-license-row">
             <button onclick="showUpgrade()" style="padding:7px 14px;background:linear-gradient(135deg,#b8860b,#daa520);color:white;border:none;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;">⭐ Activar Premium</button>
@@ -6552,7 +6552,7 @@ function cancelar(){renderNotas();}
 btnG.addEventListener('click',guardar);btnC.addEventListener('click',cancelar);
 input.addEventListener('keydown',function(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();guardar();}if(e.key==='Escape'){cancelar();}});
 }
-function convertirNotaEnRegistro(id){
+function convertirNotaEnTarea(id){
 var nota=state.notas?state.notas.find(function(n){return n.id===id;}):null;
 if(!nota) return;
 irSeccion('nuevo');
@@ -6597,7 +6597,7 @@ return '<div style="display:flex;align-items:flex-start;gap:8px;padding:10px 0;b
 '<span style="font-size:11px;color:var(--tl);white-space:nowrap;margin-top:2px;min-width:36px;">'+hora+'</span>'+
 '<span class="nota-texto" data-id="'+n.id+'" style="flex:1;font-size:14px;color:var(--td);line-height:1.4;cursor:pointer;" title="Pulsa para editar">'+n.texto.replace(/</g,'&lt;')+'</span>'+
 '<div style="display:flex;gap:4px;flex-shrink:0;">'+
-'<button class="nota-to-reg" data-id="'+n.id+'" title="Convertir en registro" style="padding:4px 8px;background:var(--gm);color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:11px;">→ Reg</button>'+
+'<button class="nota-to-reg" data-id="'+n.id+'" title="Convertir en tarea" style="padding:4px 8px;background:var(--gm);color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:11px;">→ Tarea</button>'+
 '<button class="nota-arch" data-id="'+n.id+'" title="'+(n.archivado?'Desarchivar':'Archivar')+'" style="padding:4px 8px;background:var(--bl);color:var(--td);border:1px solid var(--bd);border-radius:6px;cursor:pointer;font-size:12px;">'+(n.archivado?'↩️':'📦')+'</button>'+
 '<button class="nota-del" data-id="'+n.id+'" style="padding:4px 8px;background:none;color:#c53030;border:1px solid #f5c6c6;border-radius:6px;cursor:pointer;font-size:14px;">✕</button>'+
 '</div>'+
@@ -6610,7 +6610,7 @@ var span=e.target.closest('.nota-texto');
 if(span){editarNota(span.getAttribute('data-id'),span);return;}
 var btn=e.target.closest('button');if(!btn) return;
 var id=btn.getAttribute('data-id');if(!id) return;
-if(btn.classList.contains('nota-to-reg')) convertirNotaEnRegistro(id);
+if(btn.classList.contains('nota-to-reg')) convertirNotaEnTarea(id);
 if(btn.classList.contains('nota-arch')) archivarNota(id);
 if(btn.classList.contains('nota-del')) eliminarNota(id);
 };
@@ -7200,27 +7200,163 @@ function renderCarpetas(){
 
 function abrirCarpeta(tema){
   _carpetaActual = tema;
-  // Cambiar header
   var title = document.getElementById('rec-header-title');
   if(title) title.textContent = tema;
   var btnBack = document.getElementById('btn-back-registros');
   if(btnBack) btnBack.onclick = function(){
     _carpetaActual = null;
     var t2 = document.getElementById('rec-header-title');
-    if(t2) t2.textContent = 'Registros';
+    if(t2) t2.textContent = 'Mis Tareas';
     btnBack.onclick = function(){ irHome(); };
     renderRecords();
   };
-  // Renderizar registros del tema en orden cronológico
   var el = document.getElementById('rec-list');
   if(!el) return;
-  var recs = getFiltered().filter(function(r){ return (r.tema||'Sin asunto')===tema; });
-  recs.sort(function(a,b){ return new Date(b.fecha)-new Date(a.fecha); });
+
+  var recs = (state.records||[]).filter(function(r){ return !r.archivado && (r.tema||'Sin asunto')===tema; });
+  recs.sort(function(a,b){ return new Date(b.fecha||b.created) - new Date(a.fecha||a.created); });
+
+  el.innerHTML = '';
+
   if(!recs.length){
-    el.innerHTML='<div class="empty">No hay registros en esta carpeta 🐾</div>';
-    return;
+    var empty = document.createElement('div'); empty.className='empty'; empty.textContent='No hay tareas en esta carpeta';
+    el.appendChild(empty); return;
   }
-  el.innerHTML = '<div style="padding:8px 14px 80px;">' + recs.map(function(r){ return recHTML(r); }).join('') + '</div>';
+
+  // Get albums for this subject
+  var albs = typeof getAlbums==='function' ? getAlbums() : [];
+  var subjectAlbs = albs.filter(function(a){ return a.asig===tema; });
+
+  var wrap = document.createElement('div');
+  wrap.style.cssText = 'padding:8px 0 80px;display:flex;flex-direction:column;gap:0;';
+
+  recs.forEach(function(r){
+    var d = new Date(r.fecha||r.created||Date.now());
+    var dateStr = d.toLocaleDateString('es',{weekday:'long',day:'2-digit',month:'long',year:'numeric'});
+    var timeStr = d.toLocaleTimeString('es',{hour:'2-digit',minute:'2-digit'});
+    var rDateStr = (r.fecha||'').slice(0,10);
+
+    // Matching album files
+    var matchFotos=[], matchDocs=[];
+    subjectAlbs.forEach(function(alb){
+      if(!alb.fotos||!alb.fotos.length) return;
+      var albDate = alb.fecha||'';
+      if(albDate===rDateStr || Math.abs(new Date(albDate)-new Date(rDateStr))<172800000){
+        alb.fotos.forEach(function(f){
+          if(!f.tipo||f.tipo==='image') matchFotos.push(f);
+          else matchDocs.push(f);
+        });
+      }
+    });
+    if(r.imagenUrl&&r.imagenUrl.startsWith('data:'))
+      matchFotos.unshift({id:'main',data:r.imagenUrl,nombre:'foto.jpg',tipo:'image'});
+
+    // ── Card ──
+    var card = document.createElement('div');
+    card.style.cssText = 'border-bottom:1px solid var(--bd);padding:12px 14px;';
+
+    // Date + badge + actions row
+    var topRow = document.createElement('div');
+    topRow.style.cssText = 'display:flex;align-items:center;gap:6px;margin-bottom:8px;flex-wrap:wrap;';
+
+    var dateEl = document.createElement('div');
+    dateEl.style.cssText = 'font-size:12px;font-weight:700;color:var(--tm);font-family:Lato,sans-serif;';
+    dateEl.textContent = dateStr;
+    topRow.appendChild(dateEl);
+
+    var timeEl = document.createElement('span');
+    timeEl.style.cssText = 'font-size:10px;color:var(--tl);font-family:Lato,sans-serif;';
+    timeEl.textContent = timeStr;
+    topRow.appendChild(timeEl);
+
+    // Type badge
+    var typeColors={examen:'#c0392b',deberes:'#2980b9',trabajo:'#8e44ad',proyecto:'#16a085',apuntes:'#27ae60',otro:'#7f8c8d'};
+    var tc=typeColors[(r.accion||'').toLowerCase()]||'var(--gm)';
+    var badge=document.createElement('span');
+    badge.style.cssText='background:'+tc+';color:#fff;font-size:9px;font-weight:700;padding:2px 7px;border-radius:8px;';
+    badge.textContent=r.accion||'';
+    topRow.appendChild(badge);
+
+    // Exam date
+    if(r.fechaEvento){
+      var evEl=document.createElement('span');
+      evEl.style.cssText='font-size:10px;color:#c0392b;font-family:Lato,sans-serif;';
+      evEl.textContent='📅 '+new Date(r.fechaEvento+'T00:00:00').toLocaleDateString('es',{day:'2-digit',month:'short'});
+      topRow.appendChild(evEl);
+    }
+
+    // Actions (right)
+    var actRow=document.createElement('div'); actRow.style.cssText='margin-left:auto;display:flex;gap:4px;';
+    var editBtn=document.createElement('button');
+    editBtn.style.cssText='background:none;border:none;cursor:pointer;font-size:15px;color:var(--tl);padding:2px;';
+    editBtn.innerHTML='&#9998;'; editBtn.title='Editar';
+    (function(rid){ editBtn.addEventListener('click',function(){ editRecord(rid); }); })(r.id);
+    var delBtn=document.createElement('button');
+    delBtn.style.cssText='background:none;border:none;cursor:pointer;font-size:15px;color:#c0392b;padding:2px;';
+    delBtn.innerHTML='&#128465;'; delBtn.title='Eliminar';
+    (function(rid){ delBtn.addEventListener('click',function(){ askDelete(rid); }); })(r.id);
+    actRow.appendChild(editBtn); actRow.appendChild(delBtn);
+    topRow.appendChild(actRow);
+    card.appendChild(topRow);
+
+    // Notes
+    if(r.notas&&r.notas.trim()){
+      var notasEl=document.createElement('div');
+      notasEl.style.cssText='font-size:12px;color:var(--td);font-family:Lato,sans-serif;line-height:1.55;margin-bottom:10px;padding:8px 10px;background:var(--bl);border-radius:8px;border-left:3px solid var(--gm);';
+      notasEl.textContent=r.notas;
+      card.appendChild(notasEl);
+    }
+
+    // Photos grid
+    if(matchFotos.length){
+      var photoGrid=document.createElement('div');
+      photoGrid.style.cssText='display:grid;grid-template-columns:repeat(auto-fill,minmax(72px,1fr));gap:5px;margin-bottom:8px;';
+      var showing=matchFotos.slice(0,9);
+      showing.forEach(function(f){
+        var img=document.createElement('img');
+        img.style.cssText='width:100%;aspect-ratio:1;object-fit:cover;border-radius:7px;cursor:pointer;border:1px solid var(--bd);display:block;';
+        img.src=f.data; img.alt='';
+        img.addEventListener('click',(function(src){ return function(){ mostrarFotoAmpliada(src); }; })(f.data));
+        photoGrid.appendChild(img);
+      });
+      if(matchFotos.length>9){
+        var more=document.createElement('div');
+        more.style.cssText='aspect-ratio:1;background:var(--bl);border:1px solid var(--bd);border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--tl);';
+        more.textContent='+'+(matchFotos.length-9);
+        photoGrid.appendChild(more);
+      }
+      card.appendChild(photoGrid);
+    }
+
+    // Documents list
+    if(matchDocs.length){
+      var docList=document.createElement('div');
+      docList.style.cssText='display:flex;flex-direction:column;gap:4px;';
+      matchDocs.forEach(function(f){
+        var ext=(f.nombre||'').split('.').pop().toUpperCase()||'DOC';
+        var dcMap={PDF:'#c0392b',DOC:'#2980b9',DOCX:'#2980b9',PPT:'#e67e22',PPTX:'#e67e22',XLS:'#27ae60',XLSX:'#27ae60',TXT:'#607d8b'};
+        var dc=dcMap[ext]||'#607d8b';
+        var row=document.createElement('div');
+        row.style.cssText='display:flex;align-items:center;gap:8px;padding:6px 10px;background:var(--bl);border-radius:8px;border:1px solid var(--bd);';
+        var extBadge=document.createElement('div');
+        extBadge.style.cssText='background:'+dc+';color:#fff;font-size:8px;font-weight:900;padding:2px 5px;border-radius:4px;flex-shrink:0;letter-spacing:.5px;';
+        extBadge.textContent=ext;
+        var nameEl=document.createElement('span');
+        nameEl.style.cssText='flex:1;font-size:12px;color:var(--td);font-family:Lato,sans-serif;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;';
+        nameEl.textContent=f.nombre||'archivo';
+        var dlBtn=document.createElement('a');
+        dlBtn.href=f.data; dlBtn.download=f.nombre||'archivo';
+        dlBtn.style.cssText='padding:4px 10px;background:var(--gd);color:#fff;border-radius:6px;font-size:11px;font-weight:700;text-decoration:none;flex-shrink:0;';
+        dlBtn.textContent='⬇';
+        row.appendChild(extBadge); row.appendChild(nameEl); row.appendChild(dlBtn);
+        docList.appendChild(row);
+      });
+      card.appendChild(docList);
+    }
+
+    wrap.appendChild(card);
+  });
+  el.appendChild(wrap);
 }
 /* ══ FIN VISTA CARPETAS ══ */
 
