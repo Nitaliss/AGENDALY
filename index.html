@@ -2132,13 +2132,8 @@ body.on-home #sec-home { display: block !important; }
 
 /* ── BOTTOM NAV ── */
 .bottom-nav{position:fixed;bottom:0;left:0;right:0;height:58px;background:var(--w);border-top:1.5px solid var(--bd);display:flex;z-index:500;box-shadow:0 -2px 12px rgba(0,0,0,.08);}
-.bnav-btn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;background:none;border:1.5px solid transparent;cursor:pointer;padding:4px 2px;transition:all .12s;color:var(--tl);border-radius:8px;margin:4px 3px;min-width:0;}
-.bnav-btn.active{background:rgba(45,138,90,.08);}
-#bnav-home.active{border-color:#2D8A5A;color:#2D8A5A;background:rgba(45,138,90,.07);}
-#bnav-tareas.active{border-color:#1A7B8C;color:#1A7B8C;background:rgba(26,123,140,.07);}
-#bnav-todo.active{border-color:#E67E22;color:#E67E22;background:rgba(230,126,34,.07);}
-#bnav-agenda.active{border-color:#D4851A;color:#D4851A;background:rgba(212,133,26,.07);}
-#bnav-estudio.active{border-color:#8E44AD;color:#8E44AD;background:rgba(142,68,173,.07);}
+.bnav-btn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;background:none;border:none;cursor:pointer;padding:6px 0;transition:all .12s;color:var(--tl);}
+.bnav-btn.active{color:var(--gd);}
 .bnav-btn:active{transform:scale(.92);}
 .bnav-ico{font-size:20px;line-height:1;}
 .bnav-lbl{font-size:9px;font-weight:700;font-family:Lato,sans-serif;letter-spacing:.3px;}
@@ -2146,13 +2141,20 @@ body.on-home #sec-home { display: block !important; }
 .bnav-fab:active{transform:scale(.9);}
 .section{padding-bottom:68px !important;}
 
-/* Hide back-to-home arrow in nav sections */
-#sec-registros .tap-header-btn[onclick="irHome()"],
-#sec-notas .tap-header-btn[onclick="irHome()"],
-#sec-calendario .tap-header-btn[onclick="irHome()"],
-#sec-estudio .tap-header-btn[onclick="irHome()"] {
-  display: none !important;
-}
+/* ── BOTTOM NAV ── */
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;height:58px;background:var(--w);border-top:1.5px solid var(--bd);display:flex;z-index:500;box-shadow:0 -2px 12px rgba(0,0,0,.08);}
+.bnav-btn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;background:none;border:1.5px solid transparent;cursor:pointer;padding:4px 2px;transition:all .12s;color:var(--tl);border-radius:8px;margin:4px 3px;min-width:0;}
+.bnav-btn.active{background:rgba(45,138,90,.08);}
+#bnav-home.active{border-color:#2D8A5A;color:#2D8A5A;background:rgba(45,138,90,.07);}
+#bnav-tareas.active{border-color:#1A7B8C;color:#1A7B8C;background:rgba(26,123,140,.07);}
+#bnav-todo.active{border-color:#E67E22;color:#E67E22;background:rgba(230,126,34,.07);}
+#bnav-agenda.active{border-color:#D4851A;color:#D4851A;background:rgba(212,133,26,.07);}
+#bnav-estudio.active{border-color:#8E44AD;color:#8E44AD;background:rgba(142,68,173,.07);}
+.bnav-ico{font-size:20px;line-height:1;}
+.bnav-lbl{font-size:9px;font-weight:700;font-family:Lato,sans-serif;letter-spacing:.3px;}
+.bnav-fab{position:fixed;bottom:70px;right:18px;width:52px;height:52px;border-radius:50%;background:var(--gd);border:none;color:#fff;font-size:26px;font-weight:900;cursor:pointer;box-shadow:0 4px 16px rgba(45,80,22,.4);z-index:501;display:flex;align-items:center;justify-content:center;transition:transform .12s;}
+.bnav-fab:active{transform:scale(.9);}
+.section{padding-bottom:68px !important;}
 </style>
 <script>(function(){try{if(localStorage.getItem('tp_dark_mode')==='1')document.documentElement.style.background='#1a1a2e';}catch(e){};}());</script>
 </head>
@@ -2340,8 +2342,8 @@ body.on-home #sec-home { display: block !important; }
         </div>
         <!-- Aviso Gmail -->
         <div style="margin-top:8px;padding:10px 12px;background:#f0f9e8;border-radius:8px;border-left:3px solid var(--gm);font-size:11px;color:var(--td);font-family:Lato,sans-serif;line-height:1.7;">
-          <strong>📌 Con cuenta Gmail</strong> tendrás acceso a sincronización con Google Sheets, almacenamiento de fotos en Drive, acceso desde varios dispositivos y backup automático.<br>
-          <span style="color:var(--tl);">Con otro correo puedes usar Tapunto en <strong>modo local</strong>, sin sincronización ni almacenamiento en la nube.</span>
+          <strong>📌 Con cuenta Gmail</strong> podrás sincronizar tus datos entre dispositivos con <strong>Google Drive</strong> (Premium) y exportar registros a Google Sheets (Premium).<br>
+          <span style="color:var(--tl);">Con cualquier correo puedes usar Tapunto en <strong>modo local</strong> con todas las funciones básicas: horario, tareas, Pomodoro, agenda y álbumes.</span>
         </div>
       </div>
 
@@ -2506,37 +2508,27 @@ body.on-home #sec-home { display: block !important; }
     </div>
   </div>
 
-  <!-- ── HOME TABS ── -->
   <div style="display:flex;border-bottom:1.5px solid var(--bd);background:var(--w);padding:0 16px;">
     <button id="home-tab-resumen" onclick="homeTab('resumen')" style="padding:10px 16px 8px;font-size:13px;font-weight:700;font-family:Lato,sans-serif;background:none;border:none;cursor:pointer;color:var(--gd);border-bottom:2.5px solid var(--gd);margin-bottom:-1.5px;">Resumen</button>
     <button id="home-tab-horario" onclick="homeTab('horario')" style="padding:10px 16px 8px;font-size:13px;font-weight:700;font-family:Lato,sans-serif;background:none;border:none;cursor:pointer;color:var(--tl);border-bottom:2.5px solid transparent;margin-bottom:-1.5px;">Mi Horario</button>
   </div>
-
-  <!-- ── TAB RESUMEN ── -->
   <div id="home-tab-resumen-panel" style="padding:12px 14px 8px;display:block;">
-    <!-- Greeting card -->
     <div style="background:var(--w);border:1px solid var(--bd);border-radius:12px;padding:14px 16px;margin-bottom:10px;">
       <div id="home-resumen-saludo" style="font-family:Caveat,cursive;font-size:26px;font-weight:700;color:var(--gd);margin-bottom:2px;">Hola!</div>
       <div id="home-resumen-fecha" style="font-size:12px;color:var(--tl);font-family:Lato,sans-serif;"></div>
     </div>
-    <!-- Quick cards row -->
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">
-      <!-- Next deadline -->
-      <div id="home-next-deadline" style="background:var(--w);border:1px solid var(--bd);border-radius:10px;padding:10px 12px;cursor:pointer;" onclick="irSeccion('registros')">
+      <div style="background:var(--w);border:1px solid var(--bd);border-radius:10px;padding:10px 12px;cursor:pointer;" onclick="irSeccion('registros')">
         <div style="font-size:10px;font-weight:700;color:var(--tm);text-transform:uppercase;letter-spacing:.5px;font-family:Lato,sans-serif;margin-bottom:4px;">&#128197; Pr&#243;ximo</div>
-        <div id="home-next-deadline-text" style="font-size:12px;font-weight:700;color:var(--td);font-family:Lato,sans-serif;line-height:1.3;">Sin exámenes</div>
+        <div id="home-next-deadline-text" style="font-size:12px;font-weight:700;color:var(--td);font-family:Lato,sans-serif;line-height:1.3;">Sin ex&#225;menes</div>
       </div>
-      <!-- Pomodoro today -->
       <div style="background:var(--w);border:1px solid var(--bd);border-radius:10px;padding:10px 12px;cursor:pointer;" onclick="irSeccion('estudio')">
         <div style="font-size:10px;font-weight:700;color:var(--tm);text-transform:uppercase;letter-spacing:.5px;font-family:Lato,sans-serif;margin-bottom:4px;">&#9201; Hoy</div>
         <div id="home-pom-today" style="font-size:12px;font-weight:700;color:var(--td);font-family:Lato,sans-serif;line-height:1.3;">0 sesiones</div>
       </div>
     </div>
-    <!-- Alerts panel -->
     <div id="home-alertas-panel" style="border-radius:8px;border:1px solid var(--bd);background:var(--w);"></div>
   </div>
-
-  <!-- ── TAB HORARIO ── -->
   <div id="home-tab-horario-panel" style="padding:8px 9px 6px;display:none;">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
       <div style="display:flex;align-items:center;gap:1px;">
@@ -2547,7 +2539,8 @@ body.on-home #sec-home { display: block !important; }
       </div>
       <div style="display:flex;gap:5px;">
         <button onclick="toggleHorarioEditMode()" id="btn-edit-horario" style="background:var(--bl);border:1px solid var(--bd);border-radius:14px;padding:3px 9px;font-size:10px;font-family:Lato,sans-serif;font-weight:700;color:var(--tm);cursor:pointer;">&#9998; Editar</button>
-        <button onclick="horarioPDF()" style="background:var(--bl);border:1px solid var(--bd);border-radius:14px;padding:3px 9px;font-size:10px;font-family:Lato,sans-serif;font-weight:700;color:var(--tm);cursor:pointer;" title="Descargar PDF">&#128196; PDF</button>
+        <button id="btn-cancel-horario" onclick="cancelarEdicionHorario()" style="display:none;background:rgba(192,57,43,.1);border:1px solid #c0392b;border-radius:14px;padding:3px 9px;font-size:10px;font-family:Lato,sans-serif;font-weight:700;color:#c0392b;cursor:pointer;">&#215; Cancelar</button>
+        <button onclick="horarioPDF()" id="btn-pdf-horario" style="background:var(--bl);border:1px solid var(--bd);border-radius:14px;padding:3px 9px;font-size:10px;font-family:Lato,sans-serif;font-weight:700;color:var(--tm);cursor:pointer;">&#128196; PDF</button>
       </div>
     </div>
     <div id="home-horario-wrap" style="overflow-x:auto;border-radius:8px;border:1px solid var(--bd);background:var(--w);"></div>
@@ -2556,6 +2549,7 @@ body.on-home #sec-home { display: block !important; }
       <button onclick="hOrdenarSlots()" style="background:var(--bl);color:var(--tm);border:1px solid var(--bd);border-radius:6px;padding:4px 10px;font-size:11px;cursor:pointer;font-family:Lato,sans-serif;font-weight:700;margin-left:6px;">&#8597; Ordenar</button>
     </div>
     <div id="home-h-color-tip" style="display:none;font-size:9px;color:var(--th);font-family:Lato,sans-serif;text-align:center;margin-top:3px;">Toca celda rellena para cambiar color</div>
+    <div id="home-alertas-panel-h" style="margin-top:8px;border-radius:8px;border:1px solid var(--bd);background:var(--w);"></div>
   </div>
 
 </div><!-- /sec-home -->
@@ -2581,15 +2575,15 @@ body.on-home #sec-home { display: block !important; }
       <div style="display:flex;gap:5px;margin-bottom:5px;flex-wrap:wrap;">
         <label style="flex:1;min-width:60px;display:flex;align-items:center;justify-content:center;gap:4px;padding:7px 4px;background:var(--bl);border:1.5px dashed var(--bd);border-radius:8px;cursor:pointer;font-size:11px;font-family:Lato,sans-serif;color:var(--tl);font-weight:600;position:relative;">
           &#128247; C&#225;mara
-          <input type="file" accept="image/*" capture="environment" multiple id="h-task-foto-inp" style="position:absolute;inset:0;opacity:0;cursor:pointer;" onchange="hTaskFotoSeleccionada(this)" />
+          <input type="file" accept="image/*" capture="environment" id="h-task-foto-inp" style="position:absolute;inset:0;opacity:0;cursor:pointer;" onchange="hTaskFotoSeleccionada(this)" />
         </label>
         <label style="flex:1;min-width:60px;display:flex;align-items:center;justify-content:center;gap:4px;padding:7px 4px;background:var(--bl);border:1.5px dashed var(--bd);border-radius:8px;cursor:pointer;font-size:11px;font-family:Lato,sans-serif;color:var(--tl);font-weight:600;position:relative;">
           &#128444;&#65039; Galer&#237;a
-          <input type="file" accept="image/*" multiple id="h-task-foto-gal" style="position:absolute;inset:0;opacity:0;cursor:pointer;" onchange="hTaskFotoSeleccionada(this)" />
+          <input type="file" accept="image/*" id="h-task-foto-gal" style="position:absolute;inset:0;opacity:0;cursor:pointer;" onchange="hTaskFotoSeleccionada(this)" />
         </label>
         <label style="flex:1;min-width:60px;display:flex;align-items:center;justify-content:center;gap:4px;padding:7px 4px;background:var(--bl);border:1.5px dashed var(--bd);border-radius:8px;cursor:pointer;font-size:11px;font-family:Lato,sans-serif;color:var(--tl);font-weight:600;position:relative;">
           &#128206; Docs
-          <input type="file" accept=".pdf,.doc,.docx,.ppt,.pptx,.txt,image/*" multiple id="h-task-doc-inp" style="position:absolute;inset:0;opacity:0;cursor:pointer;" onchange="hTaskDocSeleccionado(this)" />
+          <input type="file" accept=".pdf,.doc,.docx,.ppt,.pptx,.txt,image/*" id="h-task-doc-inp" style="position:absolute;inset:0;opacity:0;cursor:pointer;" onchange="hTaskDocSeleccionado(this)" />
         </label>
       </div>
       <div id="h-task-docs-preview" style="display:flex;flex-direction:column;gap:3px;"></div>
@@ -2619,7 +2613,7 @@ body.on-home #sec-home { display: block !important; }
 <!-- ══ ÁLBUMES DE FOTOS ══ -->
 <div id="sec-albumes" class="section">
   <div class="tap-header">
-    
+    <button class="tap-header-btn" onclick="irHome()" style="flex-direction:column;gap:1px;"><span style="font-size:22px;line-height:1;color:#fff;font-weight:900;">&#8592;</span><span style="font-size:9px;color:#fff;font-weight:700;font-family:Lato,sans-serif;letter-spacing:.3px;">Inicio</span></button>
     <span class="tap-header-title">Mis álbumes</span>
     <button class="tap-header-btn" onclick="albNuevo()" style="font-size:22px;color:#fff;font-weight:900;line-height:1;">+</button>
   </div>
@@ -2641,7 +2635,7 @@ body.on-home #sec-home { display: block !important; }
   <!-- Tab bar -->
   <div style="display:flex;border-bottom:1px solid var(--bd);background:var(--w);padding:0 14px;">
     <button class="est-tab active" id="est-tab-pom" onclick="estSwitchTab('pom')">&#9201; Pomodoro</button>
-    <button class="est-tab" id="est-tab-plan" onclick="estSwitchTab('plan')">&#128203; Planificador</button>
+    <button class="est-tab" id="est-tab-plan" onclick="estSwitchTab('plan')">&#128203; Planificador <span style="font-size:9px;background:linear-gradient(135deg,#b8860b,#daa520);color:#fff;padding:1px 5px;border-radius:8px;margin-left:2px;vertical-align:middle;">⭐</span></button>
   </div>
 
   <!-- ═══ POMODORO ═══ -->
@@ -2703,12 +2697,14 @@ body.on-home #sec-home { display: block !important; }
       <button class="pom-btn pom-btn-secondary" onclick="pomSkip()">&#9193; Saltar</button>
     </div>
 
-    <!-- Sound toggle -->
-    <div style="display:flex;align-items:center;justify-content:center;gap:8px;margin-top:12px;">
-      <label style="display:flex;align-items:center;gap:6px;font-size:12px;font-family:Lato,sans-serif;color:var(--tl);cursor:pointer;">
-        <input type="checkbox" id="pom-sound-on" checked style="width:16px;height:16px;cursor:pointer;"/>
-        &#128266; Sonido al terminar
-      </label>
+    <div style="margin-top:12px;">
+      <div style="font-size:10px;font-weight:700;color:var(--tm);text-transform:uppercase;letter-spacing:.5px;text-align:center;margin-bottom:6px;font-family:Lato,sans-serif;">Sonido de alarma</div>
+      <div style="display:flex;gap:5px;justify-content:center;flex-wrap:wrap;">
+        <button class="pom-sound-btn sel" data-sound="beep" onclick="pomSetSound('beep')" style="padding:5px 10px;border:1.5px solid var(--bd);border-radius:18px;font-size:11px;cursor:pointer;background:var(--gd);color:#fff;font-family:Lato,sans-serif;">&#128276; Beep</button>
+        <button class="pom-sound-btn" data-sound="bell" onclick="pomSetSound('bell')" style="padding:5px 10px;border:1.5px solid var(--bd);border-radius:18px;font-size:11px;cursor:pointer;background:var(--bl);color:var(--tm);font-family:Lato,sans-serif;">&#128518; Campana</button>
+        <button class="pom-sound-btn" data-sound="fanfare" onclick="pomSetSound('fanfare')" style="padding:5px 10px;border:1.5px solid var(--bd);border-radius:18px;font-size:11px;cursor:pointer;background:var(--bl);color:var(--tm);font-family:Lato,sans-serif;">&#127926; Fanfare</button>
+        <button class="pom-sound-btn" data-sound="silent" onclick="pomSetSound('silent')" style="padding:5px 10px;border:1.5px solid var(--bd);border-radius:18px;font-size:11px;cursor:pointer;background:var(--bl);color:var(--tm);font-family:Lato,sans-serif;">&#128263; Silencio</button>
+      </div>
     </div>
 
     <!-- Sessions today -->
@@ -2814,7 +2810,7 @@ body.on-home #sec-home { display: block !important; }
 
 <div id="sec-nuevo" class="section">
   <div class="tap-header">
-    
+    <button class="tap-header-btn" onclick="irHome()" style="flex-direction:column;gap:1px;"><span style="font-size:22px;line-height:1;color:#fff;font-weight:900;">&#8592;</span><span style="font-size:9px;color:#fff;font-weight:700;font-family:Lato,sans-serif;letter-spacing:.3px;">Inicio</span></button>
     <span class="tap-header-title" id="nuevo-titulo">Nuevo registro</span>
   
     <button onclick="var b=this;b.style.opacity='0.5';syncFromSheets(true).then(function(){b.style.opacity='1';}).catch(function(){b.style.opacity='1';})" class="tap-header-btn" title="Sincronizar" style="font-size:22px;color:#fff;line-height:1;">&#10227;</button>
@@ -2877,7 +2873,7 @@ body.on-home #sec-home { display: block !important; }
 
     <!-- NOTAS -->
     <div>
-      <label class="tap-label">Notas</label>
+      <label class="tap-label" style="color:var(--tl);">Notas <span style="font-size:10px;font-weight:400;">(opcional)</span></label>
       <textarea id="inp-notas" placeholder="Notas libres..." rows="4"
         style="width:100%;padding:10px 12px;border:1px solid var(--bd);border-radius:8px;background:var(--bp);font-family:Lato,sans-serif;font-size:13px;color:var(--td);outline:none;resize:vertical;box-sizing:border-box;"></textarea>
       <button onclick="dictarCampo('inp-notas',this)" style="margin-top:6px;padding:9px 16px;background:var(--gm);border:none;border-radius:8px;color:#fff;cursor:pointer;font-size:13px;font-weight:700;font-family:Lato,sans-serif;">
@@ -2920,7 +2916,7 @@ body.on-home #sec-home { display: block !important; }
         <div>
           <label style="display:flex;align-items:center;justify-content:center;gap:8px;padding:10px;background:var(--bl);border:1.5px dashed var(--bd);border-radius:8px;cursor:pointer;font-size:13px;font-family:Lato,sans-serif;color:var(--tl);font-weight:600;position:relative;">
             &#128206; Adjuntar documento (PDF, Word...)
-            <input type="file" accept=".pdf,.doc,.docx,.ppt,.pptx,.txt,image/*" multiple style="position:absolute;inset:0;opacity:0;cursor:pointer;" onchange="nuevoRegistroDocSeleccionado(this)" />
+            <input type="file" accept=".pdf,.doc,.docx,.ppt,.pptx,.txt,image/*" style="position:absolute;inset:0;opacity:0;cursor:pointer;" onchange="nuevoRegistroDocSeleccionado(this)" />
           </label>
           <div id="nuevo-docs-preview" style="display:flex;flex-direction:column;gap:3px;margin-top:5px;"></div>
         </div>
@@ -2968,16 +2964,10 @@ body.on-home #sec-home { display: block !important; }
 
   <!-- Pills de estado con contadores -->
   <div style="padding:8px 14px 4px;display:flex;gap:6px;background:var(--bl);overflow-x:auto;">
-    <button onclick="filtrarEstado('')" id="pill-todos" class="tap-pill tap-pill-active">Todos</button>
-    <button onclick="filtrarEstado('pendiente')" id="pill-pendiente" class="tap-pill tap-pill-inactive">
-      <span style="width:6px;height:6px;border-radius:50%;background:#E24B4A;display:inline-block;flex-shrink:0;"></span>
-      <span id="pill-count-pendiente">Pendientes</span>
-    </button>
-    <button onclick="filtrarEstado('en curso')" id="pill-curso" class="tap-pill tap-pill-inactive">
-      <span style="width:6px;height:6px;border-radius:50%;background:#378ADD;display:inline-block;flex-shrink:0;"></span>
-      <span id="pill-count-curso">En curso</span>
-    </button>
-    <button onclick="filtrarEstado('resuelto')" id="pill-resuelto" class="tap-pill tap-pill-inactive">Resueltos</button>
+    <button onclick="filtrarEstado('')" id="pill-todos" class="tap-pill tap-pill-active">Todas</button>
+    <button onclick="filtrarEstado('examen')" id="pill-examen" class="tap-pill tap-pill-inactive">📝 Exámenes</button>
+    <button onclick="filtrarEstado('deberes')" id="pill-deberes" class="tap-pill tap-pill-inactive">📚 Deberes</button>
+    <button onclick="filtrarEstado('trabajo')" id="pill-trabajo" class="tap-pill tap-pill-inactive">📋 Trabajos</button>
   </div>
 
         <div class="search-bar" id="search-bar" style="display:none">
@@ -3193,27 +3183,35 @@ body.on-home #sec-home { display: block !important; }
               <button onclick="exportCSV()" style="padding:10px 18px;background:var(--gm);color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;">⬇ Exportar CSV</button>
               <button onclick="exportarDatosCompletos()" style="padding:10px 18px;background:var(--bc);color:var(--bct);border:1px solid var(--bd);border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;">📦 Backup completo JSON</button>
             </div>
-            <!-- Google Drive Sync -->
-            <div style="margin-top:14px;padding:14px;background:linear-gradient(135deg,rgba(66,133,244,.08),rgba(66,133,244,.04));border-radius:10px;border:1.5px solid rgba(66,133,244,.25);">
-              <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-                <span style="font-size:20px;">☁️</span>
-                <div style="font-size:14px;font-weight:700;color:var(--td);font-family:Lato,sans-serif;">Google Drive</div>
-                <span id="drive-status-badge" style="font-size:10px;background:#e8f5e9;color:#2D5016;padding:2px 8px;border-radius:8px;display:none;font-weight:700;">✓ Conectado</span>
+            <!-- Sincronización QR -->
+            <div style="margin-top:14px;padding:12px;background:var(--bl);border-radius:10px;border:1px solid var(--bd);">
+              <div style="font-size:12px;font-weight:700;color:var(--td);font-family:Lato,sans-serif;margin-bottom:8px;">📱 Sincronizar con otro dispositivo</div>
+              <p style="font-size:12px;color:var(--tl);margin-bottom:10px;">Transfiere todos tus datos a otro dispositivo escaneando un código QR. Sin internet, sin configuración.</p>
+              <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                <button onclick="mostrarQREnviar()" style="padding:10px 16px;background:var(--gm);color:#fff;border:none;border-radius:8px;font-family:Lato,sans-serif;font-size:13px;font-weight:700;cursor:pointer;">📤 Enviar datos (QR)</button>
+                <button onclick="mostrarQRRecibir()" style="padding:10px 16px;background:var(--bl);color:var(--td);border:1px solid var(--bd);border-radius:8px;font-family:Lato,sans-serif;font-size:13px;font-weight:700;cursor:pointer;">📥 Recibir datos (Cámara)</button>
               </div>
-              <p style="font-size:12px;color:var(--tl);margin-bottom:12px;line-height:1.5;">Sincroniza automáticamente tus datos entre dispositivos usando <b>tu propio Google Drive</b>. Tus datos nunca pasan por servidores de Tapunto.</p>
+            </div>
+            <!-- Google Drive Sync -->
+            <div style="margin-top:14px;padding:12px;background:var(--bl);border-radius:10px;border:1px solid var(--bd);">
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+                <div style="font-size:12px;font-weight:700;color:var(--td);font-family:Lato,sans-serif;">☁️ Google Drive</div>
+                <span id="drive-status-badge" style="font-size:10px;background:#e8f5e9;color:#2D5016;padding:2px 7px;border-radius:8px;display:none;">✓ Conectado</span>
+              </div>
+              <p style="font-size:12px;color:var(--tl);margin-bottom:10px;">Sincroniza automáticamente tus datos en Google Drive. Sin configuración técnica.</p>
               <div id="drive-disconnected" style="display:flex;flex-direction:column;gap:8px;">
-                <button onclick="conectarGoogleDrive()" style="padding:12px 16px;background:#4285F4;color:#fff;border:none;border-radius:10px;font-family:Lato,sans-serif;font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+                <button onclick="conectarGoogleDrive()" style="padding:10px 16px;background:#4285F4;color:#fff;border:none;border-radius:8px;font-family:Lato,sans-serif;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
                   Conectar con Google
                 </button>
-                <div style="font-size:11px;color:var(--tl);text-align:center;">Solo accede al archivo de Tapunto en tu Drive</div>
+                <div style="font-size:11px;color:var(--tl);text-align:center;">Solo accede a archivos creados por Tapunto en tu Drive</div>
               </div>
               <div id="drive-connected" style="display:none;flex-direction:column;gap:8px;">
-                <div style="font-size:12px;color:#2D5016;background:#e8f5e9;border-radius:6px;padding:8px 10px;font-family:Lato,sans-serif;" id="drive-last-sync-label">✓ Última sync: —</div>
+                <div style="font-size:12px;color:var(--tl);font-family:Lato,sans-serif;" id="drive-last-sync-label">Última sync: —</div>
                 <div style="display:flex;gap:8px;flex-wrap:wrap;">
-                  <button onclick="subirADrive()" style="flex:1;padding:10px;background:var(--gm);color:#fff;border:none;border-radius:8px;font-family:Lato,sans-serif;font-size:13px;font-weight:700;cursor:pointer;">☁️ Subir ahora</button>
-                  <button onclick="descargarDeDrive()" style="flex:1;padding:10px;background:var(--bl);color:var(--td);border:1px solid var(--bd);border-radius:8px;font-family:Lato,sans-serif;font-size:13px;font-weight:700;cursor:pointer;">⬇️ Descargar</button>
-                  <button onclick="desconectarDrive()" style="padding:10px 14px;background:none;color:#E24B4A;border:1px solid #E24B4A;border-radius:8px;font-family:Lato,sans-serif;font-size:12px;cursor:pointer;">Desconectar</button>
+                  <button onclick="subirADrive()" style="padding:8px 14px;background:var(--gm);color:#fff;border:none;border-radius:8px;font-family:Lato,sans-serif;font-size:12px;font-weight:700;cursor:pointer;">☁️ Subir ahora</button>
+                  <button onclick="descargarDeDrive()" style="padding:8px 14px;background:var(--bl);color:var(--td);border:1px solid var(--bd);border-radius:8px;font-family:Lato,sans-serif;font-size:12px;font-weight:700;cursor:pointer;">⬇️ Descargar</button>
+                  <button onclick="desconectarDrive()" style="padding:8px 14px;background:none;color:#E24B4A;border:1px solid #E24B4A;border-radius:8px;font-family:Lato,sans-serif;font-size:11px;cursor:pointer;">Desconectar</button>
                 </div>
               </div>
             </div>
@@ -3258,7 +3256,42 @@ body.on-home #sec-home { display: block !important; }
           </div>
         </div>
 
-
+<div class="cfg-block" id="cfg-block-drive">
+          <div class="cfg-hdr" onclick="toggleCfg(this)">
+            <span class="cfg-hdr-title">☁️ Google Drive
+              <span style="font-size:10px;background:linear-gradient(135deg,#b8860b,#daa520);color:white;padding:1px 6px;border-radius:6px;margin-left:4px;">Premium</span>
+            </span>
+            <span class="cfg-arrow">▶</span>
+          </div>
+          <div class="cfg-body">
+            <div id="drive-premium-lock" style="display:none;flex-direction:column;align-items:center;padding:20px;text-align:center;gap:12px;">
+              <div style="font-size:36px;">🔒</div>
+              <div style="font-size:14px;font-weight:700;color:var(--td);">Sincronización Google Drive</div>
+              <div style="font-size:12px;color:var(--tl);">Disponible en Plan Premium</div>
+              <button onclick="showUpgrade()" style="padding:10px 20px;background:linear-gradient(135deg,#b8860b,#daa520);color:#fff;border:none;border-radius:10px;font-family:Lato,sans-serif;font-size:13px;font-weight:700;cursor:pointer;">⭐ Activar Premium</button>
+            </div>
+            <div id="drive-content">
+              <p style="font-size:13px;color:var(--td);margin-bottom:12px;">Sincroniza automáticamente tus datos entre dispositivos usando tu propio Google Drive. Tus datos nunca pasan por servidores de Tapunto.</p>
+              <!-- Estado conexión -->
+              <div id="drive-status" style="padding:10px 12px;background:var(--bl);border-radius:8px;border:1px solid var(--bd);margin-bottom:12px;font-size:12px;font-family:Lato,sans-serif;color:var(--tl);">
+                ⚪ No conectado
+              </div>
+              <!-- Botones -->
+              <div style="display:flex;flex-direction:column;gap:8px;">
+                <button id="btn-drive-connect" onclick="conectarGoogleDrive()" style="padding:11px;background:var(--gm);color:#fff;border:none;border-radius:10px;font-family:Lato,sans-serif;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;">
+                  <span style="font-size:16px;">☁️</span> Conectar con Google Drive
+                </button>
+                <button id="btn-drive-sync-now" onclick="driveSyncManual()" style="padding:11px;background:var(--bl);color:var(--td);border:1px solid var(--bd);border-radius:10px;font-family:Lato,sans-serif;font-size:13px;font-weight:700;cursor:pointer;display:none;">
+                  ⟳ Sincronizar ahora
+                </button>
+                <button id="btn-drive-disconnect" onclick="desconectarGoogleDrive()" style="padding:11px;background:var(--bl);color:#E24B4A;border:1px solid #E24B4A;border-radius:10px;font-family:Lato,sans-serif;font-size:13px;font-weight:600;cursor:pointer;display:none;">
+                  Desconectar Drive
+                </button>
+              </div>
+              <p style="font-size:11px;color:var(--tl);margin-top:10px;">⚠️ Configuración en proceso de verificación por Google. Mientras tanto puedes usar la sincronización QR.</p>
+            </div>
+          </div>
+        </div>
 <div class="cfg-block">
           <div class="cfg-hdr" onclick="toggleCfg(this)">
             <span class="cfg-hdr-title">🔗 Google Sheets
@@ -3493,9 +3526,9 @@ body.on-home #sec-home { display: block !important; }
 
 <script>
 /* ══ GOOGLE DRIVE SYNC ══ */
-// Sincronización con Google Drive del usuario (Option C)
-// DRIVE_CLIENT_ID se obtiene de Google Cloud Console > OAuth 2.0
-var DRIVE_CLIENT_ID = '388356757097-46k0lt1ighir45osunfrv7ko2nth7h7a.apps.googleusercontent.com'; // Google Cloud Console
+// CLIENT_ID: se configura cuando Tapunto esté verificado en Google Cloud
+// Por ahora el módulo está preparado pero en modo "pendiente de activación"
+var DRIVE_CLIENT_ID = '388356757097-46k0lt1ighir45osunfrv7ko2nth7h7a.apps.googleusercontent.com'; // ← Aquí irá el Client ID de Google Cloud Console
 var DRIVE_SCOPE = 'https://www.googleapis.com/auth/drive.file';
 var DRIVE_FILE_NAME = 'tapunto-datos.json';
 var _driveFileId = null;
@@ -3550,7 +3583,7 @@ function actualizarEstadoDrive(estado){
 
 function conectarGoogleDrive(){
   if(!DRIVE_CLIENT_ID){
-    showToast('⚠️ Error al conectar con Google Drive. Revisa la configuración.');
+    showToast('⚠️ Google Drive estará disponible próximamente. Usa la sincronización QR mientras tanto.');
     return;
   }
   if(!isPremium){
@@ -3740,10 +3773,11 @@ function driveSyncAutoOnOpen(){
 /* ══ FIN GOOGLE DRIVE SYNC ══ */
 
 
+
 /* ══ SINCRONIZACIÓN GOOGLE DRIVE ══ */
 var _driveAccessToken=null;
 var _driveFileId=null;
-var _DRIVE_CLIENT_ID='388356757097-46k0lt1ighir45osunfrv7ko2nth7h7a.apps.googleusercontent.com'; // Google Cloud Console
+var _DRIVE_CLIENT_ID='388356757097-46k0lt1ighir45osunfrv7ko2nth7h7a.apps.googleusercontent.com'; // Se configura al registrar en Google Cloud
 var _DRIVE_FILE_NAME='tapunto-datos.json';
 
 // Inicializar estado de Drive al arrancar
@@ -3838,7 +3872,7 @@ function conectarGoogleDrive(){
 }
 
 function _mostrarConfigDriveClientId(){
-  // Client ID ya configurado - esta función ya no es necesaria
+  alert('Para usar Google Drive necesitas registrar Tapunto en Google Cloud Console y obtener un Client ID. Te guiamos paso a paso en tapunto.app. Por ahora puedes usar QR o exportar JSON para sincronizar.');
 }
 
 async function _verificarTokenDrive(){
@@ -6624,19 +6658,19 @@ hdr.appendChild(btnX);
 var body=document.createElement('div');
 body.style.cssText='overflow-y:auto;padding:16px 20px 32px;flex:1;';
 var secciones=[
-{id:'s0',titulo:'🏠 Inicio — Resumen y Mi Horario',texto:'La pantalla de inicio tiene dos pestañas:<br><br><b>📊 Resumen</b><br>Vista rápida del día: saludo con tu nombre, fecha, tarjeta del próximo examen o entrega con cuenta atrás, sesiones Pomodoro realizadas hoy y el panel de alertas con tus recordatorios activos.<br><br><b>📅 Mi Horario</b><br>Tu horario semanal completo. Puedes:<br>• Navegar entre horarios con ◀ ▶ (si tienes varios configurados)<br>• Tocar <b>✏️ Editar</b> para modificar el horario: añadir franjas, escribir asignaturas, cambiar colores con el icono 🎨 y ordenar franjas cronológicamente<br>• Tocar cualquier celda rellena para añadir una nota o tarea a esa asignatura<br>• Descargar el horario en PDF con el botón <b>📄 PDF</b>'},
-{id:'s1',titulo:'➕ Nueva Tarea (botón +)',texto:'El botón verde <b>+</b> flotante en la esquina inferior derecha abre el formulario de nueva tarea desde cualquier pantalla.<br><br><b>Campos principales:</b><br>• <b>Tipo:</b> Examen · Deberes · Trabajo · Apuntes · Proyecto · Otro<br>• <b>Asignatura:</b> escribe o elige una existente<br>• <b>Fecha:</b> hoy, ayer o selecciona un día<br>• <b>Fecha examen/entrega:</b> para recordatorios y planificador de estudio<br>• <b>Notas:</b> texto libre<br><br><b>Adjuntar archivos:</b><br>• 📷 Cámara — hace una foto directamente<br>• 🖼 Galería — elige fotos (puedes seleccionar varias)<br>• 📎 Archivos — sube PDF, Word, PPT... (varios a la vez)<br><br>Todos los archivos adjuntos se guardan automáticamente en un <b>álbum</b> asociado a la asignatura, accesible desde el icono 📁 en la tarjeta de la tarea.'},
-{id:'s2',titulo:'📋 Tareas — Lista de registros',texto:'Muestra todas tus tareas y registros. Cada tarjeta contiene:<br>• Icono + nombre de la asignatura en negrita<br>• Badge del tipo (Examen, Deberes...)<br>• Cuenta atrás si hay fecha de examen/entrega (verde = lejos, rojo = próximo o vencido)<br>• Fecha y hora de creación<br>• Miniatura de foto si tiene imagen<br>• Icono 📁 si tiene fotos o archivos adjuntos — tócalo para abrirlos directamente<br><br><b>Tocar una tarjeta</b> despliega las acciones: Editar, Duplicar, Archivar, Email, WhatsApp, Google Calendar, Eliminar.<br><br><b>Vista lista ☰ / carpetas ⊞:</b> alterna entre ver todas las tareas en lista o agrupadas por asignatura.<br><br><b>Buscar y filtrar:</b> usa 🔍 para buscar texto o ⚙️ para filtrar por estado, tipo o fecha.'},
-{id:'s3',titulo:'✅ To Do — Lista de pendientes',texto:'Lista de tareas rápidas para el día a día, independiente de los registros principales.<br><br><b>Crear:</b> escribe en el campo de texto y pulsa Añadir (o dictado 🎙️).<br>• Toca una tarea para marcarla como completada<br>• Desliza o usa el botón 📦 para archivar las completadas<br>• Botón "📦 Archivadas" para ver el historial<br><br>Ideal para listas de compra, tareas de casa, recados rápidos o cualquier cosa que no sea una tarea académica.'},
-{id:'s4',titulo:'📅 Mi Agenda — Calendario',texto:'Vista mensual de tus tareas y eventos.<br><br>• Cada día con eventos muestra una <b>barra de color</b> en la parte inferior de la celda<br>• Toca un día para ver la lista de tareas de ese día<br>• Navega entre meses con ◀ ▶<br>• Los días con múltiples eventos muestran badge +N<br><br>Las tareas con <b>fecha de examen/entrega</b> aparecen en el calendario en la fecha correspondiente, no en la fecha de creación. Así puedes ver de un vistazo cuántos exámenes tienes en las próximas semanas.'},
-{id:'s5',titulo:'🎓 Mi Estudio — Pomodoro',texto:'Técnica Pomodoro para estudiar con concentración y descansos programados.<br><br><b>Configurar el tiempo:</b><br>• Usa las flechas ▲▼ del selector de horas y minutos (de 1 en 1 minuto)<br>• Pulsa <b>✓ Aplicar</b> para confirmar la duración<br><br><b>Controles:</b><br>• ▶ Iniciar / ⏸ Pausar — arranca o pausa el temporizador<br>• ↺ Reset — reinicia al tiempo configurado<br>• ⏭ Saltar — pasa al modo siguiente (trabajo → descanso o viceversa)<br><br><b>Al terminar:</b> suena un beep triple y el móvil vibra. Puedes desactivar el sonido con la casilla 🔔.<br><br><b>Sesiones de hoy:</b> se registra cada sesión completada con la asignatura y los minutos. El total aparece también en el Resumen de la pantalla de inicio.<br><br><b>Selecciona la asignatura</b> que estás estudiando antes de empezar para que el registro sea preciso.'},
-{id:'s6',titulo:'🎓 Mi Estudio — Planificador de estudio',texto:'Genera un plan de estudio inteligente basado en tus exámenes y horario.<br><br><b>Paso 1 — Configurar:</b><br>• Selecciona el horario (A, B u otro) del que extraer las horas libres<br>• Define la ventana de estudio (ej. 15h–21h)<br>• Minutos por sesión (default 45)<br>• Horas extraescolares bloqueadas por día<br><br><b>Paso 2 — Exámenes:</b><br>Cada examen o entrega con fecha muestra una tarjeta ▼ expandible. Al expandir puedes configurar:<br>• Número de temas o bloques a estudiar<br>• Dificultad (Fácil / Media / Difícil)<br><br><b>Paso 3 — Generar:</b><br>El plan se actualiza automáticamente al cambiar cualquier parámetro (600ms de espera). También puedes pulsar <b>📅 Generar plan de estudio</b>.<br><br><b>El plan muestra:</b><br>• Barra de progreso (sesiones completadas / total)<br>• Un bloque por día con las sesiones de estudio (📖 verde) y repaso (🔁 rojo)<br>• Cada bloque tiene botones: ✏️ editar texto/tipo/duración, ↕ mover a otro día, × eliminar<br>• Al tocar el indicador de estado del bloque aparece un selector: <b>✓ Completado · ⟳ En proceso · ✗ No realizado · ○ Pendiente</b><br>• Tras marcar el estado, puedes añadir una observación de texto<br><br><b>Guardar y exportar:</b><br>• 💾 Guardar plan — guarda hasta 8 versiones del plan con historial<br>• 📄 Descargar PDF — genera una tabla imprimible con el plan completo<br><br>Al volver a la pestaña del planificador, el último plan guardado se restaura automáticamente.'},
-{id:'s7',titulo:'📁 Mis Álbumes — Fotos y archivos',texto:'Almacén de fotos y documentos organizados por asignatura y fecha.<br><br><b>Crear un álbum:</b> botón + en la pantalla principal de Álbumes. Asigna nombre de asignatura, fecha y añade fotos o archivos.<br><br><b>Subir archivos:</b> dentro de cada álbum usa los botones:<br>• 📷 Fotos — abre cámara o galería (múltiples imágenes)<br>• 📎 Archivos — sube PDF, Word, PPT, Excel, ZIP...<br><br><b>Vista del álbum:</b><br>• Las <b>fotos</b> se muestran en rejilla 3×3 con botón de eliminar<br>• Los <b>documentos</b> se muestran en lista con nombre completo, tipo y botón ⬇ para descargar<br>• Botón <b>⬇ Descargar todas</b> las fotos de una vez<br>• Botón 🗑 Eliminar para borrar el álbum completo<br><br><b>Acceso rápido:</b> desde una tarea con archivos adjuntos, toca el icono 📁 para ir directamente al álbum de esa asignatura.<br><br><b>Filtro:</b> en la pantalla de álbumes puedes filtrar por asignatura para encontrar rápidamente los apuntes de una materia.'},
-{id:'s7b',titulo:'☁️ Sincronización con Google Drive',texto:'Tapunto puede sincronizar todos tus datos entre dispositivos (móvil, tablet, ordenador) a través de tu propio <b>Google Drive</b>, sin servidores externos.<br><br><b>Cómo funciona:</b><br>Tus datos se guardan como un fichero <code>tapunto-datos.json</code> en tu Google Drive personal. Cada dispositivo que uses lee y escribe ese mismo fichero, por lo que siempre tienes los datos actualizados.<br><br><b>Privacidad total:</b> los datos están en <b>tu</b> Drive, no en servidores de Tapunto. Solo tú tienes acceso.<br><br><b>Cómo conectar:</b><br>1. Ve a <b>Configuración → ☁️ Google Drive</b><br>2. Pulsa <b>"Conectar con Google Drive"</b><br>3. Autoriza el acceso en la ventana de Google (solo pide permiso para un fichero de la app)<br>4. Verás ✓ Conectado — a partir de ahí la sincronización es automática<br><br><b>Sincronización manual:</b> botón <b>⟳ Sync</b> para forzar una sincronización inmediata.<br><br><b>Estrategia de conflictos:</b> si modificas datos en dos dispositivos sin sincronizar, gana el más reciente (por timestamp). Se recomienda sincronizar antes de cambiar de dispositivo.<br><br><b>⚠️ Estado actual:</b> el módulo de Drive está implementado y preparado. La activación requiere configurar un Client ID de Google Cloud Console (proceso técnico para el desarrollador, no para el usuario final).'},
-{id:'s8',titulo:'⚙️ Configuración',texto:'Accede desde el menú de avatar (esquina superior derecha de la pantalla de inicio).<br><br><b>Opciones principales:</b><br>• 🔐 Cambiar PIN — introduce el PIN actual y el nuevo (4 dígitos)<br>• 👤 Firma y datos — nombre, cargo y datos que aparecen en emails y documentos<br>• 🎨 Tema de color — cambia el color principal de la app<br>• 🌙 Modo oscuro — activa/desactiva el tema oscuro<br>• 📷 Foto de portada — imagen de fondo de la pantalla de bienvenida<br>• ☁️ Google Drive — sincroniza tus datos en tu propio Drive entre todos tus dispositivos<br>• 🔗 Google Sheets — conecta con una hoja de cálculo para exportar registros<br>• 🔔 Notificaciones — activa los recordatorios del sistema<br>• 📤 Exportar/Importar datos — copia de seguridad manual en JSON<br>• 🗑 Eliminar datos — borra todos los registros (¡irreversible!)<br>• ⭐ Activar Premium — introduce tu código de licencia'},
-{id:'s9',titulo:'🔔 Alertas y recordatorios',texto:'El panel de alertas aparece en la pantalla de <b>Inicio → Resumen</b>, debajo de las tarjetas rápidas.<br><br>Muestra las tareas con fecha de examen/entrega próximas (próximas 7 días por defecto) y las tareas atrasadas.<br><br><b>Crear un recordatorio:</b> al crear o editar una tarea, en la sección "Más opciones" encontrarás el campo de 🔔 Alerta. Elige la fecha y hora en que quieres recibir la notificación.<br><br><b>Activar notificaciones del sistema:</b> para recibir avisos aunque la app esté cerrada, activa las notificaciones en Configuración → 🔔 Notificaciones y acepta el permiso que pide el navegador.'},
-{id:'s10',titulo:'🔐 Seguridad y cuenta',texto:'<b>Acceso:</b> la app usa tu correo electrónico + un PIN de 4 dígitos que se almacena de forma segura (hash SHA-256) en tu dispositivo.<br><br><b>Sin contraseña de email:</b> Tapunto no gestiona contraseñas, solo verifica que el email y el PIN coincidan con lo registrado en este dispositivo.<br><br><b>Cambiar PIN:</b> Configuración → 🔐 Mi PIN. Necesitas el PIN actual para cambiarlo.<br><br><b>Pista del PIN:</b> guarda una pista que solo tú entiendas para no olvidarlo.<br><br><b>Datos locales:</b> toda la información se guarda en el almacenamiento local del navegador (localStorage). No se envía a ningún servidor externo salvo que configures Google Sheets.<br><br><b>Exportar datos:</b> usa Configuración → 📤 Exportar para guardar una copia de seguridad en formato JSON.'},
-{id:'s11',titulo:'📞 Contacto y créditos',texto:'¿Tienes dudas, sugerencias o has encontrado un error?<br><br>🌐 <b>tapunto.app</b><br><br>Esta app es un proyecto personal en constante mejora. Tus comentarios son bienvenidos.<br><br>Tapunto Estudiantil © 2026 · Todos los derechos reservados.'}
+{id:'s0',titulo:'🏠 Inicio — Resumen y Mi Horario',texto:'La pantalla de inicio tiene dos pestañas:<br><br><b>📊 Resumen</b><br>Saludo con tu nombre, fecha, tarjeta del próximo examen con cuenta atrás, sesiones Pomodoro de hoy y alertas activas.<br><br><b>📅 Mi Horario</b><br>Con <b>✏️ Editar</b> activo puedes:<br>• Escribir asignaturas en cada celda (color automático)<br>• Cambiar color con el icono 🎨 en la celda<br>• <b>Editar nombre del día</b> tocando el encabezado de columna<br>• <b>Añadir Sábado/Domingo</b> con los botones en modo edición<br>• Hora vacía (—): deja la franja sin hora para asignaturas simultáneas<br>• Ordenar franjas con ↕ Ordenar<br>• <b>Nuevo horario</b> (máx. 2 en gratuito, ilimitados con ⭐ Premium)<br>• Navegar entre horarios con ◄ ►<br><br>Tocar una celda rellena (sin editar) crea una tarea. Botón <b>📄 PDF</b> descarga el horario imprimible. Las alertas aparecen bajo el horario.'},
+{id:'s1',titulo:'➕ Nueva Tarea (botón +)',texto:'El botón verde <b>+</b> flotante abre el formulario desde cualquier pantalla.<br><br><b>Campos:</b> Tipo, Asignatura, Fecha, Fecha examen/entrega, Notas (opcional)<br><br><b>Adjuntar archivos:</b><br>• 📷 Cámara / 🖼️ Galería — fotos (múltiples)<br>• 📎 Archivos — PDF, Word, PPT... (múltiples, máx. 2.5MB cada uno)<br><br>Los archivos se guardan en un álbum de la asignatura. El icono 📁 en la tarjeta de tarea da acceso directo.'},
+{id:'s2',titulo:'📋 Tareas — Lista',texto:'Muestra todas tus tareas. Filtros por tipo: Todas · 📝 Exámenes · 📚 Deberes · 📋 Trabajos.<br><br>Cada tarjeta muestra asignatura, tipo, cuenta atrás si hay fecha de examen, miniatura de foto e icono 📁 si tiene archivos.<br><br>Tocar abre las acciones: Editar, Duplicar, Archivar, Email, WhatsApp, Google Calendar, Eliminar.<br><br>Vista lista ☰ o carpetas ⊞ con el botón de cambio de vista. Plan gratuito: máx. <b>20 tareas</b>.'},
+{id:'s3',titulo:'✅ To Do — Lista de pendientes',texto:'Lista de tareas rápidas independiente de los registros principales. Escribe y pulsa Añadir. Toca para marcar como hecha. Archiva las completadas con 📦.'},
+{id:'s4',titulo:'📅 Mi Agenda — Calendario',texto:'Vista mensual. Cada día con tareas muestra una barra de color. Toca un día para ver sus tareas. Las fechas de exámenes/entregas aparecen en el día correspondiente.'},
+{id:'s5',titulo:'🎓 Mi Estudio — Pomodoro',texto:'Configura el tiempo con las flechas ▲▼ (horas y minutos de 1 en 1). Pulsa <b>✓ Aplicar</b> para confirmar. Controles: ▶ Iniciar / ⏸ Pausar, ↺ Reset, ⏭ Saltar.<br><br>Sonidos disponibles: 🔔 Beep · 😆 Campana · 🎺 Fanfare · 🔇 Silencio.<br><br>Se registran las sesiones del día con asignatura y minutos. El total aparece en el Resumen.'},
+{id:'s6',titulo:'🎓⭐ Planificador de estudio (Premium)',texto:'Genera un plan de estudio inteligente basado en tus exámenes.<br><br>1. <b>Configura:</b> horario, ventana de estudio, minutos/sesión<br>2. <b>Exámenes:</b> expande cada tarjeta para configurar temas y dificultad<br>3. <b>Genera:</b> botón "Generar plan de estudio"<br><br>Cada bloque del plan tiene: indicador de estado (✓ Completado · ⟳ En proceso · ✗ No realizado · ○ Pendiente), botón ✎ editar, ↕ mover, × eliminar y campo de observaciones.<br><br>Barra de progreso en tiempo real. Guardar hasta 8 versiones. Exportar a PDF.'},
+{id:'s7',titulo:'📁 Mis Álbumes',texto:'Fotos y documentos por asignatura y fecha.<br><br>Las fotos se muestran en rejilla 3×3. Los documentos en lista con nombre, tipo, botón ⬇️ descargar y × eliminar.<br><br>Dentro de cada álbum usa los botones 📷 Fotos y 📎 Archivos para añadir más. Toca un documento para descargarlo con su nombre original.'},
+{id:'s7b',titulo:'☁️ Sincronización con Google Drive (Premium)',texto:'Guarda tus datos en un fichero <code>tapunto-datos.json</code> en <b>tu propio Google Drive</b>. Disponible en todos tus dispositivos.<br><br><b>Conectar:</b> Configuración → Backup y datos → Google Drive → "Conectar con Google". Acepta los permisos y listo.<br><br>La sincronización es automática al guardar. Botón ⟳ Sync para sincronizar manualmente. El dispositivo más reciente siempre gana en caso de conflicto.'},
+{id:'s8',titulo:'⚙️ Configuración',texto:'Accede desde el icono de avatar (esquina superior derecha).<br><br>• 🔐 Cambiar PIN<br>• 👤 Firma y datos (nombre, cargo)<br>• 🎨 Tema de color / 🌙 Modo oscuro<br>• 📷 Foto de portada<br>• ☁️ Google Drive (sincronización entre dispositivos) ⭐<br>• 🔗 Google Sheets (exportar registros) ⭐<br>• 📤 Backup completo / 📂 Restaurar / ⬇ Exportar CSV<br>• 🗑 Eliminar datos (irreversible)<br>• ⭐ Activar Premium'},
+{id:'s9',titulo:'🔔 Alertas y recordatorios',texto:'El panel de alertas aparece en Inicio (Resumen y Mi Horario) mostrando tareas con fecha de examen en los próximos 7 días y tareas atrasadas.<br><br>Para crear un recordatorio: al editar una tarea, sección "Más opciones" → campo Alerta.'},
+{id:'s10',titulo:'🔐 Seguridad y cuenta',texto:'Acceso con correo + PIN de 4 dígitos (almacenado como hash SHA-256). Todos los datos se guardan en el almacenamiento local del navegador. Exporta una copia de seguridad desde Configuración → Backup.'},
+{id:'s11',titulo:'📞 Contacto',texto:'🌐 <b>tapunto.app</b><br>Tapunto Estudiantil © 2026'}
 ];
 secciones.forEach(function(sec){
 var blk=document.createElement('div');
@@ -7320,8 +7354,6 @@ return '<div class="record record-compact" data-id="'+id+'" onclick="toggleRecAc
 // Status badge
 +(badge?'<div style="flex-shrink:0;">'+badge+'</div>':'')
 +'</div>'
-// Album icon (if subject has albums)
-+(r.tema&&(typeof getAlbums==='function')&&getAlbums().some(function(a){return a.asig===r.tema&&a.fotos&&a.fotos.length>0;})?'<button class="rec-alb-btn" data-tema="'+x(r.tema)+'" onclick="event.stopPropagation();recAbrirAlbum(this)" style="background:rgba(230,173,0,.12);border:1px solid rgba(230,173,0,.4);border-radius:6px;cursor:pointer;font-size:13px;padding:2px 6px;flex-shrink:0;color:#b8860b;" title="Fotos y archivos de esta tarea">&#128193;</button>':'')
 +actions;
 }
 function showImgModal(id){ const r=state.records.find(rec=>rec.id===id); if(!r||!r.imagenUrl) return; const w=window.open('','_blank','width=600,height=500'); w.document.write(`<html><body style="margin:0;background:#000;display:flex;align-items:center;justify-content:center;height:100vh"><img src="${r.imagenUrl}" style="max-width:100%;max-height:100%"/>
@@ -9512,41 +9544,29 @@ function hCeldaTap(asig,dia,slot){
   _hTipo='Examen';
   document.querySelectorAll('.h-tipo-chip').forEach(function(c){c.classList.remove('sel');});
   var fc=document.querySelector('.h-tipo-chip');if(fc)fc.classList.add('sel');
-  // Reset file attachments for fresh task
-  window._hTaskDocs=[];
-  window._hTaskFotoData=null;
-  var docsPreview=document.getElementById('h-task-docs-preview');
-  if(docsPreview) docsPreview.innerHTML='';
   var modal=document.getElementById('h-task-modal');if(modal)modal.style.display='flex';
 }
 function hCerrarModal(){var m=document.getElementById('h-task-modal');if(m)m.style.display='none';hPararMic();}
 function hSelTipo(btn,tipo){_hTipo=tipo;document.querySelectorAll('.h-tipo-chip').forEach(function(c){c.classList.remove('sel');});btn.classList.add('sel');}
 var _hTaskFotoData=null;
 function hTaskFotoSeleccionada(inp){
-  if(!inp.files||!inp.files.length) return;
-  if(!window._hTaskDocs) window._hTaskDocs=[];
-  var preview=document.getElementById('h-task-docs-preview');
-  Array.from(inp.files).forEach(function(file){
-    albComprimirImagen(file,600,0.75,function(data){
-      if(!data) return;
-      var docItem={data:data,nombre:file.name,tipo:'image'};
-      window._hTaskDocs.push(docItem);
-      // Also set first photo as imagenUrl for quick preview in record card
-      if(!_hTaskFotoData) _hTaskFotoData=data;
-      // Show thumbnail preview
-      if(preview){
-        var item=document.createElement('div');
-        item.style.cssText='display:flex;align-items:center;gap:6px;background:var(--bl);border-radius:6px;padding:4px 8px;';
-        var img=document.createElement('img');img.src=data;img.style.cssText='width:28px;height:28px;border-radius:4px;object-fit:cover;';
-        var name=document.createElement('span');name.style.cssText='font-size:11px;color:var(--td);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;';name.textContent=file.name;
-        var del=document.createElement('button');del.textContent='×';del.style.cssText='background:none;border:none;cursor:pointer;color:var(--tl);font-size:14px;';
-        del.addEventListener('click',function(){window._hTaskDocs=window._hTaskDocs.filter(function(d){return d.data!==data;});item.remove();if(_hTaskFotoData===data)_hTaskFotoData=null;});
-        item.appendChild(img);item.appendChild(name);item.appendChild(del);
-        preview.appendChild(item);
-      }
-    });
-  });
-  inp.value='';
+  var file=inp.files[0];if(!file)return;
+  var reader=new FileReader();
+  reader.onload=function(e){
+    var img=new Image();
+    img.onload=function(){
+      var MAX=600;var scale=Math.min(1,MAX/Math.max(img.width,img.height));
+      var c=document.createElement('canvas');c.width=Math.round(img.width*scale);c.height=Math.round(img.height*scale);
+      c.getContext('2d').drawImage(img,0,0,c.width,c.height);
+      _hTaskFotoData=c.toDataURL('image/jpeg',0.75);
+      var prev=document.getElementById('h-task-foto-preview');
+      var imgEl=document.getElementById('h-task-foto-img');
+      if(prev)prev.style.display='flex';
+      if(imgEl)imgEl.src=_hTaskFotoData;
+    };
+    img.src=e.target.result;
+  };
+  reader.readAsDataURL(file);
 }
 function hTaskFotoQuitar(){
   _hTaskFotoData=null;
@@ -9571,7 +9591,32 @@ function hGuardarTarea(){
   var t=document.getElementById('toast-ok');if(t){t.style.display='flex';setTimeout(function(){t.style.display='none';},2200);}
 
 }
-function toggleHorarioEditMode(){_hEdit=!_hEdit;if(!_hEdit){hSincronizarAsig();persist().catch(function(){});}renderHorarioHome();}
+function toggleHorarioEditMode(){
+  if(!_hEdit){
+    // Entering edit mode: save snapshot for potential cancel
+    var _sch = getSch();
+    window._hEditSnapshot = JSON.parse(JSON.stringify(_sch));
+  } else {
+    // Exiting edit mode (Listo): commit changes
+    hSincronizarAsig();
+    persist().catch(function(){});
+    window._hEditSnapshot = null;
+  }
+  _hEdit = !_hEdit;
+  renderHorarioHome();
+}
+function cancelarEdicionHorario(){
+  if(!window._hEditSnapshot) { _hEdit=false; renderHorarioHome(); return; }
+  // Restore snapshot
+  var h = getHS();
+  var activo = h.activo;
+  h.schedules[activo] = window._hEditSnapshot;
+  window._hEditSnapshot = null;
+  _hEdit = false;
+  persist().catch(function(){});
+  renderHorarioHome();
+  showToast('Cambios descartados');
+}
 function switchHorario(dir){var h=getHS();h.activo=(h.activo+dir+2)%2;persist().catch(function(){});renderHorarioHome();}
 function hRenombrar(nombre){getSch().nombre=nombre;}
 function hEditSlot(si,val){
@@ -9678,7 +9723,10 @@ function pomApplyDrum(){
 
 /* ── renderAlertas ── */
 function renderAlertas(){
-  var panel=document.getElementById('home-alertas-panel');if(!panel)return;
+  var panel=document.getElementById('home-alertas-panel');
+  var panelH=document.getElementById('home-alertas-panel-h');
+  if(!panel&&!panelH)return;
+  if(!panel){panel=panelH;panelH=null;}
   var hoy=new Date();hoy.setHours(0,0,0,0);
   var eventos=(state.records||[])
     .filter(function(r){return r.fechaEvento&&!r.archivado;})
@@ -9703,6 +9751,7 @@ function renderAlertas(){
     var asigEl=document.createElement('div');asigEl.className='h-alert-asig';asigEl.style.color=subColor;asigEl.textContent=ev.r.tema||'';info.appendChild(asigEl);
     var tipoEl=document.createElement('div');tipoEl.className='h-alert-tipo';tipoEl.textContent=ev.r.accion||'';info.appendChild(tipoEl);
     item.appendChild(info);panel.appendChild(item);
+    if(panelH) panelH.appendChild(item.cloneNode(true));
   });
 }
 
@@ -10864,7 +10913,7 @@ function docGetIcon(tipo){
 /* ── h-task-modal: add document upload ── */
 function hTaskDocSeleccionado(input){
   if(!input.files||!input.files.length) return;
-  Array.from(input.files).forEach(function(file){
+  var file=input.files[0];
   docComprimir(file,function(docItem){
     if(!docItem) return;
     // Store for saving with record
@@ -10880,7 +10929,7 @@ function hTaskDocSeleccionado(input){
       preview.appendChild(item);
     }
     input.value='';
-  });});
+  });
 }
 
 /* ── Override hGuardarTarea to save docs to album ── */
@@ -10909,28 +10958,20 @@ hGuardarTarea=function(){
 (function(){
   var _origSR2=saveRecord;
   saveRecord=function(){
-    // Capture BEFORE _origSR2 resets the form
-    var docs=(window._nuevoRegistroDocs||[]).slice();
-    var imgEl=document.getElementById('inp-imagen-preview');
-    var imgUrl=(imgEl&&imgEl.src&&imgEl.src.startsWith('data:'))?imgEl.src:'';
-    var temaCap=(document.getElementById('inp-tema')&&document.getElementById('inp-tema').value)||'';
-    var fechaCap=(document.getElementById('inp-fecha')&&document.getElementById('inp-fecha').value)||new Date().toISOString().slice(0,10);
+    var docs=window._nuevoRegistroDocs||[];
     _origSR2();
-    window._nuevoRegistroDocs=[];
-    if(docs.length>0||imgUrl){
+    if(docs.length>0){
+      // Attach docs to most recently created record
       setTimeout(function(){
-        var asig=temaCap||((state.records&&state.records[0]&&state.records[0].tema)||'Sin asignatura');
-        var fecha=fechaCap.slice(0,10);
+        var r=state.records&&state.records[0];
+        if(!r) return;
+        var asig=r.tema;var fecha=r.fecha||new Date().toISOString().slice(0,10);
         var albs=getAlbums();
         var alb=albs.find(function(a){return a.asig===asig&&a.fecha===fecha;});
         if(!alb){alb={id:'alb'+Date.now(),asig:asig,fecha:fecha,notas:'',fotos:[],created:new Date().toISOString()};albs.unshift(alb);}
-        if(imgUrl&&!alb.fotos.some(function(f){return f.data===imgUrl;})){
-          alb.fotos.push({id:'f'+Date.now()+Math.random(),data:imgUrl,nombre:'foto_tarea.jpg',tipo:'image'});
-        }
         docs.forEach(function(d){alb.fotos.push({id:'f'+Date.now()+Math.random(),data:d.data,nombre:d.nombre,tipo:d.tipo});});
+        window._nuevoRegistroDocs=[];
         try{persist().catch(function(){});}catch(e){}
-        // Refresh records list if visible
-        try{renderRecords();}catch(e){}
       },300);
     }
   };
@@ -10938,7 +10979,7 @@ hGuardarTarea=function(){
 
 function nuevoRegistroDocSeleccionado(input){
   if(!input.files||!input.files.length) return;
-  Array.from(input.files).forEach(function(file){
+  var file=input.files[0];
   docComprimir(file,function(docItem){
     if(!docItem) return;
     if(!window._nuevoRegistroDocs) window._nuevoRegistroDocs=[];
@@ -10946,13 +10987,12 @@ function nuevoRegistroDocSeleccionado(input){
     var preview=document.getElementById('nuevo-docs-preview');
     if(preview){
       var item=document.createElement('div');
-      item.style.cssText='display:flex;align-items:center;gap:6px;background:var(--bl);border-radius:6px;padding:4px 8px;font-size:11px;font-family:Lato,sans-serif;color:var(--td);';
+      item.style.cssText='display:flex;align-items:center;gap:6px;background:var(--bl);border-radius:6px;padding:4px 8px;font-size:11px;font-family:\'Lato\',sans-serif;color:var(--td);';
       item.innerHTML='<span>'+docGetIcon(docItem.tipo)+'</span><span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">'+docItem.nombre+'</span>'
         +'<button onclick="this.parentElement.remove()" style="background:none;border:none;cursor:pointer;color:var(--tl);font-size:14px;">&#215;</button>';
       preview.appendChild(item);
     }
-  });
-  input.value='';
+    input.value='';
   });
 }
 
@@ -11894,202 +11934,18 @@ function planInlineEdit(block, item, key, dayPlan, container, todayStr){
 
 
 /* ── Bottom nav active state ── */
-/* bnavSetActive defined above */
+function bnavSetActive(tab){
+  var map={home:'bnav-home',registros:'bnav-tareas',calendario:'bnav-agenda',estudio:'bnav-estudio'};
+  document.querySelectorAll('.bnav-btn').forEach(function(b){b.classList.remove('active');});
+  var id=map[tab];
+  if(!id&&tab==='home') id='bnav-home';
+  var el=document.getElementById(id||'bnav-home');
+  if(el) el.classList.add('active');
+}
 var _origIrHomeNav=irHome;
 irHome=function(){_origIrHomeNav();bnavSetActive('home');};
 var _origSwitchTabNav=switchTab;
 switchTab=function(tab,btn){_origSwitchTabNav(tab,btn);bnavSetActive(tab);};
-/* ════ HOME TABS ════ */
-function homeTab(tab){
-  var isHorario = tab === 'horario';
-  document.getElementById('home-tab-resumen-panel').style.display = isHorario ? 'none' : 'block';
-  document.getElementById('home-tab-horario-panel').style.display = isHorario ? 'block' : 'none';
-  var btnRes = document.getElementById('home-tab-resumen');
-  var btnHor = document.getElementById('home-tab-horario');
-  if(btnRes){
-    btnRes.style.color = isHorario ? 'var(--tl)' : 'var(--gd)';
-    btnRes.style.borderBottomColor = isHorario ? 'transparent' : 'var(--gd)';
-  }
-  if(btnHor){
-    btnHor.style.color = isHorario ? 'var(--gd)' : 'var(--tl)';
-    btnHor.style.borderBottomColor = isHorario ? 'var(--gd)' : 'transparent';
-  }
-  if(isHorario){
-    // Render schedule now that the tab is visible
-    setTimeout(function(){ renderHorarioHome(); }, 30);
-  }
-}
-
-/* ════ HOME RESUMEN DATA ════ */
-function renderResumen(){
-  // Greeting + date
-  var saludo = document.getElementById('home-resumen-saludo');
-  var fechaEl = document.getElementById('home-resumen-fecha');
-  var now = new Date();
-  var h = now.getHours();
-  var greeting = h < 13 ? 'Buenos días' : h < 20 ? 'Buenas tardes' : 'Buenas noches';
-  var firma = (typeof getFirma === 'function') ? getFirma() : {};
-  var nombre = (firma.nombre || (typeof currentUser !== 'undefined' ? (currentUser||'').split('@')[0] : '')) || '';
-  if(saludo) saludo.textContent = greeting + (nombre ? ', ' + nombre.split(' ')[0] + '!' : '!');
-  var dias = ['domingo','lunes','martes','miércoles','jueves','viernes','sábado'];
-  var meses = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
-  if(fechaEl) fechaEl.textContent = dias[now.getDay()] + ', ' + now.getDate() + ' de ' + meses[now.getMonth()] + ' de ' + now.getFullYear();
-
-  // Next deadline
-  var hoy = new Date(); hoy.setHours(0,0,0,0);
-  var nextEl = document.getElementById('home-next-deadline-text');
-  if(nextEl){
-    var upcoming = (state.records||[]).filter(function(r){
-      if(!r.fechaEvento||r.archivado) return false;
-      return new Date(r.fechaEvento+'T00:00:00') >= hoy;
-    }).sort(function(a,b){ return a.fechaEvento.localeCompare(b.fechaEvento); });
-    if(upcoming.length){
-      var r = upcoming[0];
-      var d = new Date(r.fechaEvento+'T00:00:00');
-      var diff = Math.ceil((d-hoy)/86400000);
-      var diffTxt = diff===0?'HOY':diff===1?'Mañana':'En '+diff+'d';
-      nextEl.innerHTML = '<span style="font-weight:700;color:var(--gd);">'+r.tema+'</span><br><span style="font-size:10px;color:var(--tl);">'+r.accion+' · '+diffTxt+'</span>';
-    } else {
-      nextEl.textContent = 'Sin exámenes próximos';
-    }
-  }
-
-  // Pomodoro sessions today
-  var pomEl = document.getElementById('home-pom-today');
-  if(pomEl){
-    var sessions = typeof _pom !== 'undefined' ? (_pom.sessions||[]) : [];
-    var totalMin = sessions.reduce(function(acc,s){return acc+(s.min||0);},0);
-    pomEl.innerHTML = sessions.length + ' sesi' + (sessions.length===1?'ón':'ones') + (totalMin>0?'<br><span style="font-size:10px;color:var(--tl);">'+totalMin+'min</span>':'');
-  }
-
-  renderAlertas();
-}
-
-/* Override irHome to render resumen */
-var _origIrHomeResumen = irHome;
-irHome = function(){
-  _origIrHomeResumen();
-  homeTab('resumen');
-  setTimeout(renderResumen, 50);
-};
-
-/* ════ BNAVSETACTIVE: add todo ════ */
-function bnavSetActive(tab){
-  var map = {home:'bnav-home', registros:'bnav-tareas', notas:'bnav-todo', calendario:'bnav-agenda', estudio:'bnav-estudio'};
-  document.querySelectorAll('.bnav-btn').forEach(function(b){ b.classList.remove('active'); });
-  var id = map[tab] || (tab==='home'?'bnav-home':null);
-  if(id){ var el=document.getElementById(id); if(el) el.classList.add('active'); }
-}
-
-/* ════ SCROLL TO TOP button ════ */
-(function(){
-  var fab = document.createElement('button');
-  fab.id = 'scroll-top-btn';
-  fab.innerHTML = '&#8679;';
-  fab.setAttribute('style','position:fixed;bottom:130px;right:18px;width:40px;height:40px;border-radius:50%;background:var(--gd);color:#fff;border:none;font-size:22px;cursor:pointer;box-shadow:0 3px 10px rgba(0,0,0,.25);z-index:502;display:none;align-items:center;justify-content:center;line-height:1;');
-  fab.title = 'Subir arriba';
-  fab.addEventListener('click', function(){ window.scrollTo({top:0,behavior:'smooth'}); });
-  // Add to body when ready
-  if(document.body) document.body.appendChild(fab);
-  else document.addEventListener('DOMContentLoaded', function(){ document.body.appendChild(fab); });
-  window.addEventListener('scroll', function(){
-    fab.style.display = window.scrollY > 200 ? 'flex' : 'none';
-  }, {passive:true});
-})();
-
-/* ════ REMOVE BACK ARROWS from tap-headers (handled by bottom nav) ════ */
-/* CSS: hide the tap-header-btn that call irHome() on non-essential sections */
-
-/* ════ HORARIO PDF ════ */
-function horarioPDF(){
-  var sch = getSch();
-  var H_DAYS_LABELS = ['Lunes','Martes','Miércoles','Jueves','Viernes'];
-  var H_DAYS = ['lun','mar','mie','jue','vie'];
-  var palette = typeof H_COLORS_EXT !== 'undefined' ? H_COLORS_EXT : H_COLORS;
-
-  var thead = '<tr><th style="background:#2D5016;color:#fff;padding:8px;font-size:12px;width:60px;">Hora</th>';
-  H_DAYS_LABELS.forEach(function(d){ thead += '<th style="background:#2D5016;color:#fff;padding:8px;font-size:12px;">'+d+'</th>'; });
-  thead += '</tr>';
-
-  var tbody = '';
-  (sch.slots||[]).forEach(function(slot, si){
-    tbody += '<tr>';
-    tbody += '<td style="padding:6px 8px;font-weight:700;font-size:11px;background:#f5f5f5;text-align:center;border:1px solid #e0e0e0;">'+slot+'</td>';
-    H_DAYS.forEach(function(dia){
-      var key = dia+'-'+si;
-      var asig = (sch.grid||{})[key]||'';
-      var cIdx = asig && sch.colores && sch.colores[asig]!==undefined ? sch.colores[asig] : -1;
-      var c = cIdx>=0 ? palette[cIdx]||palette[cIdx%8] : null;
-      var bg = c ? c.bg : '#fff';
-      var tx = c ? '#222' : '#aaa';
-      tbody += '<td style="padding:6px 8px;background:'+bg+';color:'+tx+';font-size:11px;font-weight:'+(asig?'700':'400')+';text-align:center;border:1px solid #e0e0e0;">'+(asig||'')+'</td>';
-    });
-    tbody += '</tr>';
-  });
-
-  var firma = typeof getFirma==='function' ? getFirma() : {};
-  var nombre = firma.nombre || (typeof currentUser!=='undefined' ? (currentUser||'').split('@')[0] : 'Estudiante');
-  var hoy = new Date().toLocaleDateString('es',{weekday:'long',day:'2-digit',month:'long',year:'numeric'});
-
-  var html = '<!DOCTYPE html><html lang="es"><head><meta charset="utf-8"><title>Mi Horario - '+sch.nombre+'</title>'
-    +'<style>body{font-family:Arial,sans-serif;margin:20px;color:#222;}h1{color:#2D5016;font-size:20px;margin-bottom:4px;}h2{color:#666;font-size:13px;font-weight:normal;margin-top:0;}table{width:100%;border-collapse:collapse;margin-top:12px;}th,td{border:1px solid #e0e0e0;}@media print{.no-print{display:none;}}</style>'
-    +'</head><body>'
-    +'<div class="no-print" style="margin-bottom:16px;"><button onclick="window.print()" style="padding:10px 20px;background:#2D5016;color:#fff;border:none;border-radius:8px;font-size:14px;cursor:pointer;font-weight:700;">&#128424; Imprimir / PDF</button><button onclick="window.close()" style="margin-left:8px;padding:10px 16px;background:#f5f5f5;border:1px solid #ddd;border-radius:8px;font-size:14px;cursor:pointer;">&larr; Volver</button></div>'
-    +'<h1>&#128197; '+sch.nombre+'</h1>'
-    +'<h2>'+nombre+' &bull; '+hoy+'</h2>'
-    +'<table><thead>'+thead+'</thead><tbody>'+tbody+'</tbody></table>'
-    +'<p style="font-size:10px;color:#aaa;margin-top:16px;text-align:center;">Generado con Tapunto &bull; tapunto.app</p>'
-    +'</body></html>';
-
-  var w = window.open('','_blank');
-  if(!w){ alert('Activa ventanas emergentes para descargar el PDF.'); return; }
-  w.document.write(html);
-  w.document.close();
-  w.focus();
-}
-
-/* ════ PLANNER EXAMS COLLAPSED BY DEFAULT ════ */
-var _origPlanRenderExams = planRenderExams;
-planRenderExams = function(){
-  _origPlanRenderExams();
-  // Collapse all exam cards after rendering
-  setTimeout(function(){
-    document.querySelectorAll('#plan-exams-list .plan-exam-card').forEach(function(card, i){
-      var grid = card.querySelector('div[style*="grid-template-columns"]');
-      if(!grid) return;
-      var toggle = card.querySelector('.plan-exam-toggle');
-      if(!toggle){
-        // Create toggle button and collapse
-        var header = card.querySelector('div:first-child');
-        if(!header) return;
-        var btn = document.createElement('button');
-        btn.className = 'plan-exam-toggle';
-        btn.style.cssText = 'background:none;border:none;cursor:pointer;font-size:14px;color:var(--tl);padding:2px 4px;';
-        btn.innerHTML = '&#9660;';
-        btn.title = 'Expandir/colapsar';
-        btn.addEventListener('click', function(e){
-          e.stopPropagation();
-          var isCollapsed = grid.style.display === 'none';
-          grid.style.display = isCollapsed ? 'grid' : 'none';
-          btn.innerHTML = isCollapsed ? '&#9650;' : '&#9660;';
-        });
-        header.appendChild(btn);
-        grid.style.display = 'none'; // collapsed by default
-        btn.innerHTML = '&#9660;';
-      }
-    });
-  }, 200);
-};
-
-/* album icon integrated in recHTML directly */
-
-
-function recAbrirAlbum(btn){
-  var tema = btn ? btn.dataset.tema : '';
-  if(!tema) return;
-  irSeccion('albumes');
-  setTimeout(function(){_albFiltroAsig=tema;renderAlbumes();},250);
-}
 /* ── irHome / switchTab hooks ── */
 var _origIrHomeH=irHome;
 irHome=function(){_origIrHomeH();setTimeout(function(){renderHorarioHome();renderAlertas();},0);var hi=document.getElementById('home-info-albumes');if(hi){var n=getAlbums().length;hi.textContent=n>0?n+(n===1?' álbum':' álbumes'):'Guarda fotos por asignatura';}};
@@ -12111,10 +11967,6 @@ switchTab=function(tab,btn){_origSwitchTabA(tab,btn);if(tab==='albumes')renderAl
     <span class="bnav-ico">&#128203;</span>
     <span class="bnav-lbl">Tareas</span>
   </button>
-  <button class="bnav-btn" id="bnav-todo" onclick="irSeccion('notas')">
-    <span class="bnav-ico">&#10003;</span>
-    <span class="bnav-lbl">To Do</span>
-  </button>
   <button class="bnav-btn" id="bnav-agenda" onclick="irSeccion('calendario')">
     <span class="bnav-ico">&#128197;</span>
     <span class="bnav-lbl">Agenda</span>
@@ -12125,6 +11977,372 @@ switchTab=function(tab,btn){_origSwitchTabA(tab,btn);if(tab==='albumes')renderAl
   </button>
 </nav>
 <button class="bnav-fab" onclick="irSeccion('nuevo')" title="Nueva tarea">&#43;</button>
+
+<!-- ── BOTTOM NAVIGATION ── -->
+<nav class="bottom-nav" id="bottom-nav">
+  <button class="bnav-btn active" id="bnav-home" onclick="irHome()">
+    <span class="bnav-ico">&#127968;</span><span class="bnav-lbl">Inicio</span>
+  </button>
+  <button class="bnav-btn" id="bnav-tareas" onclick="irSeccion('registros')">
+    <span class="bnav-ico">&#128203;</span><span class="bnav-lbl">Tareas</span>
+  </button>
+  <button class="bnav-btn" id="bnav-todo" onclick="irSeccion('notas')">
+    <span class="bnav-ico">&#10003;</span><span class="bnav-lbl">To Do</span>
+  </button>
+  <button class="bnav-btn" id="bnav-agenda" onclick="irSeccion('calendario')">
+    <span class="bnav-ico">&#128197;</span><span class="bnav-lbl">Agenda</span>
+  </button>
+  <button class="bnav-btn" id="bnav-estudio" onclick="irSeccion('estudio')">
+    <span class="bnav-ico">&#127891;</span><span class="bnav-lbl">Estudio</span>
+  </button>
+</nav>
+<button class="bnav-fab" onclick="irSeccion('nuevo')" title="Nueva tarea">&#43;</button>
+
+<script>
+/* ════════════════════════════════════════════════════════
+   HORARIO FEATURES: días extra, nombres editables, +horarios
+════════════════════════════════════════════════════════ */
+
+/* ── Get active days for current schedule ── */
+function hGetActiveDays(sch){
+  var base=['lun','mar','mie','jue','vie'];
+  var defaultLabels=['Lunes','Martes','Miércoles','Jueves','Viernes'];
+  var extras = sch.diasExtra || [];
+  var ocultos = sch.diasOcultos || [];
+  var extraLabels = {'sab':'Sábado','dom':'Domingo'};
+  var allDays=[], allLabels=[];
+  base.forEach(function(d,i){
+    if(!ocultos.includes(d)){
+      allDays.push(d);
+      allLabels.push((sch.dayLabels&&sch.dayLabels[i])||defaultLabels[i]);
+    }
+  });
+  extras.forEach(function(d){
+    if(!allDays.includes(d)){
+      allDays.push(d);
+      var extraIdx=allDays.length-1;
+      allLabels.push((sch.dayLabels&&sch.dayLabels[extraIdx])||extraLabels[d]||d);
+    }
+  });
+  return {days:allDays, labels:allLabels};
+}
+
+/* ── Override renderHorarioHome to use dynamic days ── */
+var _origRHH_days = renderHorarioHome;
+renderHorarioHome = function(){
+  var sch = getSch();
+  var info = hGetActiveDays(sch);
+  // Temporarily patch H_DAYS and H_DAYS_LABELS for render
+  var _bak_days = H_DAYS.slice();
+  var _bak_labels = H_DAYS_LABELS.slice();
+  H_DAYS = info.days;
+  H_DAYS_LABELS = info.labels;
+  _origRHH_days();
+  H_DAYS = _bak_days;
+  H_DAYS_LABELS = _bak_labels;
+};
+
+/* ── hEditSlot: allow empty slot (save as '—') ── */
+var _origHEditSlot = hEditSlot;
+hEditSlot = function(si, val){
+  var sch = getSch();
+  var v = (val||'').trim();
+  if(!v){ sch.slots[si]='—'; persist().catch(function(){}); return; }
+  _origHEditSlot(si, val);
+};
+
+/* ── hNuevoHorario: add a new schedule ── */
+function hNuevoHorario(){
+  var h = getHS();
+  var maxFree = 2;
+  if(!isPremium && h.schedules.length >= maxFree){
+    showUpgrade();
+    showToast('⭐ Crea horarios ilimitados con Premium');
+    return;
+  }
+  var num = h.schedules.length + 1;
+  var newSch = {
+    nombre: 'Horario ' + num,
+    slots: ['8:00','9:00','10:00','11:00','12:00'],
+    grid: {},
+    colores: {},
+    diasExtra: [],
+    dayLabels: []
+  };
+  h.schedules.push(newSch);
+  h.activo = h.schedules.length - 1;
+  persist().catch(function(){});
+  renderHorarioHome();
+  showToast('✓ Nuevo horario creado');
+}
+
+/* ── hToggleDia: toggle sat/dom ── */
+function hToggleDia(dia){
+  var sch = getSch();
+  if(!sch.diasExtra) sch.diasExtra = [];
+  var idx = sch.diasExtra.indexOf(dia);
+  if(idx >= 0){ sch.diasExtra.splice(idx, 1); }
+  else { sch.diasExtra.push(dia); }
+  persist().catch(function(){});
+  renderHorarioHome();
+}
+
+/* ── hEditDayLabel: edit a day header inline ── */
+function hEditDayLabel(di, val){
+  var sch = getSch();
+  var info = hGetActiveDays(sch);
+  if(!sch.dayLabels || sch.dayLabels.length !== info.days.length){
+    sch.dayLabels = info.labels.slice();
+  }
+  sch.dayLabels[di] = val || info.labels[di];
+  persist().catch(function(){});
+}
+
+/* ── Inject edit controls into renderHorarioHome ── */
+var _origRHH_controls = renderHorarioHome;
+renderHorarioHome = function(){
+  _origRHH_controls();
+  if(!_hEdit) return;
+  var sch = getSch();
+  var info = hGetActiveDays(sch);
+
+  // ── Make day headers editable + add × to remove day ──
+  document.querySelectorAll('.h-th-day').forEach(function(th, di){
+    if(th.querySelector('input')) return;
+    var dayKey = info.days[di];
+    var origText = th.textContent.trim();
+    th.innerHTML = '';
+    th.style.position = 'relative';
+
+    // Input for day name
+    var inp = document.createElement('input');
+    inp.type = 'text';
+    inp.value = info.labels[di] || origText;
+    inp.style.cssText = 'width:calc(100% - 14px);background:rgba(255,255,255,.85);border:none;border-radius:3px;border-bottom:1.5px solid rgba(0,0,0,.2);color:#222;font-size:10px;font-weight:700;text-align:center;outline:none;padding:2px 3px;font-family:Lato,sans-serif;display:block;margin:0 auto 2px;';
+    (function(idx2){ inp.addEventListener('input', function(){ hEditDayLabel(idx2, this.value); }); })(di);
+    th.appendChild(inp);
+
+    // × button to remove this day (all days can be removed if >1 day remains)
+    var delBtn = document.createElement('button');
+    delBtn.innerHTML = '&#215;';
+    delBtn.title = 'Eliminar ' + (info.labels[di] || dayKey);
+    delBtn.style.cssText = 'position:absolute;top:2px;right:2px;background:rgba(192,57,43,.75);color:#fff;border:none;border-radius:50%;width:13px;height:13px;font-size:9px;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;line-height:1;z-index:5;';
+    (function(dk){ delBtn.addEventListener('click', function(e){ e.stopPropagation(); hEliminarDia(dk); }); })(dayKey);
+    th.appendChild(delBtn);
+  });
+
+  // ── Add sat/dom buttons (only show for days not yet added) ──
+  var addSlotDiv = document.getElementById('home-h-add-slot');
+  if(addSlotDiv && !addSlotDiv.querySelector('.h-day-btns')){
+    var dayBtns = document.createElement('div');
+    dayBtns.className = 'h-day-btns';
+    dayBtns.style.cssText = 'display:flex;gap:5px;margin-top:6px;flex-wrap:wrap;align-items:center;';
+
+    var hasSat = info.days.includes('sab');
+    var hasDom = info.days.includes('dom');
+
+    if(!hasSat){
+      var satBtn = document.createElement('button');
+      satBtn.style.cssText = 'padding:4px 10px;border-radius:12px;font-size:11px;font-family:Lato,sans-serif;font-weight:700;cursor:pointer;border:1.5px solid var(--bd);background:var(--bl);color:var(--tm);';
+      satBtn.textContent = '+ Sábado';
+      satBtn.onclick = function(){ hToggleDia('sab'); };
+      dayBtns.appendChild(satBtn);
+    }
+    if(!hasDom){
+      var domBtn = document.createElement('button');
+      domBtn.style.cssText = 'padding:4px 10px;border-radius:12px;font-size:11px;font-family:Lato,sans-serif;font-weight:700;cursor:pointer;border:1.5px solid var(--bd);background:var(--bl);color:var(--tm);';
+      domBtn.textContent = '+ Domingo';
+      domBtn.onclick = function(){ hToggleDia('dom'); };
+      dayBtns.appendChild(domBtn);
+    }
+
+    var newHorBtn = document.createElement('button');
+    var h = getHS();
+    var canAdd = isPremium || h.schedules.length < 2;
+    newHorBtn.style.cssText = 'padding:4px 10px;border-radius:12px;font-size:11px;font-family:Lato,sans-serif;font-weight:700;cursor:pointer;border:1.5px solid var(--gd);background:var(--gd);color:#fff;margin-left:auto;';
+    newHorBtn.innerHTML = '+ Nuevo horario' + (canAdd ? '' : ' ⭐');
+    newHorBtn.onclick = hNuevoHorario;
+    dayBtns.appendChild(newHorBtn);
+
+    if(dayBtns.children.length > 0) addSlotDiv.appendChild(dayBtns);
+  }
+};
+
+/* ── hEliminarDia: remove any day (lun-vie require at least 1 remaining) ── */
+function hEliminarDia(dayKey){
+  var sch = getSch();
+  var info = hGetActiveDays(sch);
+  if(info.days.length <= 1){ showToast('Debe quedar al menos un día'); return; }
+
+  var baseDays = ['lun','mar','mie','jue','vie'];
+  if(baseDays.includes(dayKey)){
+    // Remove from base: store in sch.diasOcultos
+    if(!sch.diasOcultos) sch.diasOcultos = [];
+    if(!sch.diasOcultos.includes(dayKey)) sch.diasOcultos.push(dayKey);
+    // Also clear that day's grid cells
+    Object.keys(sch.grid||{}).forEach(function(k){ if(k.startsWith(dayKey+'-')) delete sch.grid[k]; });
+  } else {
+    // Remove extra day (sab/dom)
+    if(sch.diasExtra) sch.diasExtra = sch.diasExtra.filter(function(d){ return d !== dayKey; });
+    Object.keys(sch.grid||{}).forEach(function(k){ if(k.startsWith(dayKey+'-')) delete sch.grid[k]; });
+  }
+  persist().catch(function(){});
+  showToast('Día eliminado');
+  renderHorarioHome();
+};
+
+/* ── Show upgrade modal ── */
+function showUpgrade(){
+  try{ mostrarTip('⭐ Tapunto Premium','Activa Premium para usar esta función sin límites.',null); }
+  catch(e){ alert('⭐ Función disponible con Tapunto Premium'); }
+}
+
+</script>
+
+<script>
+/* ════ TAPUNTO FIXES ════ */
+function homeTab(t){
+  var isH=t==='horario';
+  var rp=document.getElementById('home-tab-resumen-panel');
+  var hp=document.getElementById('home-tab-horario-panel');
+  if(rp)rp.style.display=isH?'none':'block';
+  if(hp)hp.style.display=isH?'block':'none';
+  var br=document.getElementById('home-tab-resumen');
+  var bh=document.getElementById('home-tab-horario');
+  if(br){br.style.color=isH?'var(--tl)':'var(--gd)';br.style.borderBottomColor=isH?'transparent':'var(--gd)';}
+  if(bh){bh.style.color=isH?'var(--gd)':'var(--tl)';bh.style.borderBottomColor=isH?'var(--gd)':'transparent';}
+  if(isH)setTimeout(function(){try{renderHorarioHome();}catch(e){}},30);
+}
+function renderResumen(){
+  try{
+    var now=new Date(),h=now.getHours();
+    var g=h<13?'Buenos días':h<20?'Buenas tardes':'Buenas noches';
+    var firma=typeof getFirma==='function'?getFirma():{};
+    var uc=typeof currentUser!=='undefined'?(currentUser||''):'';
+    var nom=firma.nombre||(uc.indexOf('@')>=0?uc.substring(0,uc.indexOf('@')):uc)||'';
+    var sal=document.getElementById('home-resumen-saludo');
+    if(sal)sal.textContent=g+(nom?', '+nom.split(' ')[0]+'!':'!');
+    var dias=['domingo','lunes','martes','miércoles','jueves','viernes','sábado'];
+    var meses=['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+    var fd=document.getElementById('home-resumen-fecha');
+    if(fd)fd.textContent=dias[now.getDay()]+', '+now.getDate()+' de '+meses[now.getMonth()]+' de '+now.getFullYear();
+    var hoy=new Date();hoy.setHours(0,0,0,0);
+    var nd=document.getElementById('home-next-deadline-text');
+    if(nd){
+      var up=(state.records||[]).filter(function(r){return r.fechaEvento&&!r.archivado&&new Date(r.fechaEvento+'T00:00:00')>=hoy;}).sort(function(a,b){return a.fechaEvento.localeCompare(b.fechaEvento);});
+      if(up.length){var r=up[0];var d=new Date(r.fechaEvento+'T00:00:00');var diff=Math.ceil((d-hoy)/86400000);var dt=diff===0?'HOY':diff===1?'Mañana':'En '+diff+'d';nd.innerHTML='<span style="font-weight:700;color:var(--gd);">'+r.tema+'</span><br><span style="font-size:10px;color:var(--tl);">'+r.accion+' · '+dt+'</span>';}
+      else nd.textContent='Sin exámenes próximos';
+    }
+    var pt=document.getElementById('home-pom-today');
+    if(pt){var s=typeof _pom!=='undefined'?(_pom.sessions||[]):[];var tm=s.reduce(function(a,x){return a+(x.min||0);},0);pt.innerHTML=s.length+' sesi'+(s.length===1?'ón':'ones')+(tm>0?'<br><span style="font-size:10px;color:var(--tl);">'+tm+'min</span>':'');}
+    try{renderAlertas();}catch(e){}
+  }catch(ex){}
+}
+function bnavSetActive(tab){
+  var map={home:'bnav-home',registros:'bnav-tareas',notas:'bnav-todo',calendario:'bnav-agenda',estudio:'bnav-estudio'};
+  document.querySelectorAll('.bnav-btn').forEach(function(b){b.classList.remove('active');});
+  var id=map[tab]||'bnav-home';
+  var el=document.getElementById(id);if(el)el.classList.add('active');
+}
+/* Wrap irHome ONCE */
+(function(){
+  var _orig=irHome;
+  irHome=function(){
+    _orig();
+    bnavSetActive('home');
+    homeTab('resumen');
+    setTimeout(renderResumen,80);
+  };
+})();
+/* Wrap switchTab ONCE */
+(function(){
+  var _orig=switchTab;
+  switchTab=function(tab,btn){
+    _orig(tab,btn);
+    bnavSetActive(tab);
+  };
+})();
+/* cerrarSplash */
+(function(){
+  var _orig=cerrarSplash;
+  cerrarSplash=function(){_orig();setTimeout(function(){try{renderHorarioHome();renderResumen();}catch(e){}},520);};
+})();
+/* Scroll to top */
+(function(){
+  var fab=document.createElement('button');
+  fab.innerHTML='&#8679;';
+  fab.setAttribute('style','position:fixed;bottom:130px;right:18px;width:40px;height:40px;border-radius:50%;background:var(--gd);color:#fff;border:none;font-size:22px;cursor:pointer;box-shadow:0 3px 10px rgba(0,0,0,.25);z-index:502;display:none;align-items:center;justify-content:center;line-height:1;');
+  fab.onclick=function(){window.scrollTo({top:0,behavior:'smooth'});};
+  document.body.appendChild(fab);
+  window.addEventListener('scroll',function(){fab.style.display=window.scrollY>200?'flex':'none';},{passive:true});
+})();
+/* horarioPDF */
+function horarioPDF(){
+  try{
+    var sch=getSch();
+    var days=['lun','mar','mie','jue','vie'],dayL=['Lunes','Martes','Miércoles','Jueves','Viernes'];
+    var palette=typeof H_COLORS_EXT!=='undefined'?H_COLORS_EXT:H_COLORS;
+    var t='<tr><th style="background:#2D5016;color:#fff;padding:8px;font-size:12px;">Hora</th>';
+    dayL.forEach(function(d){t+='<th style="background:#2D5016;color:#fff;padding:8px;font-size:12px;">'+d+'</th>';});t+='</tr>';
+    var b='';
+    (sch.slots||[]).forEach(function(slot,si){
+      b+='<tr><td style="padding:6px 8px;font-weight:700;font-size:11px;background:#f5f5f5;text-align:center;border:1px solid #ddd;">'+slot+'</td>';
+      days.forEach(function(d){var k=d+'-'+si,a=(sch.grid||{})[k]||'';var ci=a&&sch.colores&&sch.colores[a]!==undefined?sch.colores[a]:-1;var c=ci>=0?palette[ci%palette.length]:null;b+='<td style="padding:6px 8px;background:'+(c?c.bg:'#fff')+';color:#222;font-size:11px;text-align:center;border:1px solid #ddd;">'+(a||'')+'</td>';});b+='</tr>';
+    });
+    var firma=typeof getFirma==='function'?getFirma():{};
+    var html='<!DOCTYPE html><html lang="es"><head><meta charset="utf-8"><title>Horario</title><style>body{font-family:Arial,sans-serif;margin:20px;}table{width:100%;border-collapse:collapse;}@media print{.np{display:none;}}</style></head><body><div class="np"><button onclick="window.print()" style="padding:10px 20px;background:#2D5016;color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:700;margin-bottom:16px;">Imprimir / PDF</button></div><h1 style="color:#2D5016;">'+sch.nombre+'</h1><p style="color:#666;">'+(firma.nombre||'')+'</p><table><thead>'+t+'</thead><tbody>'+b+'</tbody></table></body></html>';
+    var w=window.open('','_blank');if(!w){alert('Activa ventanas emergentes.');return;}
+    w.document.write(html);w.document.close();w.focus();
+  }catch(ex){alert('Error al generar PDF: '+ex.message);}
+}
+/* recAbrirAlbum */
+function recAbrirAlbum(btn){
+  var tema=btn?btn.dataset.tema:'';if(!tema)return;
+  irSeccion('albumes');
+  setTimeout(function(){_albFiltroAsig=tema;try{renderAlbumes();}catch(e){}},250);
+}
+/* Pomodoro sound */
+var _pomSoundType='beep';
+function pomSetSound(type){
+  _pomSoundType=type;
+  document.querySelectorAll('.pom-sound-btn').forEach(function(b){
+    var sel=b.dataset.sound===type;
+    b.style.background=sel?'var(--gd)':'var(--bl)';
+    b.style.color=sel?'#fff':'var(--tm)';
+  });
+}
+/* Back arrows hide */
+(function(){
+  var s=document.createElement('style');
+  s.textContent='#sec-registros .tap-header-btn[onclick="irHome()"],#sec-notas .tap-header-btn[onclick="irHome()"],#sec-calendario .tap-header-btn[onclick="irHome()"],#sec-estudio .tap-header-btn[onclick="irHome()"]{display:none!important;}';
+  document.head.appendChild(s);
+})();
+
+/* ── Update edit/cancel buttons based on _hEdit state ── */
+(function(){
+  var _origRHH_btns = renderHorarioHome;
+  renderHorarioHome = function(){
+    _origRHH_btns();
+    var btnEdit = document.getElementById('btn-edit-horario');
+    var btnCancel = document.getElementById('btn-cancel-horario');
+    var btnPDF = document.getElementById('btn-pdf-horario');
+    if(btnEdit) btnEdit.textContent = _hEdit ? '✓ Listo' : '✏️ Editar';
+    if(btnCancel) btnCancel.style.display = _hEdit ? 'inline-block' : 'none';
+    if(btnPDF) btnPDF.style.display = _hEdit ? 'none' : 'inline-block';
+  };
+})();
+
+/* tipo filter */
+(function(){
+  var _orig=filtrarEstado;
+  filtrarEstado=function(val){
+    document.querySelectorAll('.tap-pill').forEach(function(p){p.classList.remove('tap-pill-active');p.classList.add('tap-pill-inactive');});
+    var el=document.getElementById(val?'pill-'+val:'pill-todos');
+    if(el){el.classList.add('tap-pill-active');el.classList.remove('tap-pill-inactive');}
+    _filtroEstado=val;try{renderRecords();}catch(e){}
+  };
+})();
+</script>
 </body>
 </html>
 <script>
