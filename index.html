@@ -10476,8 +10476,10 @@ function planLimpiarHistorial(){
 /* PDF download - current plan */
 function planDescargarPDF(){
   var out=document.getElementById('plan-output');
-  if(!out||!out._planSnapshot) return;
-  planAbrirPDF(out._planSnapshot.dayPlan, out._planSnapshot.exams, out._planSnapshot.hoyStr, new Date().toLocaleDateString('es',{day:'2-digit',month:'long',year:'numeric'}));
+  if(!out||!out._planSnapshot){showToast('Genera primero el plan de estudio');return;}
+  var n=new Date();
+  var ts=n.getFullYear()+'-'+String(n.getMonth()+1).padStart(2,'0')+'-'+String(n.getDate()).padStart(2,'0');
+  planAbrirPDF(out._planSnapshot.dayPlan, out._planSnapshot.exams, ts, n.toLocaleDateString('es',{day:'2-digit',month:'long',year:'numeric'}));
 }
 
 /* PDF download - saved plan */
@@ -10488,50 +10490,146 @@ function planDescargarPDFGuardado(plan){
 
 /* Build and open PDF window */
 function planAbrirPDF(dayPlan, exams, todayStr, dateLabel){
-  var keys=Object.keys(dayPlan).sort();
+  var keys = Object.keys(dayPlan).sort();
   if(!keys.length) return;
-  var rows='';
-  keys.forEach(function(key){
-    var d=new Date(key+'T00:00:00');
-    var isToday=key===todayStr;
-    var dateStr=d.toLocaleDateString('es',{weekday:'long',day:'2-digit',month:'long'});
-    var items='';
-    dayPlan[key].forEach(function(item){
-      var color=item.type==='review'?'#c0392b':'#2D8A5A';
-      var bg=item.type==='review'?'#fdf2f2':'#f0f9f4';
-      items+='<div style="background:'+bg+';border-left:3px solid '+color+';padding:4px 8px;margin-bottom:4px;border-radius:0 4px 4px 0;">'
-        +'<strong style="color:'+color+';">'+(item.type==='review'?'Repaso':'Estudio')+': '+item.asig+'</strong>'
-        +' &mdash; '+item.text+'</div>';
-    });
-    rows+='<tr style="'+(isToday?'background:#e8f5e9;':'')+'border-bottom:1px solid #e0e0e0;">'
-      +'<td style="padding:8px 12px;font-weight:'+(isToday?'700':'400')+';color:'+(isToday?'#2D8A5A':'#333')+';white-space:nowrap;vertical-align:top;font-size:12px;">'+dateStr+'</td>'
-      +'<td style="padding:8px 12px;">'+items+'</td>'
-      +'</tr>';
+  var firma = typeof getFirma==='function' ? getFirma() : {};
+  var alumno = firma.nombre || (typeof currentUser!=='undefined' ? (currentUser||'').split('@')[0] : '') || 'Estudiante';
+  var now = new Date();
+  var todayFmt = now.toLocaleDateString('es',{weekday:'long',day:'2-digit',month:'long',year:'numeric'});
+
+  // Collect exams summary
+  var examSummary = '';
+  var futureExams = (state.records||[]).filter(function(r){
+    return r.fechaEvento && !r.archivado && new Date(r.fechaEvento+'T12:00:00') >= new Date(todayStr+'T12:00:00');
+  }).sort(function(a,b){return a.fechaEvento.localeCompare(b.fechaEvento);});
+  futureExams.forEach(function(r){
+    var d = new Date(r.fechaEvento+'T12:00:00');
+    var diff = Math.ceil((d-new Date(todayStr+'T12:00:00'))/86400000);
+    var color = diff<=2?'#c0392b':diff<=7?'#e67e22':'#2D8A5A';
+    examSummary += '<span style="display:inline-block;margin:2px 4px;padding:3px 10px;background:'+color+'1a;border:1px solid '+color+';border-radius:12px;color:'+color+';font-size:11px;font-weight:700;">'
+      +r.tema+' &bull; '+d.toLocaleDateString('es',{day:'2-digit',month:'short'})+' ('+diff+'d)</span>';
   });
-  var examSummary=exams.map(function(e){
-    return '<span style="display:inline-block;background:#f0f9f4;border:1px solid #2D8A5A;border-radius:12px;padding:3px 10px;font-size:11px;margin:3px;color:#2D5016;">'+e.tema+' &mdash; '+e.accion+'</span>';
-  }).join('');
-  var html='<!DOCTYPE html><html lang="es"><head>'
-    +'<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">'
-    +'<title>Plan de Estudio</title>'
-    +'<style>body{font-family:Georgia,serif;color:#222;margin:0;padding:20px;}@media print{.no-print{display:none;}body{padding:0;}}h1{font-size:22px;color:#2D5016;margin-bottom:4px;}h2{font-size:13px;font-weight:normal;color:#666;margin-top:0;}table{width:100%;border-collapse:collapse;}th{background:#2D5016;color:#fff;padding:8px 12px;text-align:left;font-size:12px;}tr:hover{background:#f9f9f9;}.legend{display:flex;gap:16px;margin:12px 0;font-size:11px;}.legend span{display:flex;align-items:center;gap:5px;}.dot{width:10px;height:10px;border-radius:50%;}</style>'
-    +'</head><body>'
-    +'<div class="no-print" style="margin-bottom:16px;">'
-    +'<button onclick="window.print()" style="padding:10px 20px;background:#2D5016;color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;">&#128424; Imprimir / Guardar PDF</button>'
-    +'<button onclick="window.close()" style="margin-left:8px;padding:10px 20px;background:#f5f5f5;border:1px solid #ddd;border-radius:8px;font-size:14px;cursor:pointer;">&larr; Volver</button>'
+
+  // Count totals
+  var totalStudy=0, totalReview=0, totalMins=0;
+  keys.forEach(function(k){
+    (dayPlan[k]||[]).forEach(function(b){
+      totalMins+=b.mins||0;
+      if(b.type==='study') totalStudy++;
+      else if(b.type==='review') totalReview++;
+    });
+  });
+
+  // Build day rows HTML
+  var daysHtml = '';
+  keys.forEach(function(key){
+    var d = new Date(key+'T12:00:00');
+    var isToday = key===todayStr;
+    var dateStr = d.toLocaleDateString('es',{weekday:'long',day:'2-digit',month:'long'});
+    var dayItems = (dayPlan[key]||[]);
+    if(!dayItems.length) return;
+
+    var dayBg = isToday ? '#f0f9f4' : '#fafafa';
+    var dayBorder = isToday ? '#2D8A5A' : '#e0e0e0';
+    var dayLabel = (isToday ? '&#128197; HOY &nbsp;&bull;&nbsp; ' : '') + dateStr.toUpperCase();
+
+    var blocksHtml = '';
+    dayItems.forEach(function(item){
+      var isRev = item.type==='review';
+      var color = isRev ? '#3498db' : '#2D8A5A';
+      var bg = isRev ? '#eaf4fb' : '#f0f9f4';
+      var icon = isRev ? '&#128260;' : '&#128218;';
+      var typeLabel = isRev ? 'REPASO' : 'ESTUDIO';
+      var tiles = item.topicTiles || [];
+      var tileCount = item.topicCount || tiles.length || 0;
+      var mpt = item.minsPerTopic || 0;
+
+      // Ensure tiles array
+      while(tiles.length < tileCount){
+        tiles.push({name:'Tema '+(tiles.length+1), reviews:0, maxReviews: isRev?2:3, nota:''});
+      }
+
+      // Build tiles rows
+      var tilesHtml = '';
+      if(tileCount > 0){
+        tilesHtml = '<table style="width:100%;border-collapse:collapse;margin-top:6px;">';
+        tiles.slice(0,tileCount).forEach(function(tp,ti){
+          var circles = '';
+          var dotCount = tp.maxReviews || (isRev?2:3);
+          for(var d2=0;d2<dotCount;d2++){
+            circles += '<span style="display:inline-block;width:12px;height:12px;border-radius:50%;border:1.5px solid '+color+';margin-right:3px;vertical-align:middle;"></span>';
+          }
+          var minsLabel = mpt>0 ? ' <span style="color:#999;font-size:9px;">(~'+mpt+'min)</span>' : '';
+          tilesHtml += '<tr style="border-bottom:1px solid #eee;">'
+            +'<td style="padding:4px 8px;font-size:11px;color:#333;font-weight:'+(tp.name&&tp.name.trim()!==''?'600':'400')+';">'+
+              (tp.name && tp.name.trim()!=='' && tp.name!=='Tema '+(ti+1) ? tp.name : 'Tema '+(ti+1))+minsLabel+'</td>'
+            +'<td style="padding:4px 8px;text-align:right;white-space:nowrap;">'+circles+'</td>'
+            +'</tr>';
+        });
+        tilesHtml += '</table>';
+      }
+
+      // Skip break blocks in PDF (they show as a gap)
+      if(item.type==='break'){
+        blocksHtml += '<div style="height:4px;"></div>';
+        return;
+      }
+      var timeTag = (item.startTime && item.endTime) ?
+        '<span style="font-size:10px;color:'+color+';font-weight:700;margin-right:8px;background:'+color+'1a;padding:2px 6px;border-radius:10px;">'+item.startTime+'–'+item.endTime+'</span>' : '';
+      blocksHtml += '<div style="background:'+bg+';border:1px solid '+color+'33;border-left:3px solid '+color
+        +';border-radius:6px;padding:8px 10px;margin-bottom:6px;page-break-inside:avoid;">'
+        +'<div style="display:flex;align-items:center;gap:4px;margin-bottom:2px;">'
+        +timeTag
+        +'<span style="font-size:12px;font-weight:800;color:'+color+';">'+icon+' '+typeLabel+' &bull; '+item.asig+'</span>'
+        +'<span style="font-size:10px;color:#888;font-weight:600;margin-left:auto;">'+item.mins+'min</span>'
+        +'</div>'
+        +(item.text ? '<div style="font-size:10px;color:#666;margin-bottom:4px;">'+item.text+'</div>' : '')
+        +tilesHtml
+        +'</div>';
+    });
+
+    daysHtml += '<div style="background:'+dayBg+';border:1px solid '+dayBorder+';border-radius:8px;margin-bottom:12px;overflow:hidden;page-break-inside:avoid;">'
+      +'<div style="background:'+(isToday?'#2D8A5A':'#f0f0f0')+';padding:7px 12px;">'
+      +'<span style="font-size:12px;font-weight:800;color:'+(isToday?'#fff':'#555')+';">'+dayLabel+'</span>'
+      +'</div>'
+      +'<div style="padding:8px 10px;">'+blocksHtml+'</div>'
+      +'</div>';
+  });
+
+  var html = '<!DOCTYPE html><html lang="es"><head><meta charset="utf-8">'
+    +'<title>Plan de Estudio &bull; Tapunto</title>'
+    +'<style>'
+    +'* { box-sizing:border-box; }'
+    +'body { font-family:Arial,Helvetica,sans-serif; margin:0; padding:20px; color:#222; background:#fff; }'
+    +'h1 { font-size:22px; color:#2D5016; margin:0 0 4px; }'
+    +'.meta { font-size:12px; color:#888; margin-bottom:10px; }'
+    +'.stats { display:flex; gap:16px; padding:8px 12px; background:#f5f5f5; border-radius:8px; margin-bottom:12px; }'
+    +'.stat { font-size:12px; color:#555; } .stat b { color:#2D5016; }'
+    +'.exams-wrap { margin-bottom:14px; }'
+    +'@media print { .no-print { display:none!important; } body { padding:10px; } }'
+    +'</style></head><body>'
+    +'<div class="no-print" style="margin-bottom:16px;display:flex;gap:8px;">'
+    +'<button onclick="window.print()" style="padding:10px 22px;background:#2D5016;color:#fff;border:none;border-radius:8px;font-size:14px;cursor:pointer;font-weight:700;">&#128196; Imprimir / PDF</button>'
+    +'<button onclick="window.close()" style="padding:10px 18px;background:#f5f5f5;color:#555;border:1px solid #ddd;border-radius:8px;font-size:13px;cursor:pointer;">Cerrar</button>'
     +'</div>'
-    +'<h1>&#128218; Plan de Estudio</h1>'
-    +'<h2>Generado el '+dateLabel+'</h2>'
-    +'<div style="margin-bottom:12px;"><strong style="font-size:12px;color:#666;">EX&Aacute;MENES / ENTREGAS:</strong><br>'+examSummary+'</div>'
-    +'<div class="legend">'
-    +'<span><div class="dot" style="background:#2D8A5A;"></div> Sesion de estudio</span>'
-    +'<span><div class="dot" style="background:#c0392b;"></div> Repaso</span>'
+    +'<h1>&#128197; Plan de Estudio</h1>'
+    +'<div class="meta">'+alumno+' &nbsp;&bull;&nbsp; Generado el '+todayFmt+'</div>'
+    +'<div class="stats">'
+    +'<div class="stat">&#128218; Estudio: <b>'+totalStudy+'</b> sesiones</div>'
+    +'<div class="stat">&#128260; Repaso: <b>'+totalReview+'</b> sesiones</div>'
+    +'<div class="stat">&#9201; Total: <b>'+Math.round(totalMins/60*10)/10+'h</b></div>'
+    +'<div class="stat">&#128197; D\u00edas: <b>'+keys.length+'</b></div>'
     +'</div>'
-    +'<table><thead><tr><th style="width:140px;">D&iacute;a</th><th>Actividades</th></tr></thead><tbody>'+rows+'</tbody></table>'
-    +'<p style="font-size:10px;color:#aaa;margin-top:20px;text-align:center;">Generado con Tapunto &bull; tapunto.app</p>'
+    +(examSummary ? '<div class="exams-wrap"><div style="font-size:11px;font-weight:700;color:#555;margin-bottom:6px;">PR\u00d3XIMOS EX\u00c1MENES:</div>'+examSummary+'</div>' : '')
+    +'<div style="font-size:10px;color:#bbb;margin-bottom:14px;border-top:1px solid #eee;padding-top:6px;">'
+    +'&#9711; = repaso (2 vueltas) &nbsp; &#9711; &#9711; &#9711; = estudio (3 vueltas) &nbsp;&bull;&nbsp; Rellena los c\u00edrculos a medida que estudias cada tema'
+    +'</div>'
+    +daysHtml
+    +'<div style="margin-top:20px;font-size:10px;color:#bbb;text-align:center;border-top:1px solid #eee;padding-top:8px;">Tapunto Estudiantil &bull; tapunto.app</div>'
     +'</body></html>';
-  var w=window.open('','_blank');
-  if(!w){alert('Activa ventanas emergentes para descargar el PDF.');return;}
+
+  var w=window.open('','_blank','width=900,height=700');
+  if(!w){alert('Activa las ventanas emergentes para abrir el PDF.');return;}
   w.document.write(html);
   w.document.close();
   w.focus();
@@ -13169,6 +13267,391 @@ estSwitchTab = function(tab){
     }, 200);
   }
 };
+
+</script>
+
+<script>
+/* ════════════════════════════════════════════════════════════
+   TAPUNTO PLANIFICADOR V3 — FRANJAS HORARIAS COMPLETAS
+   - Horario de clases bloqueado automáticamente
+   - Extraescolares configurables por día
+   - Comida / Cena / Sueño
+   - Descansos entre sesiones
+   - Tiempos en cada bloque del plan y en PDF
+════════════════════════════════════════════════════════════ */
+
+/* Config extendida de horarios */
+if(!window._planTimeCfg){
+  window._planTimeCfg = {
+    studyStart: '16:00',
+    studyEnd:   '22:00',
+    lunchStart: '14:30', lunchEnd: '15:30',
+    dinnerStart:'21:00', dinnerEnd:'22:00',
+    sleepStart: '23:00', sleepHours: 8,
+    breakMins:  10,
+    extraBlocks: []  // [{day:'lun',start:'17:00',end:'18:30',label:'Fútbol'}]
+  };
+  try{
+    var _saved = localStorage.getItem('tp_plan_time_cfg');
+    if(_saved) window._planTimeCfg = JSON.parse(_saved);
+  }catch(e){}
+}
+
+function planTimeCfgSave(){
+  try{ localStorage.setItem('tp_plan_time_cfg', JSON.stringify(window._planTimeCfg)); }catch(e){}
+}
+
+/* Helper: time string → minutes from midnight */
+function toMins(t){
+  var p=(t||'0:0').split(':');
+  return parseInt(p[0]||0)*60+parseInt(p[1]||0);
+}
+/* Helper: minutes → time string */
+function fromMins(m){
+  m=((m%1440)+1440)%1440;
+  return String(Math.floor(m/60)).padStart(2,'0')+':'+String(m%60).padStart(2,'0');
+}
+
+/* Render config UI (override) */
+planRenderConfig = function(){
+  var cfgDiv = document.getElementById('plan-cfg');
+  if(!cfgDiv) return;
+  var tc = window._planTimeCfg;
+  var dayKeys = ['lun','mar','mie','jue','vie','sab','dom'];
+  var dayNames = {lun:'Lunes',mar:'Martes',mie:'Miércoles',jue:'Jueves',vie:'Viernes',sab:'Sábado',dom:'Domingo'};
+
+  // Extra blocks list
+  var extraHtml = (tc.extraBlocks||[]).map(function(b,bi){
+    return '<div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;">'
+      +'<select onchange="window._planTimeCfg.extraBlocks['+bi+'].day=this.value;planTimeCfgSave();" style="padding:4px;border:1px solid var(--bd);border-radius:6px;font-family:Lato,sans-serif;font-size:11px;background:var(--bp);color:var(--td);">'
+      +dayKeys.map(function(d){ return '<option value="'+d+'"'+(b.day===d?' selected':'')+'>'+d+'</option>'; }).join('')
+      +'<option value="all"'+(b.day==='all'?' selected':'')+'>Cada día</option>'
+      +'</select>'
+      +'<input type="time" value="'+b.start+'" onchange="window._planTimeCfg.extraBlocks['+bi+'].start=this.value;planTimeCfgSave();" style="padding:4px;border:1px solid var(--bd);border-radius:6px;font-size:11px;width:88px;background:var(--bp);color:var(--td);">'
+      +'<input type="time" value="'+b.end+'" onchange="window._planTimeCfg.extraBlocks['+bi+'].end=this.value;planTimeCfgSave();" style="padding:4px;border:1px solid var(--bd);border-radius:6px;font-size:11px;width:88px;background:var(--bp);color:var(--td);">'
+      +'<input type="text" placeholder="Actividad" value="'+(b.label||'')+'" oninput="window._planTimeCfg.extraBlocks['+bi+'].label=this.value;planTimeCfgSave();" style="flex:1;padding:4px;border:1px solid var(--bd);border-radius:6px;font-size:11px;background:var(--bp);color:var(--td);">'
+      +'<button onclick="window._planTimeCfg.extraBlocks.splice('+bi+',1);planTimeCfgSave();planRenderConfig();" style="background:none;border:none;color:#c0392b;font-size:16px;cursor:pointer;padding:0 4px;">×</button>'
+      +'</div>';
+  }).join('');
+
+  function row(label, html){ return '<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;"><div style="font-size:11px;font-weight:700;color:var(--tm);min-width:110px;font-family:Lato,sans-serif;">'+label+'</div><div style="flex:1;">'+html+'</div></div>'; }
+  function timeInput(val, field){
+    return '<input type="time" value="'+val+'" onchange="window._planTimeCfg.'+field+'=this.value;planTimeCfgSave();planGenerarV2(false);" style="padding:5px 8px;border:1px solid var(--bd);border-radius:6px;font-size:12px;background:var(--bp);color:var(--td);">';
+  }
+  function numInput(val, field, min, max, label2){
+    return '<input type="number" value="'+val+'" min="'+min+'" max="'+max+'" onchange="window._planTimeCfg.'+field+'=parseInt(this.value)||'+val+';planTimeCfgSave();planGenerarV2(false);" style="width:60px;padding:5px 8px;border:1px solid var(--bd);border-radius:6px;font-size:12px;background:var(--bp);color:var(--td);">'+(label2?'<span style="font-size:11px;color:var(--tl);margin-left:4px;">'+label2+'</span>':'');
+  }
+
+  cfgDiv.innerHTML = '<div style="background:var(--bl);border:1px solid var(--bd);border-radius:10px;padding:12px;margin-bottom:10px;">'
+    +'<div style="font-size:12px;font-weight:700;color:var(--td);font-family:Lato,sans-serif;margin-bottom:10px;">⏰ Franjas horarias</div>'
+    +row('📚 Estudio', timeInput(tc.studyStart,'studyStart')+' <span style="font-size:11px;color:var(--tl);margin:0 4px;">a</span> '+timeInput(tc.studyEnd,'studyEnd'))
+    +row('🍽 Comida', timeInput(tc.lunchStart,'lunchStart')+' <span style="font-size:11px;color:var(--tl);margin:0 4px;">a</span> '+timeInput(tc.lunchEnd,'lunchEnd'))
+    +row('🌙 Cena', timeInput(tc.dinnerStart,'dinnerStart')+' <span style="font-size:11px;color:var(--tl);margin:0 4px;">a</span> '+timeInput(tc.dinnerEnd,'dinnerEnd'))
+    +row('😴 Sueño', numInput(tc.sleepHours,'sleepHours',4,12,'horas / día')+' '+timeInput(tc.sleepStart,'sleepStart')+' <span style="font-size:11px;color:var(--tl);margin-left:4px;">(hora acostarse)</span>')
+    +row('⏱ Descanso', numInput(tc.breakMins,'breakMins',0,30,'min entre sesiones'))
+    +'</div>'
+    +'<div style="background:var(--bl);border:1px solid var(--bd);border-radius:10px;padding:12px;">'
+    +'<div style="font-size:12px;font-weight:700;color:var(--td);font-family:Lato,sans-serif;margin-bottom:8px;">🏃 Extraescolares / Bloqueos</div>'
+    +'<div style="font-size:10px;color:var(--tl);margin-bottom:8px;">Día · Inicio · Fin · Nombre de la actividad</div>'
+    +(extraHtml||'<div style="font-size:11px;color:var(--tl);padding:4px 0;">Sin bloqueos adicionales</div>')
+    +'<button onclick="window._planTimeCfg.extraBlocks.push({day:\'lun\',start:\'17:00\',end:\'18:30\',label:\'\'});planTimeCfgSave();planRenderConfig();" style="margin-top:8px;padding:5px 12px;background:var(--gd);color:#fff;border:none;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;font-family:Lato,sans-serif;">+ Añadir bloqueo</button>'
+    +'</div>';
+};
+
+/* ── planGenerarV2 OVERRIDE: time-aware scheduling ── */
+planGenerarV2 = function(doScroll){
+  if(doScroll===undefined) doScroll=true;
+  var tc = window._planTimeCfg;
+  var _now = new Date();
+  var todayStr = _now.getFullYear()+'-'+String(_now.getMonth()+1).padStart(2,'0')+'-'+String(_now.getDate()).padStart(2,'0');
+  var hoy = new Date(todayStr+'T12:00:00');
+  var sessionMins = parseInt((document.getElementById('plan-session-mins')||{value:'45'}).value)||45;
+  var breakMins = tc.breakMins||10;
+  var blockMins = sessionMins + breakMins;
+
+  var exams = (state.records||[]).filter(function(r){
+    return r.fechaEvento && !r.archivado && new Date(r.fechaEvento+'T12:00:00') >= hoy;
+  }).sort(function(a,b){ return a.fechaEvento.localeCompare(b.fechaEvento); });
+
+  if(!exams.length){
+    var out=document.getElementById('plan-output');
+    if(out) out.innerHTML='<div style="color:var(--tl);font-size:13px;padding:8px;">Añade exámenes con fecha de entrega para generar el plan.</div>';
+    return;
+  }
+
+  /* ── Get available time slots for a given date ── */
+  function getAvailableSlots(dateKey){
+    var d = new Date(dateKey+'T12:00:00');
+    var dayKeys = ['dom','lun','mar','mie','jue','vie','sab'];
+    var dayKey = dayKeys[d.getDay()];
+
+    // Blocked intervals (in minutes from midnight), sorted
+    var blocked = [];
+
+    // 1. School schedule
+    var sch = (state.horario && state.horario.schedules) ? state.horario.schedules[_planCfg.scheduleIdx||0] : null;
+    if(sch && sch.slots){
+      var info = typeof hGetActiveDays==='function' ? hGetActiveDays(sch) : {days:['lun','mar','mie','jue','vie'],labels:[]};
+      if(info.days.includes(dayKey)){
+        // Get first and last occupied slot for this day
+        var occupiedSlots = sch.slots.filter(function(slot,si){
+          var hasContent = info.days.some(function(dKey){
+            return (sch.grid||{})[dKey+'-'+si];
+          });
+          return hasContent;
+        });
+        if(occupiedSlots.length){
+          var firstSlot = occupiedSlots[0];
+          var lastSlot = occupiedSlots[occupiedSlots.length-1];
+          var startM = toMins(firstSlot);
+          var endM = toMins(lastSlot) + 60; // assume 1h per slot
+          blocked.push({s:startM, e:endM, label:'Clases'});
+        }
+      }
+    }
+
+    // 2. Meal blocks
+    blocked.push({s:toMins(tc.lunchStart), e:toMins(tc.lunchEnd), label:'Comida'});
+    blocked.push({s:toMins(tc.dinnerStart), e:toMins(tc.dinnerEnd), label:'Cena'});
+
+    // 3. Sleep
+    var sleepStart = toMins(tc.sleepStart||'23:00');
+    var sleepEnd = sleepStart + (tc.sleepHours||8)*60;
+    blocked.push({s:sleepStart, e:sleepEnd>1440?1440:sleepEnd, label:'Sueño'});
+    if(sleepEnd > 1440) blocked.push({s:0, e:sleepEnd-1440, label:'Sueño'});
+
+    // 4. Extracurricular blocks
+    (tc.extraBlocks||[]).forEach(function(b){
+      if(b.day===dayKey || b.day==='all'){
+        blocked.push({s:toMins(b.start), e:toMins(b.end), label:b.label||'Bloqueado'});
+      }
+    });
+
+    // Study window
+    var winStart = toMins(tc.studyStart||'16:00');
+    var winEnd = toMins(tc.studyEnd||'22:00');
+
+    // Find free intervals within study window
+    blocked.sort(function(a,b){return a.s-b.s;});
+    var free = [];
+    var cur = winStart;
+    blocked.forEach(function(bl){
+      var bs = Math.max(bl.s, winStart);
+      var be = Math.min(bl.e, winEnd);
+      if(bs > cur) free.push({s:cur, e:bs});
+      if(be > cur) cur = be;
+    });
+    if(cur < winEnd) free.push({s:cur, e:winEnd});
+
+    return free;
+  }
+
+  /* ── Build flat list of blocks to schedule ── */
+  function mkKey(d){ return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
+
+  var dayPlan = {};
+
+  function addBlock(key, block){
+    if(!dayPlan[key]) dayPlan[key]=[];
+    dayPlan[key].push(block);
+  }
+
+  exams.forEach(function(r){
+    var data = _planData[r.id] || {topics:3,diff:2};
+    var examDate = new Date(r.fechaEvento+'T12:00:00');
+    var daysToExam = Math.max(0, Math.ceil((examDate-hoy)/86400000));
+
+    var reviewStart = new Date(examDate); reviewStart.setDate(reviewStart.getDate()-2);
+    var studyDays = Math.max(0, Math.round((reviewStart-hoy)/86400000)+1);
+    var topicsPerStudyDay = studyDays>0 ? Math.ceil(data.topics/studyDays) : data.topics;
+    var reviewMins = sessionMins*(1+(data.diff-1)*0.35);
+    var mptReview = Math.round(reviewMins/Math.max(1,data.topics));
+
+    // Study blocks
+    var remaining = data.topics;
+    for(var d=0; d<studyDays && remaining>0; d++){
+      var day = new Date(hoy); day.setDate(day.getDate()+d);
+      var key = mkKey(day);
+      var t = Math.min(topicsPerStudyDay, remaining);
+      remaining -= t;
+      addBlock(key, {_type:'study', asig:r.tema, topicCount:t, mins:sessionMins});
+    }
+
+    // Review blocks
+    var reviewAdded = false;
+    for(var j=2; j>=1; j--){
+      var rd = new Date(examDate); rd.setDate(rd.getDate()-j);
+      if(rd < hoy){ if(!reviewAdded){ addBlock(mkKey(hoy),{_type:'review',asig:r.tema,topicCount:data.topics,mins:Math.round(reviewMins),mpt:mptReview,topics:data.topics}); reviewAdded=true;} continue; }
+      addBlock(mkKey(rd),{_type:'review',asig:r.tema,topicCount:data.topics,mins:Math.round(reviewMins),mpt:mptReview,topics:data.topics});
+      reviewAdded=true;
+    }
+  });
+
+  /* ── Schedule each day: assign actual times ── */
+  var finalPlan = {};
+
+  Object.keys(dayPlan).sort().forEach(function(key){
+    var rawBlocks = dayPlan[key];
+    var freeSlots = getAvailableSlots(key);
+    var scheduled = [];
+    var cursor = -1; // minutes
+    var slotIdx = 0;
+
+    // Advance cursor to first free slot
+    if(freeSlots.length) cursor = freeSlots[0].s;
+
+    rawBlocks.forEach(function(raw){
+      var isRev = raw._type==='review';
+      var needMins = raw.mins;
+
+      // Find a free slot that fits
+      var placed = false;
+      for(var si=slotIdx; si<freeSlots.length; si++){
+        var slotStart = Math.max(freeSlots[si].s, cursor);
+        var slotEnd = freeSlots[si].e;
+        if(slotEnd - slotStart >= needMins){
+          var startM = slotStart;
+          var endM = startM + needMins;
+
+          // Build tiles for review
+          var tiles = [];
+          if(isRev){
+            for(var ti=0;ti<(raw.topics||raw.topicCount);ti++){
+              tiles.push({name:'Tema '+(ti+1), reviews:0, maxReviews:2, nota:''});
+            }
+          }
+
+          scheduled.push({
+            id: (isRev?'r':'s')+Date.now()+'_'+Math.random().toString(36).slice(2,5),
+            asig: raw.asig,
+            text: isRev ? 'Repaso: todos los temas' : ('Estudiar '+raw.topicCount+' tema'+(raw.topicCount!==1?'s':'')),
+            type: isRev ? 'review' : 'study',
+            color: isRev ? '#3498db' : 'var(--gd)',
+            bg: isRev ? 'rgba(52,152,219,.1)' : 'rgba(45,138,90,.1)',
+            mins: needMins,
+            startTime: fromMins(startM),
+            endTime: fromMins(endM),
+            completed: false, nota: '',
+            topicCount: raw.topicCount,
+            topicTiles: tiles,
+            minsPerTopic: raw.mpt||0
+          });
+
+          // Add break block if breakMins > 0 and fits
+          var breakEnd = endM + breakMins;
+          if(breakMins>0 && breakEnd<=slotEnd){
+            scheduled.push({
+              id:'b'+Date.now()+'_'+Math.random().toString(36).slice(2,5),
+              asig:'', text:'Descanso',
+              type:'break', color:'#95a5a6', bg:'rgba(149,165,166,.08)',
+              mins:breakMins,
+              startTime:fromMins(endM), endTime:fromMins(breakEnd),
+              completed:false, nota:'', topicCount:0, topicTiles:[]
+            });
+            cursor = breakEnd;
+          } else {
+            cursor = endM;
+          }
+
+          slotIdx = si;
+          placed = true;
+          break;
+        }
+      }
+      if(!placed){
+        // No time slot fits today — add without time (greyed out)
+        var tiles2=[];
+        if(isRev){ for(var ti2=0;ti2<(raw.topics||raw.topicCount);ti2++){ tiles2.push({name:'Tema '+(ti2+1),reviews:0,maxReviews:2,nota:''});} }
+        scheduled.push({
+          id:(isRev?'r':'s')+Date.now()+'_'+Math.random().toString(36).slice(2,5),
+          asig:raw.asig, text:(isRev?'Repaso: todos los temas':'Estudiar '+raw.topicCount+' tema'+(raw.topicCount!==1?'s':'')),
+          type:isRev?'review':'study',color:isRev?'#3498db':'var(--gd)',bg:isRev?'rgba(52,152,219,.1)':'rgba(45,138,90,.1)',
+          mins:needMins,startTime:'',endTime:'',
+          completed:false,nota:'',topicCount:raw.topicCount,topicTiles:tiles2,minsPerTopic:raw.mpt||0
+        });
+      }
+    });
+
+    if(scheduled.length) finalPlan[key] = scheduled;
+  });
+
+  // Summaries
+  var summaries = {};
+  Object.keys(finalPlan).sort().forEach(function(key){
+    var parts=[];
+    finalPlan[key].forEach(function(b){
+      if(b.type==='study') parts.push(b.topicCount+'t. '+b.asig+(b.startTime?' ('+b.startTime+')':''));
+      else if(b.type==='review') parts.push('Repaso '+b.asig+(b.startTime?' ('+b.startTime+')':''));
+    });
+    if(parts.length) summaries[key]='Hoy: '+parts.join(' + ')+'.';
+  });
+
+  var out = document.getElementById('plan-output');
+  if(!out) return;
+  if(!Object.keys(finalPlan).length){
+    out.innerHTML='<div style="color:var(--tl);font-size:13px;padding:8px;">No hay tiempo disponible para el plan. Revisa la configuración de franjas horarias.</div>';
+    return;
+  }
+
+  out._planSnapshot = {dayPlan:finalPlan, hoyStr:todayStr};
+  state.currentPlanSnapshot = JSON.parse(JSON.stringify({dayPlan:finalPlan, hoyStr:todayStr}));
+  try{ persist().catch(function(){}); }catch(e){}
+
+  planRenderDom(out, finalPlan, todayStr, summaries);
+  var acts=document.getElementById('plan-actions'); if(acts) acts.style.display='flex';
+  if(doScroll) out.scrollIntoView({behavior:'smooth',block:'nearest'});
+  planRenderGuardados();
+};
+
+/* ── Update planMakeBlock to show time slot ── */
+(function(){
+  var _origPMB = planMakeBlock;
+  planMakeBlock = function(item, key, dayPlan, container, todayStr){
+    var block = _origPMB(item, key, dayPlan, container, todayStr);
+
+    // Inject time badge into mainRow if times available
+    if(item.startTime && item.endTime){
+      var mainRow = block.querySelector('div');
+      if(mainRow){
+        var timeBadge = document.createElement('div');
+        timeBadge.style.cssText='font-size:10px;font-weight:700;color:'+(item.type==='break'?'#95a5a6':item.type==='review'?'#3498db':'var(--gd)')+';font-family:Lato,sans-serif;white-space:nowrap;margin-right:4px;flex-shrink:0;';
+        timeBadge.textContent = item.startTime+'–'+item.endTime;
+        mainRow.insertBefore(timeBadge, mainRow.firstChild);
+      }
+    }
+
+    // Style break blocks differently (smaller, no tiles)
+    if(item.type==='break'){
+      block.style.opacity='0.6';
+      block.style.padding='3px 6px';
+    }
+
+    return block;
+  };
+})();
+
+/* ── Update planAbrirPDF to show times ── */
+(function(){
+  var _origPDF = planAbrirPDF;
+  planAbrirPDF = function(dayPlan, exams, todayStr, dateLabel){
+    // Inject time into tiles HTML — handled by the already-updated function
+    // Just call the existing one which already uses startTime/endTime
+    _origPDF(dayPlan, exams, todayStr, dateLabel);
+  };
+})();
+
+/* Also update planRenderExams to call planRenderConfig first */
+(function(){
+  var _origPRE = planRenderExams;
+  planRenderExams = function(){
+    _origPRE();
+    // planRenderConfig is called separately via estSwitchTab
+  };
+})();
+
+/* ── Override planGenerar to call V2 ── */
+planGenerar = planGenerarV2;
+
 
 </script>
 </body>
