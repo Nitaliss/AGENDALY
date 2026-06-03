@@ -10730,23 +10730,7 @@ function estSwitchTab(tab){
     planRenderExams();
     setTimeout(planRenderConfig,50);
     // Restore saved plan if exists
-    setTimeout(function(){
-      var out=document.getElementById('plan-output');
-      if(!out) return;
-      // Always restore from state if we have a snapshot (DOM property may be lost)
-      if(state.currentPlanSnapshot && state.currentPlanSnapshot.dayPlan){
-        // Restore mutable dayPlan from snapshot
-        var snap=JSON.parse(JSON.stringify(state.currentPlanSnapshot));
-        var _nw=new Date(); var _tk=_nw.getFullYear()+'-'+String(_nw.getMonth()+1).padStart(2,'0')+'-'+String(_nw.getDate()).padStart(2,'0');
-        Object.keys(snap.dayPlan).forEach(function(k){if(k<_tk) delete snap.dayPlan[k];}); snap.hoyStr=_tk;
-        out._planSnapshot=snap;
-        if(Object.keys(snap.dayPlan).length){
-          planRenderDom(out,snap.dayPlan,_tk,{});
-          var acts=document.getElementById('plan-actions');
-          if(acts) acts.style.display='flex';
-        }
-      }
-    },150);
+    // planRenderExams() above already calls planGenerar() which renders the plan
   }
 }
 
@@ -14209,6 +14193,7 @@ function icsOpenFilePicker(){
 
 /* ── Constants ── */
 var _VN  = ['1ª Vuelta','2ª Vuelta','3ª Vuelta','4ª Vuelta'];
+var _VNC = ['Trabajado','Memorizado','Consolidado','Revisado'];
 var _VD  = ['Lectura, subrayado y esquemas','Memorización','Repaso y consolidación','Revisión final'];
 var _VIC = ['📖','🧠','🔁','✅'];
 var _VBG = ['rgba(37,99,235,.09)','rgba(124,58,237,.09)','rgba(5,150,105,.09)','rgba(217,119,6,.09)'];
@@ -14232,6 +14217,11 @@ function _topicMins(diff,vueltaMins,vi){
 planRenderExams = function(){
   var list=document.getElementById('plan-exams-list');
   if(!list) return;
+  // Remember which cards were open to restore state
+  var _openCards={};
+  Array.from(list.querySelectorAll('[data-exam-id]')).forEach(function(el){
+    if(el._bodyOpen) _openCards[el.getAttribute('data-exam-id')]=true;
+  });
   var todayStr=_localToday();
   var hoy=new Date(todayStr+'T12:00:00');
 
@@ -14262,6 +14252,7 @@ planRenderExams = function(){
 
     var card=document.createElement('div');
     card.style.cssText='background:var(--w);border:1.5px solid var(--bd);border-radius:12px;margin-bottom:10px;overflow:visible;';
+    card.setAttribute('data-exam-id', r.id);
 
     /* ── Header ── */
     var hdr=document.createElement('div');
@@ -14313,10 +14304,36 @@ planRenderExams = function(){
       var btn=document.createElement('button');
       btn.style.cssText='padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;cursor:pointer;font-family:Lato,sans-serif;transition:all .15s;border:1.5px solid '+(data.numVueltas===n?_VCL[0]:'var(--bd)')+';background:'+(data.numVueltas===n?_VCL[0]:'transparent')+';color:'+(data.numVueltas===n?'#fff':'var(--td)')+';';
       btn.textContent=n+'V';
-      (function(num,rid,d){ btn.onclick=function(){
+      (function(num,rid,d,vcRow,vtRow){ btn.onclick=function(e){
+        e.stopPropagation();
         d.numVueltas=num; d.vueltaMins=_DEFMINS.slice(0,num);
-        planRenderExams(); setTimeout(planGenerar.bind(null,false),50);
-      };})(n,r.id,data);
+        // Update button styles in place
+        vcRow.querySelectorAll('button').forEach(function(b2){
+          var isActive=(b2.textContent===num+'V');
+          b2.style.borderColor=isActive?_VCL[0]:'var(--bd)';
+          b2.style.background=isActive?_VCL[0]:'transparent';
+          b2.style.color=isActive?'#fff':'var(--td)';
+        });
+        // Rebuild vuelta time row
+        vtRow.innerHTML='';
+        for(var v2=0;v2<num;v2++){
+          (function(vi){
+            var cell=document.createElement('div');
+            cell.style.cssText='background:'+_VBG[vi]+';border-radius:8px;padding:6px 8px;text-align:center;';
+            var lbl=document.createElement('div');
+            lbl.style.cssText='font-size:9px;font-weight:700;color:'+_VCL[vi]+';font-family:Lato,sans-serif;margin-bottom:3px;';
+            lbl.textContent=_VN[vi];
+            var inp=document.createElement('input');
+            inp.type='number'; inp.min='10'; inp.max='180'; inp.value=d.vueltaMins[vi]||_DEFMINS[vi];
+            inp.style.cssText='width:100%;border:1px solid var(--bd);border-radius:6px;font-size:13px;font-weight:700;text-align:center;background:var(--bp);color:var(--td);padding:3px 0;';
+            (function(vi2,d2){ inp.oninput=function(){ d2.vueltaMins[vi2]=parseInt(this.value)||_DEFMINS[vi2]; clearTimeout(window._planDeb); window._planDeb=setTimeout(function(){planGenerar(false);},400); }; })(vi,d);
+            var minLbl=document.createElement('div'); minLbl.style.cssText='font-size:9px;color:var(--tl);font-family:Lato,sans-serif;margin-top:2px;'; minLbl.textContent='min/tema';
+            cell.appendChild(lbl); cell.appendChild(inp); cell.appendChild(minLbl);
+            vtRow.appendChild(cell);
+          })(v2);
+        }
+        clearTimeout(window._planDeb); window._planDeb=setTimeout(function(){planGenerar(false);},100);
+      };})(n,r.id,data,vcRow,vtRow);
       vcRow.appendChild(btn);
     });
     body.appendChild(vcRow);
@@ -14358,7 +14375,17 @@ planRenderExams = function(){
       var btn=document.createElement('button');
       btn.style.cssText='padding:3px 8px;border-radius:12px;font-size:10px;cursor:pointer;font-family:Lato,sans-serif;border:1px solid '+(data.pocosDias===opt.v?_VCL[2]:'var(--bd)')+';background:'+(data.pocosDias===opt.v?_VCL[2]:'transparent')+';color:'+(data.pocosDias===opt.v?'#fff':'var(--td)')+';';
       btn.textContent=opt.l;
-      (function(val,d){ btn.onclick=function(){ d.pocosDias=val; planRenderExams(); setTimeout(planGenerar.bind(null,false),50); }; })(opt.v,data);
+      (function(val,d,pdRow2){ btn.onclick=function(e){
+      e.stopPropagation();
+      d.pocosDias=val;
+      pdRow2.querySelectorAll('button').forEach(function(b2){
+        var isActive=(b2.textContent===opt.l);
+        b2.style.borderColor=isActive?_VCL[2]:'var(--bd)';
+        b2.style.background=isActive?_VCL[2]:'transparent';
+        b2.style.color=isActive?'#fff':'var(--td)';
+      });
+      clearTimeout(window._planDeb); window._planDeb=setTimeout(function(){planGenerar(false);},100);
+    }; })(opt.v,data,pdRow);
       pdRow.appendChild(btn);
     });
     body.appendChild(pdRow);
@@ -14420,6 +14447,10 @@ planRenderExams = function(){
     body.appendChild(topicSec);
 
     card.appendChild(hdr); card.appendChild(body); list.appendChild(card);
+    // Restore open state (or auto-open if has topics configured)
+    var wasOpen=_openCards[r.id]||(data.topics&&data.topics.some(function(t){return t.name;})&&!Object.keys(_openCards).length);
+    if(wasOpen){ body.style.display='block'; arrow.style.transform='rotate(180deg)'; card._bodyOpen=true; }
+    hdr.addEventListener('click',function(){ card._bodyOpen=!card._bodyOpen; },true);
   });
 
   planGenerar(false);
@@ -14481,58 +14512,82 @@ planGenerar = function(doScroll){
     }
   });
 
-  /* Assign tasks to days */
+  /* ── Phase-based scheduling: 1ª→2ª→3ª vuelta distributed evenly across available days ── */
   var finalPlan={};
-  function addBlock(key,b){if(!finalPlan[key])finalPlan[key]=[];finalPlan[key].push(b);}
-  var dayIdx=0; var cursor=-1; var slotIdx=0;
-  var dayKey=todayStr;
+  function _addBlock(key,b){if(!finalPlan[key])finalPlan[key]=[];finalPlan[key].push(b);}
 
-  function advanceDay(){
-    dayIdx++;
-    var d2=new Date(hoy); d2.setDate(d2.getDate()+dayIdx);
-    dayKey=_mkKey(d2); cursor=-1; slotIdx=0;
+  /* Group pending tasks by exam+vuelta */
+  var pendingTasks=tasks.filter(function(t){return !t.done;});
+  var examVueltas={};
+  pendingTasks.forEach(function(t){
+    var evk=t.examId+'_'+t.vuelta;
+    if(!examVueltas[evk]) examVueltas[evk]={examId:t.examId,asig:t.asig,accion:t.accion,
+      fechaEvento:t.fechaEvento,vuelta:t.vuelta,tasks:[]};
+    examVueltas[evk].tasks.push(t);
+  });
+
+  /* Determine available study days per exam, distribute phases */
+  function getStudyDays(fechaEvento){
+    var eDate=new Date(fechaEvento+'T12:00:00');
+    return Math.max(1, Math.ceil((eDate-hoy)/86400000)-1);
   }
 
-  function placeTask(task){
-    /* Try to fit in current day, then advance */
-    for(var tries=0;tries<60;tries++){
-      if(!window._planTimeCfg) return;
-      var slots=_getSlots(dayKey);
-      if(cursor<0&&slots.length) cursor=slots[0].s;
-      for(var si=slotIdx;si<slots.length;si++){
-        var ss=Math.max(slots[si].s,cursor);
-        var se=slots[si].e;
-        if(se-ss>=task.mins){
-          var st=ss,en2=ss+task.mins;
-          addBlock(dayKey,{id:'v'+Date.now()+'_'+Math.random().toString(36).slice(2,4),
-            examId:task.examId,asig:task.asig,accion:task.accion,fechaEvento:task.fechaEvento,
-            topicIdx:task.topicIdx,topicName:task.topicName,diff:task.diff,
-            vuelta:task.vuelta,vueltaLabel:task.vueltaLabel,
-            type:'vuelta',color:_VCL[task.vuelta],bg:_VBG[task.vuelta],
-            mins:task.mins,startTime:_fromMins(st),endTime:_fromMins(en2),
-            completed:task.done,nota:'',key:task.key});
-          var brk=(tc&&tc.breakMins)||10;
-          cursor=en2+(en2+brk<=se?brk:0); slotIdx=si;
-          return true;
-        }
-      }
-      /* Check exam hasn't passed */
-      var nextDay=new Date(hoy); nextDay.setDate(nextDay.getDate()+dayIdx+1);
-      var examD=new Date(task.fechaEvento+'T12:00:00');
-      if(nextDay>=examD){ /* place without time */ 
-        addBlock(dayKey,{id:'v'+Date.now(),examId:task.examId,asig:task.asig,accion:task.accion,
-          fechaEvento:task.fechaEvento,topicIdx:task.topicIdx,topicName:task.topicName,
-          diff:task.diff,vuelta:task.vuelta,vueltaLabel:task.vueltaLabel,
-          type:'vuelta',color:_VCL[task.vuelta],bg:_VBG[task.vuelta],
-          mins:task.mins,startTime:'',endTime:'',completed:task.done,nota:'',key:task.key});
-        return true;
-      }
-      advanceDay();
+  /* For each exam, assign phase windows */
+  var examPhases={};
+  exams.forEach(function(r){
+    var d2=_planData[r.id]||{numVueltas:3};
+    var nv=d2.numVueltas||3;
+    var sd=getStudyDays(r.fechaEvento);
+    /* Phase boundaries (cumulative proportions: 40% / 35% / 25%) */
+    var props=[0.40,0.35,0.25,0.20];
+    var boundaries=[0];
+    for(var v=0;v<nv;v++){
+      boundaries.push(boundaries[v]+Math.max(1,Math.round(sd*(props[v]||0.25))));
     }
-    return false;
-  }
+    examPhases[r.id]={boundaries:boundaries,studyDays:sd};
+  });
 
-  tasks.filter(function(t){return !t.done;}).forEach(function(t){ placeTask(t); });
+  /* Assign each exam-vuelta group to days using its phase window */
+  Object.values(examVueltas).forEach(function(group){
+    var ph=examPhases[group.examId];
+    if(!ph) return;
+    var v=group.vuelta;
+    var nv=(_planData[group.examId]||{}).numVueltas||3;
+    var phStart=ph.boundaries[v]||0;
+    var phEnd=Math.min(ph.boundaries[v+1]||ph.studyDays, ph.studyDays);
+    var phaseDays=Math.max(1, phEnd-phStart);
+    var tCount=group.tasks.length;
+    var tPerDay=Math.ceil(tCount/phaseDays);
+
+    group.tasks.forEach(function(task,tIdx){
+      /* Which day in the phase? */
+      var phDayIdx=Math.floor(tIdx/tPerDay);
+      var globalDayIdx=phStart+phDayIdx;
+      var dayDate=new Date(hoy); dayDate.setDate(dayDate.getDate()+globalDayIdx);
+      var key=_mkKey(dayDate);
+      /* Get time slots for this day and schedule within them */
+      var slots=_getSlots(key);
+      /* Find a free slot — track used time per day */
+      if(!finalPlan[key]) finalPlan[key]=[];
+      var usedMins=finalPlan[key].reduce(function(s,b){return s+(b.mins||0)+(b.type==='vuelta'?((tc&&tc.breakMins)||10):0);},0);
+      var winS=_toMins((tc&&tc.studyStart)||'16:00');
+      var startM=winS+usedMins;
+      var endM=startM+task.mins;
+      /* Check if fits within any slot */
+      var placed=false;
+      for(var si=0;si<slots.length;si++){
+        if(slots[si].s<=startM && endM<=slots[si].e){ placed=true; break; }
+        if(startM<slots[si].s){ startM=slots[si].s; endM=startM+task.mins; placed=endM<=slots[si].e; if(placed) break; }
+      }
+      _addBlock(key,{id:'v'+Date.now()+'_'+Math.random().toString(36).slice(2,4),
+        examId:task.examId,asig:task.asig,accion:task.accion,fechaEvento:task.fechaEvento,
+        topicIdx:task.topicIdx,topicName:task.topicName,diff:task.diff,
+        vuelta:task.vuelta,vueltaLabel:task.vueltaLabel,
+        type:'vuelta',color:_VCL[task.vuelta],bg:_VBG[task.vuelta],
+        mins:task.mins,startTime:placed?_fromMins(startM):'',endTime:placed?_fromMins(endM):'',
+        completed:task.done,nota:'',key:task.key});
+    });
+  });
 
   if(!Object.keys(finalPlan).length){
     out.innerHTML='<div style="color:var(--tl);font-size:13px;padding:12px;">No hay tiempo disponible. Revisa la configuración.</div>';
@@ -14819,24 +14874,25 @@ renderSeguimiento = function(){
     thN.textContent='Tema'; hrow.appendChild(thN);
     for(var v=0;v<numV;v++){
       var th=document.createElement('th');
-      th.style.cssText='width:60px;text-align:center;padding:7px 4px;font-size:10px;font-weight:700;color:'+_VCL[v]+';border-bottom:1px solid var(--bd);';
-      th.textContent=_VN[v].split(' ')[0]; hrow.appendChild(th);
+      th.style.cssText='width:70px;text-align:center;padding:6px 4px;border-bottom:1px solid var(--bd);white-space:nowrap;';
+      th.innerHTML='<div style="font-size:9px;color:'+_VCL[v]+';font-weight:700;">'+(_VIC[v]||'')+'</div><div style="font-size:8px;color:var(--tm);">'+(_VNC[v]||_VN[v])+'</div>';
+      hrow.appendChild(th);
     }
     thead.appendChild(hrow); tbl.appendChild(thead);
     var tbody=document.createElement('tbody');
     topics.forEach(function(tp,ti){
       var row=document.createElement('tr'); row.style.cssText='border-bottom:1px solid var(--bd);';
       var tdN=document.createElement('td');
-      tdN.style.cssText='padding:7px 12px;color:var(--td);font-size:12px;font-weight:500;';
+      tdN.style.cssText='padding:6px 10px;color:var(--td);font-size:12px;font-weight:500;border-right:1px solid var(--bd);';
       tdN.textContent=tp.name||('Tema '+(ti+1));
       row.appendChild(tdN);
       for(var v2=0;v2<numV;v2++){
-        var td=document.createElement('td'); td.style.cssText='text-align:center;padding:5px 4px;';
+        var td=document.createElement('td'); td.style.cssText='text-align:center;padding:4px 3px;';
         var rVal=planVD[_tvk(ti,v2)]||null;
         var cell=document.createElement('div');
         var cc=rVal?({'green':'#16a34a','orange':'#d97706','red':'#dc2626'}[rVal]||_VCL[v2]):null;
-        cell.style.cssText='width:28px;height:28px;border-radius:6px;margin:0 auto;border:2px solid '+(cc||'var(--bd)')+';background:'+(cc||'transparent')+';cursor:'+(isArch?'default':'pointer')+';transition:all .15s;';
-        if(cc){ var inner=document.createElement('div'); inner.style.cssText='width:14px;height:14px;border-radius:50%;background:#fff;margin:5px auto;'; cell.appendChild(inner); }
+        cell.style.cssText='width:32px;height:32px;border-radius:8px;margin:0 auto;border:2px solid '+(cc||'var(--bd)')+';background:'+(cc||'transparent')+';cursor:'+(isArch?'default':'pointer')+';transition:all .15s;display:flex;align-items:center;justify-content:center;';
+        if(cc){ var inner=document.createElement('div'); inner.style.cssText='width:14px;height:14px;border-radius:50%;background:#fff;'; cell.appendChild(inner); }
         if(!isArch){
           (function(tIdx,vIdx,cellEl){ cellEl.addEventListener('click',function(e){
             e.stopPropagation();
