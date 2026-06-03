@@ -2634,6 +2634,7 @@ body.on-home #sec-home { display: block !important; }
   <div style="display:flex;border-bottom:1px solid var(--bd);background:var(--w);padding:0 14px;">
     <button class="est-tab active" id="est-tab-pom" onclick="estSwitchTab('pom')">&#9201; Pomodoro</button>
     <button class="est-tab" id="est-tab-plan" onclick="estSwitchTab('plan')">&#128203; Planificador <span style="font-size:9px;background:linear-gradient(135deg,#b8860b,#daa520);color:#fff;padding:1px 5px;border-radius:8px;margin-left:2px;vertical-align:middle;">⭐</span></button>
+    <button class="est-tab" id="est-tab-seg" onclick="estSwitchTab('seg')">&#128200; Seguimiento</button>
   </div>
 
   <!-- ═══ POMODORO ═══ -->
@@ -2736,6 +2737,11 @@ body.on-home #sec-home { display: block !important; }
     </div>
   </div><!-- /est-plan -->
 
+
+  <!-- ═══ SEGUIMIENTO ═══ -->
+  <div id="est-seg" style="padding:12px 10px 32px;display:none;">
+    <div id="seg-content"></div>
+  </div>
 </div><!-- /sec-estudio -->
 
 <!-- Modal crear álbum -->
@@ -4221,7 +4227,7 @@ const buf=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(atob('dG
 return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('').slice(0,32);
 }
 const APP_KEY = 'tapunto_v1';
-let state = {records:[],contactos:[],temas:[],acciones:[],comunicados:[],notas:[],rutinas:[],sheetsUrl:'',theme:'verde',coverImageData:null,modo:'trabajo',horario:{activo:0,schedules:[{nombre:'Horario 1',slots:['8:00','9:00','10:00','11:00','12:00','13:00','14:00'],grid:{},colores:{}},{nombre:'Horario 2',slots:['8:00','9:00','10:00','11:00','12:00','13:00','14:00'],grid:{},colores:{}}]},albums:[],planesEstudio:[],currentPlanSnapshot:null};
+let state = {records:[],contactos:[],temas:[],acciones:[],comunicados:[],notas:[],rutinas:[],sheetsUrl:'',theme:'verde',coverImageData:null,modo:'trabajo',horario:{activo:0,schedules:[{nombre:'Horario 1',slots:['8:00','9:00','10:00','11:00','12:00','13:00','14:00'],grid:{},colores:{}},{nombre:'Horario 2',slots:['8:00','9:00','10:00','11:00','12:00','13:00','14:00'],grid:{},colores:{}}]},albums:[],planesEstudio:[],currentPlanSnapshot:null,seguimiento:{active:{},archived:[]}};
 var rutinasFechaActual = {}; // {id: fechaKey} fecha seleccionada por cada rutina
 let currentUser = null;
 let editingId   = null;
@@ -10714,8 +10720,11 @@ function planAbrirPDF(dayPlan, exams, todayStr, dateLabel){
 function estSwitchTab(tab){
   document.getElementById('est-tab-pom').classList.toggle('active', tab==='pom');
   document.getElementById('est-tab-plan').classList.toggle('active', tab==='plan');
+  if(document.getElementById('est-tab-seg')) document.getElementById('est-tab-seg').classList.toggle('active', tab==='seg');
   document.getElementById('est-pom').style.display = tab==='pom'?'block':'none';
   document.getElementById('est-plan').style.display = tab==='plan'?'block':'none';
+  if(document.getElementById('est-seg')) document.getElementById('est-seg').style.display = tab==='seg'?'block':'none';
+  if(tab==='seg'){ try{renderSeguimiento();}catch(e){} }
   if(tab==='plan'){
     planRenderExams();
     setTimeout(planRenderConfig,50);
@@ -12496,62 +12505,113 @@ function planMakeBlock(item, key, dayPlan, container, todayStr){
       _counter.style.cssText='font-size:10px;font-weight:700;font-family:Lato,sans-serif;flex-shrink:0;min-width:24px;text-align:right;';
 
       // Use IIFE to capture tp, _dotsEl, _counter per tile — no function declaration
-      (function(tpCapt, dotsCapt, ctrCapt, dotColorCapt){
+      (function(tpCapt, dotsCapt, ctrCapt, dotColorCapt, isStudy, tileIdx){
+        /* Tri-color for study, standard count for review */
+        var _triCycle=[null,'green','orange','red'];
+        var _triColors={green:'#16a34a',orange:'#d97706',red:'#dc2626'};
+        var _triLabels={green:'Fácil',orange:'Regular',red:'Difícil'};
+
+        function _triNext(v){ var i=_triCycle.indexOf(v||null); return _triCycle[(i+1)%4]; }
 
         function renderTileDots(){
           dotsCapt.innerHTML='';
-          for(var d=0;d<tpCapt.maxReviews;d++){
-            var _dot=document.createElement('div');
-            var _done=d<tpCapt.reviews;
-            _dot.style.cssText='width:13px;height:13px;border-radius:50%;cursor:pointer;transition:background .15s;border:1.5px solid '+(_done?dotColorCapt:'var(--bd)')+';background:'+(_done?dotColorCapt:'transparent')+';';
-            (function(di){
-              _dot.addEventListener('click',function(e){
-                e.stopPropagation();
-                tpCapt.reviews=(di<tpCapt.reviews)?di:di+1;
-                if(tpCapt.reviews>tpCapt.maxReviews) tpCapt.reviews=0;
-                renderTileDots();
-                // Auto-complete: check if ALL tiles of THIS block are done
-                var _allDone=item.topicTiles.every(function(x){return x.reviews>=x.maxReviews;});
-                if(_allDone&&item.status!=='done'){
-                  item.status='done';item.completed=true;
-                  block.style.opacity='.75';
-                  var _badge=document.getElementById('pb-done-'+item.id);
-                  if(!_badge){
-                    _badge=document.createElement('div');
-                    _badge.id='pb-done-'+item.id;
-                    _badge.style.cssText='font-size:11px;color:#27ae60;font-weight:700;font-family:Lato,sans-serif;margin-top:4px;';
-                    _badge.textContent='✅ Sesión completada';
-                    block.appendChild(_badge);
+          if(isStudy){
+            /* Study: tri-color dots — each dot = one study round */
+            if(!tpCapt.rounds) tpCapt.rounds=[];
+            var numDots=Math.max(tpCapt.rounds.length, tpCapt.maxReviews||3);
+            for(var d=0;d<numDots;d++){
+              var curVal=tpCapt.rounds[d]||null;
+              var _dot=document.createElement('div');
+              _dot.style.cssText='width:15px;height:15px;border-radius:50%;cursor:pointer;transition:all .15s;border:1.5px solid '+(curVal?_triColors[curVal]:'var(--bd)')+';background:'+(curVal?_triColors[curVal]+'33':'transparent')+';';
+              if(curVal) _dot.title=_triLabels[curVal];
+              (function(di){
+                _dot.addEventListener('click',function(e){
+                  e.stopPropagation();
+                  if(!tpCapt.rounds) tpCapt.rounds=[];
+                  while(tpCapt.rounds.length<=di) tpCapt.rounds.push(null);
+                  tpCapt.rounds[di]=_triNext(tpCapt.rounds[di]);
+                  tpCapt.reviews=tpCapt.rounds.filter(function(r){return r!==null;}).length;
+                  renderTileDots();
+                  // Update seguimiento tracking
+                  // Sync to tracking without recursion
+                  try{
+                    if(typeof seguimientoSyncFromPlan==='function'){
+                      seguimientoSyncFromPlan();
+                      // Refresh seg tab if open
+                      var _segDiv=document.getElementById('est-seg');
+                      if(_segDiv&&_segDiv.style.display!=='none') setTimeout(function(){try{renderSeguimiento();}catch(e){}},50);
+                    }
+                  }catch(ex){}
+                  // Auto-complete
+                  var _allDone=item.topicTiles.every(function(x){return (x.rounds||[]).some(function(r){return r!==null;});});
+                  if(_allDone&&item.status!=='done'){
+                    item.status='done';item.completed=true;block.style.opacity='.75';
+                    var _b=document.getElementById('pb-done-'+item.id);
+                    if(!_b){_b=document.createElement('div');_b.id='pb-done-'+item.id;_b.style.cssText='font-size:11px;color:#27ae60;font-weight:700;font-family:Lato,sans-serif;margin-top:4px;';_b.textContent='✅ Sesión completada';block.appendChild(_b);}
+                  } else if(!_allDone&&item.status==='done'){
+                    item.status='pending';item.completed=false;block.style.opacity='1';
+                    var _b2=document.getElementById('pb-done-'+item.id);if(_b2)_b2.remove();
                   }
-                } else if(!_allDone&&item.status==='done'){
-                  item.status='pending';item.completed=false;block.style.opacity='1';
-                  var _b2=document.getElementById('pb-done-'+item.id);if(_b2)_b2.remove();
-                }
-                planSaveSnap(container,dayPlan,todayStr);
-                try{planRefreshProgress(container,dayPlan);}catch(ex){}
+                  planSaveSnap(container,dayPlan,todayStr);
+                  try{planRefreshProgress(container,dayPlan);}catch(ex){}
+                });
+              })(d);
+              dotsCapt.appendChild(_dot);
+            }
+            // + button to add round
+            if(numDots<8){
+              var _addBtn=document.createElement('button');
+              _addBtn.style.cssText='width:13px;height:13px;border-radius:50%;border:1.5px dashed var(--bd);background:none;cursor:pointer;font-size:9px;color:var(--tl);padding:0;display:flex;align-items:center;justify-content:center;';
+              _addBtn.textContent='+';
+              _addBtn.addEventListener('click',function(e){
+                e.stopPropagation();
+                if(!tpCapt.rounds) tpCapt.rounds=[];
+                tpCapt.rounds.push(null); tpCapt.maxReviews=(tpCapt.rounds.length);
+                renderTileDots(); planSaveSnap(container,dayPlan,todayStr);
               });
-            })(d);
-            dotsCapt.appendChild(_dot);
+              dotsCapt.appendChild(_addBtn);
+            }
+            // Counter: X done / total, colored by last difficulty
+            var doneCount=(tpCapt.rounds||[]).filter(function(r){return r!==null;}).length;
+            ctrCapt.textContent=doneCount+'/'+numDots;
+            var lastDiff=null;
+            for(var ri=(tpCapt.rounds||[]).length-1;ri>=0;ri--){if(tpCapt.rounds[ri]){lastDiff=tpCapt.rounds[ri];break;}}
+            ctrCapt.style.color=lastDiff?_triColors[lastDiff]:'var(--tl)';
+          } else {
+            /* Review: same tri-color cycle but blue tones for completed state */
+            if(!tpCapt.rounds) tpCapt.rounds=[];
+            var numDots2=Math.max(tpCapt.rounds.length, tpCapt.maxReviews||2);
+            for(var d2=0;d2<numDots2;d2++){
+              var curVal2=tpCapt.rounds[d2]||null;
+              var _dot2=document.createElement('div');
+              /* Blue when no difficulty set, tri-color when set */
+              var _dotBorder2 = curVal2 ? _triColors[curVal2] : (d2<tpCapt.reviews ? dotColorCapt : 'var(--bd)');
+              var _dotBg2 = curVal2 ? _triColors[curVal2]+'33' : (d2<tpCapt.reviews ? dotColorCapt : 'transparent');
+              _dot2.style.cssText='width:13px;height:13px;border-radius:50%;cursor:pointer;transition:all .15s;border:1.5px solid '+_dotBorder2+';background:'+_dotBg2+';';
+              (function(di2){
+                _dot2.addEventListener('click',function(e){
+                  e.stopPropagation();
+                  if(!tpCapt.rounds) tpCapt.rounds=[];
+                  while(tpCapt.rounds.length<=di2) tpCapt.rounds.push(null);
+                  tpCapt.rounds[di2]=_triNext(tpCapt.rounds[di2]);
+                  tpCapt.reviews=Math.max(tpCapt.reviews, di2+1);
+                  renderTileDots();
+                  planSaveSnap(container,dayPlan,todayStr);
+                  try{planRefreshProgress(container,dayPlan);}catch(ex){}
+                });
+              })(d2);
+              dotsCapt.appendChild(_dot2);
+            }
+            var doneR=(tpCapt.rounds||[]).filter(function(r){return r!==null;}).length;
+            ctrCapt.textContent=doneR+'/'+numDots2;
+            var lastR=null;
+            for(var ri3=(tpCapt.rounds||[]).length-1;ri3>=0;ri3--){if(tpCapt.rounds[ri3]){lastR=tpCapt.rounds[ri3];break;}}
+            ctrCapt.style.color=lastR?_triColors[lastR]:doneR?dotColorCapt:'var(--tl)';
           }
-          if(tpCapt.maxReviews<10){
-            var _addBtn=document.createElement('button');
-            _addBtn.style.cssText='width:14px;height:14px;border-radius:50%;border:1.5px dashed var(--bd);background:none;cursor:pointer;font-size:9px;color:var(--tl);padding:0;display:flex;align-items:center;justify-content:center;';
-            _addBtn.innerHTML='+';
-            _addBtn.addEventListener('click',function(e){
-              e.stopPropagation();
-              tpCapt.maxReviews++;
-              renderTileDots();
-              planSaveSnap(container,dayPlan,todayStr);
-            });
-            dotsCapt.appendChild(_addBtn);
-          }
-          var _pct=tpCapt.maxReviews>0?tpCapt.reviews/tpCapt.maxReviews:0;
-          ctrCapt.textContent=tpCapt.reviews+'/'+tpCapt.maxReviews;
-          ctrCapt.style.color=_pct>=1?dotColorCapt:_pct>=0.5?'#e67e22':'var(--tl)';
         }
         renderTileDots();
 
-      })(tp, _dotsEl, _counter, _dotColorVal);
+      })(tp, _dotsEl, _counter, _dotColorVal, (item.type==='study'), ti);
 
       _topRow.appendChild(_dotsEl);
       _topRow.appendChild(_counter);
@@ -13082,7 +13142,7 @@ function planShowRating(){/* removed */}
   var fab=document.createElement('button');
   fab.id='scroll-top-btn';
   fab.innerHTML='&#8679;';
-  fab.setAttribute('style','position:fixed;bottom:72px;right:12px;width:36px;height:36px;border-radius:50%;background:rgba(45,80,22,.85);color:#fff;border:1.5px solid rgba(45,80,22,.4);font-size:18px;cursor:pointer;box-shadow:0 2px 6px rgba(0,0,0,.2);z-index:499;display:none;align-items:center;justify-content:center;line-height:1;');
+  fab.setAttribute('style','position:fixed;bottom:80px;right:12px;width:40px;height:40px;border-radius:50%;background:var(--gd);color:#fff;border:3px solid #fff;box-shadow:0 4px 14px rgba(45,80,22,.5);font-size:20px;cursor:pointer;box-shadow:0 2px 6px rgba(0,0,0,.2);z-index:499;display:none;align-items:center;justify-content:center;line-height:1;');
   fab.onclick=function(){window.scrollTo({top:0,behavior:'smooth'});};
   document.body.appendChild(fab);
   window.addEventListener('scroll',function(){fab.style.display=window.scrollY>200?'flex':'none';},{passive:true});
@@ -13599,6 +13659,301 @@ planGenerarV2 = planGenerar;
 
 <!-- FAB fixed centered above nav -->
 <button class="bnav-fab" onclick="irSeccion('nuevo')" title="Nueva tarea" aria-label="Nueva tarea">&#43;</button>
+
+
+
+<script>
+
+/* ═══ TAPUNTO SEGUIMIENTO V2 — CLEAN IMPLEMENTATION ═══ */
+
+/* Difficulty constants */
+var _DC=[null,'green','orange','red'];
+var _DCol={green:'#16a34a',orange:'#d97706',red:'#dc2626'};
+var _DBg={green:'rgba(22,163,74,.25)',orange:'rgba(217,119,6,.25)',red:'rgba(220,38,38,.22)'};
+var _DLbl={green:'Fácil',orange:'Regular',red:'Difícil'};
+function _dNext(v){var i=_DC.indexOf(v||null);return _DC[(i+1)%4];}
+
+/* ── Sync plan tiles → seguimiento state ── */
+function seguimientoSyncFromPlan(){
+  if(!state.seguimiento) state.seguimiento={active:{},archived:[]};
+  if(!state.currentPlanSnapshot||!state.currentPlanSnapshot.dayPlan) return;
+  var dp=state.currentPlanSnapshot.dayPlan;
+  Object.values(dp).forEach(function(dayArr){
+    dayArr.forEach(function(b){
+      if(b.type!=='study'||!b.topicTiles||!b.topicTiles.length) return;
+      var examRec=(state.records||[]).find(function(r){return r.tema===b.asig&&!r.archivado&&r.fechaEvento;});
+      if(!examRec) return;
+      var key=examRec.id||b.asig;
+      if(!state.seguimiento.active[key]){
+        state.seguimiento.active[key]={tema:examRec.tema,accion:examRec.accion||'',fechaEvento:examRec.fechaEvento,topics:[]};
+      }
+      var entry=state.seguimiento.active[key];
+      b.topicTiles.forEach(function(tp,ti){
+        while(entry.topics.length<=ti) entry.topics.push({name:'',rounds:[]});
+        if(tp.name&&tp.name.trim()) entry.topics[ti].name=tp.name;
+        // Smart merge rounds (Option A): keep existing, update with new data
+        var newRounds=tp.rounds||[];
+        var curRounds=entry.topics[ti].rounds||[];
+        for(var ri=0;ri<newRounds.length;ri++){
+          if(newRounds[ri]!==null&&newRounds[ri]!==undefined){
+            while(curRounds.length<=ri) curRounds.push(null);
+            curRounds[ri]=newRounds[ri];
+          }
+        }
+        entry.topics[ti].rounds=curRounds;
+      });
+    });
+  });
+  try{persist().catch(function(){});}catch(e){}
+  // NOTE: renderSeguimiento is NOT called here to avoid recursion
+  // The caller (estSwitchTab or dot click) handles the refresh
+}
+
+/* ── Archive (Option C) ── */
+function seguimientoArchivar(key){
+  if(!state.seguimiento||!state.seguimiento.active||!state.seguimiento.active[key]) return;
+  var entry=JSON.parse(JSON.stringify(state.seguimiento.active[key]));
+  entry.archivedAt=new Date().toISOString();
+  if(!state.seguimiento.archived) state.seguimiento.archived=[];
+  state.seguimiento.archived.unshift(entry);
+  try{persist().catch(function(){});}catch(e){}
+  renderSeguimiento();
+}
+
+/* ── Render seguimiento tab ── */
+function renderSeguimiento(){
+  var cont=document.getElementById('seg-content');
+  if(!cont) return;
+  seguimientoSyncFromPlan();
+
+  var now=new Date();
+  var todayStr=now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0')+'-'+String(now.getDate()).padStart(2,'0');
+  var hoy=new Date(todayStr+'T12:00:00');
+
+  cont.innerHTML='';
+
+  var active=state.seguimiento&&state.seguimiento.active?state.seguimiento.active:{};
+  var archived=state.seguimiento&&state.seguimiento.archived?state.seguimiento.archived:[];
+  var activeKeys=Object.keys(active).sort(function(a,b){
+    return (active[a].fechaEvento||'').localeCompare(active[b].fechaEvento||'');
+  });
+
+  if(!activeKeys.length&&!archived.length){
+    cont.innerHTML='<div style="color:var(--tl);font-size:13px;padding:20px;text-align:center;font-family:Lato,sans-serif;line-height:1.6;">Genera el plan de estudio y marca las bolitas de colores en cada tema.<br><br>🟢 Fácil &nbsp; 🟠 Medio &nbsp; 🔴 Difícil</div>';
+    return;
+  }
+
+  function buildExamTable(entry, key, isArchived){
+    if(!entry||!entry.topics||!entry.topics.length) return null;
+    var topics=entry.topics;
+    var examDate=entry.fechaEvento?new Date(entry.fechaEvento+'T12:00:00'):null;
+    var diff=examDate?Math.ceil((examDate-hoy)/86400000):null;
+    var diffLabel=diff===null?'':(diff<0?'Vencido':diff===0?'HOY':diff===1?'Mañana':diff+'d');
+    var diffColor=diff===null?'var(--tl)':(diff<0||diff===0?'#c0392b':diff<=3?'#e67e22':'#27ae60');
+
+    // Max existing rounds + default cols
+    var maxR=3; // default 3 columns
+    topics.forEach(function(t){ if((t.rounds||[]).length>maxR) maxR=t.rounds.length; });
+
+    // % studied = topics with ≥1 non-null round
+    var studied=topics.filter(function(t){return (t.rounds||[]).some(function(r){return r;});}).length;
+    var pct=topics.length>0?Math.round(studied/topics.length*100):0;
+
+    /* Wrapper */
+    var wrap=document.createElement('div');
+    wrap.style.cssText='border-radius:12px;border:1.5px solid var(--bd);overflow:hidden;margin-bottom:16px;'+(isArchived?'opacity:.7;':'');
+
+    /* Header */
+    var hdr=document.createElement('div');
+    hdr.style.cssText='display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:var(--bl);border-bottom:1px solid var(--bd);gap:8px;flex-wrap:wrap;';
+
+    var titleDiv=document.createElement('div');
+    titleDiv.style.cssText='flex:1;min-width:0;';
+    var t1=document.createElement('div');
+    t1.style.cssText='font-size:13px;font-weight:800;color:var(--td);font-family:Lato,sans-serif;';
+    t1.textContent=(entry.accion||'Examen')+' · '+(entry.tema||'');
+    var t2=document.createElement('div');
+    t2.style.cssText='font-size:10px;color:'+diffColor+';font-family:Lato,sans-serif;margin-top:2px;';
+    t2.textContent=(examDate?examDate.toLocaleDateString('es',{day:'2-digit',month:'long',year:'numeric'}):'')+
+      (diffLabel?' · '+diffLabel:'')+(isArchived?' · Archivado '+new Date(entry.archivedAt).toLocaleDateString('es',{day:'2-digit',month:'short'}):'');
+    titleDiv.appendChild(t1); titleDiv.appendChild(t2);
+
+    var rightDiv=document.createElement('div');
+    rightDiv.style.cssText='display:flex;align-items:center;gap:8px;flex-shrink:0;';
+
+    // % badge
+    var pctEl=document.createElement('div');
+    pctEl.id='seg-pct-'+key.replace(/[^a-z0-9]/gi,'_');
+    pctEl.style.cssText='padding:4px 12px;border-radius:20px;font-size:13px;font-weight:800;font-family:Lato,sans-serif;white-space:nowrap;border:2px solid '+(pct>=80?'#27ae60':pct>=50?'#e67e22':'var(--bd)')+';color:'+(pct>=80?'#27ae60':pct>=50?'#e67e22':'var(--td)')+';';
+    pctEl.textContent=pct+'%';
+    rightDiv.appendChild(pctEl);
+
+    if(!isArchived){
+      var archBtn=document.createElement('button');
+      archBtn.style.cssText='padding:5px 10px;background:none;border:1px solid var(--bd);border-radius:8px;font-size:11px;color:var(--tl);cursor:pointer;font-family:Lato,sans-serif;white-space:nowrap;';
+      archBtn.textContent='📦 Archivar';
+      (function(k){archBtn.onclick=function(e){e.stopPropagation();seguimientoArchivar(k);};})(key);
+      rightDiv.appendChild(archBtn);
+    }
+
+    hdr.appendChild(titleDiv); hdr.appendChild(rightDiv);
+    wrap.appendChild(hdr);
+
+    /* Table */
+    var tbl=document.createElement('table');
+    tbl.style.cssText='width:100%;border-collapse:collapse;font-family:Lato,sans-serif;';
+
+    // Column header row
+    var thead=document.createElement('thead');
+    var hrow=document.createElement('tr');
+    hrow.style.cssText='background:var(--bl);';
+
+    var thN=document.createElement('th');
+    thN.style.cssText='text-align:left;padding:7px 12px;font-size:10px;font-weight:700;color:var(--tm);text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid var(--bd);';
+    thN.textContent='Tema';
+    hrow.appendChild(thN);
+
+    for(var ci=0;ci<maxR;ci++){
+      var th=document.createElement('th');
+      th.style.cssText='width:40px;text-align:center;padding:7px 4px;font-size:11px;font-weight:700;color:var(--tm);border-bottom:1px solid var(--bd);';
+      th.textContent=(ci+1);
+      hrow.appendChild(th);
+    }
+    // + column header
+    if(!isArchived){
+      var thAdd=document.createElement('th');
+      thAdd.style.cssText='width:32px;text-align:center;padding:7px 4px;border-bottom:1px solid var(--bd);';
+      var addColBtn=document.createElement('button');
+      addColBtn.style.cssText='width:22px;height:22px;border-radius:50%;border:1.5px dashed var(--bd);background:none;cursor:pointer;font-size:12px;color:var(--tl);padding:0;';
+      addColBtn.textContent='+';
+      (function(k,e,wr){ addColBtn.onclick=function(ev){
+        ev.stopPropagation(); maxR++;
+        // Rebuild table
+        wr.remove(); cont.insertBefore(buildExamTable(e,k,false), cont.querySelector('.seg-arch-section')||null);
+      };})(key, entry, wrap);
+      thAdd.appendChild(addColBtn); hrow.appendChild(thAdd);
+    }
+    thead.appendChild(hrow); tbl.appendChild(thead);
+
+    // Body rows
+    var tbody=document.createElement('tbody');
+    topics.forEach(function(tp,ti){
+      var row=document.createElement('tr');
+      row.style.cssText='border-bottom:1px solid '+'var(--bd)'+';';
+
+      var tdName=document.createElement('td');
+      tdName.style.cssText='padding:8px 12px;color:var(--td);font-size:12px;font-weight:500;';
+      tdName.textContent=tp.name||('Tema '+(ti+1));
+      row.appendChild(tdName);
+
+      for(var ci2=0;ci2<maxR;ci2++){
+        var td=document.createElement('td');
+        td.style.cssText='text-align:center;padding:5px 4px;width:40px;';
+
+        var val=(tp.rounds&&tp.rounds[ci2])?tp.rounds[ci2]:null;
+        var cell=document.createElement('div');
+        cell.style.cssText='width:26px;height:26px;border-radius:6px;margin:0 auto;cursor:'+(isArchived?'default':'pointer')+';transition:all .15s;border:1.5px solid '+(val?_DCol[val]:'var(--bd)')+';background:'+(val?_DBg[val]:'transparent')+';display:flex;align-items:center;justify-content:center;';
+        if(val){
+          var dot2=document.createElement('div');
+          dot2.style.cssText='width:12px;height:12px;border-radius:50%;background:'+_DCol[val]+';';
+          cell.appendChild(dot2);
+          cell.title=_DLbl[val];
+        }
+        if(!isArchived){
+          (function(tpC,ci3,cellEl,rowEl,tIdx){
+            cellEl.addEventListener('click',function(e){
+              e.stopPropagation();
+              if(!tpC.rounds) tpC.rounds=[];
+              while(tpC.rounds.length<=ci3) tpC.rounds.push(null);
+              tpC.rounds[ci3]=_dNext(tpC.rounds[ci3]);
+              // Also sync back to plan tiles
+              seguimientoSyncToTile(key,tIdx,ci3,tpC.rounds[ci3]);
+              renderSeguimiento();
+            });
+          })(tp,ci2,cell,row,ti);
+        }
+        td.appendChild(cell); row.appendChild(td);
+      }
+      if(!isArchived) row.appendChild(document.createElement('td')); // empty + column cell
+      tbody.appendChild(row);
+    });
+    tbl.appendChild(tbody);
+    wrap.appendChild(tbl);
+
+    // Legend footer
+    var leg=document.createElement('div');
+    leg.style.cssText='display:flex;gap:14px;padding:7px 12px;background:var(--bl);border-top:1px solid var(--bd);';
+    ['green','orange','red'].forEach(function(d){
+      var s=document.createElement('span');
+      s.style.cssText='font-size:10px;color:'+_DCol[d]+';font-weight:700;display:flex;align-items:center;gap:3px;font-family:Lato,sans-serif;';
+      s.innerHTML='<span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:'+_DCol[d]+';"></span>'+_DLbl[d];
+      leg.appendChild(s);
+    });
+    if(isArchived){
+      var delBtn=document.createElement('button');
+      delBtn.style.cssText='margin-left:auto;padding:2px 8px;background:none;border:1px solid #c0392b;border-radius:6px;color:#c0392b;font-size:10px;cursor:pointer;';
+      delBtn.textContent='Eliminar';
+      (function(idx){ delBtn.onclick=function(){ state.seguimiento.archived.splice(idx,1); try{persist().catch(function(){});}catch(e){} renderSeguimiento(); }; })(archived.indexOf(entry));
+      leg.appendChild(delBtn);
+    }
+    wrap.appendChild(leg);
+    return wrap;
+  }
+
+  // Active exams
+  if(activeKeys.length){
+    var secTitle=document.createElement('div');
+    secTitle.style.cssText='font-size:11px;font-weight:700;color:var(--tm);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;font-family:Lato,sans-serif;';
+    secTitle.textContent='📊 En curso';
+    cont.appendChild(secTitle);
+    activeKeys.forEach(function(k){
+      var tbl=buildExamTable(active[k],k,false);
+      if(tbl) cont.appendChild(tbl);
+    });
+  }
+
+  // Archived
+  if(archived.length){
+    var archSec=document.createElement('div');
+    archSec.className='seg-arch-section';
+    var archTitle=document.createElement('div');
+    archTitle.style.cssText='font-size:11px;font-weight:700;color:var(--tm);text-transform:uppercase;letter-spacing:.5px;margin:16px 0 8px;font-family:Lato,sans-serif;';
+    archTitle.textContent='📦 Archivados';
+    archSec.appendChild(archTitle);
+    archived.forEach(function(entry,idx){
+      var tbl=buildExamTable(entry,'archived_'+idx,true);
+      if(tbl) archSec.appendChild(tbl);
+    });
+    cont.appendChild(archSec);
+  }
+}
+
+/* Sync a table cell change back to the plan tile */
+function seguimientoSyncToTile(examKey, topicIdx, roundIdx, val){
+  if(!state.seguimiento||!state.seguimiento.active||!state.seguimiento.active[examKey]) return;
+  var entry=state.seguimiento.active[examKey];
+  if(!entry.topics[topicIdx]) return;
+  if(!entry.topics[topicIdx].rounds) entry.topics[topicIdx].rounds=[];
+  while(entry.topics[topicIdx].rounds.length<=roundIdx) entry.topics[topicIdx].rounds.push(null);
+  entry.topics[topicIdx].rounds[roundIdx]=val;
+  // Update plan snapshot tiles
+  if(state.currentPlanSnapshot&&state.currentPlanSnapshot.dayPlan){
+    Object.values(state.currentPlanSnapshot.dayPlan).forEach(function(dayArr){
+      dayArr.forEach(function(b){
+        if(b.type!=='study'||b.asig!==entry.tema||!b.topicTiles) return;
+        if(b.topicTiles[topicIdx]){
+          if(!b.topicTiles[topicIdx].rounds) b.topicTiles[topicIdx].rounds=[];
+          while(b.topicTiles[topicIdx].rounds.length<=roundIdx) b.topicTiles[topicIdx].rounds.push(null);
+          b.topicTiles[topicIdx].rounds[roundIdx]=val;
+        }
+      });
+    });
+    // Persist updated snapshot
+    state.seguimiento.active[examKey]=entry;
+    try{persist().catch(function(){});}catch(e){}
+  }
+}
+</script>
 </body>
 </html>
 <script>
