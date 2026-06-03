@@ -2137,12 +2137,12 @@ body.on-home #sec-home { display: block !important; }
 .bnav-btn:active{transform:scale(.92);}
 .bnav-ico{font-size:20px;line-height:1;}
 .bnav-lbl{font-size:9px;font-weight:700;font-family:Lato,sans-serif;letter-spacing:.3px;}
-.bnav-fab{width:60px;height:60px;border-radius:50%;background:var(--gd);border:3px solid #fff;color:#fff;font-size:30px;font-weight:900;cursor:pointer;box-shadow:0 4px 14px rgba(45,80,22,.55);display:flex;align-items:center;justify-content:center;transition:transform .12s;position:fixed;bottom:14px;left:50%;transform:translateX(-50%);z-index:600;}.bnav-fab:active{transform:translateX(-50%) scale(.9);}
-.bnav-fab:active{transform:scale(.88);}
+.bnav-fab{width:58px;height:58px;border-radius:50%;background:var(--gd);border:3px solid #fff;color:#fff;font-size:28px;font-weight:900;cursor:pointer;box-shadow:0 4px 14px rgba(45,80,22,.5);display:flex;align-items:center;justify-content:center;transition:transform .12s;flex-shrink:0;position:fixed;bottom:16px;left:50%;transform:translateX(-50%);z-index:510;}.bnav-fab:active{transform:translateX(-50%) scale(.92);box-shadow:0 2px 8px rgba(45,80,22,.3);}
+
 .section{padding-bottom:68px !important;}
 
 /* ── BOTTOM NAV ── */
-.bottom-nav{position:fixed;bottom:0;left:0;right:0;height:60px;background:var(--w);border-top:1.5px solid var(--bd);display:flex;align-items:center;z-index:500;box-shadow:0 -2px 12px rgba(0,0,0,.08);padding:0 2px;overflow:visible;}
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;height:60px;background:var(--w);border-top:1.5px solid var(--bd);display:flex;align-items:center;z-index:500;box-shadow:0 -2px 12px rgba(0,0,0,.08);padding:0 4px;overflow:visible;}
 
 .bnav-btn.active{background:rgba(45,138,90,.08);}
 #bnav-home.active{border-color:#2D8A5A;color:#2D8A5A;background:rgba(45,138,90,.07);}
@@ -9981,8 +9981,14 @@ function renderAlertas(){
     .sort(function(a,b){return a.diff-b.diff;})
     .slice(0,14);
   panel.innerHTML='';
+  if(panelH){ panelH.innerHTML=''; }  // ← CRITICAL: clear before re-populating
   var hdr=document.createElement('div');hdr.className='h-alert-hdr';hdr.textContent='Próximos';panel.appendChild(hdr);
-  if(!eventos.length){var em=document.createElement('div');em.className='h-alert-empty';em.textContent='Sin eventos';panel.appendChild(em);return;}
+  if(panelH){ var hdr2=document.createElement('div');hdr2.className='h-alert-hdr';hdr2.textContent='Próximos';panelH.appendChild(hdr2); }
+  if(!eventos.length){
+    var em=document.createElement('div');em.className='h-alert-empty';em.textContent='Sin eventos';panel.appendChild(em);
+    if(panelH){ var em2=document.createElement('div');em2.className='h-alert-empty';em2.textContent='Sin eventos';panelH.appendChild(em2); }
+    return;
+  }
   var sch=getSch();
   eventos.forEach(function(ev){
     var diff=ev.diff;
@@ -12272,17 +12278,107 @@ function planRenderDom(container, dayPlan, todayStr, dailySummaries){
       dayCard.appendChild(sumEl);
     }
 
-    // Blocks container — fixed min-height prevents resize on dot click
+    // Blocks container — PDF-style layout
     var blocksWrap=document.createElement('div');
-    blocksWrap.style.cssText='padding:6px 8px;display:flex;flex-direction:column;gap:5px;';
+    blocksWrap.style.cssText='padding:4px 0 6px 0;display:flex;flex-direction:column;';
 
     dayArr.forEach(function(item){
-      var block=planMakeBlock(item,key,dayPlan,container,todayStr);
-      // Lock width/height to prevent resize
-      block.style.minWidth='0';
-      block.style.width='100%';
-      block.style.boxSizing='border-box';
-      blocksWrap.appendChild(block);
+      if(item.type==='break'){
+        // Break: thin divider with time and label
+        var brkRow=document.createElement('div');
+        brkRow.style.cssText='display:flex;align-items:center;gap:8px;padding:3px 12px;';
+        var brkTime=document.createElement('span');
+        brkTime.style.cssText='font-size:10px;font-weight:700;color:#95a5a6;font-family:Lato,sans-serif;min-width:90px;';
+        brkTime.textContent=(item.startTime||'')+' – '+(item.endTime||'');
+        var brkLine=document.createElement('div');
+        brkLine.style.cssText='flex:1;height:1px;background:var(--bd);';
+        var brkLbl=document.createElement('span');
+        brkLbl.style.cssText='font-size:10px;color:#95a5a6;font-family:Lato,sans-serif;white-space:nowrap;';
+        brkLbl.textContent='⏸ Descanso · '+(item.mins||10)+'min';
+        brkRow.appendChild(brkTime); brkRow.appendChild(brkLine); brkRow.appendChild(brkLbl);
+        blocksWrap.appendChild(brkRow);
+        return;
+      }
+
+      // Study/Review/Practica block: time label prominent + content below
+      var blockOuter=document.createElement('div');
+      blockOuter.style.cssText='padding:0;width:100%;box-sizing:border-box;';
+
+      // Time + type header row
+      var blockHdr=document.createElement('div');
+      var isRev=item.type==='review', isPrac=item.type==='practica';
+      var hdrColor=isRev?'#3498db':isPrac?'#e67e22':'var(--gd)';
+      var hdrBg=isRev?'rgba(52,152,219,.08)':isPrac?'rgba(230,126,34,.08)':'rgba(45,138,90,.08)';
+      var typeIcon=isRev?'🔁':isPrac?'🏋':'📖';
+      var typeLabel=isRev?'REPASO':isPrac?'PRÁCTICA':'ESTUDIO';
+      blockHdr.style.cssText='display:flex;align-items:center;gap:8px;padding:7px 12px;background:'+hdrBg+';border-left:3px solid '+hdrColor+';';
+
+      var timeSpan=document.createElement('span');
+      timeSpan.style.cssText='font-size:11px;font-weight:700;color:'+hdrColor+';font-family:Lato,sans-serif;min-width:90px;flex-shrink:0;';
+      timeSpan.textContent=(item.startTime&&item.endTime)?(item.startTime+' – '+item.endTime):'';
+
+      var typeBadge=document.createElement('span');
+      typeBadge.style.cssText='font-size:10px;font-weight:800;color:'+hdrColor+';font-family:Lato,sans-serif;text-transform:uppercase;letter-spacing:.5px;flex-shrink:0;';
+      typeBadge.textContent=typeIcon+' '+typeLabel;
+
+      var asigSpan=document.createElement('span');
+      asigSpan.style.cssText='font-size:12px;font-weight:700;color:var(--td);font-family:Lato,sans-serif;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;';
+      asigSpan.textContent='· '+(item.asig||'');
+
+      var minsSpan=document.createElement('span');
+      minsSpan.style.cssText='font-size:10px;color:var(--tl);font-family:Lato,sans-serif;flex-shrink:0;';
+      minsSpan.textContent=(item.mins||0)+'min';
+
+      blockHdr.appendChild(timeSpan);
+      blockHdr.appendChild(typeBadge);
+      blockHdr.appendChild(asigSpan);
+      blockHdr.appendChild(minsSpan);
+      blockOuter.appendChild(blockHdr);
+
+      // Topic tiles + actions (from planMakeBlock)
+      var innerBlock=planMakeBlock(item,key,dayPlan,container,todayStr);
+      // Extract only the tiles and action parts (skip the main row since we have blockHdr)
+      // planMakeBlock returns a div with: mainRow + tiles + doneBadge
+      // We want tiles and actions only
+      var tileWrap=innerBlock.querySelector('.plan-topic-tiles');
+      var tilesDiv=innerBlock.querySelector('div[style*="_tilesWrap"]');
+      // Get children after mainRow
+      var children=Array.from(innerBlock.children);
+      var mainRowFound=false;
+      var contentDiv=document.createElement('div');
+      contentDiv.style.cssText='padding:0 12px 8px 12px;background:var(--w);';
+      children.forEach(function(child){
+        // Skip the mainRow (first div child with display:flex)
+        if(!mainRowFound && child.style && child.style.cssText && child.style.cssText.indexOf('flex')>-1){
+          mainRowFound=true;
+          // Extract actions (edit/delete buttons) from mainRow
+          var actBtns=child.querySelectorAll('button');
+          if(actBtns.length){
+            var actRow=document.createElement('div');
+            actRow.style.cssText='display:flex;justify-content:flex-end;gap:4px;padding:4px 0 0;';
+            actBtns.forEach(function(btn){ actRow.appendChild(btn.cloneNode(true)); });
+            contentDiv.appendChild(actRow);
+          }
+          return;
+        }
+        contentDiv.appendChild(child);
+      });
+      if(contentDiv.children.length) blockOuter.appendChild(contentDiv);
+
+      // Nota textarea (from innerBlock)
+      var nota=innerBlock.querySelector('textarea');
+      if(nota){
+        var notaWrap=document.createElement('div');
+        notaWrap.style.cssText='padding:0 12px 8px;';
+        notaWrap.appendChild(nota);
+        blockOuter.appendChild(notaWrap);
+      }
+
+      // status/done state mirroring
+      blockOuter._planItem = item;
+      blockOuter.id = 'pb-outer-'+item.id;
+
+      blocksWrap.appendChild(blockOuter);
     });
     dayCard.appendChild(blocksWrap);
     planWrap.appendChild(dayCard);
@@ -12613,7 +12709,7 @@ switchTab=function(tab,btn){_origSwitchTabA(tab,btn);if(tab==='albumes')renderAl
   <button class="bnav-btn" id="bnav-tareas" onclick="irSeccion('registros')">
     <span class="bnav-ico">&#128203;</span><span class="bnav-lbl">Tareas</span>
   </button>
-  <div style="flex:1;"></div>
+  <div style="width:58px;height:58px;flex-shrink:0;" aria-hidden="true"></div>
   <button class="bnav-btn" id="bnav-agenda" onclick="irSeccion('calendario')">
     <span class="bnav-ico">&#128197;</span><span class="bnav-lbl">Agenda</span>
   </button>
@@ -13141,9 +13237,6 @@ function pomSetSound(type){
 })();
 </script>
 
-<!-- FAB + centered above nav -->
-<button class="bnav-fab" onclick="irSeccion('nuevo')" title="Nueva tarea">&#43;</button>
-
 
 <script>
 /* ═══════════════════════════════════════════════════════════
@@ -13204,7 +13297,26 @@ function planRenderConfig(){
       +'</div>';
   }).join('');
 
-  cfgDiv.innerHTML='<div style="background:var(--bl);border:1px solid var(--bd);border-radius:10px;padding:12px;margin-bottom:10px;">'
+  // Build schedule selector if multiple schedules exist
+  var schedHtml = '';
+  if(state.horario && state.horario.schedules && state.horario.schedules.length > 1){
+    schedHtml = '<div style="background:var(--bl);border:1px solid var(--bd);border-radius:10px;padding:10px 12px;margin-bottom:10px;">'
+      +'<div style="font-size:11px;font-weight:700;color:var(--tm);margin-bottom:6px;font-family:Lato,sans-serif;">📅 HORARIO A BLOQUEAR</div>'
+      +'<select onchange="if(!_planCfg)_planCfg={};_planCfg.scheduleIdx=parseInt(this.value)||0;planGenerar(false);" style="width:100%;padding:7px 10px;border:1.5px solid var(--bd);border-radius:8px;font-size:13px;font-family:Lato,sans-serif;background:var(--bp);color:var(--td);">'
+      +state.horario.schedules.map(function(sch,idx){
+        return '<option value="'+idx+'"'+(((_planCfg&&_planCfg.scheduleIdx)||0)===idx?' selected':'')+'>'+
+          (sch.nombre||('Horario '+(idx+1)))+'</option>';
+      }).join('')
+      +'</select>'
+      +'<div style="font-size:10px;color:var(--tl);margin-top:4px;">Las horas de clase se bloquean automáticamente en el plan.</div>'
+      +'</div>';
+  } else if(state.horario && state.horario.schedules && state.horario.schedules.length===1){
+    schedHtml = '<div style="font-size:10px;color:var(--tl);padding:4px 0 8px;font-family:Lato,sans-serif;">📅 Horario de clase bloqueado automáticamente.</div>';
+  } else {
+    schedHtml = '<div style="font-size:10px;color:var(--tl);padding:4px 0 8px;font-family:Lato,sans-serif;">⚠️ Sin horario configurado — ve a Inicio → Mi Horario para añadir clases.</div>';
+  }
+
+  cfgDiv.innerHTML=schedHtml+'<div style="background:var(--bl);border:1px solid var(--bd);border-radius:10px;padding:12px;margin-bottom:10px;">'
     +'<div style="font-size:12px;font-weight:700;color:var(--td);margin-bottom:10px;font-family:Lato,sans-serif;">⏰ Franjas horarias</div>'
     +tRow('📚 Estudio','studyStart','studyEnd')
     +tRow('🍽 Comida','lunchStart','lunchEnd')
@@ -13372,14 +13484,20 @@ planGenerar = function(doScroll){
     var mpt=Math.round(revMins/Math.max(1,data.topics));
     var pracMins=(data.hasPractica&&data.practicaPct>0)?Math.round(sessionMins*(data.practicaPct/100)):0;
 
-    // Study days
+    // Study days (ALL days including weekends)
     var rem=data.topics;
-    for(var di=0;di<studyDays&&rem>0;di++){
+    for(var di=0;di<studyDays;di++){
       var day=new Date(hoy); day.setDate(day.getDate()+di);
       var key=_mkKey(day);
-      var t=Math.min(tpd,rem); rem-=t;
-      addRaw(key,{_t:'study',asig:r.tema,topicCount:t,mins:sessionMins-pracMins,r:r});
-      if(pracMins>=5) addRaw(key,{_t:'practica',asig:r.tema,mins:pracMins,r:r});
+      if(rem>0){
+        // Still have topics to study
+        var t=Math.min(tpd,rem); rem-=t;
+        addRaw(key,{_t:'study',asig:r.tema,topicCount:t,mins:sessionMins-pracMins,r:r});
+        if(pracMins>=5) addRaw(key,{_t:'practica',asig:r.tema,mins:pracMins,r:r});
+      } else {
+        // Topics done — add light review session to reinforce
+        addRaw(key,{_t:'study',asig:r.tema,topicCount:1,mins:Math.round(sessionMins*0.5),r:r,_label:'Repaso ligero'});
+      }
     }
     // Review days: last 2 days before exam
     var placed=false;
@@ -13416,7 +13534,7 @@ planGenerar = function(doScroll){
           var btype=isRev?'review':isPrac?'practica':'study';
           var bcolor=isRev?'#3498db':isPrac?'#e67e22':'var(--gd)';
           var bbg=isRev?'rgba(52,152,219,.1)':isPrac?'rgba(230,126,34,.1)':'rgba(45,138,90,.1)';
-          var btext=isRev?'Repaso: todos los temas':isPrac?'Ejercicios prácticos':'Estudiar '+raw.topicCount+' tema'+(raw.topicCount!==1?'s':'');
+          var btext=isRev?'Repaso: todos los temas':isPrac?'Ejercicios prácticos':(raw._label||('Estudiar '+raw.topicCount+' tema'+(raw.topicCount!==1?'s':'')));
           scheduled.push({id:btype[0]+Date.now()+'_'+Math.random().toString(36).slice(2,5),
             asig:raw.asig,text:btext,type:btype,color:bcolor,bg:bbg,
             mins:need,startTime:_fromMins(st),endTime:_fromMins(en),
@@ -13437,7 +13555,7 @@ planGenerar = function(doScroll){
         var tiles2=[];
         if(isRev){for(var ti2=0;ti2<raw.topicCount;ti2++) tiles2.push({name:'Tema '+(ti2+1),reviews:0,maxReviews:2,nota:''});}
         scheduled.push({id:(isRev?'r':'s')+Date.now()+'_'+Math.random().toString(36).slice(2,5),
-          asig:raw.asig,text:isRev?'Repaso: todos los temas':'Estudiar '+raw.topicCount+' temas',
+          asig:raw.asig,text:isRev?'Repaso: todos los temas':(raw._label||('Estudiar '+raw.topicCount+' tema'+(raw.topicCount!==1?'s':''))),
           type:isRev?'review':'study',color:isRev?'#3498db':'var(--gd)',bg:isRev?'rgba(52,152,219,.1)':'rgba(45,138,90,.1)',
           mins:need,startTime:'',endTime:'',completed:false,nota:'',
           topicCount:raw.topicCount,topicTiles:tiles2,minsPerTopic:raw.mpt||0});
@@ -13445,9 +13563,15 @@ planGenerar = function(doScroll){
     });
     if(scheduled.length){
       finalPlan[key]=scheduled;
-      var parts=scheduled.filter(function(b){return b.type!=='break';})
-        .map(function(b){return (b.startTime?b.startTime+' ':'')+b.text+(b.asig?' ('+b.asig+')':'');});
-      if(parts.length) summaries[key]=parts.join(' → ');
+      // Summary: just count study/review blocks (no concatenated times)
+      var nStudy=scheduled.filter(function(b){return b.type==='study';}).length;
+      var nReview=scheduled.filter(function(b){return b.type==='review';}).length;
+      var nPrac=scheduled.filter(function(b){return b.type==='practica';}).length;
+      var sParts=[];
+      if(nStudy) sParts.push(nStudy+' sesión'+(nStudy!==1?'es':'')+ ' estudio');
+      if(nReview) sParts.push(nReview+' repaso'+(nReview!==1?'s':''));
+      if(nPrac) sParts.push(nPrac+' práctica'+(nPrac!==1?'s':''));
+      if(sParts.length) summaries[key]=sParts.join(' · ');
     }
   });
 
@@ -13472,6 +13596,9 @@ planGenerarV2 = planGenerar;
 
 </script>
 
+
+<!-- FAB fixed centered above nav -->
+<button class="bnav-fab" onclick="irSeccion('nuevo')" title="Nueva tarea" aria-label="Nueva tarea">&#43;</button>
 </body>
 </html>
 <script>
