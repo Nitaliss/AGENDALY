@@ -3176,25 +3176,17 @@ body.on-home #sec-home { display: block !important; }
             <span class="cfg-arrow">▶</span>
           </div>
           <div class="cfg-body">
-            <p style="font-size:13px;color:var(--td);margin-bottom:12px;">Exporta tus registros para hacer una copia de seguridad o analizarlos en Excel.</p>
+            <p style="font-size:13px;color:var(--td);margin-bottom:12px;">Exporta todos tus datos (tareas, horario, planificador, seguimiento, Pomodoro) para copia de seguridad.</p>
             <div style="display:flex;gap:10px;flex-wrap:wrap;">
-              <button onclick="exportBackupJSON()" style="padding:10px 16px;background:var(--gm);color:#fff;border:none;border-radius:8px;font-family:Lato,sans-serif;font-size:13px;font-weight:700;cursor:pointer;">📥 Exportar backup</button>
+              
               <label style="padding:10px 16px;background:var(--bl);color:var(--tm);border:1px solid var(--bd);border-radius:8px;font-family:Lato,sans-serif;font-size:13px;font-weight:600;cursor:pointer;display:inline-block;">
                 📂 Restaurar backup
                 <input type="file" accept=".json" style="display:none" onchange="importBackupJSON(event)">
               </label>
-              <button onclick="exportCSV()" style="padding:10px 18px;background:var(--gm);color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;">⬇ Exportar CSV</button>
               <button onclick="exportarDatosCompletos()" style="padding:10px 18px;background:var(--bc);color:var(--bct);border:1px solid var(--bd);border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;">📦 Backup completo JSON</button>
+              <button onclick="icsOpenFilePicker()" style="padding:10px 18px;background:#4285F4;color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;">📅 Importar ICS</button>
             </div>
-            <!-- Sincronización QR -->
-            <div style="margin-top:14px;padding:12px;background:var(--bl);border-radius:10px;border:1px solid var(--bd);">
-              <div style="font-size:12px;font-weight:700;color:var(--td);font-family:Lato,sans-serif;margin-bottom:8px;">📱 Sincronizar con otro dispositivo</div>
-              <p style="font-size:12px;color:var(--tl);margin-bottom:10px;">Transfiere todos tus datos a otro dispositivo escaneando un código QR. Sin internet, sin configuración.</p>
-              <div style="display:flex;gap:8px;flex-wrap:wrap;">
-                <button onclick="mostrarQREnviar()" style="padding:10px 16px;background:var(--gm);color:#fff;border:none;border-radius:8px;font-family:Lato,sans-serif;font-size:13px;font-weight:700;cursor:pointer;">📤 Enviar datos (QR)</button>
-                <button onclick="mostrarQRRecibir()" style="padding:10px 16px;background:var(--bl);color:var(--td);border:1px solid var(--bd);border-radius:8px;font-family:Lato,sans-serif;font-size:13px;font-weight:700;cursor:pointer;">📥 Recibir datos (Cámara)</button>
-              </div>
-            </div>
+            
             <!-- Google Drive Sync -->
             <div style="margin-top:14px;padding:12px;background:var(--bl);border-radius:10px;border:1px solid var(--bd);">
               <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
@@ -3432,7 +3424,13 @@ body.on-home #sec-home { display: block !important; }
         </div>
 
 
-      </div><!-- /sec-config -->
+      
+    <!-- ═══ AYUDA ═══ -->
+    <div style="margin-top:18px;">
+      <div style="font-size:14px;font-weight:700;color:var(--td);font-family:Lato,sans-serif;margin-bottom:10px;">❓ Guía rápida</div>
+      <div id="help-accordion"></div>
+    </div>
+  </div><!-- /sec-config -->
     </div><!-- /page -->
   </div><!-- /nb-inner -->
 <!-- Tooltip Modal -->
@@ -6625,19 +6623,15 @@ hdr.appendChild(btnX);
 var body=document.createElement('div');
 body.style.cssText='overflow-y:auto;padding:16px 20px 32px;flex:1;';
 var secciones=[
-{id:'s0',titulo:'🏠 Inicio — Resumen y Mi Horario',texto:'La pantalla de inicio tiene dos pestañas:<br><br><b>📊 Resumen</b><br>Saludo con tu nombre, fecha, tarjeta del próximo examen con cuenta atrás, sesiones Pomodoro de hoy y alertas activas.<br><br><b>📅 Mi Horario</b><br>Con <b>✏️ Editar</b> activo puedes:<br>• Escribir asignaturas en cada celda (color automático)<br>• Cambiar color con el icono 🎨 en la celda<br>• <b>Editar nombre del día</b> tocando el encabezado de columna<br>• <b>Añadir Sábado/Domingo</b> con los botones en modo edición<br>• Hora vacía (—): deja la franja sin hora para asignaturas simultáneas<br>• Ordenar franjas con ↕ Ordenar<br>• <b>Nuevo horario</b> (máx. 2 en gratuito, ilimitados con ⭐ Premium)<br>• Navegar entre horarios con ◄ ►<br><br>Tocar una celda rellena (sin editar) crea una tarea. Botón <b>📄 PDF</b> descarga el horario imprimible. Las alertas aparecen bajo el horario.'},
-{id:'s1',titulo:'➕ Nueva Tarea (botón +)',texto:'El botón verde <b>+</b> flotante abre el formulario desde cualquier pantalla.<br><br><b>Campos:</b> Tipo, Asignatura, Fecha, Fecha examen/entrega, Notas (opcional)<br><br><b>Adjuntar archivos:</b><br>• 📷 Cámara / 🖼️ Galería — fotos (múltiples)<br>• 📎 Archivos — PDF, Word, PPT... (múltiples, máx. 2.5MB cada uno)<br><br>Los archivos se guardan en un álbum de la asignatura. El icono 📁 en la tarjeta de tarea da acceso directo.'},
-{id:'s2',titulo:'📋 Tareas — Lista',texto:'Muestra todas tus tareas. Filtros por tipo: Todas · 📝 Exámenes · 📚 Deberes · 📋 Trabajos.<br><br>Cada tarjeta muestra asignatura, tipo, cuenta atrás si hay fecha de examen, miniatura de foto e icono 📁 si tiene archivos.<br><br>Tocar abre las acciones: Editar, Duplicar, Archivar, Email, WhatsApp, Google Calendar, Eliminar.<br><br>Vista lista ☰ o carpetas ⊞ con el botón de cambio de vista. Plan gratuito: máx. <b>20 tareas</b>.'},
-{id:'s3',titulo:'✅ To Do — Lista de pendientes',texto:'Lista de tareas rápidas independiente de los registros principales. Escribe y pulsa Añadir. Toca para marcar como hecha. Archiva las completadas con 📦.'},
-{id:'s4',titulo:'📅 Mi Agenda — Calendario',texto:'Vista mensual. Cada día con tareas muestra una barra de color. Toca un día para ver sus tareas. Las fechas de exámenes/entregas aparecen en el día correspondiente.'},
-{id:'s5',titulo:'🎓 Mi Estudio — Pomodoro',texto:'Configura el tiempo con las flechas ▲▼ (horas y minutos de 1 en 1). Pulsa <b>✓ Aplicar</b> para confirmar. Controles: ▶ Iniciar / ⏸ Pausar, ↺ Reset, ⏭ Saltar.<br><br>Sonidos disponibles: 🔔 Beep · 😆 Campana · 🎺 Fanfare · 🔇 Silencio.<br><br>Se registran las sesiones del día con asignatura y minutos. El total aparece en el Resumen.'},
-{id:'s6',titulo:'🎓⭐ Planificador de estudio (Premium)',texto:'Genera un plan de estudio inteligente basado en tus exámenes.<br><br>1. <b>Configura:</b> horario, ventana de estudio, minutos/sesión<br>2. <b>Exámenes:</b> expande cada tarjeta para configurar temas y dificultad<br>3. <b>Genera:</b> botón "Generar plan de estudio"<br><br>Cada bloque del plan tiene: indicador de estado (✓ Completado · ⟳ En proceso · ✗ No realizado · ○ Pendiente), botón ✎ editar, ↕ mover, × eliminar y campo de observaciones.<br><br>Barra de progreso en tiempo real. Guardar hasta 8 versiones. Exportar a PDF.'},
-{id:'s7',titulo:'📁 Mis Álbumes',texto:'Fotos y documentos por asignatura y fecha.<br><br>Las fotos se muestran en rejilla 3×3. Los documentos en lista con nombre, tipo, botón ⬇️ descargar y × eliminar.<br><br>Dentro de cada álbum usa los botones 📷 Fotos y 📎 Archivos para añadir más. Toca un documento para descargarlo con su nombre original.'},
-{id:'s7b',titulo:'☁️ Sincronización con Google Drive (Premium)',texto:'Guarda tus datos en un fichero <code>tapunto-datos.json</code> en <b>tu propio Google Drive</b>. Disponible en todos tus dispositivos.<br><br><b>Conectar:</b> Configuración → Backup y datos → Google Drive → "Conectar con Google". Acepta los permisos y listo.<br><br>La sincronización es automática al guardar. Botón ⟳ Sync para sincronizar manualmente. El dispositivo más reciente siempre gana en caso de conflicto.'},
-{id:'s8',titulo:'⚙️ Configuración',texto:'Accede desde el icono de avatar (esquina superior derecha).<br><br>• 🔐 Cambiar PIN<br>• 👤 Firma y datos (nombre, cargo)<br>• 🎨 Tema de color / 🌙 Modo oscuro<br>• 📷 Foto de portada<br>• ☁️ Google Drive (sincronización entre dispositivos) ⭐<br>• 🔗 Google Sheets (exportar registros) ⭐<br>• 📤 Backup completo / 📂 Restaurar / ⬇ Exportar CSV<br>• 🗑 Eliminar datos (irreversible)<br>• ⭐ Activar Premium'},
-{id:'s9',titulo:'🔔 Alertas y recordatorios',texto:'El panel de alertas aparece en Inicio (Resumen y Mi Horario) mostrando tareas con fecha de examen en los próximos 7 días y tareas atrasadas.<br><br>Para crear un recordatorio: al editar una tarea, sección "Más opciones" → campo Alerta.'},
-{id:'s10',titulo:'🔐 Seguridad y cuenta',texto:'Acceso con correo + PIN de 4 dígitos (almacenado como hash SHA-256). Todos los datos se guardan en el almacenamiento local del navegador. Exporta una copia de seguridad desde Configuración → Backup.'},
-{id:'s11',titulo:'📞 Contacto',texto:'🌐 <b>tapunto.app</b><br>Tapunto Estudiantil © 2026'}
+{id:'s0',titulo:'Inicio',texto:'Dos pestañas: Resumen y Mi Horario. El Resumen muestra saludo, fecha, próximo examen y Pomodoro. Mi Horario permite editar asignaturas, colores y días.'},
+{id:'s1',titulo:'Mis Tareas',texto:'Vista en carpetas por asignatura. Filtra por tipo (Exámenes, Deberes, Trabajos). La flecha vuelve a carpetas. En lista se ven miniaturas y badges de docs.'},
+{id:'s2',titulo:'Pomodoro',texto:'Temporizador de estudio. Introduce horas y minutos directamente. Sesiones en dos columnas: Estudio y Descanso. 4 sonidos de aviso.'},
+{id:'s3',titulo:'Planificador (Premium)',texto:'Genera el plan según exámenes futuros. Configura horario, ventana de estudio, comidas, sueño y extraescolares. Usa la × para quitar un examen. Las bolitas ciclan: vacío, verde (fácil), naranja (regular), rojo (difícil).'},
+{id:'s4',titulo:'Seguimiento',texto:'Tabla de progreso por examen. Temas en filas, rondas en columnas. Colores: verde fácil, naranja regular, rojo difícil. Toca la celda para marcar. % estudiado en la cabecera. Archiva para guardar snapshots.'},
+{id:'s5',titulo:'Agenda',texto:'Vista mensual y semanal con mini-etiquetas de eventos. Importar ICS en Configuración: importa eventos de Google Calendar, Outlook o Moodle.'},
+{id:'s6',titulo:'Backup',texto:'En Configuración: Backup completo JSON exporta todo. Restaurar backup importa el JSON. Exportar CSV para Excel. Importar ICS para eventos de calendario.'},
+{id:'s7',titulo:'Google Drive (Premium)',texto:'Conecta tu cuenta Google para guardar fotos y docs. El token dura 1 hora. Los enlaces Drive se incluyen al enviar emails.'},
+{id:'s8',titulo:'Bolitas de dificultad',texto:'En los bloques de ESTUDIO y REPASO las bolitas ciclan: vacío, verde (fácil), naranja (regular), rojo (difícil). Los colores sincronizan con la tabla de Seguimiento.'}
 ];
 secciones.forEach(function(sec){
 var blk=document.createElement('div');
@@ -7549,6 +7543,8 @@ function exportarDatosCompletos(){
     // ── Planificador ──
     planesEstudio: state.planesEstudio || [],
     currentPlanSnapshot: state.currentPlanSnapshot || null,
+    planData: (typeof _planData !== 'undefined') ? _planData : {},
+    seguimiento: state.seguimiento || {active:{},archived:[]},
     // ── Pomodoro sesiones ──
     pomSessions: pomSessions,
     pomConfig: {
@@ -7609,6 +7605,8 @@ function importBackupJSON(e){
       if(d.albums&&Array.isArray(d.albums)) state.albums=d.albums;
       if(d.planesEstudio&&Array.isArray(d.planesEstudio)) state.planesEstudio=d.planesEstudio;
       if(d.currentPlanSnapshot) state.currentPlanSnapshot=d.currentPlanSnapshot;
+      if(d.seguimiento) state.seguimiento=d.seguimiento;
+      if(d.planData&&typeof _planData!=='undefined'){Object.keys(d.planData).forEach(function(k){_planData[k]=d.planData[k];});}
       if(d.pomSessions&&Array.isArray(d.pomSessions)){
         try{ localStorage.setItem('tp_pom_sessions_'+new Date().toDateString(), JSON.stringify(d.pomSessions)); }catch(ex){}
       }
@@ -10723,6 +10721,9 @@ function estSwitchTab(tab){
   if(document.getElementById('est-tab-seg')) document.getElementById('est-tab-seg').classList.toggle('active', tab==='seg');
   document.getElementById('est-pom').style.display = tab==='pom'?'block':'none';
   document.getElementById('est-plan').style.display = tab==='plan'?'block':'none';
+  var _sp=document.getElementById('est-seg'); if(_sp) _sp.style.display=tab==='seg'?'block':'none';
+  var _st=document.getElementById('est-tab-seg'); if(_st) _st.classList.toggle('active',tab==='seg');
+  if(tab==='seg'){try{renderSeguimiento();}catch(e){}}
   if(document.getElementById('est-seg')) document.getElementById('est-seg').style.display = tab==='seg'?'block':'none';
   if(tab==='seg'){ try{renderSeguimiento();}catch(e){} }
   if(tab==='plan'){
@@ -10736,10 +10737,14 @@ function estSwitchTab(tab){
       if(state.currentPlanSnapshot && state.currentPlanSnapshot.dayPlan){
         // Restore mutable dayPlan from snapshot
         var snap=JSON.parse(JSON.stringify(state.currentPlanSnapshot));
+        var _nw=new Date(); var _tk=_nw.getFullYear()+'-'+String(_nw.getMonth()+1).padStart(2,'0')+'-'+String(_nw.getDate()).padStart(2,'0');
+        Object.keys(snap.dayPlan).forEach(function(k){if(k<_tk) delete snap.dayPlan[k];}); snap.hoyStr=_tk;
         out._planSnapshot=snap;
-        planRenderDom(out,snap.dayPlan,snap.hoyStr,{});
-        var acts=document.getElementById('plan-actions');
-        if(acts) acts.style.display='flex';
+        if(Object.keys(snap.dayPlan).length){
+          planRenderDom(out,snap.dayPlan,_tk,{});
+          var acts=document.getElementById('plan-actions');
+          if(acts) acts.style.display='flex';
+        }
       }
     },150);
   }
@@ -12253,6 +12258,8 @@ function planRenderDom(container, dayPlan, todayStr, dailySummaries){
 
   Object.keys(dayPlan).sort().forEach(function(key){
     var d=new Date(key+'T12:00:00');
+    var _yd=new Date(todayStr+'T12:00:00'); _yd.setDate(_yd.getDate()-1);
+    if(d<_yd) return;
     var isToday=key===todayStr;
     var days=['dom','lun','mar','mié','jue','vie','sáb'];
     var months=['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
@@ -12522,7 +12529,7 @@ function planMakeBlock(item, key, dayPlan, container, todayStr){
             for(var d=0;d<numDots;d++){
               var curVal=tpCapt.rounds[d]||null;
               var _dot=document.createElement('div');
-              _dot.style.cssText='width:15px;height:15px;border-radius:50%;cursor:pointer;transition:all .15s;border:1.5px solid '+(curVal?_triColors[curVal]:'var(--bd)')+';background:'+(curVal?_triColors[curVal]+'33':'transparent')+';';
+              _dot.style.cssText='width:15px;height:15px;border-radius:50%;cursor:pointer;transition:all .15s;border:2px solid '+(curVal?_triColors[curVal]:'var(--bd)')+';background:'+(curVal?_triColors[curVal]:'transparent')+';';
               if(curVal) _dot.title=_triLabels[curVal];
               (function(di){
                 _dot.addEventListener('click',function(e){
@@ -12586,7 +12593,7 @@ function planMakeBlock(item, key, dayPlan, container, todayStr){
               var _dot2=document.createElement('div');
               /* Blue when no difficulty set, tri-color when set */
               var _dotBorder2 = curVal2 ? _triColors[curVal2] : (d2<tpCapt.reviews ? dotColorCapt : 'var(--bd)');
-              var _dotBg2 = curVal2 ? _triColors[curVal2]+'33' : (d2<tpCapt.reviews ? dotColorCapt : 'transparent');
+              var _dotBg2 = curVal2 ? _triColors[curVal2] : (d2<tpCapt.reviews ? dotColorCapt : 'transparent');
               _dot2.style.cssText='width:13px;height:13px;border-radius:50%;cursor:pointer;transition:all .15s;border:1.5px solid '+_dotBorder2+';background:'+_dotBg2+';';
               (function(di2){
                 _dot2.addEventListener('click',function(e){
@@ -13398,13 +13405,15 @@ function planRenderConfig(){
 }
 
 /* ─── planRenderExams ─── */
+if(!window._planHidden) window._planHidden={};
+
 planRenderExams = function(){
   var list=document.getElementById('plan-exams-list');
   if(!list) return;
   var todayStr=_localToday();
   var hoy=new Date(todayStr+'T12:00:00');
   var exams=(state.records||[]).filter(function(r){
-    return r.fechaEvento&&!r.archivado&&new Date(r.fechaEvento+'T12:00:00')>=hoy;
+    return r.fechaEvento&&!r.archivado&&!window._planHidden[r.id]&&new Date(r.fechaEvento+'T12:00:00')>=hoy;
   }).sort(function(a,b){return a.fechaEvento.localeCompare(b.fechaEvento);});
 
   if(!exams.length){
@@ -13447,6 +13456,32 @@ planRenderExams = function(){
       body.style.display=open?'none':'block';
       hdr.querySelector('span:last-child').style.transform=open?'':'rotate(180deg)';
     });
+    // Discrete × delete on header
+    var delX=document.createElement('button');
+    delX.style.cssText='width:22px;height:22px;border-radius:50%;border:none;background:none;color:#dc2626;font-size:16px;cursor:pointer;font-weight:700;padding:0;line-height:1;flex-shrink:0;opacity:.6;';
+    delX.textContent='×';
+    delX.title='Eliminar del planificador';
+    (function(recId){
+      delX.addEventListener('click',function(e){
+        e.stopPropagation();
+        if(!confirm('¿Quitar este examen del planificador?\nNo se elimina de Mis Tareas.')) return;
+        delete _planData[recId];
+        if(state.seguimiento&&state.seguimiento.active) delete state.seguimiento.active[recId];
+        try{persist().catch(function(){});}catch(ex){}
+        planRenderExams();
+      });
+    })(r.id);
+    // Insert × into header
+    hdr.insertBefore(delX, hdr.lastChild);
+    var xBtn=document.createElement('button'); xBtn.style.cssText='background:none;border:none;color:#dc2626;font-size:18px;cursor:pointer;padding:0 4px;flex-shrink:0;'; xBtn.textContent='×'; xBtn.title='Quitar del planificador';
+    (function(rid,rname){ xBtn.addEventListener('click',function(e){ e.stopPropagation();
+        if(!confirm('Quitar "'+rname+'" del planificador?\nNo se elimina de Mis Tareas.')) return;
+        window._planHidden[rid]=true;
+        delete _planData[rid];
+        if(state.seguimiento&&state.seguimiento.active) delete state.seguimiento.active[rid];
+        try{persist().catch(function(){});}catch(ex){}
+        planRenderExams(); }); })(r.id, r.tema);
+    hdr.appendChild(xBtn);
     card.appendChild(hdr); card.appendChild(body); list.appendChild(card);
   });
   planGenerar(false);
@@ -13519,7 +13554,7 @@ planGenerar = function(doScroll){
   var breakMins=tc.breakMins||10;
 
   var exams=(state.records||[]).filter(function(r){
-    return r.fechaEvento&&!r.archivado&&new Date(r.fechaEvento+'T12:00:00')>=hoy;
+    return r.fechaEvento&&!r.archivado&&!window._planHidden[r.id]&&new Date(r.fechaEvento+'T12:00:00')>=hoy;
   }).sort(function(a,b){return a.fechaEvento.localeCompare(b.fechaEvento);});
 
   var out=document.getElementById('plan-output');
@@ -13669,7 +13704,7 @@ planGenerarV2 = planGenerar;
 /* Difficulty constants */
 var _DC=[null,'green','orange','red'];
 var _DCol={green:'#16a34a',orange:'#d97706',red:'#dc2626'};
-var _DBg={green:'rgba(22,163,74,.25)',orange:'rgba(217,119,6,.25)',red:'rgba(220,38,38,.22)'};
+var _DBg={green:'#16a34a',orange:'#d97706',red:'#dc2626'};
 var _DLbl={green:'Fácil',orange:'Regular',red:'Difícil'};
 function _dNext(v){var i=_DC.indexOf(v||null);return _DC[(i+1)%4];}
 
@@ -13852,10 +13887,10 @@ function renderSeguimiento(){
 
         var val=(tp.rounds&&tp.rounds[ci2])?tp.rounds[ci2]:null;
         var cell=document.createElement('div');
-        cell.style.cssText='width:26px;height:26px;border-radius:6px;margin:0 auto;cursor:'+(isArchived?'default':'pointer')+';transition:all .15s;border:1.5px solid '+(val?_DCol[val]:'var(--bd)')+';background:'+(val?_DBg[val]:'transparent')+';display:flex;align-items:center;justify-content:center;';
+        cell.style.cssText='width:26px;height:26px;border-radius:6px;margin:0 auto;cursor:'+(isArchived?'default':'pointer')+';transition:all .15s;border:2px solid '+(val?_DCol[val]:'var(--bd)')+';background:'+(val?_DBg[val]:'transparent')+';display:flex;align-items:center;justify-content:center;';
         if(val){
           var dot2=document.createElement('div');
-          dot2.style.cssText='width:12px;height:12px;border-radius:50%;background:'+_DCol[val]+';';
+          dot2.style.cssText='width:12px;height:12px;border-radius:50%;background:#fff;opacity:.9;';
           cell.appendChild(dot2);
           cell.title=_DLbl[val];
         }
@@ -13953,6 +13988,918 @@ function seguimientoSyncToTile(examKey, topicIdx, roundIdx, val){
     try{persist().catch(function(){});}catch(e){}
   }
 }
+</script>
+
+<script>
+
+/* ═══ TAPUNTO ICS IMPORT — Importar calendario ═══ */
+
+function icsParseDate(s){
+  /* Parse DTSTART formats: 20260610T090000Z or 20260610 */
+  if(!s) return null;
+  s=s.replace(/^TZID=[^:]+:/,'').trim();
+  var y=s.slice(0,4), m=s.slice(4,6), d=s.slice(6,8);
+  return y+'-'+m+'-'+d;
+}
+
+function icsImport(file){
+  var reader=new FileReader();
+  reader.onload=function(ev){
+    var text=ev.target.result;
+    var lines=text.replace(/\r\n/g,'\n').replace(/\r/g,'\n').split('\n');
+    // Unfold continuation lines
+    var unfolded=[];
+    lines.forEach(function(l){
+      if(l.match(/^[ \t]/) && unfolded.length){ unfolded[unfolded.length-1]+=l.slice(1); }
+      else unfolded.push(l);
+    });
+
+    var events=[], cur=null;
+    unfolded.forEach(function(line){
+      if(line.startsWith('BEGIN:VEVENT')){ cur={}; }
+      else if(line.startsWith('END:VEVENT')&&cur){
+        if(cur.dtstart) events.push(cur);
+        cur=null;
+      } else if(cur){
+        var sep=line.indexOf(':');
+        if(sep<0) return;
+        var key=line.slice(0,sep).toUpperCase().split(';')[0];
+        var val=line.slice(sep+1).trim();
+        if(key==='DTSTART') cur.dtstart=icsParseDate(line.slice(sep+1).trim());
+        else if(key==='SUMMARY') cur.summary=val.replace(/\\n/g,' ').replace(/\\,/g,',');
+        else if(key==='DESCRIPTION') cur.description=val.replace(/\\n/g,' ');
+        else if(key==='LOCATION') cur.location=val;
+      }
+    });
+
+    if(!events.length){
+      showToast('\u26a0 No se encontraron eventos en el archivo ICS');
+      return;
+    }
+
+    // Show import dialog
+    icsShowPreview(events);
+  };
+  reader.readAsText(file);
+}
+
+function icsShowPreview(events){
+  // Filter to future events
+  var now=new Date(); now.setHours(0,0,0,0);
+  var future=events.filter(function(e){
+    if(!e.dtstart) return false;
+    return new Date(e.dtstart+'T12:00:00')>=now;
+  }).sort(function(a,b){return a.dtstart.localeCompare(b.dtstart);});
+
+  var modal=document.createElement('div');
+  modal.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9990;display:flex;align-items:flex-end;justify-content:center;';
+
+  var sheet=document.createElement('div');
+  sheet.style.cssText='background:var(--w);border-radius:20px 20px 0 0;padding:20px 16px 32px;width:100%;max-width:480px;max-height:80vh;overflow-y:auto;';
+
+  var hdr=document.createElement('div');
+  hdr.style.cssText='font-size:16px;font-weight:800;color:var(--td);font-family:Lato,sans-serif;margin-bottom:4px;';
+  hdr.textContent='📅 Importar '+future.length+' evento'+(future.length!==1?'s':'');
+  var sub=document.createElement('div');
+  sub.style.cssText='font-size:12px;color:var(--tl);font-family:Lato,sans-serif;margin-bottom:14px;';
+  sub.textContent='Selecciona los eventos a importar como tareas/exámenes';
+  sheet.appendChild(hdr); sheet.appendChild(sub);
+
+  // Checkboxes
+  var checks=[];
+  future.forEach(function(ev,i){
+    var row=document.createElement('label');
+    row.style.cssText='display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid var(--bd);cursor:pointer;';
+    var cb=document.createElement('input');
+    cb.type='checkbox'; cb.checked=true;
+    cb.style.cssText='width:18px;height:18px;margin-top:2px;accent-color:var(--gd);flex-shrink:0;cursor:pointer;';
+    checks.push({cb:cb,ev:ev});
+    var info=document.createElement('div');
+    info.style.cssText='flex:1;min-width:0;';
+    var d=new Date(ev.dtstart+'T12:00:00');
+    var dateStr=d.toLocaleDateString('es',{weekday:'short',day:'2-digit',month:'short',year:'numeric'});
+    var title=document.createElement('div');
+    title.style.cssText='font-size:13px;font-weight:700;color:var(--td);font-family:Lato,sans-serif;';
+    title.textContent=ev.summary||'Sin título';
+    var dateEl=document.createElement('div');
+    dateEl.style.cssText='font-size:11px;color:var(--tl);font-family:Lato,sans-serif;margin-top:2px;';
+    dateEl.textContent=dateStr+(ev.location?' · '+ev.location:'');
+    info.appendChild(title); info.appendChild(dateEl);
+    row.appendChild(cb); row.appendChild(info);
+    sheet.appendChild(row);
+  });
+
+  // Buttons
+  var btns=document.createElement('div');
+  btns.style.cssText='display:flex;gap:10px;margin-top:16px;';
+
+  var cancelBtn=document.createElement('button');
+  cancelBtn.style.cssText='flex:1;padding:12px;background:var(--bl);border:1px solid var(--bd);border-radius:10px;font-size:14px;font-weight:700;color:var(--tl);cursor:pointer;font-family:Lato,sans-serif;';
+  cancelBtn.textContent='Cancelar';
+  cancelBtn.onclick=function(){ document.body.removeChild(modal); };
+
+  var importBtn=document.createElement('button');
+  importBtn.style.cssText='flex:2;padding:12px;background:var(--gd);border:none;border-radius:10px;font-size:14px;font-weight:700;color:#fff;cursor:pointer;font-family:Lato,sans-serif;';
+  importBtn.textContent='📥 Importar seleccionados';
+  importBtn.onclick=function(){
+    var selected=checks.filter(function(c){return c.cb.checked;});
+    var imported=0;
+    selected.forEach(function(c){
+      var ev=c.ev;
+      var title=ev.summary||'Evento importado';
+      // Try to detect if it's an exam
+      var isExam=/examen|exam|test|parcial|final|ev[ae]luaci[oó]n/i.test(title);
+      var isTrabajo=/trabajo|entrega|tarea|proyecto|pr[aá]ctica/i.test(title);
+      var accion=isExam?'Examen':isTrabajo?'Trabajo':'Evento';
+      // Extract subject from title
+      var tema=title.replace(/examen\s+(de\s+)?/i,'').replace(/parcial\s+de\s+/i,'').replace(/\s+\d+$/,'').trim();
+      var rec={
+        id:'ics_'+Date.now()+'_'+Math.random().toString(36).slice(2,6),
+        tema:tema, accion:accion,
+        fecha:new Date().toISOString(),
+        fechaEvento:ev.dtstart,
+        notas:ev.description||'',
+        estado:'pendiente',
+        icono:isExam?'📝':isTrabajo?'📋':'📅',
+        importadoICS:true
+      };
+      if(!state.records) state.records=[];
+      state.records.push(rec);
+      imported++;
+    });
+    persist().catch(function(){});
+    document.body.removeChild(modal);
+    showToast('✓ '+imported+' evento'+(imported!==1?'s':'')+' importado'+(imported!==1?'s':'')+' como tareas');
+    try{ renderRecords(); renderCalendario && renderCalendario(); }catch(e){}
+    try{ renderResumen(); }catch(e){}
+  };
+
+  btns.appendChild(cancelBtn); btns.appendChild(importBtn);
+  sheet.appendChild(btns);
+  modal.appendChild(sheet);
+
+  // Close on backdrop click
+  modal.addEventListener('click',function(e){ if(e.target===modal) document.body.removeChild(modal); });
+  document.body.appendChild(modal);
+}
+
+function icsOpenFilePicker(){
+  var inp=document.createElement('input');
+  inp.type='file'; inp.accept='.ics,.ical,text/calendar';
+  inp.onchange=function(e){ if(e.target.files[0]) icsImport(e.target.files[0]); };
+  inp.click();
+}
+
+</script>
+
+<script>
+
+/* ═══ HELP SECTION ═══ */
+(function(){
+  var items=[
+    {q:'📋 Mis Tareas', a:'Organiza exámenes, trabajos y deberes. Entra en una carpeta por asignatura para ver las tareas. Toca el icono 📁 en una tarjeta para abrir su álbum de fotos y docs. Usa los filtros (Exámenes · Deberes · Trabajos) para filtrar dentro de una carpeta.'},
+    {q:'📅 Mi Agenda', a:'Vista mensual y semanal de todos tus eventos con fecha. Los exámenes aparecen con etiqueta de color. Toca un día para ver el detalle. Puedes importar tu calendario universitario desde Configuración → Importar ICS.'},
+    {q:'🎓 Mi Estudio — Pomodoro', a:'Configura la duración (horas + minutos) y empieza la sesión. Escribe qué asignatura estás estudiando. Las sesiones se registran en dos columnas: Estudio y Descanso, con tiempo acumulado.'},
+    {q:'📊 Mi Estudio — Planificador', a:'Genera un plan automático por examen. Configura: ventana de estudio (ej. 16:00–22:00), comida, cena, sueño y extraescolares. El plan bloquea automáticamente tus horas de clase y reparte sesiones de estudio y repaso con franjas horarias reales.'},
+    {q:'🔵 Bolitas de color en el plan', a:'Cada bolita representa una ronda de estudio. Toca para ciclar: ⚪ Sin marcar → 🟢 Fácil → 🟠 Regular → 🔴 Difícil. El color indica cómo te ha resultado ese tema en esa ronda.'},
+    {q:'📈 Mi Estudio — Seguimiento', a:'Tabla automática por examen con todos los temas y columnas de rondas (1, 2, 3…). El color de cada celda refleja la dificultad marcada en el plan. El porcentaje en la cabecera indica cuántos temas has trabajado. Usa 📦 Archivar para guardar el estado antes de regenerar el plan.'},
+    {q:'🗑 Eliminar examen del planificador', a:'Abre la tarjeta del examen en el Planificador y toca la × roja en la esquina. Confirma para eliminar solo de la planificación (no afecta a Mis Tareas).'},
+    {q:'📅 Importar ICS (Google Calendar)', a:'Ve a Configuración → Backup y datos → Importar ICS. Exporta tu calendario desde Google Calendar (o Outlook/Moodle) como archivo .ics y selecciónalo. Tapunto detecta automáticamente los exámenes y los importa como tareas con fecha.'},
+    {q:'📦 Backup y restauración', a:'Configuración → Backup completo JSON exporta TODO: tareas, horario, álbumes, planificación, seguimiento, Pomodoro y configuración. Para restaurar, usa Restaurar backup. Los datos se cifran en tu dispositivo.'},
+    {q:'☁️ Google Drive', a:'Conecta tu cuenta Google en Configuración para subir y descargar tu backup automáticamente. El token dura 1 hora; reconecta cuando sea necesario. Las fotos y docs subidos a Drive aparecen en las tareas como enlace.'},
+    {q:'🏠 Inicio', a:'Dos pestañas: Resumen (próximo examen, sesiones Pomodoro de hoy, alertas urgentes) y Mi Horario (vista del horario de clases). Personaliza los días y colores de cada asignatura desde la pestaña Horario.'},
+    {q:'⭐ Premium', a:'La versión gratuita incluye hasta 20 tareas, 2 horarios y funciones básicas. Premium desbloquea: tareas ilimitadas, Google Drive, planificador completo, múltiples horarios y exportación PDF.'},
+  ];
+
+  var acc=document.getElementById('help-accordion');
+  if(!acc) return;
+  acc.innerHTML='';
+  items.forEach(function(item){
+    var wrap=document.createElement('div');
+    wrap.style.cssText='border-bottom:1px solid var(--bd);';
+    var btn=document.createElement('button');
+    btn.style.cssText='width:100%;text-align:left;padding:11px 4px;background:none;border:none;cursor:pointer;font-size:12px;font-weight:700;color:var(--td);font-family:Lato,sans-serif;display:flex;align-items:center;justify-content:space-between;gap:8px;';
+    btn.innerHTML='<span>'+item.q+'</span><span style="font-size:11px;color:var(--tl);transition:transform .2s;">▼</span>';
+    var body=document.createElement('div');
+    body.style.cssText='display:none;padding:0 4px 12px;font-size:12px;color:var(--tl);font-family:Lato,sans-serif;line-height:1.6;';
+    body.textContent=item.a;
+    btn.addEventListener('click',function(){
+      var open=body.style.display!=='none';
+      // Close all others
+      acc.querySelectorAll('div>div').forEach(function(d){d.style.display='none';});
+      acc.querySelectorAll('button span:last-child').forEach(function(s){s.style.transform='';});
+      if(!open){
+        body.style.display='block';
+        btn.querySelector('span:last-child').style.transform='rotate(180deg)';
+      }
+    });
+    wrap.appendChild(btn); wrap.appendChild(body);
+    acc.appendChild(wrap);
+  });
+})();
+</script>
+
+<script>
+/* ═══════════════════════════════════════════════════════════════
+   TAPUNTO PLANIFICADOR V5 — MULTI-VUELTA
+   Reemplaza planRenderExams, planGenerar, planMakeBlock topics,
+   renderSeguimiento (vuelta columns + status indicator)
+   + "Actualizar mi plan" daily re-planning
+═══════════════════════════════════════════════════════════════ */
+
+/* ── Constants ── */
+var _VN  = ['1ª Vuelta','2ª Vuelta','3ª Vuelta','4ª Vuelta'];
+var _VD  = ['Lectura, subrayado y esquemas','Memorización','Repaso y consolidación','Revisión final'];
+var _VIC = ['📖','🧠','🔁','✅'];
+var _VBG = ['rgba(37,99,235,.09)','rgba(124,58,237,.09)','rgba(5,150,105,.09)','rgba(217,119,6,.09)'];
+var _VCL = ['#2563eb','#7c3aed','#059669','#d97706'];
+var _DM  = {1:0.75, 2:1.0, 3:1.4};
+var _DD  = {1:'Fácil',2:'Media',3:'Difícil'};
+var _DC2 = {1:'#16a34a',2:'#d97706',3:'#dc2626'};
+var _DEFMINS = [60,45,30,20];
+
+if(!window._planHidden) window._planHidden={};
+if(!window._planVueltaDone) window._planVueltaDone={};
+/* _planVueltaDone[examId][tkv] = 'green'|'orange'|'red'|null
+   tkv = 't0_v0' means topic 0, vuelta 0 */
+
+function _tvk(ti,vi){ return 't'+ti+'_v'+vi; }
+function _topicMins(diff,vueltaMins,vi){
+  return Math.max(10, Math.round((vueltaMins[vi]||30)*(_DM[diff||2]||1.0)));
+}
+
+/* ── planRenderExams V5 ── */
+planRenderExams = function(){
+  var list=document.getElementById('plan-exams-list');
+  if(!list) return;
+  var todayStr=_localToday();
+  var hoy=new Date(todayStr+'T12:00:00');
+
+  var exams=(state.records||[]).filter(function(r){
+    return r.fechaEvento&&!r.archivado&&!window._planHidden[r.id]&&
+           new Date(r.fechaEvento+'T12:00:00')>=hoy;
+  }).sort(function(a,b){return a.fechaEvento.localeCompare(b.fechaEvento);});
+
+  if(!exams.length){
+    list.innerHTML='<div style="color:var(--tl);font-size:13px;padding:8px 0;">No hay exámenes futuros.<br>Añade fecha de examen en una tarea.</div>';
+    planGenerar(false); return;
+  }
+  list.innerHTML='';
+
+  exams.forEach(function(r){
+    if(!_planData[r.id]) _planData[r.id]={topics:[{name:'',diff:2}],numVueltas:3,vueltaMins:[60,45,30],pocosDias:'compress'};
+    var data=_planData[r.id];
+    if(!data.topics||!data.topics.length) data.topics=[{name:'',diff:2}];
+    if(!data.numVueltas) data.numVueltas=3;
+    if(!data.vueltaMins||data.vueltaMins.length<data.numVueltas){
+      data.vueltaMins=_DEFMINS.slice(0,data.numVueltas);
+    }
+    if(!window._planVueltaDone[r.id]) window._planVueltaDone[r.id]={};
+
+    var eDate=new Date(r.fechaEvento+'T12:00:00');
+    var daysLeft=Math.ceil((eDate-hoy)/86400000);
+    var urgColor=daysLeft<=2?'#dc2626':daysLeft<=7?'#d97706':'#16a34a';
+
+    var card=document.createElement('div');
+    card.style.cssText='background:var(--w);border:1.5px solid var(--bd);border-radius:12px;margin-bottom:10px;overflow:visible;';
+
+    /* ── Header ── */
+    var hdr=document.createElement('div');
+    hdr.style.cssText='display:flex;align-items:center;justify-content:space-between;padding:10px 14px;cursor:pointer;gap:8px;';
+
+    var titleDiv=document.createElement('div');
+    titleDiv.style.cssText='flex:1;min-width:0;';
+    var t1=document.createElement('div');
+    t1.style.cssText='font-size:13px;font-weight:800;color:var(--td);font-family:Lato,sans-serif;';
+    t1.textContent=r.tema;
+    var t2=document.createElement('div');
+    t2.style.cssText='font-size:10px;color:'+urgColor+';font-family:Lato,sans-serif;margin-top:1px;';
+    t2.textContent=(r.accion||'Examen')+' · '+eDate.toLocaleDateString('es',{day:'2-digit',month:'short'})+' ('+daysLeft+'d)';
+    titleDiv.appendChild(t1); titleDiv.appendChild(t2);
+
+    var xBtn=document.createElement('button');
+    xBtn.style.cssText='background:none;border:none;color:#dc2626;font-size:18px;cursor:pointer;padding:0 4px;flex-shrink:0;';
+    xBtn.textContent='×'; xBtn.title='Quitar del planificador';
+    (function(rid,rname){ xBtn.onclick=function(e){ e.stopPropagation();
+      if(!confirm('¿Quitar "'+rname+'" del planificador?')) return;
+      window._planHidden[rid]=true; delete _planData[rid]; delete window._planVueltaDone[rid];
+      if(state.seguimiento&&state.seguimiento.active) delete state.seguimiento.active[rid];
+      try{persist().catch(function(){});}catch(ex){} planRenderExams();
+    };})(r.id,r.tema);
+
+    var arrow=document.createElement('span');
+    arrow.style.cssText='font-size:12px;color:var(--tl);transition:transform .2s;flex-shrink:0;';
+    arrow.textContent='▼';
+
+    hdr.appendChild(titleDiv); hdr.appendChild(xBtn); hdr.appendChild(arrow);
+
+    /* ── Body (collapsible) ── */
+    var body=document.createElement('div');
+    body.style.cssText='display:none;padding:0 14px 14px;border-top:1px solid var(--bd);';
+
+    hdr.addEventListener('click',function(){ var open=body.style.display!=='none';
+      body.style.display=open?'none':'block'; arrow.style.transform=open?'':'rotate(180deg)';
+    });
+
+    /* ── Vuelta config ── */
+    var vcRow=document.createElement('div');
+    vcRow.style.cssText='display:flex;align-items:center;gap:8px;margin:10px 0 8px;flex-wrap:wrap;';
+    var vcLabel=document.createElement('span');
+    vcLabel.style.cssText='font-size:11px;font-weight:700;color:var(--tm);font-family:Lato,sans-serif;';
+    vcLabel.textContent='Vueltas:';
+    vcRow.appendChild(vcLabel);
+
+    [2,3,4].forEach(function(n){
+      var btn=document.createElement('button');
+      btn.style.cssText='padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;cursor:pointer;font-family:Lato,sans-serif;transition:all .15s;border:1.5px solid '+(data.numVueltas===n?_VCL[0]:'var(--bd)')+';background:'+(data.numVueltas===n?_VCL[0]:'transparent')+';color:'+(data.numVueltas===n?'#fff':'var(--td)')+';';
+      btn.textContent=n+'V';
+      (function(num,rid,d){ btn.onclick=function(){
+        d.numVueltas=num; d.vueltaMins=_DEFMINS.slice(0,num);
+        planRenderExams(); setTimeout(planGenerar.bind(null,false),50);
+      };})(n,r.id,data);
+      vcRow.appendChild(btn);
+    });
+    body.appendChild(vcRow);
+
+    /* Vuelta time config */
+    var vtRow=document.createElement('div');
+    vtRow.style.cssText='display:grid;grid-template-columns:repeat(auto-fill,minmax(80px,1fr));gap:6px;margin-bottom:10px;';
+    for(var vi=0;vi<data.numVueltas;vi++){
+      (function(v){
+        var cell=document.createElement('div');
+        cell.style.cssText='background:'+_VBG[v]+';border-radius:8px;padding:6px 8px;text-align:center;';
+        var lbl=document.createElement('div');
+        lbl.style.cssText='font-size:9px;font-weight:700;color:'+_VCL[v]+';font-family:Lato,sans-serif;margin-bottom:3px;';
+        lbl.textContent=_VN[v];
+        var inp=document.createElement('input');
+        inp.type='number'; inp.min='10'; inp.max='180'; inp.value=data.vueltaMins[v]||_DEFMINS[v];
+        inp.style.cssText='width:100%;border:1px solid var(--bd);border-radius:6px;font-size:13px;font-weight:700;text-align:center;background:var(--bp);color:var(--td);padding:3px 0;';
+        (function(vi2,d){ inp.oninput=function(){
+          d.vueltaMins[vi2]=parseInt(this.value)||_DEFMINS[vi2];
+          clearTimeout(window._planDeb); window._planDeb=setTimeout(function(){planGenerar(false);},400);
+        };})(v,data);
+        var minLbl=document.createElement('div');
+        minLbl.style.cssText='font-size:9px;color:var(--tl);font-family:Lato,sans-serif;margin-top:2px;';
+        minLbl.textContent='min/tema';
+        cell.appendChild(lbl); cell.appendChild(inp); cell.appendChild(minLbl);
+        vtRow.appendChild(cell);
+      })(vi);
+    }
+    body.appendChild(vtRow);
+
+    /* Pocos días strategy */
+    var pdRow=document.createElement('div');
+    pdRow.style.cssText='display:flex;align-items:center;gap:6px;margin-bottom:12px;';
+    var pdL=document.createElement('span');
+    pdL.style.cssText='font-size:10px;font-weight:700;color:var(--tm);font-family:Lato,sans-serif;white-space:nowrap;';
+    pdL.textContent='Si poco tiempo:';
+    pdRow.appendChild(pdL);
+    [{v:'compress',l:'Comprimir tiempos'},{v:'skip3',l:'Saltar 3ª vuelta'},{v:'skip23',l:'Solo 1ª vuelta'}].forEach(function(opt){
+      var btn=document.createElement('button');
+      btn.style.cssText='padding:3px 8px;border-radius:12px;font-size:10px;cursor:pointer;font-family:Lato,sans-serif;border:1px solid '+(data.pocosDias===opt.v?_VCL[2]:'var(--bd)')+';background:'+(data.pocosDias===opt.v?_VCL[2]:'transparent')+';color:'+(data.pocosDias===opt.v?'#fff':'var(--td)')+';';
+      btn.textContent=opt.l;
+      (function(val,d){ btn.onclick=function(){ d.pocosDias=val; planRenderExams(); setTimeout(planGenerar.bind(null,false),50); }; })(opt.v,data);
+      pdRow.appendChild(btn);
+    });
+    body.appendChild(pdRow);
+
+    /* ── Topics list ── */
+    var topicSec=document.createElement('div');
+    topicSec.style.cssText='border-top:1px solid var(--bd);padding-top:10px;';
+    var topicTitle=document.createElement('div');
+    topicTitle.style.cssText='font-size:11px;font-weight:700;color:var(--tm);font-family:Lato,sans-serif;margin-bottom:8px;';
+    topicTitle.textContent='📚 Temas del examen';
+    topicSec.appendChild(topicTitle);
+
+    function renderTopics(){
+      var tList=topicSec.querySelector('.topic-list');
+      if(!tList){ tList=document.createElement('div'); tList.className='topic-list'; topicSec.appendChild(tList); }
+      tList.innerHTML='';
+      data.topics.forEach(function(tp,ti){
+        var row=document.createElement('div');
+        row.style.cssText='display:flex;align-items:center;gap:6px;margin-bottom:6px;';
+
+        var numLbl=document.createElement('span');
+        numLbl.style.cssText='font-size:11px;font-weight:700;color:var(--tl);min-width:18px;font-family:Lato,sans-serif;';
+        numLbl.textContent=(ti+1)+'.';
+
+        var nameInp=document.createElement('input');
+        nameInp.type='text'; nameInp.placeholder='Nombre del tema…'; nameInp.value=tp.name||'';
+        nameInp.style.cssText='flex:1;min-width:0;padding:5px 8px;border:1px solid var(--bd);border-radius:8px;font-size:12px;background:var(--bp);color:var(--td);font-family:Lato,sans-serif;';
+        (function(t){ nameInp.oninput=function(){ t.name=this.value; clearTimeout(window._planDeb); window._planDeb=setTimeout(function(){planGenerar(false);},600); }; })(tp);
+
+        /* Diff selector */
+        var diffSel=document.createElement('div');
+        diffSel.style.cssText='display:flex;gap:3px;flex-shrink:0;';
+        [1,2,3].forEach(function(d){
+          var db=document.createElement('button');
+          db.style.cssText='width:24px;height:24px;border-radius:50%;font-size:10px;cursor:pointer;border:1.5px solid '+(tp.diff===d?_DC2[d]:'var(--bd)')+';background:'+(tp.diff===d?_DC2[d]:'transparent')+';color:'+(tp.diff===d?'#fff':'var(--td)')+';font-weight:700;transition:all .15s;font-family:Lato,sans-serif;';
+          db.title=_DD[d]; db.textContent=d;
+          (function(dv,t,rid2){ db.onclick=function(){ t.diff=dv; renderTopics(); clearTimeout(window._planDeb); window._planDeb=setTimeout(function(){planGenerar(false);},400); }; })(d,tp,r.id);
+          diffSel.appendChild(db);
+        });
+
+        /* Delete topic */
+        var delT=document.createElement('button');
+        delT.style.cssText='background:none;border:none;color:#dc2626;font-size:16px;cursor:pointer;padding:0 2px;flex-shrink:0;';
+        delT.textContent='×';
+        (function(idx){ delT.onclick=function(){ data.topics.splice(idx,1); renderTopics(); clearTimeout(window._planDeb); window._planDeb=setTimeout(function(){planGenerar(false);},400); }; })(ti);
+
+        row.appendChild(numLbl); row.appendChild(nameInp); row.appendChild(diffSel); row.appendChild(delT);
+        tList.appendChild(row);
+      });
+
+      /* Add topic button */
+      var addBtn=document.createElement('button');
+      addBtn.style.cssText='width:100%;padding:6px;background:none;border:1.5px dashed var(--bd);border-radius:8px;font-size:12px;color:var(--tl);cursor:pointer;font-family:Lato,sans-serif;margin-top:2px;';
+      addBtn.textContent='+ Añadir tema';
+      addBtn.onclick=function(){ data.topics.push({name:'',diff:2}); renderTopics(); };
+      tList.appendChild(addBtn);
+    }
+    renderTopics();
+    body.appendChild(topicSec);
+
+    card.appendChild(hdr); card.appendChild(body); list.appendChild(card);
+  });
+
+  planGenerar(false);
+};
+
+/* ── planGenerar V5 — Multi-vuelta ── */
+planGenerar = function(doScroll){
+  if(doScroll===undefined) doScroll=false;
+  var tc=window._planTimeCfg;
+  var todayStr=_localToday();
+  var hoy=new Date(todayStr+'T12:00:00');
+  var out=document.getElementById('plan-output');
+  if(!out) return;
+
+  var exams=(state.records||[]).filter(function(r){
+    return r.fechaEvento&&!r.archivado&&!window._planHidden[r.id]&&
+           new Date(r.fechaEvento+'T12:00:00')>=hoy;
+  }).sort(function(a,b){return a.fechaEvento.localeCompare(b.fechaEvento);});
+
+  if(!exams.length){
+    out.innerHTML='<div style="color:var(--tl);font-size:13px;padding:12px;text-align:center;">Añade exámenes con fecha para generar el plan.</div>';
+    return;
+  }
+
+  /* Build raw task list: {examId,asig,topicIdx,topicName,vuelta,mins,done} */
+  var tasks=[];
+  exams.forEach(function(r){
+    var d=_planData[r.id]||{topics:[{name:'Tema 1',diff:2}],numVueltas:3,vueltaMins:[60,45,30],pocosDias:'compress'};
+    _planData[r.id]=d;
+    if(!window._planVueltaDone[r.id]) window._planVueltaDone[r.id]={};
+    var done=window._planVueltaDone[r.id];
+    var eDate=new Date(r.fechaEvento+'T12:00:00');
+    var daysLeft=Math.max(1,Math.ceil((eDate-hoy)/86400000));
+    /* Determine how many vueltas fit */
+    var totalMins=0;
+    var numV=d.numVueltas||3;
+    d.topics.forEach(function(tp){
+      for(var v=0;v<numV;v++) totalMins+=_topicMins(tp.diff,d.vueltaMins,v);
+    });
+    /* Check available time */
+    var minsPerDay=(_toMins((tc&&tc.studyEnd)||'22:00')-_toMins((tc&&tc.studyStart)||'16:00'));
+    var availTotal=daysLeft*minsPerDay*0.7; /* 70% efficiency */
+    var actualV=numV;
+    if(availTotal<totalMins){
+      if(d.pocosDias==='skip3'&&numV>=3) actualV=Math.min(numV,2);
+      else if(d.pocosDias==='skip23') actualV=1;
+      /* compress: keep numV but adjust later */
+    }
+    /* Create tasks in vuelta order (all 1ª first, then 2ª...) */
+    for(var v=0;v<actualV;v++){
+      d.topics.forEach(function(tp,ti){
+        var key=_tvk(ti,v);
+        var isDone=!!(done[key]);
+        tasks.push({examId:r.id,asig:r.tema,accion:r.accion||'Examen',
+          fechaEvento:r.fechaEvento,topicIdx:ti,topicName:tp.name||('Tema '+(ti+1)),
+          diff:tp.diff||2,vuelta:v,vueltaLabel:_VN[v],
+          mins:_topicMins(tp.diff,d.vueltaMins,v),done:isDone,key:key});
+      });
+    }
+  });
+
+  /* Assign tasks to days */
+  var finalPlan={};
+  function addBlock(key,b){if(!finalPlan[key])finalPlan[key]=[];finalPlan[key].push(b);}
+  var dayIdx=0; var cursor=-1; var slotIdx=0;
+  var dayKey=todayStr;
+
+  function advanceDay(){
+    dayIdx++;
+    var d2=new Date(hoy); d2.setDate(d2.getDate()+dayIdx);
+    dayKey=_mkKey(d2); cursor=-1; slotIdx=0;
+  }
+
+  function placeTask(task){
+    /* Try to fit in current day, then advance */
+    for(var tries=0;tries<60;tries++){
+      if(!window._planTimeCfg) return;
+      var slots=_getSlots(dayKey);
+      if(cursor<0&&slots.length) cursor=slots[0].s;
+      for(var si=slotIdx;si<slots.length;si++){
+        var ss=Math.max(slots[si].s,cursor);
+        var se=slots[si].e;
+        if(se-ss>=task.mins){
+          var st=ss,en2=ss+task.mins;
+          addBlock(dayKey,{id:'v'+Date.now()+'_'+Math.random().toString(36).slice(2,4),
+            examId:task.examId,asig:task.asig,accion:task.accion,fechaEvento:task.fechaEvento,
+            topicIdx:task.topicIdx,topicName:task.topicName,diff:task.diff,
+            vuelta:task.vuelta,vueltaLabel:task.vueltaLabel,
+            type:'vuelta',color:_VCL[task.vuelta],bg:_VBG[task.vuelta],
+            mins:task.mins,startTime:_fromMins(st),endTime:_fromMins(en2),
+            completed:task.done,nota:'',key:task.key});
+          var brk=(tc&&tc.breakMins)||10;
+          cursor=en2+(en2+brk<=se?brk:0); slotIdx=si;
+          return true;
+        }
+      }
+      /* Check exam hasn't passed */
+      var nextDay=new Date(hoy); nextDay.setDate(nextDay.getDate()+dayIdx+1);
+      var examD=new Date(task.fechaEvento+'T12:00:00');
+      if(nextDay>=examD){ /* place without time */ 
+        addBlock(dayKey,{id:'v'+Date.now(),examId:task.examId,asig:task.asig,accion:task.accion,
+          fechaEvento:task.fechaEvento,topicIdx:task.topicIdx,topicName:task.topicName,
+          diff:task.diff,vuelta:task.vuelta,vueltaLabel:task.vueltaLabel,
+          type:'vuelta',color:_VCL[task.vuelta],bg:_VBG[task.vuelta],
+          mins:task.mins,startTime:'',endTime:'',completed:task.done,nota:'',key:task.key});
+        return true;
+      }
+      advanceDay();
+    }
+    return false;
+  }
+
+  tasks.filter(function(t){return !t.done;}).forEach(function(t){ placeTask(t); });
+
+  if(!Object.keys(finalPlan).length){
+    out.innerHTML='<div style="color:var(--tl);font-size:13px;padding:12px;">No hay tiempo disponible. Revisa la configuración.</div>';
+    return;
+  }
+
+  state.currentPlanSnapshot=JSON.parse(JSON.stringify({dayPlan:finalPlan,hoyStr:todayStr}));
+  try{persist().catch(function(){});}catch(e){}
+  planRenderDomV5(out,finalPlan,todayStr);
+  var acts=document.getElementById('plan-actions');
+  if(acts) acts.style.display='flex';
+  if(doScroll) out.scrollIntoView({behavior:'smooth',block:'nearest'});
+  planRenderGuardados&&planRenderGuardados();
+};
+
+/* ── planRenderDomV5 ── */
+function planRenderDomV5(container, dayPlan, todayStr){
+  container.innerHTML='';
+  Object.keys(dayPlan).sort().forEach(function(key){
+    var d=new Date(key+'T12:00:00');
+    var _yd=new Date(todayStr+'T12:00:00'); _yd.setDate(_yd.getDate()-1);
+    if(d<_yd) return;
+    var isToday=key===todayStr;
+    var blocks=dayPlan[key];
+    var dayCard=document.createElement('div');
+    dayCard.style.cssText='background:var(--w);border:1.5px solid '+(isToday?'var(--gd)':'var(--bd)')+';border-radius:12px;margin-bottom:12px;overflow:hidden;';
+    /* Day header */
+    var dHdr=document.createElement('div');
+    dHdr.style.cssText='display:flex;align-items:center;justify-content:space-between;padding:8px 14px;background:var(--bl);border-bottom:1px solid var(--bd);';
+    var dTitle=document.createElement('span');
+    dTitle.style.cssText='font-size:12px;font-weight:800;color:var(--td);font-family:Lato,sans-serif;text-transform:uppercase;';
+    dTitle.textContent=(isToday?'HOY · ':'')+d.toLocaleDateString('es',{weekday:'short',day:'numeric',month:'short'}).toUpperCase();
+    var dMins=document.createElement('span');
+    dMins.style.cssText='font-size:10px;color:var(--tl);font-family:Lato,sans-serif;';
+    var totalM=blocks.reduce(function(s,b){return s+b.mins;},0);
+    dMins.textContent=Math.floor(totalM/60)+'h '+(totalM%60)+'min';
+    dHdr.appendChild(dTitle); dHdr.appendChild(dMins); dayCard.appendChild(dHdr);
+
+    /* Blocks */
+    var bWrap=document.createElement('div');
+    bWrap.style.cssText='padding:4px 0;';
+
+    /* Group consecutive blocks by exam+vuelta for compact display */
+    var groups=[]; var cur=null;
+    blocks.forEach(function(b){
+      var gKey=b.examId+'_'+b.vuelta;
+      if(cur&&cur.gKey===gKey&&cur.startTime){ cur.topics.push(b); cur.endTime=b.endTime; }
+      else{ cur={gKey:gKey,examId:b.examId,asig:b.asig,vuelta:b.vuelta,
+        vueltaLabel:b.vueltaLabel,color:b.color,bg:b.bg,
+        startTime:b.startTime,endTime:b.endTime,topics:[b]}; groups.push(cur); }
+    });
+
+    groups.forEach(function(g){
+      var bOuter=document.createElement('div');
+      bOuter.style.cssText='margin:0;';
+      /* Block header */
+      var bHdr=document.createElement('div');
+      bHdr.style.cssText='display:flex;align-items:center;gap:8px;padding:7px 14px;background:'+g.bg+';border-left:3px solid '+g.color+';';
+      var timeEl=document.createElement('span');
+      timeEl.style.cssText='font-size:10px;font-weight:700;color:'+g.color+';min-width:90px;flex-shrink:0;font-family:Lato,sans-serif;';
+      timeEl.textContent=g.startTime&&g.endTime?(g.startTime+' – '+g.endTime):'';
+      var typeEl=document.createElement('span');
+      typeEl.style.cssText='font-size:10px;font-weight:800;color:'+g.color+';font-family:Lato,sans-serif;flex-shrink:0;';
+      typeEl.textContent=(_VIC[g.vuelta]||'📖')+' '+g.vueltaLabel;
+      var asigEl=document.createElement('span');
+      asigEl.style.cssText='font-size:12px;font-weight:700;color:var(--td);font-family:Lato,sans-serif;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;';
+      asigEl.textContent='· '+g.asig;
+      var minsEl=document.createElement('span');
+      minsEl.style.cssText='font-size:10px;color:var(--tl);font-family:Lato,sans-serif;flex-shrink:0;';
+      var gMins=g.topics.reduce(function(s,t){return s+t.mins;},0);
+      minsEl.textContent=gMins+'min';
+      bHdr.appendChild(timeEl); bHdr.appendChild(typeEl); bHdr.appendChild(asigEl); bHdr.appendChild(minsEl);
+      bOuter.appendChild(bHdr);
+
+      /* Topic tiles */
+      var tilesWrap=document.createElement('div');
+      tilesWrap.style.cssText='padding:6px 14px 8px;display:flex;flex-direction:column;gap:4px;background:var(--w);';
+      g.topics.forEach(function(b){
+        var tile=document.createElement('div');
+        tile.style.cssText='display:flex;align-items:center;gap:10px;padding:5px 8px;background:var(--bl);border-radius:8px;';
+        /* Topic name */
+        var tName=document.createElement('span');
+        tName.style.cssText='flex:1;font-size:12px;color:var(--td);font-family:Lato,sans-serif;font-weight:500;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;';
+        tName.textContent=b.topicName||('Tema '+(b.topicIdx+1));
+        /* Diff badge */
+        var diffBadge=document.createElement('span');
+        diffBadge.style.cssText='font-size:9px;padding:1px 5px;border-radius:10px;font-weight:700;flex-shrink:0;background:'+(_DC2[b.diff]||'#999')+'22;color:'+(_DC2[b.diff]||'#999')+';font-family:Lato,sans-serif;';
+        diffBadge.textContent=(_DD[b.diff]||'Media');
+        /* Single vuelta dot */
+        var dotWrap=document.createElement('div');
+        dotWrap.style.cssText='flex-shrink:0;';
+        var dot=document.createElement('div');
+        var curVal=(window._planVueltaDone[b.examId]&&window._planVueltaDone[b.examId][b.key])||null;
+        var dotColor=curVal?({'green':'#16a34a','orange':'#d97706','red':'#dc2626'}[curVal]||b.color):b.color;
+        var dotFilled=!!curVal;
+        dot.style.cssText='width:20px;height:20px;border-radius:50%;cursor:pointer;transition:all .2s;border:2px solid '+dotColor+';background:'+(dotFilled?dotColor:'transparent')+';';
+        dot.title=curVal?({'green':'Fácil','orange':'Regular','red':'Difícil'}[curVal]||''):'Marcar como trabajado';
+        var _CYCLE=[null,'green','orange','red'];
+        (function(bl,dotEl){
+          dotEl.addEventListener('click',function(e){
+            e.stopPropagation();
+            if(!window._planVueltaDone[bl.examId]) window._planVueltaDone[bl.examId]={};
+            var cv=window._planVueltaDone[bl.examId][bl.key]||null;
+            var ni=_CYCLE.indexOf(cv); var nv=_CYCLE[(ni+1)%4];
+            window._planVueltaDone[bl.examId][bl.key]=nv;
+            var nc=nv?({'green':'#16a34a','orange':'#d97706','red':'#dc2626'}[nv]||bl.color):bl.color;
+            dotEl.style.border='2px solid '+nc;
+            dotEl.style.background=nv?nc:'transparent';
+            dotEl.title=nv?({'green':'Fácil','orange':'Regular','red':'Difícil'}[nv]||''):'Marcar como trabajado';
+            bl.completed=!!nv;
+            // Sync to seguimiento
+            seguimientoSyncVuelta(bl.examId,bl.topicIdx,bl.vuelta,nv);
+            try{persist().catch(function(){});}catch(ex){}
+          });
+        })(b,dot);
+        dotWrap.appendChild(dot);
+        tile.appendChild(tName); tile.appendChild(diffBadge); tile.appendChild(dotWrap);
+        tilesWrap.appendChild(tile);
+      });
+      bOuter.appendChild(tilesWrap);
+      bWrap.appendChild(bOuter);
+    });
+    dayCard.appendChild(bWrap); container.appendChild(dayCard);
+  });
+}
+
+/* ── Sync vuelta dot → seguimiento ── */
+function seguimientoSyncVuelta(examId, topicIdx, vuelta, val){
+  if(!state.seguimiento) state.seguimiento={active:{},archived:[]};
+  if(!state.seguimiento.active[examId]){
+    var rec=(state.records||[]).find(function(r){return r.id===examId;});
+    if(!rec) return;
+    state.seguimiento.active[examId]={tema:rec.tema,accion:rec.accion||'',fechaEvento:rec.fechaEvento,topics:[]};
+  }
+  var entry=state.seguimiento.active[examId];
+  var d=_planData[examId];
+  /* Sync topic names from _planData */
+  if(d&&d.topics){
+    d.topics.forEach(function(tp,ti){
+      while(entry.topics.length<=ti) entry.topics.push({name:'',rounds:[]});
+      if(tp.name) entry.topics[ti].name=tp.name;
+    });
+  }
+  while(entry.topics.length<=topicIdx) entry.topics.push({name:'',rounds:[]});
+  if(!entry.topics[topicIdx].rounds) entry.topics[topicIdx].rounds=[];
+  while(entry.topics[topicIdx].rounds.length<=vuelta) entry.topics[topicIdx].rounds.push(null);
+  entry.topics[topicIdx].rounds[vuelta]=val;
+  var segDiv=document.getElementById('est-seg');
+  if(segDiv&&segDiv.style.display!=='none') setTimeout(function(){try{renderSeguimiento();}catch(e){}},80);
+}
+
+/* ── Actualizar mi plan (daily re-plan) ── */
+function planActualizar(){
+  if(!state.currentPlanSnapshot||!state.currentPlanSnapshot.dayPlan){ planGenerar(true); return; }
+  var todayStr=_localToday();
+  var hoy=new Date(todayStr+'T12:00:00');
+  var dp=state.currentPlanSnapshot.dayPlan;
+  /* Find missed tasks (in past days, dot not set) */
+  var missed=[];
+  Object.keys(dp).sort().forEach(function(k){
+    if(k>=todayStr) return;
+    (dp[k]||[]).forEach(function(b){
+      if(!b.examId||!b.key) return;
+      var done=(window._planVueltaDone[b.examId]&&window._planVueltaDone[b.examId][b.key])||null;
+      if(!done) missed.push({examId:b.examId,topicIdx:b.topicIdx,vuelta:b.vuelta});
+    });
+  });
+  /* Remove missed from future days (they'll be re-placed by planGenerar) */
+  Object.keys(dp).forEach(function(k){
+    if(k<todayStr) delete dp[k];
+  });
+  /* Mark missed as undone (they're already undone, just ensuring) */
+  missed.forEach(function(m){
+    if(!window._planVueltaDone[m.examId]) window._planVueltaDone[m.examId]={};
+    var key=_tvk(m.topicIdx,m.vuelta);
+    /* Keep as undone so planGenerar re-includes them */
+    window._planVueltaDone[m.examId][key]=null;
+  });
+  planGenerar(true);
+  var n=missed.length;
+  if(typeof showToast==='function') showToast(n>0?'Plan actualizado · '+n+' tema'+(n!==1?'s':'')+' recuperado'+(n!==1?'s':''):'Plan actualizado · todo al día ✓');
+}
+
+/* ── renderSeguimiento V2 — vuelta columns + status ── */
+var _origRenderSeg = (typeof renderSeguimiento==='function') ? renderSeguimiento : null;
+renderSeguimiento = function(){
+  var cont=document.getElementById('seg-content');
+  if(!cont) return;
+  if(!state.seguimiento) state.seguimiento={active:{},archived:[]};
+
+  var todayStr=_localToday();
+  var hoy=new Date(todayStr+'T12:00:00');
+  var active=state.seguimiento.active||{};
+  var archived=state.seguimiento.archived||[];
+  var activeKeys=Object.keys(active).sort(function(a,b){
+    return (active[a].fechaEvento||'').localeCompare(active[b].fechaEvento||'');
+  });
+
+  cont.innerHTML='';
+  if(!activeKeys.length&&!archived.length){
+    cont.innerHTML='<div style="color:var(--tl);font-size:13px;padding:20px;text-align:center;font-family:Lato,sans-serif;line-height:1.6;">Genera el plan de estudio y marca las bolitas para ver el seguimiento aquí.</div>';
+    return;
+  }
+
+  function buildTable(entry,key,isArch){
+    var d=_planData[key];
+    var numV=(d&&d.numVueltas)||3;
+    var topics=entry.topics||[];
+    if(!topics.length) return null;
+    var examDate=entry.fechaEvento?new Date(entry.fechaEvento+'T12:00:00'):null;
+    var daysLeft=examDate?Math.ceil((examDate-hoy)/86400000):null;
+    var urgColor=daysLeft===null?'var(--tl)':(daysLeft<0?'#dc2626':daysLeft<=2?'#dc2626':daysLeft<=7?'#d97706':'#16a34a');
+
+    /* Compute % and status */
+    var totalDots=topics.length*numV, doneDots=0, planned=0, done=0, missed=0;
+    var planVD=window._planVueltaDone[key]||{};
+    /* Count from plan snapshot how many should be done by today */
+    if(state.currentPlanSnapshot&&state.currentPlanSnapshot.dayPlan){
+      Object.keys(state.currentPlanSnapshot.dayPlan).forEach(function(dk){
+        (state.currentPlanSnapshot.dayPlan[dk]||[]).forEach(function(b){
+          if(b.examId!==key) return;
+          if(dk<=todayStr) planned++;
+        });
+      });
+    }
+    topics.forEach(function(tp,ti){
+      for(var v=0;v<numV;v++){
+        var tvk=_tvk(ti,v);
+        if(planVD[tvk]) doneDots++;
+      }
+    });
+    done=doneDots; missed=Math.max(0,planned-done);
+    var pct=totalDots>0?Math.round(doneDots/totalDots*100):0;
+    var statusTxt=missed>0?('⚠️ -'+missed+' temas'):done>planned?('✅ +'+(done-planned)+' temas'):'';
+    var statusColor=missed>0?'#dc2626':done>planned?'#16a34a':'var(--tl)';
+
+    var wrap=document.createElement('div');
+    wrap.style.cssText='border:1.5px solid var(--bd);border-radius:12px;overflow:hidden;margin-bottom:16px;'+(isArch?'opacity:.75;':'');
+
+    /* Header */
+    var hdr=document.createElement('div');
+    hdr.style.cssText='display:flex;align-items:center;flex-wrap:wrap;gap:8px;padding:10px 14px;background:var(--bl);border-bottom:1px solid var(--bd);';
+    var tDiv=document.createElement('div'); tDiv.style.cssText='flex:1;min-width:0;';
+    var t1=document.createElement('div'); t1.style.cssText='font-size:13px;font-weight:800;color:var(--td);font-family:Lato,sans-serif;';
+    t1.textContent=(entry.accion||'Examen')+' · '+entry.tema;
+    var t2=document.createElement('div'); t2.style.cssText='font-size:10px;color:'+urgColor+';font-family:Lato,sans-serif;margin-top:2px;';
+    t2.textContent=(examDate?examDate.toLocaleDateString('es',{day:'2-digit',month:'long',year:'numeric'}):'')+
+      (daysLeft!==null?' · '+(daysLeft<0?'Vencido':daysLeft===0?'HOY':daysLeft+'d'):'');
+    tDiv.appendChild(t1); tDiv.appendChild(t2);
+
+    /* % + status */
+    var badgeRow=document.createElement('div'); badgeRow.style.cssText='display:flex;align-items:center;gap:6px;flex-shrink:0;';
+    var pctEl=document.createElement('div');
+    pctEl.style.cssText='padding:3px 10px;border-radius:20px;font-size:12px;font-weight:800;font-family:Lato,sans-serif;border:2px solid '+(pct>=80?'#16a34a':pct>=50?'#d97706':'var(--bd)')+';color:'+(pct>=80?'#16a34a':pct>=50?'#d97706':'var(--td)')+';';
+    pctEl.textContent=pct+'%';
+    badgeRow.appendChild(pctEl);
+    if(statusTxt){
+      var stEl=document.createElement('span');
+      stEl.style.cssText='font-size:11px;font-weight:700;color:'+statusColor+';font-family:Lato,sans-serif;white-space:nowrap;';
+      stEl.textContent=statusTxt;
+      badgeRow.appendChild(stEl);
+    }
+    if(!isArch){
+      var archB=document.createElement('button');
+      archB.style.cssText='padding:4px 8px;background:none;border:1px solid var(--bd);border-radius:8px;font-size:10px;color:var(--tl);cursor:pointer;font-family:Lato,sans-serif;';
+      archB.textContent='📦';
+      archB.title='Archivar';
+      (function(k){ archB.onclick=function(e){ e.stopPropagation();
+        if(!confirm('¿Archivar el seguimiento de este examen?')) return;
+        seguimientoArchivar(k);
+      };})(key);
+      badgeRow.appendChild(archB);
+    }
+    hdr.appendChild(tDiv); hdr.appendChild(badgeRow);
+    wrap.appendChild(hdr);
+
+    /* Table */
+    var tbl=document.createElement('table');
+    tbl.style.cssText='width:100%;border-collapse:collapse;font-family:Lato,sans-serif;';
+    var thead=document.createElement('thead');
+    var hrow=document.createElement('tr'); hrow.style.background='var(--bl)';
+    var thN=document.createElement('th');
+    thN.style.cssText='text-align:left;padding:7px 12px;font-size:10px;font-weight:700;color:var(--tm);text-transform:uppercase;border-bottom:1px solid var(--bd);';
+    thN.textContent='Tema'; hrow.appendChild(thN);
+    for(var v=0;v<numV;v++){
+      var th=document.createElement('th');
+      th.style.cssText='width:60px;text-align:center;padding:7px 4px;font-size:10px;font-weight:700;color:'+_VCL[v]+';border-bottom:1px solid var(--bd);';
+      th.textContent=_VN[v].split(' ')[0]; hrow.appendChild(th);
+    }
+    thead.appendChild(hrow); tbl.appendChild(thead);
+    var tbody=document.createElement('tbody');
+    topics.forEach(function(tp,ti){
+      var row=document.createElement('tr'); row.style.cssText='border-bottom:1px solid var(--bd);';
+      var tdN=document.createElement('td');
+      tdN.style.cssText='padding:7px 12px;color:var(--td);font-size:12px;font-weight:500;';
+      tdN.textContent=tp.name||('Tema '+(ti+1));
+      row.appendChild(tdN);
+      for(var v2=0;v2<numV;v2++){
+        var td=document.createElement('td'); td.style.cssText='text-align:center;padding:5px 4px;';
+        var rVal=planVD[_tvk(ti,v2)]||null;
+        var cell=document.createElement('div');
+        var cc=rVal?({'green':'#16a34a','orange':'#d97706','red':'#dc2626'}[rVal]||_VCL[v2]):null;
+        cell.style.cssText='width:28px;height:28px;border-radius:6px;margin:0 auto;border:2px solid '+(cc||'var(--bd)')+';background:'+(cc||'transparent')+';cursor:'+(isArch?'default':'pointer')+';transition:all .15s;';
+        if(cc){ var inner=document.createElement('div'); inner.style.cssText='width:14px;height:14px;border-radius:50%;background:#fff;margin:5px auto;'; cell.appendChild(inner); }
+        if(!isArch){
+          (function(tIdx,vIdx,cellEl){ cellEl.addEventListener('click',function(e){
+            e.stopPropagation();
+            if(!window._planVueltaDone[key]) window._planVueltaDone[key]={};
+            var cvk=_tvk(tIdx,vIdx);
+            var cv=window._planVueltaDone[key][cvk]||null;
+            var _C=[null,'green','orange','red'];
+            window._planVueltaDone[key][cvk]=_C[(_C.indexOf(cv)+1)%4];
+            seguimientoSyncVuelta(key,tIdx,vIdx,window._planVueltaDone[key][cvk]);
+            try{persist().catch(function(){});}catch(e2){}
+            renderSeguimiento();
+          });})(ti,v2,cell);
+        }
+        td.appendChild(cell); row.appendChild(td);
+      }
+      tbody.appendChild(row);
+    });
+    tbl.appendChild(tbody); wrap.appendChild(tbl);
+
+    /* Legend */
+    var leg=document.createElement('div'); leg.style.cssText='display:flex;gap:12px;padding:6px 12px;background:var(--bl);border-top:1px solid var(--bd);flex-wrap:wrap;';
+    [['green','#16a34a','Fácil'],['orange','#d97706','Regular'],['red','#dc2626','Difícil']].forEach(function(pair){
+      var s=document.createElement('span'); s.style.cssText='font-size:10px;color:'+pair[1]+';font-weight:700;display:flex;align-items:center;gap:3px;font-family:Lato,sans-serif;';
+      s.innerHTML='<span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:'+pair[1]+';"></span>'+pair[2];
+      leg.appendChild(s);
+    });
+    if(isArch){
+      var delB=document.createElement('button'); delB.style.cssText='margin-left:auto;padding:2px 8px;background:none;border:1px solid #dc2626;border-radius:6px;color:#dc2626;font-size:10px;cursor:pointer;font-family:Lato,sans-serif;'; delB.textContent='Eliminar';
+      (function(idx){ delB.onclick=function(){ state.seguimiento.archived.splice(idx,1); try{persist().catch(function(){});}catch(e){} renderSeguimiento(); }; })(archived.indexOf(entry));
+      leg.appendChild(delB);
+    }
+    wrap.appendChild(leg);
+    return wrap;
+  }
+
+  if(activeKeys.length){
+    var secT=document.createElement('div'); secT.style.cssText='font-size:11px;font-weight:700;color:var(--tm);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;font-family:Lato,sans-serif;'; secT.textContent='📊 En curso';
+    cont.appendChild(secT);
+    activeKeys.forEach(function(k){ var t=buildTable(active[k],k,false); if(t) cont.appendChild(t); });
+  }
+  if(archived.length){
+    var archT=document.createElement('div'); archT.style.cssText='font-size:11px;font-weight:700;color:var(--tm);text-transform:uppercase;letter-spacing:.5px;margin:14px 0 8px;font-family:Lato,sans-serif;'; archT.textContent='📦 Archivados';
+    cont.appendChild(archT);
+    archived.forEach(function(entry,idx){ var t=buildTable(entry,'archived_'+idx,true); if(t) cont.appendChild(t); });
+  }
+};
+
+/* Wire up "Actualizar mi plan" button */
+(function(){
+  var btn=document.getElementById('plan-actualizar-btn');
+  if(btn){ btn.onclick=planActualizar; return; }
+  /* Create button if not exists */
+  var acts=document.getElementById('plan-actions');
+  if(acts){
+    var nb=document.createElement('button');
+    nb.id='plan-actualizar-btn';
+    nb.style.cssText='padding:9px 16px;background:var(--gd);color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;font-family:Lato,sans-serif;';
+    nb.textContent='🔄 Actualizar mi plan';
+    nb.onclick=planActualizar;
+    acts.appendChild(nb);
+  }
+})();
+
 </script>
 </body>
 </html>
