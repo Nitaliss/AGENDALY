@@ -4225,7 +4225,7 @@ const buf=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(atob('dG
 return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('').slice(0,32);
 }
 const APP_KEY = 'tapunto_v1';
-let state = {records:[],contactos:[],temas:[],acciones:[],comunicados:[],notas:[],rutinas:[],sheetsUrl:'',theme:'verde',coverImageData:null,modo:'trabajo',horario:{activo:0,schedules:[{nombre:'Horario 1',slots:['8:00','9:00','10:00','11:00','12:00','13:00','14:00'],grid:{},colores:{}},{nombre:'Horario 2',slots:['8:00','9:00','10:00','11:00','12:00','13:00','14:00'],grid:{},colores:{}}]},albums:[],planesEstudio:[],currentPlanSnapshot:null,seguimiento:{active:{},archived:[]}};
+let state = {records:[],contactos:[],temas:[],acciones:[],comunicados:[],notas:[],rutinas:[],sheetsUrl:'',theme:'verde',coverImageData:null,modo:'trabajo',horario:{activo:0,schedules:[{nombre:'Horario 1',slots:['8:00','9:00','10:00','11:00','12:00','13:00','14:00'],grid:{},colores:{}},{nombre:'Horario 2',slots:['8:00','9:00','10:00','11:00','12:00','13:00','14:00'],grid:{},colores:{}}]},albums:[],planesEstudio:[],currentPlanSnapshot:null,seguimiento:{active:{},archived:[]},planVueltaDone:{}};
 var rutinasFechaActual = {}; // {id: fechaKey} fecha seleccionada por cada rutina
 let currentUser = null;
 let editingId   = null;
@@ -4330,7 +4330,11 @@ plain=raw;
 plain=raw;
 }
 const parsedState=JSON.parse(plain);
-state=Object.assign({records:[],contactos:[],temas:[],acciones:[],comunicados:[],notas:[],rutinas:[],sheetsUrl:'',theme:'verde',coverImageData:null,modo:'trabajo',horario:{activo:0,schedules:[{nombre:'Horario 1',slots:['8:00','9:00','10:00','11:00','12:00','13:00','14:00'],grid:{},colores:{}},{nombre:'Horario 2',slots:['8:00','9:00','10:00','11:00','12:00','13:00','14:00'],grid:{},colores:{}}]},albums:[],planesEstudio:[],currentPlanSnapshot:null},parsedState);
+state=Object.assign({records:[],contactos:[],temas:[],acciones:[],comunicados:[],notas:[],rutinas:[],sheetsUrl:'',theme:'verde',coverImageData:null,modo:'trabajo',horario:{activo:0,schedules:[{nombre:'Horario 1',slots:['8:00','9:00','10:00','11:00','12:00','13:00','14:00'],grid:{},colores:{}},{nombre:'Horario 2',slots:['8:00','9:00','10:00','11:00','12:00','13:00','14:00'],grid:{},colores:{}}]},albums:[],planesEstudio:[],currentPlanSnapshot:null,planVueltaDone:{},seguimiento:{active:{},archived:[]},planData:{}},parsedState);
+// Restore _planData from state.planData (persisted separately)
+if(state.planData&&typeof _planData!=='undefined'){
+  Object.keys(state.planData).forEach(function(k){_planData[k]=state.planData[k];});
+}
 // Garantizar arrays aunque vengan undefined del estado guardado
 if(!Array.isArray(state.notas)) state.notas=[];
 if(!Array.isArray(state.rutinas)) state.rutinas=[];
@@ -7545,6 +7549,7 @@ function exportarDatosCompletos(){
     currentPlanSnapshot: state.currentPlanSnapshot || null,
     planData: (typeof _planData !== 'undefined') ? _planData : {},
     seguimiento: state.seguimiento || {active:{},archived:[]},
+    planVueltaDone: state.planVueltaDone || {},
     // ── Pomodoro sesiones ──
     pomSessions: pomSessions,
     pomConfig: {
@@ -7607,6 +7612,7 @@ function importBackupJSON(e){
       if(d.currentPlanSnapshot) state.currentPlanSnapshot=d.currentPlanSnapshot;
       if(d.seguimiento) state.seguimiento=d.seguimiento;
       if(d.planData&&typeof _planData!=='undefined'){Object.keys(d.planData).forEach(function(k){_planData[k]=d.planData[k];});}
+      if(d.planVueltaDone) state.planVueltaDone=d.planVueltaDone;
       if(d.pomSessions&&Array.isArray(d.pomSessions)){
         try{ localStorage.setItem('tp_pom_sessions_'+new Date().toDateString(), JSON.stringify(d.pomSessions)); }catch(ex){}
       }
@@ -14177,13 +14183,9 @@ function icsOpenFilePicker(){
         btn.querySelector('span:last-child').style.transform='rotate(180deg)';
       }
     });
-    wrap.appendChild(btn); wrap.appendChild(body);
-    acc.appendChild(wrap);
+    wrap.appendChild(btn); wrap.appendChild(body); acc.appendChild(wrap);
   });
 })();
-</script>
-
-<script>
 /* ═══════════════════════════════════════════════════════════════
    TAPUNTO PLANIFICADOR V5 — MULTI-VUELTA
    Reemplaza planRenderExams, planGenerar, planMakeBlock topics,
@@ -14204,7 +14206,9 @@ var _DC2 = {1:'#16a34a',2:'#d97706',3:'#dc2626'};
 var _DEFMINS = [60,45,30,20];
 
 if(!window._planHidden) window._planHidden={};
-if(!window._planVueltaDone) window._planVueltaDone={};
+// Always ensure planVueltaDone exists (might be cleared after async loadState)
+try{ if(!state.planVueltaDone) state.planVueltaDone={}; }catch(e){ state.planVueltaDone={}; }
+if(!state.planVueltaDone) state.planVueltaDone={};
 /* _planVueltaDone[examId][tkv] = 'green'|'orange'|'red'|null
    tkv = 't0_v0' means topic 0, vuelta 0 */
 
@@ -14217,6 +14221,14 @@ function _topicMins(diff,vueltaMins,vi){
 planRenderExams = function(){
   var list=document.getElementById('plan-exams-list');
   if(!list) return;
+  // Ensure state fields are initialized
+  if(!state.planVueltaDone) state.planVueltaDone={};
+  if(!state.planData) state.planData={};
+  if(!state.seguimiento) state.seguimiento={active:{},archived:[]};
+  // Restore _planData from state if _planData is empty
+  if(Object.keys(_planData).length===0 && Object.keys(state.planData).length>0){
+    Object.keys(state.planData).forEach(function(k){ _planData[k]=state.planData[k]; });
+  }
   // Remember which cards were open to restore state
   var _openCards={};
   Array.from(list.querySelectorAll('[data-exam-id]')).forEach(function(el){
@@ -14239,12 +14251,25 @@ planRenderExams = function(){
   exams.forEach(function(r){
     if(!_planData[r.id]) _planData[r.id]={topics:[{name:'',diff:2}],numVueltas:3,vueltaMins:[60,45,30],pocosDias:'compress'};
     var data=_planData[r.id];
+    // ── Migrate V4 format (topics=number) to V5 format (topics=array) ──
+    if(!Array.isArray(data.topics)){
+      var _nt=typeof data.topics==='number'?data.topics:3;
+      var _diff0=data.diff||2;
+      var _tops=[]; for(var _ti=0;_ti<_nt;_ti++) _tops.push({name:'',diff:_diff0});
+      data.topics=_tops;
+    }
+    if(!data.numVueltas) data.numVueltas=3;
+    if(!data.vueltaMins||data.vueltaMins.length<data.numVueltas) data.vueltaMins=_DEFMINS.slice(0,data.numVueltas);
+    if(!data.pocosDias) data.pocosDias='compress';
+    // ── Keep state.planData in sync so it persists across reloads ──
+    if(!state.planData) state.planData={};
+    state.planData[r.id]=data;
     if(!data.topics||!data.topics.length) data.topics=[{name:'',diff:2}];
     if(!data.numVueltas) data.numVueltas=3;
     if(!data.vueltaMins||data.vueltaMins.length<data.numVueltas){
       data.vueltaMins=_DEFMINS.slice(0,data.numVueltas);
     }
-    if(!window._planVueltaDone[r.id]) window._planVueltaDone[r.id]={};
+    if(!state.planVueltaDone[r.id]) state.planVueltaDone[r.id]={};
 
     var eDate=new Date(r.fechaEvento+'T12:00:00');
     var daysLeft=Math.ceil((eDate-hoy)/86400000);
@@ -14273,7 +14298,7 @@ planRenderExams = function(){
     xBtn.textContent='×'; xBtn.title='Quitar del planificador';
     (function(rid,rname){ xBtn.onclick=function(e){ e.stopPropagation();
       if(!confirm('¿Quitar "'+rname+'" del planificador?')) return;
-      window._planHidden[rid]=true; delete _planData[rid]; delete window._planVueltaDone[rid];
+      window._planHidden[rid]=true; delete _planData[rid]; delete state.planVueltaDone[rid];
       if(state.seguimiento&&state.seguimiento.active) delete state.seguimiento.active[rid];
       try{persist().catch(function(){});}catch(ex){} planRenderExams();
     };})(r.id,r.tema);
@@ -14479,9 +14504,17 @@ planGenerar = function(doScroll){
   var tasks=[];
   exams.forEach(function(r){
     var d=_planData[r.id]||{topics:[{name:'Tema 1',diff:2}],numVueltas:3,vueltaMins:[60,45,30],pocosDias:'compress'};
+    // Migrate V4 format
+    if(!Array.isArray(d.topics)){
+      var _gnt=typeof d.topics==='number'?d.topics:3;
+      var _gtops=[]; for(var _gti=0;_gti<_gnt;_gti++) _gtops.push({name:'Tema '+(_gti+1),diff:d.diff||2});
+      d.topics=_gtops;
+    }
+    if(!d.numVueltas) d.numVueltas=3;
+    if(!d.vueltaMins||d.vueltaMins.length<d.numVueltas) d.vueltaMins=_DEFMINS.slice(0,d.numVueltas);
     _planData[r.id]=d;
-    if(!window._planVueltaDone[r.id]) window._planVueltaDone[r.id]={};
-    var done=window._planVueltaDone[r.id];
+    if(!state.planVueltaDone[r.id]) state.planVueltaDone[r.id]={};
+    var done=state.planVueltaDone[r.id];
     var eDate=new Date(r.fechaEvento+'T12:00:00');
     var daysLeft=Math.max(1,Math.ceil((eDate-hoy)/86400000));
     /* Determine how many vueltas fit */
@@ -14529,7 +14562,8 @@ planGenerar = function(doScroll){
   /* Determine available study days per exam, distribute phases */
   function getStudyDays(fechaEvento){
     var eDate=new Date(fechaEvento+'T12:00:00');
-    return Math.max(1, Math.ceil((eDate-hoy)/86400000)-1);
+    // Include up to day before exam (daysToExam-1 = studyable days)
+    return Math.max(1, Math.ceil((eDate-hoy)/86400000));
   }
 
   /* For each exam, assign phase windows */
@@ -14544,6 +14578,9 @@ planGenerar = function(doScroll){
     for(var v=0;v<nv;v++){
       boundaries.push(boundaries[v]+Math.max(1,Math.round(sd*(props[v]||0.25))));
     }
+    // Cap: last boundary must be < studyDays (leave exam day free)
+    if(boundaries[nv]>=sd) boundaries[nv]=Math.max(boundaries[nv-1]+1, sd-1);
+        if(boundaries[nv]<=boundaries[nv-1]) boundaries[nv]=boundaries[nv-1]+1;
     examPhases[r.id]={boundaries:boundaries,studyDays:sd};
   });
 
@@ -14680,7 +14717,7 @@ function planRenderDomV5(container, dayPlan, todayStr){
         var dotWrap=document.createElement('div');
         dotWrap.style.cssText='flex-shrink:0;';
         var dot=document.createElement('div');
-        var curVal=(window._planVueltaDone[b.examId]&&window._planVueltaDone[b.examId][b.key])||null;
+        var curVal=(state.planVueltaDone[b.examId]&&state.planVueltaDone[b.examId][b.key])||null;
         var dotColor=curVal?({'green':'#16a34a','orange':'#d97706','red':'#dc2626'}[curVal]||b.color):b.color;
         var dotFilled=!!curVal;
         dot.style.cssText='width:20px;height:20px;border-radius:50%;cursor:pointer;transition:all .2s;border:2px solid '+dotColor+';background:'+(dotFilled?dotColor:'transparent')+';';
@@ -14689,10 +14726,10 @@ function planRenderDomV5(container, dayPlan, todayStr){
         (function(bl,dotEl){
           dotEl.addEventListener('click',function(e){
             e.stopPropagation();
-            if(!window._planVueltaDone[bl.examId]) window._planVueltaDone[bl.examId]={};
-            var cv=window._planVueltaDone[bl.examId][bl.key]||null;
+            if(!state.planVueltaDone[bl.examId]) state.planVueltaDone[bl.examId]={};
+            var cv=state.planVueltaDone[bl.examId][bl.key]||null;
             var ni=_CYCLE.indexOf(cv); var nv=_CYCLE[(ni+1)%4];
-            window._planVueltaDone[bl.examId][bl.key]=nv;
+            state.planVueltaDone[bl.examId][bl.key]=nv;
             var nc=nv?({'green':'#16a34a','orange':'#d97706','red':'#dc2626'}[nv]||bl.color):bl.color;
             dotEl.style.border='2px solid '+nc;
             dotEl.style.background=nv?nc:'transparent';
@@ -14751,7 +14788,7 @@ function planActualizar(){
     if(k>=todayStr) return;
     (dp[k]||[]).forEach(function(b){
       if(!b.examId||!b.key) return;
-      var done=(window._planVueltaDone[b.examId]&&window._planVueltaDone[b.examId][b.key])||null;
+      var done=(state.planVueltaDone[b.examId]&&state.planVueltaDone[b.examId][b.key])||null;
       if(!done) missed.push({examId:b.examId,topicIdx:b.topicIdx,vuelta:b.vuelta});
     });
   });
@@ -14761,10 +14798,10 @@ function planActualizar(){
   });
   /* Mark missed as undone (they're already undone, just ensuring) */
   missed.forEach(function(m){
-    if(!window._planVueltaDone[m.examId]) window._planVueltaDone[m.examId]={};
+    if(!state.planVueltaDone[m.examId]) state.planVueltaDone[m.examId]={};
     var key=_tvk(m.topicIdx,m.vuelta);
     /* Keep as undone so planGenerar re-includes them */
-    window._planVueltaDone[m.examId][key]=null;
+    state.planVueltaDone[m.examId][key]=null;
   });
   planGenerar(true);
   var n=missed.length;
@@ -14803,7 +14840,7 @@ renderSeguimiento = function(){
 
     /* Compute % and status */
     var totalDots=topics.length*numV, doneDots=0, planned=0, done=0, missed=0;
-    var planVD=window._planVueltaDone[key]||{};
+    var planVD=state.planVueltaDone[key]||{};
     /* Count from plan snapshot how many should be done by today */
     if(state.currentPlanSnapshot&&state.currentPlanSnapshot.dayPlan){
       Object.keys(state.currentPlanSnapshot.dayPlan).forEach(function(dk){
@@ -14896,12 +14933,12 @@ renderSeguimiento = function(){
         if(!isArch){
           (function(tIdx,vIdx,cellEl){ cellEl.addEventListener('click',function(e){
             e.stopPropagation();
-            if(!window._planVueltaDone[key]) window._planVueltaDone[key]={};
+            if(!state.planVueltaDone[key]) state.planVueltaDone[key]={};
             var cvk=_tvk(tIdx,vIdx);
-            var cv=window._planVueltaDone[key][cvk]||null;
+            var cv=state.planVueltaDone[key][cvk]||null;
             var _C=[null,'green','orange','red'];
-            window._planVueltaDone[key][cvk]=_C[(_C.indexOf(cv)+1)%4];
-            seguimientoSyncVuelta(key,tIdx,vIdx,window._planVueltaDone[key][cvk]);
+            state.planVueltaDone[key][cvk]=_C[(_C.indexOf(cv)+1)%4];
+            seguimientoSyncVuelta(key,tIdx,vIdx,state.planVueltaDone[key][cvk]);
             try{persist().catch(function(){});}catch(e2){}
             renderSeguimiento();
           });})(ti,v2,cell);
@@ -14955,6 +14992,7 @@ renderSeguimiento = function(){
     acts.appendChild(nb);
   }
 })();
+
 
 </script>
 </body>
