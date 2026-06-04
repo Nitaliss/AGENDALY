@@ -3425,12 +3425,7 @@ body.on-home #sec-home { display: block !important; }
 
 
       
-    <!-- ═══ AYUDA ═══ -->
-    <div style="margin-top:18px;">
-      <div style="font-size:14px;font-weight:700;color:var(--td);font-family:Lato,sans-serif;margin-bottom:10px;">❓ Guía rápida</div>
-      <div id="help-accordion"></div>
-    </div>
-  </div><!-- /sec-config -->
+    </div><!-- /sec-config -->
     </div><!-- /page -->
   </div><!-- /nb-inner -->
 <!-- Tooltip Modal -->
@@ -10479,9 +10474,8 @@ function planGenerar(doScroll){
 
 /* Save current plan */
 function planGuardar(){
-  var out = document.getElementById('plan-output');
-  if(!out||!out._planSnapshot) return;
-  var snap = out._planSnapshot;
+  var snap=state.currentPlanSnapshot||((document.getElementById('plan-output')||{})._planSnapshot);
+  if(!snap||!snap.dayPlan){if(typeof showToast==='function')showToast('Genera primero el plan');return;}
   if(!state.planesEstudio) state.planesEstudio=[];
   var saved = {
     id: 'plan'+Date.now(),
@@ -10562,7 +10556,9 @@ function planLimpiarHistorial(){
 /* PDF download - current plan */
 function planDescargarPDF(){
   var out=document.getElementById('plan-output');
-  if(!out||!out._planSnapshot){showToast('Genera primero el plan de estudio');return;}
+  var _snap=state.currentPlanSnapshot||(out&&out._planSnapshot)||null;
+  if(!_snap||!_snap.dayPlan){if(typeof showToast==='function')showToast('Genera primero el plan');return;}
+  if(out&&!out._planSnapshot)out._planSnapshot=_snap;
   var n=new Date();
   var ts=n.getFullYear()+'-'+String(n.getMonth()+1).padStart(2,'0')+'-'+String(n.getDate()).padStart(2,'0');
   planAbrirPDF(out._planSnapshot.dayPlan, out._planSnapshot.exams, ts, n.toLocaleDateString('es',{day:'2-digit',month:'long',year:'numeric'}));
@@ -12314,10 +12310,10 @@ function planRenderDom(container, dayPlan, todayStr, dailySummaries){
       var blockHdr=document.createElement('div');
       var isRev=item.type==='review', isPrac=item.type==='practica';
       var hdrColor=isRev?'#3498db':isPrac?'#e67e22':'var(--gd)';
-      var hdrBg=isRev?'rgba(52,152,219,.08)':isPrac?'rgba(230,126,34,.08)':'rgba(45,138,90,.08)';
+      var hdrBg=isRev?'rgba(52,152,219,.14)':isPrac?'rgba(230,126,34,.14)':'rgba(45,138,90,.14)';
       var typeIcon=isRev?'🔁':isPrac?'🏋':'📖';
       var typeLabel=isRev?'REPASO':isPrac?'PRÁCTICA':'ESTUDIO';
-      blockHdr.style.cssText='display:flex;align-items:center;gap:8px;padding:7px 12px;background:'+hdrBg+';border-left:3px solid '+hdrColor+';';
+      blockHdr.style.cssText='display:flex;align-items:center;gap:8px;padding:7px 12px;background:'+hdrBg+';border-left:4px solid '+hdrColor+';';
 
       var timeSpan=document.createElement('span');
       timeSpan.style.cssText='font-size:11px;font-weight:700;color:'+hdrColor+';font-family:Lato,sans-serif;min-width:90px;flex-shrink:0;';
@@ -13321,6 +13317,24 @@ function _localToday(){var n=new Date();return _mkKey(n);}
 function planRenderConfig(){
   var cfgDiv=document.getElementById('plan-cfg');
   if(!cfgDiv) return;
+  if(!document.getElementById('plan-cfg-toggle')){
+    var tDiv=document.createElement('div');
+    tDiv.id='plan-cfg-toggle';
+    tDiv.style.cssText='display:flex;align-items:center;justify-content:space-between;padding:8px 12px;background:var(--bl);border:1.5px solid var(--bd);border-radius:10px;cursor:pointer;margin-bottom:8px;';
+    tDiv.innerHTML='<span style="font-size:12px;font-weight:700;color:var(--td);font-family:Lato,sans-serif;">⌛ Franjas horarias y descansos</span><span id="pcfg-arr" style="font-size:11px;color:var(--tl);transition:transform .2s;">▼</span>';
+    tDiv.addEventListener('click',function(){
+      var body=document.getElementById('plan-cfg-body');
+      if(!body)return;
+      var nowOpen=body.style.display!=='none';
+      body.style.display=nowOpen?'none':'block';
+      document.getElementById('pcfg-arr').style.transform=nowOpen?'':'rotate(180deg)';
+    });
+    cfgDiv.parentNode.insertBefore(tDiv,cfgDiv);
+    var bDiv=document.createElement('div');
+    bDiv.id='plan-cfg-body';
+    bDiv.style.display='none';
+    cfgDiv.parentNode.insertBefore(bDiv,cfgDiv.nextSibling);
+  }
   var tc=window._planTimeCfg;
   var dayKeys=['lun','mar','mie','jue','vie','sab','dom'];
 
@@ -13373,7 +13387,8 @@ function planRenderConfig(){
     schedHtml = '<div style="font-size:10px;color:var(--tl);padding:4px 0 8px;font-family:Lato,sans-serif;">⚠️ Sin horario configurado — ve a Inicio → Mi Horario para añadir clases.</div>';
   }
 
-  cfgDiv.innerHTML=schedHtml+'<div style="background:var(--bl);border:1px solid var(--bd);border-radius:10px;padding:12px;margin-bottom:10px;">'
+  var _pBody=document.getElementById('plan-cfg-body')||cfgDiv;
+  _pBody.innerHTML=schedHtml+'<div style="background:var(--bl);border:1px solid var(--bd);border-radius:10px;padding:12px;margin-bottom:10px;">'
     +'<div style="font-size:12px;font-weight:700;color:var(--td);margin-bottom:10px;font-family:Lato,sans-serif;">⏰ Franjas horarias</div>'
     +tRow('📚 Estudio','studyStart','studyEnd')
     +tRow('🍽 Comida','lunchStart','lunchEnd')
@@ -13687,298 +13702,7 @@ planGenerarV2 = planGenerar;
 
 
 
-<script>
 
-/* ═══ TAPUNTO SEGUIMIENTO V2 — CLEAN IMPLEMENTATION ═══ */
-
-/* Difficulty constants */
-var _DC=[null,'green','orange','red'];
-var _DCol={green:'#16a34a',orange:'#d97706',red:'#dc2626'};
-var _DBg={green:'#16a34a',orange:'#d97706',red:'#dc2626'};
-var _DLbl={green:'Fácil',orange:'Regular',red:'Difícil'};
-function _dNext(v){var i=_DC.indexOf(v||null);return _DC[(i+1)%4];}
-
-/* ── Sync plan tiles → seguimiento state ── */
-function seguimientoSyncFromPlan(){
-  if(!state.seguimiento) state.seguimiento={active:{},archived:[]};
-  if(!state.currentPlanSnapshot||!state.currentPlanSnapshot.dayPlan) return;
-  var dp=state.currentPlanSnapshot.dayPlan;
-  Object.values(dp).forEach(function(dayArr){
-    dayArr.forEach(function(b){
-      if(b.type!=='study'||!b.topicTiles||!b.topicTiles.length) return;
-      var examRec=(state.records||[]).find(function(r){return r.tema===b.asig&&!r.archivado&&r.fechaEvento;});
-      if(!examRec) return;
-      var key=examRec.id||b.asig;
-      if(!state.seguimiento.active[key]){
-        state.seguimiento.active[key]={tema:examRec.tema,accion:examRec.accion||'',fechaEvento:examRec.fechaEvento,topics:[]};
-      }
-      var entry=state.seguimiento.active[key];
-      b.topicTiles.forEach(function(tp,ti){
-        while(entry.topics.length<=ti) entry.topics.push({name:'',rounds:[]});
-        if(tp.name&&tp.name.trim()) entry.topics[ti].name=tp.name;
-        // Smart merge rounds (Option A): keep existing, update with new data
-        var newRounds=tp.rounds||[];
-        var curRounds=entry.topics[ti].rounds||[];
-        for(var ri=0;ri<newRounds.length;ri++){
-          if(newRounds[ri]!==null&&newRounds[ri]!==undefined){
-            while(curRounds.length<=ri) curRounds.push(null);
-            curRounds[ri]=newRounds[ri];
-          }
-        }
-        entry.topics[ti].rounds=curRounds;
-      });
-    });
-  });
-  try{persist().catch(function(){});}catch(e){}
-  // NOTE: renderSeguimiento is NOT called here to avoid recursion
-  // The caller (estSwitchTab or dot click) handles the refresh
-}
-
-/* ── Archive (Option C) ── */
-function seguimientoArchivar(key){
-  if(!state.seguimiento||!state.seguimiento.active||!state.seguimiento.active[key]) return;
-  var entry=JSON.parse(JSON.stringify(state.seguimiento.active[key]));
-  entry.archivedAt=new Date().toISOString();
-  if(!state.seguimiento.archived) state.seguimiento.archived=[];
-  state.seguimiento.archived.unshift(entry);
-  try{persist().catch(function(){});}catch(e){}
-  renderSeguimiento();
-}
-
-/* ── Render seguimiento tab ── */
-function renderSeguimiento(){
-  var cont=document.getElementById('seg-content');
-  if(!cont) return;
-  seguimientoSyncFromPlan();
-
-  var now=new Date();
-  var todayStr=now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0')+'-'+String(now.getDate()).padStart(2,'0');
-  var hoy=new Date(todayStr+'T12:00:00');
-
-  cont.innerHTML='';
-
-  var active=state.seguimiento&&state.seguimiento.active?state.seguimiento.active:{};
-  var archived=state.seguimiento&&state.seguimiento.archived?state.seguimiento.archived:[];
-  var activeKeys=Object.keys(active).sort(function(a,b){
-    return (active[a].fechaEvento||'').localeCompare(active[b].fechaEvento||'');
-  });
-
-  if(!activeKeys.length&&!archived.length){
-    cont.innerHTML='<div style="color:var(--tl);font-size:13px;padding:20px;text-align:center;font-family:Lato,sans-serif;line-height:1.6;">Genera el plan de estudio y marca las bolitas de colores en cada tema.<br><br>🟢 Fácil &nbsp; 🟠 Medio &nbsp; 🔴 Difícil</div>';
-    return;
-  }
-
-  function buildExamTable(entry, key, isArchived){
-    if(!entry||!entry.topics||!entry.topics.length) return null;
-    var topics=entry.topics;
-    var examDate=entry.fechaEvento?new Date(entry.fechaEvento+'T12:00:00'):null;
-    var diff=examDate?Math.ceil((examDate-hoy)/86400000):null;
-    var diffLabel=diff===null?'':(diff<0?'Vencido':diff===0?'HOY':diff===1?'Mañana':diff+'d');
-    var diffColor=diff===null?'var(--tl)':(diff<0||diff===0?'#c0392b':diff<=3?'#e67e22':'#27ae60');
-
-    // Max existing rounds + default cols
-    var maxR=3; // default 3 columns
-    topics.forEach(function(t){ if((t.rounds||[]).length>maxR) maxR=t.rounds.length; });
-
-    // % studied = topics with ≥1 non-null round
-    var studied=topics.filter(function(t){return (t.rounds||[]).some(function(r){return r;});}).length;
-    var pct=topics.length>0?Math.round(studied/topics.length*100):0;
-
-    /* Wrapper */
-    var wrap=document.createElement('div');
-    wrap.style.cssText='border-radius:12px;border:1.5px solid var(--bd);overflow:hidden;margin-bottom:16px;'+(isArchived?'opacity:.7;':'');
-
-    /* Header */
-    var hdr=document.createElement('div');
-    hdr.style.cssText='display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:var(--bl);border-bottom:1px solid var(--bd);gap:8px;flex-wrap:wrap;';
-
-    var titleDiv=document.createElement('div');
-    titleDiv.style.cssText='flex:1;min-width:0;';
-    var t1=document.createElement('div');
-    t1.style.cssText='font-size:13px;font-weight:800;color:var(--td);font-family:Lato,sans-serif;';
-    t1.textContent=(entry.accion||'Examen')+' · '+(entry.tema||'');
-    var t2=document.createElement('div');
-    t2.style.cssText='font-size:10px;color:'+diffColor+';font-family:Lato,sans-serif;margin-top:2px;';
-    t2.textContent=(examDate?examDate.toLocaleDateString('es',{day:'2-digit',month:'long',year:'numeric'}):'')+
-      (diffLabel?' · '+diffLabel:'')+(isArchived?' · Archivado '+new Date(entry.archivedAt).toLocaleDateString('es',{day:'2-digit',month:'short'}):'');
-    titleDiv.appendChild(t1); titleDiv.appendChild(t2);
-
-    var rightDiv=document.createElement('div');
-    rightDiv.style.cssText='display:flex;align-items:center;gap:8px;flex-shrink:0;';
-
-    // % badge
-    var pctEl=document.createElement('div');
-    pctEl.id='seg-pct-'+key.replace(/[^a-z0-9]/gi,'_');
-    pctEl.style.cssText='padding:4px 12px;border-radius:20px;font-size:13px;font-weight:800;font-family:Lato,sans-serif;white-space:nowrap;border:2px solid '+(pct>=80?'#27ae60':pct>=50?'#e67e22':'var(--bd)')+';color:'+(pct>=80?'#27ae60':pct>=50?'#e67e22':'var(--td)')+';';
-    pctEl.textContent=pct+'%';
-    rightDiv.appendChild(pctEl);
-
-    if(!isArchived){
-      var archBtn=document.createElement('button');
-      archBtn.style.cssText='padding:5px 10px;background:none;border:1px solid var(--bd);border-radius:8px;font-size:11px;color:var(--tl);cursor:pointer;font-family:Lato,sans-serif;white-space:nowrap;';
-      archBtn.textContent='📦 Archivar';
-      (function(k){archBtn.onclick=function(e){e.stopPropagation();seguimientoArchivar(k);};})(key);
-      rightDiv.appendChild(archBtn);
-    }
-
-    hdr.appendChild(titleDiv); hdr.appendChild(rightDiv);
-    wrap.appendChild(hdr);
-
-    /* Table */
-    var tbl=document.createElement('table');
-    tbl.style.cssText='width:100%;border-collapse:collapse;font-family:Lato,sans-serif;';
-
-    // Column header row
-    var thead=document.createElement('thead');
-    var hrow=document.createElement('tr');
-    hrow.style.cssText='background:var(--bl);';
-
-    var thN=document.createElement('th');
-    thN.style.cssText='text-align:left;padding:7px 12px;font-size:10px;font-weight:700;color:var(--tm);text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid var(--bd);';
-    thN.textContent='Tema';
-    hrow.appendChild(thN);
-
-    for(var ci=0;ci<maxR;ci++){
-      var th=document.createElement('th');
-      th.style.cssText='width:40px;text-align:center;padding:7px 4px;font-size:11px;font-weight:700;color:var(--tm);border-bottom:1px solid var(--bd);';
-      th.textContent=(ci+1);
-      hrow.appendChild(th);
-    }
-    // + column header
-    if(!isArchived){
-      var thAdd=document.createElement('th');
-      thAdd.style.cssText='width:32px;text-align:center;padding:7px 4px;border-bottom:1px solid var(--bd);';
-      var addColBtn=document.createElement('button');
-      addColBtn.style.cssText='width:22px;height:22px;border-radius:50%;border:1.5px dashed var(--bd);background:none;cursor:pointer;font-size:12px;color:var(--tl);padding:0;';
-      addColBtn.textContent='+';
-      (function(k,e,wr){ addColBtn.onclick=function(ev){
-        ev.stopPropagation(); maxR++;
-        // Rebuild table
-        wr.remove(); cont.insertBefore(buildExamTable(e,k,false), cont.querySelector('.seg-arch-section')||null);
-      };})(key, entry, wrap);
-      thAdd.appendChild(addColBtn); hrow.appendChild(thAdd);
-    }
-    thead.appendChild(hrow); tbl.appendChild(thead);
-
-    // Body rows
-    var tbody=document.createElement('tbody');
-    topics.forEach(function(tp,ti){
-      var row=document.createElement('tr');
-      row.style.cssText='border-bottom:1px solid '+'var(--bd)'+';';
-
-      var tdName=document.createElement('td');
-      tdName.style.cssText='padding:8px 12px;color:var(--td);font-size:12px;font-weight:500;';
-      tdName.textContent=tp.name||('Tema '+(ti+1));
-      row.appendChild(tdName);
-
-      for(var ci2=0;ci2<maxR;ci2++){
-        var td=document.createElement('td');
-        td.style.cssText='text-align:center;padding:5px 4px;width:40px;';
-
-        var val=(tp.rounds&&tp.rounds[ci2])?tp.rounds[ci2]:null;
-        var cell=document.createElement('div');
-        cell.style.cssText='width:26px;height:26px;border-radius:6px;margin:0 auto;cursor:'+(isArchived?'default':'pointer')+';transition:all .15s;border:2px solid '+(val?_DCol[val]:'var(--bd)')+';background:'+(val?_DBg[val]:'transparent')+';display:flex;align-items:center;justify-content:center;';
-        if(val){
-          var dot2=document.createElement('div');
-          dot2.style.cssText='width:12px;height:12px;border-radius:50%;background:#fff;opacity:.9;';
-          cell.appendChild(dot2);
-          cell.title=_DLbl[val];
-        }
-        if(!isArchived){
-          (function(tpC,ci3,cellEl,rowEl,tIdx){
-            cellEl.addEventListener('click',function(e){
-              e.stopPropagation();
-              if(!tpC.rounds) tpC.rounds=[];
-              while(tpC.rounds.length<=ci3) tpC.rounds.push(null);
-              tpC.rounds[ci3]=_dNext(tpC.rounds[ci3]);
-              // Also sync back to plan tiles
-              seguimientoSyncToTile(key,tIdx,ci3,tpC.rounds[ci3]);
-              renderSeguimiento();
-            });
-          })(tp,ci2,cell,row,ti);
-        }
-        td.appendChild(cell); row.appendChild(td);
-      }
-      if(!isArchived) row.appendChild(document.createElement('td')); // empty + column cell
-      tbody.appendChild(row);
-    });
-    tbl.appendChild(tbody);
-    wrap.appendChild(tbl);
-
-    // Legend footer
-    var leg=document.createElement('div');
-    leg.style.cssText='display:flex;gap:14px;padding:7px 12px;background:var(--bl);border-top:1px solid var(--bd);';
-    ['green','orange','red'].forEach(function(d){
-      var s=document.createElement('span');
-      s.style.cssText='font-size:10px;color:'+_DCol[d]+';font-weight:700;display:flex;align-items:center;gap:3px;font-family:Lato,sans-serif;';
-      s.innerHTML='<span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:'+_DCol[d]+';"></span>'+_DLbl[d];
-      leg.appendChild(s);
-    });
-    if(isArchived){
-      var delBtn=document.createElement('button');
-      delBtn.style.cssText='margin-left:auto;padding:2px 8px;background:none;border:1px solid #c0392b;border-radius:6px;color:#c0392b;font-size:10px;cursor:pointer;';
-      delBtn.textContent='Eliminar';
-      (function(idx){ delBtn.onclick=function(){ state.seguimiento.archived.splice(idx,1); try{persist().catch(function(){});}catch(e){} renderSeguimiento(); }; })(archived.indexOf(entry));
-      leg.appendChild(delBtn);
-    }
-    wrap.appendChild(leg);
-    return wrap;
-  }
-
-  // Active exams
-  if(activeKeys.length){
-    var secTitle=document.createElement('div');
-    secTitle.style.cssText='font-size:11px;font-weight:700;color:var(--tm);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;font-family:Lato,sans-serif;';
-    secTitle.textContent='📊 En curso';
-    cont.appendChild(secTitle);
-    activeKeys.forEach(function(k){
-      var tbl=buildExamTable(active[k],k,false);
-      if(tbl) cont.appendChild(tbl);
-    });
-  }
-
-  // Archived
-  if(archived.length){
-    var archSec=document.createElement('div');
-    archSec.className='seg-arch-section';
-    var archTitle=document.createElement('div');
-    archTitle.style.cssText='font-size:11px;font-weight:700;color:var(--tm);text-transform:uppercase;letter-spacing:.5px;margin:16px 0 8px;font-family:Lato,sans-serif;';
-    archTitle.textContent='📦 Archivados';
-    archSec.appendChild(archTitle);
-    archived.forEach(function(entry,idx){
-      var tbl=buildExamTable(entry,'archived_'+idx,true);
-      if(tbl) archSec.appendChild(tbl);
-    });
-    cont.appendChild(archSec);
-  }
-}
-
-/* Sync a table cell change back to the plan tile */
-function seguimientoSyncToTile(examKey, topicIdx, roundIdx, val){
-  if(!state.seguimiento||!state.seguimiento.active||!state.seguimiento.active[examKey]) return;
-  var entry=state.seguimiento.active[examKey];
-  if(!entry.topics[topicIdx]) return;
-  if(!entry.topics[topicIdx].rounds) entry.topics[topicIdx].rounds=[];
-  while(entry.topics[topicIdx].rounds.length<=roundIdx) entry.topics[topicIdx].rounds.push(null);
-  entry.topics[topicIdx].rounds[roundIdx]=val;
-  // Update plan snapshot tiles
-  if(state.currentPlanSnapshot&&state.currentPlanSnapshot.dayPlan){
-    Object.values(state.currentPlanSnapshot.dayPlan).forEach(function(dayArr){
-      dayArr.forEach(function(b){
-        if(b.type!=='study'||b.asig!==entry.tema||!b.topicTiles) return;
-        if(b.topicTiles[topicIdx]){
-          if(!b.topicTiles[topicIdx].rounds) b.topicTiles[topicIdx].rounds=[];
-          while(b.topicTiles[topicIdx].rounds.length<=roundIdx) b.topicTiles[topicIdx].rounds.push(null);
-          b.topicTiles[topicIdx].rounds[roundIdx]=val;
-        }
-      });
-    });
-    // Persist updated snapshot
-    state.seguimiento.active[examKey]=entry;
-    try{persist().catch(function(){});}catch(e){}
-  }
-}
-</script>
 
 <script>
 
@@ -14438,7 +14162,7 @@ planRenderExams = function(){
         var nameInp=document.createElement('input');
         nameInp.type='text'; nameInp.placeholder='Nombre del tema…'; nameInp.value=tp.name||'';
         nameInp.style.cssText='flex:1;min-width:0;padding:5px 8px;border:1px solid var(--bd);border-radius:8px;font-size:12px;background:var(--bp);color:var(--td);font-family:Lato,sans-serif;';
-        (function(t){ nameInp.oninput=function(){ t.name=this.value; clearTimeout(window._planDeb); window._planDeb=setTimeout(function(){planGenerar(false);},600); }; })(tp);
+        (function(t,tIdx,rid){ nameInp.oninput=function(){ t.name=this.value; if(state.planData&&state.planData[rid]&&Array.isArray(state.planData[rid].topics)&&state.planData[rid].topics[tIdx]) state.planData[rid].topics[tIdx].name=this.value; if(state.seguimiento&&state.seguimiento.active&&state.seguimiento.active[rid]){var sg=state.seguimiento.active[rid];while(sg.topics.length<=tIdx)sg.topics.push({name:'',rounds:[]});sg.topics[tIdx].name=this.value;} clearTimeout(window._planDeb); window._planDeb=setTimeout(function(){planGenerar(false);},600); }; })(tp,ti,r.id);
 
         /* Diff selector */
         var diffSel=document.createElement('div');
@@ -14650,7 +14374,7 @@ function planRenderDomV5(container, dayPlan, todayStr){
     var isToday=key===todayStr;
     var blocks=dayPlan[key];
     var dayCard=document.createElement('div');
-    dayCard.style.cssText='background:var(--w);border:1.5px solid '+(isToday?'var(--gd)':'var(--bd)')+';border-radius:12px;margin-bottom:12px;overflow:hidden;';
+    dayCard.style.cssText='background:var(--w);border:'+(isToday?'2.5px':'1.5px')+' solid '+(isToday?'var(--gd)':'var(--bd)')+';border-radius:12px;margin-bottom:12px;overflow:hidden;box-shadow:'+(isToday?'0 2px 8px rgba(45,138,90,.18)':'none')+';';
     /* Day header */
     var dHdr=document.createElement('div');
     dHdr.style.cssText='display:flex;align-items:center;justify-content:space-between;padding:8px 14px;background:var(--bl);border-bottom:1px solid var(--bd);';
@@ -14993,6 +14717,414 @@ renderSeguimiento = function(){
   }
 })();
 
+
+</script>
+
+<script>
+/* ═══ TAPUNTO SEGUIMIENTO V3 — Vista Chips (E) + Gantt horizontal ═══ */
+
+/* ── Constants (shared with V5 planner) ── */
+var _SEG_ICONS = ['\u{1F4D6}','\u{1F9E0}','\u{1F501}','\u2705'];
+var _SEG_DOTS  = ['\u26AA','\uD83D\uDFE2','\uD83D\uDFE0','\uD83D\uDD34'];
+
+/* ── seguimientoArchivar ── */
+function seguimientoArchivar(key){
+  if(!state.seguimiento||!state.seguimiento.active||!state.seguimiento.active[key]) return;
+  var entry=JSON.parse(JSON.stringify(state.seguimiento.active[key]));
+  entry.archivedAt=new Date().toISOString();
+  if(!state.seguimiento.archived) state.seguimiento.archived=[];
+  state.seguimiento.archived.unshift(entry);
+  try{persist().catch(function(){});}catch(e){}
+  renderSeguimiento();
+}
+
+/* ── seguimientoSyncFromPlan ── */
+function seguimientoSyncFromPlan(){
+  if(!state.seguimiento) state.seguimiento={active:{},archived:[]};
+  if(!state.currentPlanSnapshot||!state.currentPlanSnapshot.dayPlan) return;
+  var dp=state.currentPlanSnapshot.dayPlan;
+  Object.values(dp).forEach(function(dayArr){
+    dayArr.forEach(function(b){
+      if(b.type!=='vuelta'||!b.examId) return;
+      var rec=(state.records||[]).find(function(r){return r.id===b.examId;});
+      if(!rec) return;
+      var key=b.examId;
+      if(!state.seguimiento.active[key]){
+        state.seguimiento.active[key]={tema:rec.tema,accion:rec.accion||'',fechaEvento:rec.fechaEvento,topics:[]};
+      }
+      var entry=state.seguimiento.active[key];
+      // Sync topic names from planData
+      var d=state.planData&&state.planData[key];
+      if(d&&Array.isArray(d.topics)){
+        d.topics.forEach(function(tp,ti){
+          while(entry.topics.length<=ti) entry.topics.push({name:'',rounds:[]});
+          if(tp.name) entry.topics[ti].name=tp.name;
+        });
+      }
+    });
+  });
+  try{persist().catch(function(){});}catch(e){}
+}
+
+/* ── seguimientoSyncVuelta (already defined in V5, re-confirm) ── */
+if(typeof seguimientoSyncVuelta==='undefined'){
+  window.seguimientoSyncVuelta=function(examId,topicIdx,vuelta,val){
+    if(!state.seguimiento) state.seguimiento={active:{},archived:[]};
+    if(!state.seguimiento.active[examId]) return;
+    var entry=state.seguimiento.active[examId];
+    while(entry.topics.length<=topicIdx) entry.topics.push({name:'',rounds:[]});
+    if(!entry.topics[topicIdx].rounds) entry.topics[topicIdx].rounds=[];
+    while(entry.topics[topicIdx].rounds.length<=vuelta) entry.topics[topicIdx].rounds.push(null);
+    entry.topics[topicIdx].rounds[vuelta]=val;
+    try{persist().catch(function(){});}catch(e){}
+  };
+}
+
+/* ── renderSeguimiento V3 ── */
+renderSeguimiento = function(){
+  var cont=document.getElementById('seg-content');
+  if(!cont) return;
+  if(!state.seguimiento) state.seguimiento={active:{},archived:[]};
+  if(!state.planVueltaDone) state.planVueltaDone={};
+  seguimientoSyncFromPlan();
+
+  var now=new Date();
+  var todayStr=now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0')+'-'+String(now.getDate()).padStart(2,'0');
+  var hoy=new Date(todayStr+'T12:00:00');
+
+  cont.innerHTML='';
+
+  var activeKeys=Object.keys(state.seguimiento.active||{}).sort(function(a,b){
+    return ((state.seguimiento.active[a]||{}).fechaEvento||'').localeCompare((state.seguimiento.active[b]||{}).fechaEvento||'');
+  });
+  var archived=state.seguimiento.archived||[];
+
+  if(!activeKeys.length&&!archived.length){
+    cont.innerHTML='<div style="color:var(--tl);font-size:13px;padding:20px;text-align:center;font-family:Lato,sans-serif;line-height:1.6;">Genera el plan de estudio y marca las bolitas para ver el seguimiento.</div>';
+    return;
+  }
+
+  // ── Build exam block ──
+  function buildExam(entry, key, isArch){
+    var topics=entry.topics||[];
+    if(!topics.length) return null;
+    var d2=state.planData&&state.planData[key];
+    var numV=(d2&&d2.numVueltas)||3;
+    var vDone=state.planVueltaDone&&state.planVueltaDone[key]||{};
+    var examDate=entry.fechaEvento?new Date(entry.fechaEvento+'T12:00:00'):null;
+    var daysLeft=examDate?Math.ceil((examDate-hoy)/86400000):null;
+    var urgColor=daysLeft===null?'var(--tl)':(daysLeft<0?'#dc2626':daysLeft<=2?'#dc2626':daysLeft<=7?'#d97706':'#16a34a');
+
+    // % and status
+    var total=topics.length*numV, done=0, planned=0;
+    if(state.currentPlanSnapshot&&state.currentPlanSnapshot.dayPlan){
+      Object.keys(state.currentPlanSnapshot.dayPlan).forEach(function(dk){
+        if(dk<=todayStr)(state.currentPlanSnapshot.dayPlan[dk]||[]).forEach(function(b){if(b.examId===key) planned++;});
+      });
+    }
+    topics.forEach(function(tp,ti){
+      for(var v=0;v<numV;v++){if(vDone['t'+ti+'_v'+v]) done++;}
+    });
+    var pct=total>0?Math.round(done/total*100):0;
+    var missed=Math.max(0,planned-done);
+    var ahead=Math.max(0,done-planned);
+    var statusTxt=missed>0?('-'+missed+' tema'+(missed!==1?'s':'')):ahead>0?('+'+ahead+' tema'+(ahead!==1?'s':'')):'\u2713 al d\u00eda';
+    var statusColor=missed>0?'#dc2626':ahead>0?'#16a34a':'#16a34a';
+
+    var wrap=document.createElement('div');
+    wrap.style.cssText='background:var(--w);border:1.5px solid var(--bd);border-radius:12px;margin-bottom:14px;overflow:hidden;'+(isArch?'opacity:.72;':'');
+
+    // ── HEADER ──
+    var hdr=document.createElement('div');
+    hdr.style.cssText='display:flex;align-items:center;flex-wrap:wrap;gap:8px;padding:10px 14px;background:var(--bl);border-bottom:1px solid var(--bd);';
+    var tDiv=document.createElement('div'); tDiv.style.cssText='flex:1;min-width:0;';
+    var t1=document.createElement('div'); t1.style.cssText='font-size:13px;font-weight:800;color:var(--td);font-family:Lato,sans-serif;';
+    t1.textContent=(entry.accion||'Examen')+' \u00b7 '+entry.tema;
+    var t2=document.createElement('div'); t2.style.cssText='font-size:10px;color:'+urgColor+';font-family:Lato,sans-serif;margin-top:2px;';
+    t2.textContent=(examDate?examDate.toLocaleDateString('es',{day:'2-digit',month:'long',year:'numeric'}):'')+
+      (daysLeft!==null?' \u00b7 '+(daysLeft<0?'Vencido':daysLeft===0?'HOY':daysLeft+'d'):'');
+    tDiv.appendChild(t1); tDiv.appendChild(t2);
+    var rightDiv=document.createElement('div'); rightDiv.style.cssText='display:flex;align-items:center;gap:6px;flex-shrink:0;';
+    var pctEl=document.createElement('div');
+    pctEl.style.cssText='padding:3px 10px;border-radius:20px;font-size:12px;font-weight:800;font-family:Lato,sans-serif;border:2px solid '+(pct>=80?'#16a34a':pct>=50?'#d97706':'var(--bd)')+';color:'+(pct>=80?'#16a34a':pct>=50?'#d97706':'var(--td)')+';';
+    pctEl.textContent=pct+'%';
+    var stEl=document.createElement('span'); stEl.style.cssText='font-size:11px;font-weight:700;color:'+statusColor+';font-family:Lato,sans-serif;white-space:nowrap;';
+    stEl.textContent=statusTxt;
+    rightDiv.appendChild(pctEl); rightDiv.appendChild(stEl);
+    if(!isArch){
+      var archB=document.createElement('button');
+      archB.style.cssText='padding:4px 8px;background:none;border:1px solid var(--bd);border-radius:8px;font-size:10px;color:var(--tl);cursor:pointer;font-family:Lato,sans-serif;';
+      archB.textContent='\uD83D\uDCE6';archB.title='Archivar';
+      (function(k){ archB.onclick=function(e){e.stopPropagation();if(!confirm('Archivar seguimiento?'))return;seguimientoArchivar(k);};})(key);
+      rightDiv.appendChild(archB);
+    }
+    hdr.appendChild(tDiv); hdr.appendChild(rightDiv); wrap.appendChild(hdr);
+
+    // ── TOGGLE ROW ──
+    var viewKey='seg_view_'+key;
+    var curView=window[viewKey]||'chips';
+    var togRow=document.createElement('div');
+    togRow.style.cssText='display:flex;gap:6px;padding:8px 14px;background:var(--bl);border-bottom:1px solid var(--bd);';
+    function makeTogBtn(label,v){
+      var b=document.createElement('button');
+      b.style.cssText='flex:1;padding:5px;border-radius:8px;font-size:11px;cursor:pointer;font-family:Lato,sans-serif;transition:all .15s;border:0.5px solid '+(curView===v?'var(--gd)':'var(--bd)')+';background:'+(curView===v?'rgba(45,138,90,.12)':'var(--w)')+';color:'+(curView===v?'#16a34a':'var(--tl)')+';font-weight:'+(curView===v?'700':'400')+';';
+      b.textContent=label;
+      (function(btn,vname,w2,k2){
+        btn.onclick=function(e){
+          e.stopPropagation();
+          window[viewKey]=vname;
+          w2.remove();
+          cont.insertBefore(buildExam(entry,k2,isArch), cont.querySelector('.seg-arch')||null);
+        };
+      })(b,v,wrap,key);
+      return b;
+    }
+    togRow.appendChild(makeTogBtn('\uD83D\uDCCC Progreso','chips'));
+    togRow.appendChild(makeTogBtn('\uD83D\uDCCA Gantt','gantt'));
+    wrap.appendChild(togRow);
+
+    // ── CONTENT ──
+    var body=document.createElement('div');
+    body.style.cssText='padding:0;';
+
+    if(curView==='chips'){
+      // CHIPS VIEW
+      var cWrap=document.createElement('div');
+      cWrap.style.cssText='padding:8px 14px;';
+      topics.forEach(function(tp,ti){
+        var row=document.createElement('div');
+        row.style.cssText='display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:0.5px solid var(--bd);';
+        var tname=document.createElement('span');
+        tname.style.cssText='flex:1;font-size:12px;color:var(--td);font-family:Lato,sans-serif;';
+        tname.textContent=tp.name||('Tema '+(ti+1));
+        var chipRow=document.createElement('div'); chipRow.style.cssText='display:flex;gap:4px;';
+        for(var v=0;v<numV;v++){
+          (function(vi){
+            var tvk='t'+ti+'_v'+vi;
+            var val=vDone[tvk]||null;
+            var colors={green:'#16a34a',orange:'#d97706',red:'#dc2626'};
+            var bgs={green:'rgba(22,163,74,.15)',orange:'rgba(217,119,6,.15)',red:'rgba(220,38,38,.12)'};
+            var cc=val?colors[val]:null;
+            var chip=document.createElement('div');
+            chip.style.cssText='display:flex;align-items:center;gap:3px;padding:3px 8px;border-radius:20px;font-size:10px;cursor:pointer;transition:all .15s;border:0.5px solid '+(cc||'var(--bd)')+';background:'+(val?bgs[val]:'var(--bl)')+';color:'+(cc||'var(--tl)')+';font-family:Lato,sans-serif;';
+            var dot=document.createElement('div');
+            dot.style.cssText='width:8px;height:8px;border-radius:50%;flex-shrink:0;border:1.5px solid '+(cc||'currentColor')+';background:'+(cc||'transparent')+';';
+            var lbl=document.createElement('span');
+            lbl.textContent=(_SEG_ICONS[vi]||vi+'V');
+            chip.appendChild(dot); chip.appendChild(lbl);
+            var _cyc=[null,'green','orange','red'];
+            (function(chip2,dot2,ti2,vi2,tvk2){
+              chip2.addEventListener('click',function(e){
+                e.stopPropagation();
+                var cur2=state.planVueltaDone[key]&&state.planVueltaDone[key][tvk2]||null;
+                var nxt=_cyc[(_cyc.indexOf(cur2)+1)%4];
+                if(!state.planVueltaDone[key]) state.planVueltaDone[key]={};
+                state.planVueltaDone[key][tvk2]=nxt;
+                seguimientoSyncVuelta(key,ti2,vi2,nxt);
+                try{persist().catch(function(){});}catch(ex){}
+                setTimeout(function(){try{renderSeguimiento();}catch(e2){}},60);
+              });
+            })(chip,dot,ti,vi,tvk);
+            chipRow.appendChild(chip);
+          })(v);
+        }
+        // check if all done
+        var allDone=true;
+        for(var v2=0;v2<numV;v2++){if(!vDone['t'+ti+'_v'+v2]){allDone=false;break;}}
+        row.appendChild(tname); row.appendChild(chipRow);
+        if(allDone){var ck=document.createElement('span');ck.style.cssText='font-size:10px;color:#16a34a;font-weight:700;flex-shrink:0;';ck.textContent='\u2713';row.appendChild(ck);}
+        cWrap.appendChild(row);
+      });
+      body.appendChild(cWrap);
+
+    } else {
+      // GANTT VIEW
+      var WIN=4;
+      var ganttOff=window['seg_gantt_off_'+key]||0;
+      var examDay=daysLeft!==null?daysLeft:7;
+      var totalDays=Math.max(examDay+1,1);
+
+      // Build the plan day map: dayOffset -> [{ti,vi}]
+      var dayMap={};
+      if(state.currentPlanSnapshot&&state.currentPlanSnapshot.dayPlan){
+        Object.keys(state.currentPlanSnapshot.dayPlan).forEach(function(dk){
+          var diffD=Math.ceil((new Date(dk+'T12:00:00')-hoy)/86400000);
+          if(diffD<0||diffD>examDay) return;
+          (state.currentPlanSnapshot.dayPlan[dk]||[]).forEach(function(b){
+            if(b.examId!==key||b.type!=='vuelta') return;
+            if(!dayMap[diffD]) dayMap[diffD]=[];
+            dayMap[diffD].push({ti:b.topicIdx,vi:b.vuelta});
+          });
+        });
+      }
+
+      function buildGantt(){
+        var vis=[]; for(var ii=0;ii<WIN;ii++) vis.push(ganttOff+ii);
+        var gWrap=document.createElement('div'); gWrap.style.cssText='padding:8px 14px 4px;';
+
+        // nav
+        var nav=document.createElement('div'); nav.style.cssText='display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;';
+        var prevBtn=document.createElement('button');
+        prevBtn.style.cssText='width:28px;height:28px;border-radius:6px;border:0.5px solid var(--bd);background:var(--w);color:var(--td);cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;';
+        prevBtn.innerHTML='&#8249;'; prevBtn.disabled=ganttOff<=0;
+        if(ganttOff<=0) prevBtn.style.opacity='.3';
+        var nextBtn=document.createElement('button');
+        nextBtn.style.cssText=prevBtn.style.cssText; nextBtn.innerHTML='&#8250;';
+        var canNext=(ganttOff+WIN)<examDay;
+        if(!canNext) nextBtn.style.opacity='.3';
+        nextBtn.disabled=!canNext;
+        (function(){ prevBtn.onclick=function(e){e.stopPropagation();if(ganttOff>0){window['seg_gantt_off_'+key]=Math.max(0,ganttOff-WIN);wrap.remove();cont.insertBefore(buildExam(entry,key,isArch),cont.querySelector('.seg-arch')||null);}};
+          nextBtn.onclick=function(e){e.stopPropagation();if(canNext){window['seg_gantt_off_'+key]=ganttOff+WIN;wrap.remove();cont.insertBefore(buildExam(entry,key,isArch),cont.querySelector('.seg-arch')||null);}};
+        })();
+        var dFrom=dLabel(ganttOff); var dTo=dLabel(Math.min(ganttOff+WIN-1,examDay-1));
+        var navLbl=document.createElement('span'); navLbl.style.cssText='font-size:10px;color:var(--tl);font-family:Lato,sans-serif;';
+        navLbl.textContent=dFrom+' \u2014 '+dTo;
+        nav.appendChild(prevBtn); nav.appendChild(navLbl); nav.appendChild(nextBtn);
+        gWrap.appendChild(nav);
+
+        // table
+        var tbl=document.createElement('table'); tbl.style.cssText='width:100%;border-collapse:collapse;';
+        // header
+        var thead=document.createElement('thead');
+        var hrow=document.createElement('tr');
+        var thN=document.createElement('th'); thN.style.cssText='font-size:9px;color:var(--tl);text-align:left;padding:0 4px 4px 0;width:70px;font-family:Lato,sans-serif;font-weight:400;';
+        thN.textContent='Tema'; hrow.appendChild(thN);
+        vis.forEach(function(d){
+          var th=document.createElement('th');
+          var isT=d===0;
+          th.style.cssText='font-size:9px;color:'+(isT?'#2563eb':'var(--tl)')+';text-align:center;padding:0 2px 4px;width:42px;font-family:Lato,sans-serif;font-weight:'+(isT?'700':'400')+';';
+          th.textContent=(isT?'\u25cf ':'')+dLabel(d);
+          hrow.appendChild(th);
+        });
+        // fixed exam col
+        var thX=document.createElement('th');
+        thX.style.cssText='font-size:9px;color:#dc2626;text-align:center;padding:0 2px 4px;width:46px;font-family:Lato,sans-serif;font-weight:700;line-height:1.2;';
+        thX.innerHTML='\uD83C\uDFF9<br>'+(examDate?examDate.toLocaleDateString('es',{day:'2-digit',month:'short'}):'exam');
+        hrow.appendChild(thX);
+        thead.appendChild(hrow); tbl.appendChild(thead);
+
+        var tbody=document.createElement('tbody');
+        var _cyc2=[null,'green','orange','red'];
+        var _colors={green:'#16a34a',orange:'#d97706',red:'#dc2626'};
+        var _bgs={green:'#C0DD97',orange:'#FAC775',red:'#F7C1C1'};
+
+        topics.forEach(function(tp,ti){
+          var row=document.createElement('tr');
+          var tdN=document.createElement('td');
+          tdN.style.cssText='font-size:10px;color:var(--td);padding:2px 4px 2px 0;font-family:Lato,sans-serif;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:70px;vertical-align:middle;';
+          tdN.title=tp.name||('Tema '+(ti+1));
+          tdN.textContent=(tp.name||('T'+(ti+1))).substring(0,9)+(tp.name&&tp.name.length>9?'\u2026':'');
+          row.appendChild(tdN);
+          vis.forEach(function(d){
+            var td=document.createElement('td'); td.style.cssText='text-align:center;padding:2px 1px;';
+            var bg=d===0?'rgba(59,130,246,0.05)':'transparent'; td.style.background=bg;
+            // Find if this topic has a session on this day
+            var sessions=dayMap[d]||[];
+            var session=null;
+            sessions.forEach(function(s){if(s.ti===ti)session=s;});
+            if(session!==null){
+              var tvk='t'+ti+'_v'+session.vi;
+              var val=vDone[tvk]||null;
+              var cell=document.createElement('div');
+              var cc2=val?_colors[val]:null;
+              cell.style.cssText='width:36px;height:26px;border-radius:5px;margin:0 auto;display:flex;align-items:center;justify-content:center;font-size:11px;cursor:pointer;transition:all .15s;border:0.5px solid '+(cc2||'var(--bd)')+';background:'+(val?_bgs[val]:'var(--bl)')+';';
+              cell.textContent=(_SEG_ICONS[session.vi]||'?')+(val?(_SEG_DOTS[_cyc2.indexOf(val)]||''):'');
+              cell.title='Vuelta '+(session.vi+1)+(val?' \u00b7 '+val:'');
+              (function(ti2,vi2,tvk2,cellEl){
+                cellEl.addEventListener('click',function(e){
+                  e.stopPropagation();
+                  var cur3=state.planVueltaDone[key]&&state.planVueltaDone[key][tvk2]||null;
+                  var nxt2=_cyc2[(_cyc2.indexOf(cur3)+1)%4];
+                  if(!state.planVueltaDone[key]) state.planVueltaDone[key]={};
+                  state.planVueltaDone[key][tvk2]=nxt2;
+                  seguimientoSyncVuelta(key,ti2,vi2,nxt2);
+                  try{persist().catch(function(){});}catch(ex){}
+                  setTimeout(function(){try{renderSeguimiento();}catch(e2){}},60);
+                });
+              })(ti,session.vi,tvk,cell);
+              td.appendChild(cell);
+            } else {
+              var empty=document.createElement('div');
+              empty.style.cssText='width:36px;height:26px;margin:0 auto;';
+              td.appendChild(empty);
+            }
+            row.appendChild(td);
+          });
+          // Exam column
+          var tdX=document.createElement('td'); tdX.style.cssText='text-align:center;padding:2px 1px;';
+          var xCell=document.createElement('div');
+          xCell.style.cssText='width:38px;height:26px;border-radius:5px;margin:0 auto;background:#FCEBEB;border:1.5px solid #E24B4A;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.2;';
+          xCell.innerHTML='<span style="font-size:8px;color:#A32D2D;font-weight:700;">'+(examDate?examDate.toLocaleDateString('es',{day:'2-digit',month:'short'}):'exam')+'</span>';
+          tdX.appendChild(xCell); row.appendChild(tdX);
+          tbody.appendChild(row);
+        });
+        tbl.appendChild(tbody);
+        gWrap.appendChild(tbl);
+
+        // legend (collapsible)
+        var legHdr=document.createElement('div');
+        legHdr.style.cssText='display:flex;align-items:center;justify-content:space-between;padding:6px 0;margin-top:4px;cursor:pointer;border-top:0.5px solid var(--bd);';
+        legHdr.innerHTML='<span style="font-size:10px;color:var(--tl);font-family:Lato,sans-serif;">Leyenda</span><span id="leg-arr-'+key+'" style="font-size:10px;color:var(--tl);transition:transform .2s;">&#9660;</span>';
+        var legBody=document.createElement('div');
+        legBody.id='leg-body-'+key;
+        legBody.style.cssText='display:none;flex-wrap:wrap;gap:8px;padding:6px 0;';
+        legBody.innerHTML=[
+          ['#C0DD97','#639922','F\u00e1cil'],
+          ['#FAC775','#BA7517','Regular'],
+          ['#F7C1C1','#A32D2D','Dif\u00edcil'],
+          ['#FCEBEB','#E24B4A','Examen']
+        ].map(function(x){
+          return '<div style="display:flex;align-items:center;gap:4px;font-size:10px;color:var(--tl);font-family:Lato,sans-serif;"><div style="width:10px;height:10px;border-radius:3px;background:'+x[0]+';border:0.5px solid '+x[1]+';flex-shrink:0;"></div>'+x[2]+'</div>';
+        }).join('')+'<div style="width:100%;font-size:10px;color:var(--tl);font-family:Lato,sans-serif;">\uD83D\uDCD6 1\u00AA &middot; \uD83E\uDDE0 2\u00AA &middot; \uD83D\uDD01 3\u00AA vuelta</div>';
+        legHdr.addEventListener('click',function(){
+          var open2=legBody.style.display!=='none';
+          legBody.style.display=open2?'none':'flex';
+          var arr=document.getElementById('leg-arr-'+key);
+          if(arr) arr.style.transform=open2?'':'rotate(180deg)';
+        });
+        gWrap.appendChild(legHdr); gWrap.appendChild(legBody);
+        return gWrap;
+      }
+
+      body.appendChild(buildGantt());
+    }
+
+    wrap.appendChild(body);
+    if(isArch){
+      var delRow=document.createElement('div'); delRow.style.cssText='padding:6px 14px;border-top:0.5px solid var(--bd);display:flex;justify-content:flex-end;';
+      var delB=document.createElement('button'); delB.style.cssText='padding:4px 10px;background:none;border:1px solid #dc2626;border-radius:6px;color:#dc2626;font-size:10px;cursor:pointer;font-family:Lato,sans-serif;';
+      delB.textContent='Eliminar';
+      (function(idx){ delB.onclick=function(){state.seguimiento.archived.splice(idx,1);try{persist().catch(function(){});}catch(e){}renderSeguimiento();};})(archived.indexOf(entry));
+      delRow.appendChild(delB); wrap.appendChild(delRow);
+    }
+    return wrap;
+  }
+
+  function dLabel(d){
+    var months=['En','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+    var b=new Date(hoy); b.setDate(b.getDate()+d);
+    return b.getDate()+' '+months[b.getMonth()];
+  }
+
+  if(activeKeys.length){
+    var st=document.createElement('div'); st.style.cssText='font-size:11px;font-weight:700;color:var(--tm);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;font-family:Lato,sans-serif;';
+    st.textContent='\uD83D\uDCCA En curso'; cont.appendChild(st);
+    activeKeys.forEach(function(k){
+      var el=buildExam(state.seguimiento.active[k],k,false);
+      if(el) cont.appendChild(el);
+    });
+  }
+  if(archived.length){
+    var archSec=document.createElement('div'); archSec.className='seg-arch';
+    var at=document.createElement('div'); at.style.cssText='font-size:11px;font-weight:700;color:var(--tm);text-transform:uppercase;letter-spacing:.5px;margin:14px 0 8px;font-family:Lato,sans-serif;';
+    at.textContent='\uD83D\uDCE6 Archivados'; archSec.appendChild(at);
+    archived.forEach(function(entry2,idx2){
+      var el=buildExam(entry2,'arch_'+idx2,true);
+      if(el) archSec.appendChild(el);
+    });
+    cont.appendChild(archSec);
+  }
+};
 
 </script>
 </body>
