@@ -16,7 +16,7 @@
 <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
 <meta name="description" content="Tu agenda personal de productividad. Apunta. Organiza. Comunica.">
 <link rel="manifest" id="pwa-manifest">
-<title>Tapunto — Tu agenda personal segura</title>
+<title>Tapunto v10 — Tu agenda personal segura</title>
 <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
 <!--
   ============================================================
@@ -2142,6 +2142,9 @@ body.on-home #sec-home { display: block !important; }
 .section{padding-bottom:68px !important;}
 
 /* ── BOTTOM NAV ── */
+/* ── Drawer Más ── */
+.mas-btn{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;padding:12px 6px;background:var(--bl);border:1.5px solid var(--bd);border-radius:12px;cursor:pointer;font-size:11px;font-weight:600;color:var(--td);font-family:Lato,sans-serif;transition:background .15s;}
+.mas-btn:active{background:rgba(45,138,90,.10);}
 .bottom-nav{position:fixed;bottom:0;left:0;right:0;height:60px;background:var(--w);border-top:1.5px solid var(--bd);display:flex;align-items:center;z-index:500;box-shadow:0 -2px 12px rgba(0,0,0,.08);padding:0 4px;overflow:visible;}
 
 .bnav-btn.active{background:rgba(45,138,90,.08);}
@@ -2157,6 +2160,10 @@ body.on-home #sec-home { display: block !important; }
 <script>(function(){try{if(localStorage.getItem('tp_dark_mode')==='1')document.documentElement.style.background='#1a1a2e';}catch(e){};}());</script>
 </head>
 <body data-theme="verde">
+<div id="version-banner" style="background:linear-gradient(90deg,#1d4ed8,#7c3aed);color:#fff;padding:6px 14px;font-size:11px;font-weight:700;font-family:Lato,sans-serif;display:flex;align-items:center;justify-content:space-between;letter-spacing:.3px;">
+  <span>✓ Tapunto actualizado — Fase 1 &amp; 2 activas</span>
+  <button onclick="this.parentElement.style.display='none'" style="background:rgba(255,255,255,.2);border:none;color:#fff;border-radius:4px;padding:2px 6px;cursor:pointer;font-size:10px;">✕</button>
+</div>
 
 <!-- CONFIRM DELETE -->
 <div class="confirm-ov" id="confirm-ov">
@@ -2468,7 +2475,7 @@ body.on-home #sec-home { display: block !important; }
 </div>
 <div id="offline-banner" style="display:none;background:#c53030;color:#fff;text-align:center;font-size:12px;font-weight:700;padding:4px;font-family:Lato,sans-serif;">📵 Sin conexión — Guardando localmente</div>
 <div class="hdr-section-title-bar" id="hdr-title-bar" style="display:none!important;">
-  <span id="hdr-section-title">TAPUNTO</span>
+  <span id="hdr-section-title">TAPUNTO</span><span style="font-size:8px;background:rgba(255,255,255,.3);color:#fff;padding:1px 5px;border-radius:6px;margin-left:5px;font-weight:700;">v10</span><span style="font-size:9px;background:#16a34a;color:#fff;padding:1px 6px;border-radius:8px;margin-left:6px;font-weight:700;vertical-align:middle;">v10</span><span style="font-size:9px;background:#16a34a;color:#fff;padding:1px 6px;border-radius:8px;margin-left:6px;font-weight:700;vertical-align:middle;">v10</span>
 </div>
 <!-- PAGE -->
     <div class="page">
@@ -3164,7 +3171,7 @@ body.on-home #sec-home { display: block !important; }
             <span style="font-size:11px;color:var(--tl);" id="cfg-plan-desc">20 tareas · sin IA</span>
           </div>
           <div id="cfg-license-row">
-            <button onclick="showUpgrade()" style="padding:7px 14px;background:linear-gradient(135deg,#b8860b,#daa520);color:white;border:none;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;">⭐ Activar Premium</button>
+            <button onclick="if(typeof showToast==='function')showToast('Todas las funciones están disponibles ✓')" style="padding:7px 14px;background:linear-gradient(135deg,#16a34a,#15803d);color:white;border:none;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;">✓ Todo incluido</button>
           </div>
           <div id="cfg-premium-info" style="display:none;font-size:12px;color:var(--tl);">Licencia activa · Gracias por apoyar Tapunto 🐾</div>
           <div style="font-size:11px;color:var(--th);">👤 <strong id="cfg-email">—</strong></div>
@@ -4326,7 +4333,7 @@ plain=raw;
 plain=raw;
 }
 const parsedState=JSON.parse(plain);
-state=Object.assign({records:[],contactos:[],temas:[],acciones:[],comunicados:[],notas:[],rutinas:[],sheetsUrl:'',theme:'verde',coverImageData:null,modo:'trabajo',horario:{activo:0,schedules:[{nombre:'Horario 1',slots:['8:00','9:00','10:00','11:00','12:00','13:00','14:00'],grid:{},colores:{}},{nombre:'Horario 2',slots:['8:00','9:00','10:00','11:00','12:00','13:00','14:00'],grid:{},colores:{}}]},albums:[],planesEstudio:[],currentPlanSnapshot:null,planVueltaDone:{},seguimiento:{active:{},archived:[]},planData:{}},parsedState);
+state=Object.assign({records:[],contactos:[],temas:[],acciones:[],comunicados:[],notas:[],rutinas:[],sheetsUrl:'',theme:'verde',coverImageData:null,modo:'trabajo',horario:{activo:0,schedules:[{nombre:'Horario 1',slots:['8:00','9:00','10:00','11:00','12:00','13:00','14:00'],grid:{},colores:{}},{nombre:'Horario 2',slots:['8:00','9:00','10:00','11:00','12:00','13:00','14:00'],grid:{},colores:{}}]},albums:[],planesEstudio:[],currentPlanSnapshot:null,planVueltaDone:{},seguimiento:{active:{},archived:[]},planData:{},planChecks:{}},parsedState);
 // Restore _planData from state.planData (persisted separately)
 if(state.planData&&typeof _planData!=='undefined'){
   Object.keys(state.planData).forEach(function(k){_planData[k]=state.planData[k];});
@@ -6841,6 +6848,9 @@ if(sb) sb.style.display='none';
 var home=document.getElementById('sec-home');
 if(home){home.classList.add('active');home.style.display='block';}
 document.body.classList.add('on-home');
+document.querySelectorAll('.bnav-btn').forEach(function(b){b.classList.remove('active');});
+var bh=document.getElementById('bnav-home'); if(bh) bh.classList.add('active');
+cerrarMas&&cerrarMas();
 var ni=document.getElementById('nota-input');if(ni)ni.value='';
 var nat=document.getElementById('notas-arch-toggle');if(nat)nat.remove();
 var mp=document.getElementById('img-menu-popup');if(mp)mp.remove();
@@ -6913,8 +6923,14 @@ if(darkLabel) darkLabel.textContent=isDark?'Claro':'Oscuro';
 function irSeccion(tab){
 document.body.classList.remove('on-home');
 switchTab(tab,null);
-var titles={nuevo:'NUEVA TAREA',registros:'MIS TAREAS',recordatorios:'ALERTAS',calendario:'MI AGENDA',notas:'TO DO',config:'CONFIGURACIÓN',albumes:'MIS ÁLBUMES',estudio:'MI ESTUDIO'};
+var titles={nuevo:'NUEVA TAREA',registros:'MIS TAREAS',recordatorios:'ALERTAS',calendario:'MI AGENDA',notas:'TO DO',config:'AJUSTES',albumes:'MIS ÁLBUMES',estudio:'MI ESTUDIO',rutinas:'RUTINAS'};
 document.getElementById('hdr-section-title').textContent=titles[tab]||'TAPUNTO';
+/* Highlight correct nav button */
+document.querySelectorAll('.bnav-btn').forEach(function(b){b.classList.remove('active');});
+if(tab==='registros') document.getElementById('bnav-tareas').classList.add('active');
+else if(tab==='estudio') document.getElementById('bnav-estudio').classList.add('active');
+else if(tab==='calendario'){var _ba=document.getElementById('bnav-agenda');if(_ba)_ba.classList.add('active');}
+else if(['notas','albumes','rutinas','config'].indexOf(tab)>=0){var _bm=document.getElementById('bnav-mas');if(_bm)_bm.classList.add('active');}
 }
 function switchTab(tab,btn){
 document.querySelectorAll('.section').forEach(function(s){s.classList.remove('active');s.style.display='none';});
@@ -7068,7 +7084,7 @@ return '📅 '+key.charAt(0).toUpperCase()+key.slice(1);
 }
 
 /* ══ VISTA CARPETAS ══ */
-var _vistaRegistros = localStorage.getItem('tp_vista_reg') || 'carpetas'; // 'lista' o 'carpetas'
+var _vistaRegistros = localStorage.getItem('tp_vista_reg') || 'lista';
 var _carpetaActual = null; // tema seleccionado
 
 function toggleVistaRegistros(){
@@ -7546,6 +7562,7 @@ function exportarDatosCompletos(){
     planData: (typeof _planData !== 'undefined') ? _planData : {},
     seguimiento: state.seguimiento || {active:{},archived:[]},
     planVueltaDone: state.planVueltaDone || {},
+    planChecks: state.planChecks || {},
     // ── Pomodoro sesiones ──
     pomSessions: pomSessions,
     pomConfig: {
@@ -7609,6 +7626,7 @@ function importBackupJSON(e){
       if(d.seguimiento) state.seguimiento=d.seguimiento;
       if(d.planData&&typeof _planData!=='undefined'){Object.keys(d.planData).forEach(function(k){_planData[k]=d.planData[k];});}
       if(d.planVueltaDone) state.planVueltaDone=d.planVueltaDone;
+      if(d.planChecks) state.planChecks=d.planChecks;
       if(d.pomSessions&&Array.isArray(d.pomSessions)){
         try{ localStorage.setItem('tp_pom_sessions_'+new Date().toDateString(), JSON.stringify(d.pomSessions)); }catch(ex){}
       }
@@ -8117,6 +8135,7 @@ checkTrial();
 checkLicenseExpiry();
 updatePortadaNombre();
 irHome();
+setTimeout(function(){try{checkOnboarding();}catch(e){}},300);
 if(isPremium&&state.sheetsUrl){
 syncFromSheets(false).catch(()=>{});
 setTimeout(function(){syncConfigToSheets();},3000);
@@ -8473,57 +8492,21 @@ document.getElementById(p+'-status').innerHTML='<span style="color:#155724">✓ 
 }
 
 function checkTrial(){
-if(isPremium) return;
-const trialKey='tp_trial_'+currentUser;
-const trialStart=localStorage.getItem(trialKey);
-if(!trialStart){
-localStorage.setItem(trialKey,Date.now().toString());
-isPremium=true;
-localStorage.setItem(atob('dHBfcHJlbWl1bV92ZXJpZmllZF8=')+currentUser,'trial');
-applyPremiumUI();
-showTrialBanner(7);
-return;
+  /* All features free — no trial expiry */
+  if(!isPremium){
+    isPremium=true;
+    localStorage.setItem(atob('dHBfcHJlbWl1bV92ZXJpZmllZF8=')+currentUser,'free');
+    applyPremiumUI();
+  }
 }
-const days=Math.floor((Date.now()-parseInt(trialStart))/(1000*60*60*24));
-if(days<7){
-isPremium=true;
-localStorage.setItem(atob('dHBfcHJlbWl1bV92ZXJpZmllZF8=')+currentUser,'trial');
-applyPremiumUI();
-showTrialBanner(7-days);
-} else {
-localStorage.removeItem(atob('dHBfcHJlbWl1bV92ZXJpZmllZF8=')+currentUser);
-isPremium=false;
-applyPremiumUI();
-}
-}
-function showTrialBanner(diasRestantes){
-const b=document.getElementById('trial-banner');
-if(b){
-b.style.display='flex';
-b.innerHTML='🎁 Prueba Premium gratuita: <strong>'+diasRestantes+' día'+(diasRestantes!==1?'s':'')+' restante'+(diasRestantes!==1?'s':'')+'</strong> — <span onclick="showUpgrade()" style="text-decoration:underline;cursor:pointer;">Activar licencia</span>';
-}
+function showTrialBanner(){
+  /* Disabled in free version */
 }
 function checkLicenseExpiry(){
-const key=localStorage.getItem('tp_license_'+currentUser);
-if(!key) return;
-const expiry=localStorage.getItem('tp_license_expiry_'+currentUser);
-if(!expiry) return;
-const daysLeft=Math.floor((parseInt(expiry)-Date.now())/(1000*60*60*24));
-if(daysLeft<=0){
-isPremium=false;
-localStorage.removeItem(atob('dHBfcHJlbWl1bV92ZXJpZmllZF8=')+currentUser);
-applyPremiumUI();
-showRenewalBanner('Tu licencia Premium ha expirado. Tus datos están seguros.',true);
-} else if(daysLeft<=30){
-showRenewalBanner('Tu licencia Premium expira en '+daysLeft+' día'+(daysLeft!==1?'s':'')+'. Renueva para no perder el acceso.',false);
+  /* No license expiry in this version */
 }
-}
-function showRenewalBanner(msg,expired){
-const b=document.getElementById('renewal-banner');
-if(b){
-b.style.display='flex';
-b.innerHTML=msg+' <span onclick="showUpgrade()" style="text-decoration:underline;cursor:pointer;white-space:nowrap;">'+(expired?'Renovar ahora':'Renovar')+'</span>';
-}
+function showRenewalBanner(){
+  /* Disabled in free version */
 }
 function eliminarCuenta(){
 if(!confirm('⚠️ ATENCIÓN\n\nEstás a punto de eliminar completamente tu cuenta y todos tus datos de este dispositivo.\n\nEsta acción no se puede deshacer.\n\n¿Estás segura?')) return;
@@ -9989,7 +9972,7 @@ function renderAlertas(){
   panel.innerHTML='';
   if(panelH){ panelH.innerHTML=''; }  // ← CRITICAL: clear before re-populating
   var hdr=document.createElement('div');hdr.className='h-alert-hdr';hdr.textContent='Próximos';panel.appendChild(hdr);
-  if(panelH){ var hdr2=document.createElement('div');hdr2.className='h-alert-hdr';hdr2.textContent='Próximos';panelH.appendChild(hdr2); }
+  /* header already added to panelH by panel logic */
   if(!eventos.length){
     var em=document.createElement('div');em.className='h-alert-empty';em.textContent='Sin eventos';panel.appendChild(em);
     if(panelH){ var em2=document.createElement('div');em2.className='h-alert-empty';em2.textContent='Sin eventos';panelH.appendChild(em2); }
@@ -10573,151 +10556,65 @@ function planDescargarPDFGuardado(plan){
 
 /* Build and open PDF window */
 function planAbrirPDF(dayPlan, exams, todayStr, dateLabel){
-  var keys = Object.keys(dayPlan).sort().filter(function(k){
-    var d2=new Date(k+'T12:00:00'); var yd=new Date(); yd.setDate(yd.getDate()-1); return d2>=yd;
-  });
+  var keys=Object.keys(dayPlan).sort().filter(function(k){var d2=new Date(k+'T12:00:00');var yd=new Date();yd.setDate(yd.getDate()-1);return d2>=yd;});
   if(!keys.length) return;
-  var firma = typeof getFirma==='function' ? getFirma() : {};
-  var alumno = firma.nombre || (typeof currentUser!=='undefined' ? (currentUser||'').split('@')[0] : '') || 'Estudiante';
-  var now = new Date();
-  var todayFmt = now.toLocaleDateString('es',{weekday:'long',day:'2-digit',month:'long',year:'numeric'});
-
-  // Collect exams summary
-  var examSummary = '';
-  var futureExams = (state.records||[]).filter(function(r){
-    return r.fechaEvento && !r.archivado && new Date(r.fechaEvento+'T12:00:00') >= new Date(todayStr+'T12:00:00');
-  }).sort(function(a,b){return a.fechaEvento.localeCompare(b.fechaEvento);});
-  futureExams.forEach(function(r){
-    var d = new Date(r.fechaEvento+'T12:00:00');
-    var diff = Math.ceil((d-new Date(todayStr+'T12:00:00'))/86400000);
-    var color = diff<=2?'#c0392b':diff<=7?'#e67e22':'#2D8A5A';
-    examSummary += '<span style="display:inline-block;margin:2px 4px;padding:3px 10px;background:'+color+'1a;border:1px solid '+color+';border-radius:12px;color:'+color+';font-size:11px;font-weight:700;">'
-      +r.tema+' &bull; '+d.toLocaleDateString('es',{day:'2-digit',month:'short'})+' ('+diff+'d)</span>';
-  });
-
-  // Count totals
-  var totalStudy=0, totalReview=0, totalMins=0;
-  keys.forEach(function(k){
-    (dayPlan[k]||[]).forEach(function(b){
-      totalMins+=b.mins||0;
-      if(b.type==='study') totalStudy++;
-      else if(b.type==='review') totalReview++;
+  var tc=window._planTimeCfg; var brk=(tc&&tc.breakMins)||10;
+  var firma=typeof getFirma==='function'?getFirma():{};
+  var alumno=firma.nombre||(typeof currentUser!=='undefined'?(currentUser||'').split('@')[0]:'')||'Estudiante';
+  var now=new Date(); var todayFmt=now.toLocaleDateString('es',{weekday:'long',day:'2-digit',month:'long',year:'numeric'});
+  var _PN=['Comprension','Memorizacion','Explicacion','Simulacro'];
+  var _PI=['Lee activamente. Haz un esquema al terminar.','Tapa el tema y escribe todo lo que recuerdes.','Explica en voz alta como si ensenases.','Escribe 3 preguntas de examen y respondelas.'];
+  var _PAL=['#1d4ed8','#047857','#7c3aed','#b45309','#be123c','#0e7490','#4d7c0f','#7e22ce'];
+  var _DC={'1':'#15803d','2':'#b45309','3':'#dc2626'}; var _DL={'1':'Facil','2':'Media','3':'Dificil'};
+  var ecm={}; var fe=(state.records||[]).filter(function(r){return r.fechaEvento&&!r.archivado&&new Date(r.fechaEvento+'T12:00:00')>=new Date(todayStr+'T12:00:00');}).sort(function(a,b){return a.fechaEvento.localeCompare(b.fechaEvento);});
+  fe.forEach(function(r,i){ecm[r.id]=_PAL[i%_PAL.length];});
+  var eps=''; fe.forEach(function(r){var d=new Date(r.fechaEvento+'T12:00:00');var diff=Math.ceil((d-new Date(todayStr+'T12:00:00'))/86400000);var c=ecm[r.id]||'#1d4ed8';eps+='<span style="display:inline-block;margin:2px 4px;padding:3px 10px;background:'+c+'18;border:1.5px solid '+c+';border-radius:12px;color:'+c+';font-size:11px;font-weight:700;">'+r.tema+' &bull; '+d.toLocaleDateString('es',{day:'2-digit',month:'short'})+' ('+diff+'d)</span>';});
+  var tm=0; keys.forEach(function(k){(dayPlan[k]||[]).filter(function(b){return !b.completed;}).forEach(function(b){tm+=b.mins||0;});});
+  var dh=''; keys.forEach(function(key){var d=new Date(key+'T12:00:00');var isT=key===todayStr;var di=(dayPlan[key]||[]).filter(function(b){return !b.completed;});if(!di.length)return;var dm=di.reduce(function(s,b){return s+(b.mins||0);},0);var ds=d.toLocaleDateString('es',{weekday:'long',day:'2-digit',month:'long'});
+    dh+='<div style="margin-bottom:14px;border:1.5px solid '+(isT?'#16a34a':'#e2e8f0')+';border-radius:10px;overflow:hidden;">';
+    dh+='<div style="background:'+(isT?'#e8f5ed':'#f8fafc')+';padding:8px 14px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid '+(isT?'#16a34a':'#e2e8f0')+';">';
+    dh+='<span style="font-size:12px;font-weight:800;color:'+(isT?'#15803d':'#1e293b')+';text-transform:uppercase;">'+(isT?'HOY &bull; ':'')+ds.toUpperCase()+'</span>';
+    dh+='<span style="font-size:11px;font-weight:700;color:'+(isT?'#15803d':'#64748b')+';background:'+(isT?'rgba(22,163,74,.15)':'rgba(0,0,0,.06)')+';padding:2px 10px;border-radius:10px;">'+Math.floor(dm/60)+'h '+(dm%60)+'min</span>';
+    dh+='</div><div style="padding:8px;">';
+    di.forEach(function(block,bi){
+      if(bi>0&&brk>0){var prev=di[bi-1];dh+='<div style="display:flex;align-items:center;gap:8px;padding:4px 10px;margin:3px 0;background:#eff6ff;border:1px solid #bfdbfe;border-radius:6px;"><span style="font-size:10px;font-weight:700;color:#1d4ed8;">PAUSA '+brk+' min</span>';if(prev.endTime){var ep=prev.endTime.split(':');var em=parseInt(ep[0])*60+parseInt(ep[1]);dh+='<span style="font-size:10px;color:#3b82f6;margin-left:auto;">'+prev.endTime+' - '+(String(Math.floor((em+brk)/60)).padStart(2,'0')+':'+String((em+brk)%60).padStart(2,'0'))+'</span>';}dh+='</div>';}
+      if(block.type==='practica'){dh+='<div style="padding:8px 12px;margin:3px 0;background:#fff7ed;border:1.5px solid rgba(180,83,9,.35);border-radius:8px;border-left:4px solid #b45309;"><div style="font-size:11px;font-weight:800;color:#92400e;">PRACTICA &bull; '+(block.practicaTipo||'Practica')+' &bull; '+block.asig+'</div>';if(block.startTime&&block.endTime)dh+='<div style="font-size:10px;color:#b45309;margin-top:2px;">'+block.startTime+' - '+block.endTime+' &bull; '+block.mins+'min</div>';dh+='</div>';return;}
+      if(block.type!=='vuelta')return;
+      var vi=block.vuelta||0; var col=block.col||ecm[block.examId]||'#1d4ed8'; var diff=String(block.diff||2);
+      var cks=state.planChecks&&state.planChecks['ck_'+block.examId+'_'+block.key]||[];
+      var ckI=[['Lectura activa','Esquema o mapa mental','Resumen escrito'],['Recall sin apuntes','Identificar huecos','Re-test puntos fallados'],['Explicar en voz alta','Responder preguntas','Anotar dudas'],['Simulacro tipo examen','Analizar errores','Repaso final']][vi]||[];
+      dh+='<div style="margin:3px 0;border:1.5px solid '+col+'44;border-radius:8px;overflow:hidden;">';
+      dh+='<div style="background:'+col+'14;border-bottom:1px solid '+col+'22;padding:6px 12px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;">';
+      dh+='<span style="font-size:12px;font-weight:800;color:#1e293b;flex:1;">'+block.asig+'</span>';
+      dh+='<span style="font-size:10px;font-weight:700;color:'+col+';background:'+col+'18;padding:2px 8px;border-radius:10px;">Vuelta '+(vi+1)+' &bull; '+(_PN[vi]||'')+'</span>';
+      if(block.startTime&&block.endTime)dh+='<span style="font-size:10px;font-weight:700;color:'+col+';">'+block.startTime+' - '+block.endTime+'</span>';
+      dh+='<span style="font-size:10px;font-weight:700;color:'+col+';border:1px solid '+col+'44;padding:1px 7px;border-radius:8px;">'+block.mins+'min</span>';
+      dh+='</div>';
+      dh+='<div style="padding:6px 12px;background:white;border-left:4px solid '+col+';">';
+      dh+='<div style="display:flex;align-items:center;gap:8px;">';
+      dh+='<span style="flex:1;font-size:12px;font-weight:600;color:#1e293b;">'+(block.topicName||'')+'</span>';
+      if(_DL[diff])dh+='<span style="font-size:9px;padding:1px 6px;border-radius:8px;font-weight:700;border:1px solid '+(_DC[diff]||'#999')+';color:'+(_DC[diff]||'#999')+';background:'+(_DC[diff]||'#999')+'15;">'+_DL[diff]+'</span>';
+      dh+='<span style="font-size:10px;font-weight:700;color:'+col+';background:'+col+'15;padding:1px 6px;border-radius:6px;">'+block.mins+'m</span>';
+      var vdv=state.planVueltaDone&&state.planVueltaDone[block.examId]&&state.planVueltaDone[block.examId][block.key];
+      var dbg=vdv?({'green':'#16a34a','orange':'#d97706','red':'#dc2626'}[vdv]||col):'transparent';
+      dh+='<span style="display:inline-block;width:14px;height:14px;border-radius:50%;border:2px solid '+(vdv?dbg:col)+';background:'+dbg+';vertical-align:middle;"></span>';
+      dh+='</div>';
+      dh+='<div style="margin-top:4px;font-size:10px;color:'+col+';"><strong>Vuelta '+(vi+1)+' &bull; '+(_PN[vi]||'')+':</strong> '+(_PI[vi]||'')+'</div>';
+      if(ckI.length){dh+='<div style="margin-top:5px;">';ckI.forEach(function(item,ci){var chk=!!(cks[ci]);dh+='<div style="display:flex;align-items:center;gap:6px;padding:2px 0;"><span style="display:inline-block;width:11px;height:11px;border-radius:3px;border:1.5px solid '+col+';background:'+(chk?col:'transparent')+';flex-shrink:0;"></span><span style="font-size:10px;color:#374151;text-decoration:'+(chk?'line-through':'none')+';opacity:'+(chk?.6:1)+';">'+item+'</span></div>';});dh+='</div>';}
+      dh+='</div></div>';
     });
+    dh+='</div></div>';
   });
-
-  // Build day rows HTML
-  var daysHtml = '';
-  keys.forEach(function(key){
-    var d = new Date(key+'T12:00:00');
-    var isToday = key===todayStr;
-    var dateStr = d.toLocaleDateString('es',{weekday:'long',day:'2-digit',month:'long'});
-    var dayItems = (dayPlan[key]||[]);
-    if(!dayItems.length) return;
-
-    var dayBg = isToday ? '#f0f9f4' : '#fafafa';
-    var dayBorder = isToday ? '#2D8A5A' : '#e0e0e0';
-    var dayLabel = (isToday ? '&#128197; HOY &nbsp;&bull;&nbsp; ' : '') + dateStr.toUpperCase();
-
-    var blocksHtml = '';
-    dayItems.forEach(function(item){
-      var isRev = item.type==='review';
-      var color = isRev ? '#3498db' : '#2D8A5A';
-      var bg = isRev ? '#eaf4fb' : '#f0f9f4';
-      var icon = isRev ? '&#128260;' : '&#128218;';
-      var typeLabel = isRev ? 'REPASO' : 'ESTUDIO';
-      var tiles = item.topicTiles || [];
-      var tileCount = item.topicCount || tiles.length || 0;
-      var mpt = item.minsPerTopic || 0;
-
-      // Ensure tiles array
-      while(tiles.length < tileCount){
-        tiles.push({name:'Tema '+(tiles.length+1), reviews:0, maxReviews: isRev?2:3, nota:''});
-      }
-
-      // Build tiles rows
-      var tilesHtml = '';
-      if(tileCount > 0){
-        tilesHtml = '<table style="width:100%;border-collapse:collapse;margin-top:6px;">';
-        tiles.slice(0,tileCount).forEach(function(tp,ti){
-          var circles = '';
-          var dotCount = tp.maxReviews || (isRev?2:3);
-          for(var d2=0;d2<dotCount;d2++){
-            circles += '<span style="display:inline-block;width:12px;height:12px;border-radius:50%;border:1.5px solid '+color+';margin-right:3px;vertical-align:middle;"></span>';
-          }
-          var minsLabel = mpt>0 ? ' <span style="color:#999;font-size:9px;">(~'+mpt+'min)</span>' : '';
-          tilesHtml += '<tr style="border-bottom:1px solid #eee;">'
-            +'<td style="padding:4px 8px;font-size:11px;color:#333;font-weight:'+(tp.name&&tp.name.trim()!==''?'600':'400')+';">'+
-              (tp.name && tp.name.trim()!=='' && tp.name!=='Tema '+(ti+1) ? tp.name : 'Tema '+(ti+1))+minsLabel+'</td>'
-            +'<td style="padding:4px 8px;text-align:right;white-space:nowrap;">'+circles+'</td>'
-            +'</tr>';
-        });
-        tilesHtml += '</table>';
-      }
-
-      // Skip break blocks in PDF (they show as a gap)
-      if(item.type==='break'){
-        blocksHtml += '<div style="height:4px;"></div>';
-        return;
-      }
-      var timeTag = (item.startTime && item.endTime) ?
-        '<span style="font-size:10px;color:'+color+';font-weight:700;margin-right:8px;background:'+color+'1a;padding:2px 6px;border-radius:10px;">'+item.startTime+'–'+item.endTime+'</span>' : '';
-      blocksHtml += '<div style="background:'+bg+';border:1px solid '+color+'33;border-left:3px solid '+color
-        +';border-radius:6px;padding:8px 10px;margin-bottom:6px;page-break-inside:avoid;">'
-        +'<div style="display:flex;align-items:center;gap:4px;margin-bottom:2px;">'
-        +timeTag
-        +'<span style="font-size:12px;font-weight:800;color:'+color+';">'+icon+' '+typeLabel+' &bull; '+item.asig+'</span>'
-        +'<span style="font-size:10px;color:#888;font-weight:600;margin-left:auto;">'+item.mins+'min</span>'
-        +'</div>'
-        +(item.text ? '<div style="font-size:10px;color:#666;margin-bottom:4px;">'+item.text+'</div>' : '')
-        +tilesHtml
-        +'</div>';
-    });
-
-    daysHtml += '<div style="background:'+dayBg+';border:1px solid '+dayBorder+';border-radius:8px;margin-bottom:12px;overflow:hidden;page-break-inside:avoid;">'
-      +'<div style="background:'+(isToday?'#2D8A5A':'#f0f0f0')+';padding:7px 12px;">'
-      +'<span style="font-size:12px;font-weight:800;color:'+(isToday?'#fff':'#555')+';">'+dayLabel+'</span>'
-      +'</div>'
-      +'<div style="padding:8px 10px;">'+blocksHtml+'</div>'
-      +'</div>';
-  });
-
-  var html = '<!DOCTYPE html><html lang="es"><head><meta charset="utf-8">'
-    +'<title>Plan de Estudio &bull; Tapunto</title>'
-    +'<style>'
-    +'* { box-sizing:border-box; }'
-    +'body { font-family:Arial,Helvetica,sans-serif; margin:0; padding:20px; color:#222; background:#fff; }'
-    +'h1 { font-size:22px; color:#2D5016; margin:0 0 4px; }'
-    +'.meta { font-size:12px; color:#888; margin-bottom:10px; }'
-    +'.stats { display:flex; gap:16px; padding:8px 12px; background:#f5f5f5; border-radius:8px; margin-bottom:12px; }'
-    +'.stat { font-size:12px; color:#555; } .stat b { color:#2D5016; }'
-    +'.exams-wrap { margin-bottom:14px; }'
-    +'@media print { .no-print { display:none!important; } body { padding:10px; } }'
-    +'</style></head><body>'
-    +'<div class="no-print" style="margin-bottom:16px;display:flex;gap:8px;">'
-    +'<button onclick="window.print()" style="padding:10px 22px;background:#2D5016;color:#fff;border:none;border-radius:8px;font-size:14px;cursor:pointer;font-weight:700;">&#128196; Imprimir / PDF</button>'
-    +'<button onclick="window.close()" style="padding:10px 18px;background:#f5f5f5;color:#555;border:1px solid #ddd;border-radius:8px;font-size:13px;cursor:pointer;">Cerrar</button>'
-    +'</div>'
-    +'<h1>&#128197; Plan de Estudio</h1>'
-    +'<div class="meta">'+alumno+' &nbsp;&bull;&nbsp; Generado el '+todayFmt+'</div>'
-    +'<div class="stats">'
-    +'<div class="stat">&#128218; Estudio: <b>'+totalStudy+'</b> sesiones</div>'
-    +'<div class="stat">&#128260; Repaso: <b>'+totalReview+'</b> sesiones</div>'
-    +'<div class="stat">&#9201; Total: <b>'+Math.round(totalMins/60*10)/10+'h</b></div>'
-    +'<div class="stat">&#128197; D\u00edas: <b>'+keys.length+'</b></div>'
-    +'</div>'
-    +(examSummary ? '<div class="exams-wrap"><div style="font-size:11px;font-weight:700;color:#555;margin-bottom:6px;">PR\u00d3XIMOS EX\u00c1MENES:</div>'+examSummary+'</div>' : '')
-    +'<div style="font-size:10px;color:#bbb;margin-bottom:14px;border-top:1px solid #eee;padding-top:6px;">'
-    +'&#9711; = repaso (2 vueltas) &nbsp; &#9711; &#9711; &#9711; = estudio (3 vueltas) &nbsp;&bull;&nbsp; Rellena los c\u00edrculos a medida que estudias cada tema'
-    +'</div>'
-    +daysHtml
-    +'<div style="margin-top:20px;font-size:10px;color:#bbb;text-align:center;border-top:1px solid #eee;padding-top:8px;">Tapunto Estudiantil &bull; tapunto.app</div>'
-    +'</body></html>';
-
-  var w=window.open('','_blank','width=900,height=700');
-  if(!w){alert('Activa las ventanas emergentes para abrir el PDF.');return;}
-  w.document.write(html);
-  w.document.close();
-  w.focus();
+  var sh=''; if(state.seguimiento&&state.seguimiento.active){var sk=Object.keys(state.seguimiento.active);if(sk.length){sh='<div style="margin-top:20px;border-top:2px solid #e2e8f0;padding-top:16px;"><div style="font-size:14px;font-weight:800;color:#1e293b;margin-bottom:12px;">SEGUIMIENTO</div>';sk.forEach(function(k){var en=state.seguimiento.active[k];var d2=state.planData&&state.planData[k];var nv=(d2&&d2.numVueltas)||3;var vd=state.planVueltaDone&&state.planVueltaDone[k]||{};var tp=en.topics||[];var tot=tp.length*nv;var dn=0;tp.forEach(function(t,ti){for(var v=0;v<nv;v++){if(vd['t'+ti+'_v'+v])dn++;}});var pct=tot>0?Math.round(dn/tot*100):0;var col=ecm[k]||'#1d4ed8';var ed=en.fechaEvento?new Date(en.fechaEvento+'T12:00:00'):null;sh+='<div style="margin-bottom:12px;border:1.5px solid '+col+'33;border-radius:8px;overflow:hidden;"><div style="background:'+col+'14;padding:7px 12px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid '+col+'22;"><span style="font-size:12px;font-weight:800;color:#1e293b;">'+(en.accion||'Examen')+' &bull; '+en.tema+'</span><div style="display:flex;align-items:center;gap:8px;">'+(ed?'<span style="font-size:10px;color:'+col+';">'+ed.toLocaleDateString('es',{day:'2-digit',month:'short'})+'</span>':'')+' <span style="font-size:13px;font-weight:800;color:'+col+';border:2px solid '+col+';padding:1px 10px;border-radius:20px;">'+pct+'%</span></div></div>';sh+='<table style="width:100%;border-collapse:collapse;font-size:11px;"><thead><tr style="background:#f8fafc;"><th style="padding:5px 10px;text-align:left;border:1px solid #e2e8f0;font-weight:700;color:#64748b;">Tema</th>';for(var v=0;v<nv;v++)sh+='<th style="padding:5px 8px;text-align:center;border:1px solid #e2e8f0;font-weight:700;color:'+col+';">V'+(v+1)+' '+(_PN[v]||'')+'</th>';sh+='</tr></thead><tbody>';tp.forEach(function(t,ti){sh+='<tr><td style="padding:5px 10px;font-weight:600;color:#1e293b;border:1px solid #e2e8f0;">'+(t.name||('Tema '+(ti+1)))+'</td>';for(var v2=0;v2<nv;v2++){var vl=vd['t'+ti+'_v'+v2]||null;var vc=vl==='green'?'#16a34a':vl==='orange'?'#d97706':vl==='red'?'#dc2626':'#94a3b8';var vt=vl==='green'?'Facil':vl==='orange'?'Regular':vl==='red'?'Dificil':'--';sh+='<td style="padding:5px 8px;text-align:center;border:1px solid #e2e8f0;color:'+vc+';font-weight:'+(vl?700:400)+';">'+vt+'</td>';}sh+='</tr>';});sh+='</tbody></table></div>';});sh+='</div>';}}
+  var html='<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Plan de Estudio - Tapunto</title><style>*{box-sizing:border-box;}body{font-family:Arial,sans-serif;margin:0;padding:20px;color:#1e293b;}@media print{.np{display:none!important;}}</style></head><body>';
+  html+='<div style="background:#f8fafc;border-radius:12px;padding:16px 20px;margin-bottom:20px;border-left:4px solid #16a34a;">';
+  html+='<div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:8px;">';
+  html+='<div><div style="font-size:20px;font-weight:800;color:#1e293b;margin-bottom:4px;">Plan de Estudio - Tapunto</div><div style="font-size:12px;color:#64748b;">'+alumno+' &bull; '+todayFmt+'</div><div style="font-size:12px;color:#64748b;margin-top:2px;">Total: '+Math.floor(tm/60)+'h '+(tm%60)+'min planificado</div></div>';
+  html+='<button onclick="window.print()" class="np" style="padding:8px 16px;background:#16a34a;color:white;border:none;border-radius:8px;cursor:pointer;font-size:12px;font-weight:700;">Imprimir / PDF</button></div>';
+  if(eps)html+='<div style="margin-top:10px;">'+eps+'</div>';
+  html+='</div>'+dh+sh+'</body></html>';
+  var w=window.open('','_blank');if(!w){if(typeof showToast==='function')showToast('Activa las ventanas emergentes');return;}
+  w.document.write(html);w.document.close();setTimeout(function(){w.print();},500);
 }
 
 function estSwitchTab(tab){
@@ -10845,10 +10742,13 @@ function pomComplete(){
   }
 
   // Auto switch mode
-  _pom.mode = _pom.mode==='work' ? 'break' : 'work';
+  var _wasWork=_pom.mode==='work';
+  _pom.mode = _wasWork ? 'break' : 'work';
   _pom.timeLeft = _pom.mode==='work' ? _pom.totalWork : _pom.totalBreak;
   document.getElementById('pom-start-btn').innerHTML = '&#9654; Iniciar';
   pomRenderDisplay();
+  /* Show break/resume suggestion */
+  setTimeout(function(){ try{ pomShowSuggestion(!_wasWork); }catch(e){} }, 300);
 }
 
 function pomBeep(){
@@ -12758,6 +12658,41 @@ switchTab=function(tab,btn){_origSwitchTabA(tab,btn);if(tab==='albumes')renderAl
 <button class="btn-config-float" onclick="irSeccion('config')" title="Configuración">⚙️<span style="font-size:9px;font-weight:700;letter-spacing:.3px;">Config</span></button>
 
 <!-- ── BOTTOM NAVIGATION ── -->
+
+
+<!-- Drawer "Más" -->
+<div id="mas-overlay" onclick="cerrarMas()" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:600;"></div>
+<div id="mas-drawer" style="display:none;position:fixed;bottom:0;left:0;right:0;background:var(--w);border-radius:18px 18px 0 0;z-index:610;padding:0 0 30px;box-shadow:0 -4px 24px rgba(0,0,0,.18);transform:translateY(100%);transition:transform .28s cubic-bezier(.4,0,.2,1);">
+  <div style="width:40px;height:4px;background:var(--bd);border-radius:4px;margin:12px auto 16px;"></div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:0 16px 8px;">
+    <button class="mas-btn" onclick="cerrarMas();irSeccion('estudio')" style="background:rgba(22,163,74,.08);border-color:rgba(22,163,74,.30);">
+      <span style="font-size:26px;">&#128218;</span>
+      <span style="color:#15803d;font-weight:700;">Estudiar</span>
+    </button>
+    <button class="mas-btn" onclick="cerrarMas();irSeccion('estudio');setTimeout(function(){estSwitchTab('pom');},80)">
+      <span style="font-size:26px;">&#127813;</span>
+      <span>Pomodoro</span>
+    </button>
+    <button class="mas-btn" onclick="cerrarMas();irSeccion('notas')">
+      <span style="font-size:26px;">&#9989;</span>
+      <span>To Do</span>
+    </button>
+    <button class="mas-btn" onclick="cerrarMas();irSeccion('rutinas')">
+      <span style="font-size:26px;">&#128260;</span>
+      <span>Rutinas</span>
+    </button>
+    <button class="mas-btn" onclick="cerrarMas();irSeccion('albumes')">
+      <span style="font-size:26px;">&#128444;</span>
+      <span>&#193;lbumes</span>
+    </button>
+    <button class="mas-btn" onclick="cerrarMas();irSeccion('config')">
+      <span style="font-size:26px;">&#9881;</span>
+      <span>Ajustes</span>
+    </button>
+  </div>
+</div>
+
+<!-- ── BOTTOM NAVIGATION ── -->
 <nav class="bottom-nav" id="bottom-nav">
   <button class="bnav-btn active" id="bnav-home" onclick="irHome()">
     <span class="bnav-ico">&#127968;</span><span class="bnav-lbl">Inicio</span>
@@ -12769,25 +12704,8 @@ switchTab=function(tab,btn){_origSwitchTabA(tab,btn);if(tab==='albumes')renderAl
   <button class="bnav-btn" id="bnav-agenda" onclick="irSeccion('calendario')">
     <span class="bnav-ico">&#128197;</span><span class="bnav-lbl">Agenda</span>
   </button>
-  <button class="bnav-btn" id="bnav-estudio" onclick="irSeccion('estudio')">
-    <span class="bnav-ico">&#127891;</span><span class="bnav-lbl">Estudio</span>
-  </button>
-</nav>
-
-<!-- ── BOTTOM NAVIGATION ── -->
-<nav class="bottom-nav" id="bottom-nav">
-  <button class="bnav-btn active" id="bnav-home" onclick="irHome()">
-    <span class="bnav-ico">&#127968;</span><span class="bnav-lbl">Inicio</span>
-  </button>
-  <button class="bnav-btn" id="bnav-tareas" onclick="irSeccion('registros')">
-    <span class="bnav-ico">&#128203;</span><span class="bnav-lbl">Tareas</span>
-  </button>
-  &#43;</button>
-  <button class="bnav-btn" id="bnav-agenda" onclick="irSeccion('calendario')">
-    <span class="bnav-ico">&#128197;</span><span class="bnav-lbl">Agenda</span>
-  </button>
-  <button class="bnav-btn" id="bnav-estudio" onclick="irSeccion('estudio')">
-    <span class="bnav-ico">&#127891;</span><span class="bnav-lbl">Estudio</span>
+  <button class="bnav-btn" id="bnav-mas" onclick="abrirMas()" style="position:relative;">
+    <span class="bnav-ico">&#9776;</span><span class="bnav-lbl">M&#225;s</span>
   </button>
 </nav>
 
@@ -12986,8 +12904,8 @@ function hEliminarDia(dayKey){
 
 /* ── Show upgrade modal ── */
 function showUpgrade(){
-  try{ mostrarTip('⭐ Tapunto Premium','Activa Premium para usar esta función sin límites.',null); }
-  catch(e){ alert('⭐ Función disponible con Tapunto Premium'); }
+  /* All features are free in this version */
+  if(typeof showToast==='function') showToast('Todas las funciones están disponibles ✓');
 }
 
 </script>
@@ -14089,7 +14007,23 @@ planRenderExams = function(){
       (function(num){btn.onclick=function(e){e.stopPropagation();data.numVueltas=num;vcRow.querySelectorAll('button').forEach(function(b2){var a=b2.textContent===num+'V';b2.style.borderColor=a?ec.col:'var(--bd)';b2.style.background=a?ec.col:'transparent';b2.style.color=a?'#fff':'var(--td)';});buildTA(taDiv,data);clearTimeout(window._planDeb);window._planDeb=setTimeout(function(){planGenerar(false);},120);};})(n);
       vcRow.appendChild(btn);
     });
-    body.appendChild(vcRow); buildTA(taDiv,data); body.appendChild(taDiv);
+    body.appendChild(vcRow); buildTA(taDiv,data);
+    /* ── Opciones avanzadas (collapsed) ── */
+    var advToggle=document.createElement('div');
+    advToggle.style.cssText='display:flex;align-items:center;justify-content:space-between;padding:6px 0;cursor:pointer;border-top:0.5px solid var(--bd);margin-top:6px;';
+    advToggle.innerHTML='<span style="font-size:11px;font-weight:700;color:var(--tl);font-family:Lato,sans-serif;">Opciones avanzadas</span><span id="adv-arr-'+r.id+'" style="font-size:10px;color:var(--tl);transition:transform .2s;">&#9660;</span>';
+    var advBody=document.createElement('div');
+    advBody.id='adv-body-'+r.id;
+    advBody.style.cssText='display:none;padding-top:6px;';
+    advToggle.addEventListener('click',function(e){
+      e.stopPropagation();
+      var open=advBody.style.display!=='none';
+      advBody.style.display=open?'none':'block';
+      var arr=document.getElementById('adv-arr-'+r.id);
+      if(arr) arr.style.transform=open?'':'rotate(180deg)';
+    });
+    body.appendChild(advToggle);
+    advBody.appendChild(taDiv);
     /* Pocos días */
     var pdRow=document.createElement('div'); pdRow.style.cssText='display:flex;align-items:center;gap:6px;margin-bottom:12px;flex-wrap:wrap;';
     var pdL=document.createElement('span'); pdL.style.cssText='font-size:10px;font-weight:700;color:var(--tm);font-family:Lato,sans-serif;white-space:nowrap;'; pdL.textContent='Si poco tiempo:';
@@ -14102,7 +14036,7 @@ planRenderExams = function(){
       (function(val){btn.onclick=function(e){e.stopPropagation();data.pocosDias=val;pdRow.querySelectorAll('button').forEach(function(b2){var a=b2.textContent===opt.l;b2.style.borderColor=a?ec.col:'var(--bd)';b2.style.background=a?ec.col:'transparent';b2.style.color=a?'#fff':'var(--td)';});clearTimeout(window._planDeb);window._planDeb=setTimeout(function(){planGenerar(false);},120);};})(opt.v);
       pdRow.appendChild(btn);
     });
-    body.appendChild(pdRow);
+    advBody.appendChild(pdRow);
     /* Práctica */
     var pracDiv=document.createElement('div'); pracDiv.style.cssText='background:rgba(180,83,9,.08);border:1px solid rgba(180,83,9,.30);border-radius:10px;padding:10px 12px;margin-bottom:12px;';
     var pracHdr=document.createElement('div'); pracHdr.style.cssText='display:flex;align-items:center;justify-content:space-between;margin-bottom:'+(data.hasPractica?'8px':'0')+';';
@@ -14136,7 +14070,7 @@ planRenderExams = function(){
         var num=document.createElement('span'); num.style.cssText='font-size:11px;font-weight:700;color:var(--tl);min-width:18px;font-family:Lato,sans-serif;'; num.textContent=(ti+1)+'.';
         var inp=document.createElement('input'); inp.type='text'; inp.placeholder='Nombre del tema…'; inp.value=tp.name||'';
         inp.style.cssText='flex:1;min-width:0;padding:5px 8px;border:1px solid var(--bd);border-radius:8px;font-size:12px;background:var(--bp);color:var(--td);font-family:Lato,sans-serif;';
-        (function(t,tI,rid){inp.oninput=function(){t.name=this.value;if(state.planData&&state.planData[rid]&&Array.isArray(state.planData[rid].topics)&&state.planData[rid].topics[tI])state.planData[rid].topics[tI].name=this.value;if(state.seguimiento&&state.seguimiento.active&&state.seguimiento.active[rid]){var sg=state.seguimiento.active[rid];while(sg.topics.length<=tI)sg.topics.push({name:'',rounds:[]});sg.topics[tI].name=this.value;}clearTimeout(window._planDeb);window._planDeb=setTimeout(function(){planGenerar(false);},600);};})(tp,ti,r.id);
+        (function(t,tI,rid){inp.oninput=function(){t.name=this.value;if(state.planData&&state.planData[rid]&&Array.isArray(state.planData[rid].topics)&&state.planData[rid].topics[tI])state.planData[rid].topics[tI].name=this.value;if(state.seguimiento&&state.seguimiento.active&&state.seguimiento.active[rid]){var sg2=state.seguimiento.active[rid];while(sg2.topics.length<=tI)sg2.topics.push({name:'',rounds:[]});sg2.topics[tI].name=this.value;}if(state.seguimiento&&state.seguimiento.active&&state.seguimiento.active[rid]){var sg=state.seguimiento.active[rid];while(sg.topics.length<=tI)sg.topics.push({name:'',rounds:[]});sg.topics[tI].name=this.value;}clearTimeout(window._planDeb);window._planDeb=setTimeout(function(){planGenerar(false);},600);};})(tp,ti,r.id);
         var ds=document.createElement('div'); ds.style.cssText='display:flex;gap:3px;flex-shrink:0;';
         [1,2,3].forEach(function(dv){
           var db=document.createElement('button');
@@ -14264,6 +14198,19 @@ planGenerar = function(doScroll){
 };
 
 /* ══ planRenderDomV5 — plan view (only undone) + cronograma (all) ══ */
+var _VUELTA_CHECKS=[
+  ['Lectura activa','Esquema o mapa mental','Resumen escrito con mis palabras'],
+  ['Recall sin apuntes: escribir todo lo que recuerdo','Identificar y repasar los huecos','Re-test de los puntos fallados'],
+  ['Explicar en voz alta sin mirar','Responder preguntas propias','Anotar dudas que quedan'],
+  ['Simulacro completo: preguntas tipo examen','Analizar errores y reforzar','Repaso final rápido de conceptos clave']
+];
+var _PHASE_NAMES=['Comprensión','Memorización','Explicación','Simulacro'];
+var _PHASE_INSTR=[
+  'Lee activamente. Para, reflexiona y haz un esquema al terminar.',
+  'Tapa el tema y escribe todo lo que recuerdes. Revisa huecos.',
+  'Explícalo en voz alta como si enseñaras a alguien. Los bloqueos señalan lo que falta.',
+  'Escribe 3 preguntas de examen sobre este tema. Respóndelas sin mirar.'
+];
 function planRenderDomV5(container,dayPlan,todayStr){
   container.innerHTML='';
   var tc=window._planTimeCfg;
@@ -14285,7 +14232,7 @@ function planRenderDomV5(container,dayPlan,todayStr){
     dHdr.style.cssText='display:flex;align-items:center;justify-content:space-between;padding:9px 14px;background:'+(isToday?'rgba(22,163,74,.11)':'var(--bl)')+';border-bottom:2px solid '+(isToday?'rgba(22,163,74,.35)':'var(--bd)')+';';
     var dT=document.createElement('div');
     dT.style.cssText='font-size:12px;font-weight:800;color:'+(isToday?'#15803d':'var(--td)')+';font-family:Lato,sans-serif;text-transform:uppercase;letter-spacing:.3px;';
-    dT.textContent=(isToday?'📅 HOY · ':'')+d.toLocaleDateString('es',{weekday:'long',day:'numeric',month:'short'}).toUpperCase();
+    dT.textContent=(isToday?'HOY · ':'')+d.toLocaleDateString('es',{weekday:'long',day:'numeric',month:'short'}).toUpperCase();
     var dM=document.createElement('span');
     dM.style.cssText='font-size:11px;font-weight:800;color:'+(isToday?'#15803d':'var(--td)')+';background:'+(isToday?'rgba(22,163,74,.18)':'rgba(0,0,0,.06)')+';padding:3px 10px;border-radius:10px;font-family:Lato,sans-serif;';
     dM.textContent=Math.floor(totalM/60)+'h '+(totalM%60)+'min';
@@ -14298,7 +14245,7 @@ function planRenderDomV5(container,dayPlan,todayStr){
         var prev=visBlocks[bi-1];
         var brkDiv=document.createElement('div');
         brkDiv.style.cssText='display:flex;align-items:center;gap:8px;padding:5px 12px;margin:0 0 5px;background:rgba(59,130,246,.10);border:1.5px solid rgba(59,130,246,.28);border-radius:8px;';
-        var brkI=document.createElement('span'); brkI.textContent='☕';
+        var brkI=document.createElement('span'); brkI.style.cssText='font-size:10px;font-weight:700;color:#1d4ed8;font-family:Lato,sans-serif;'; brkI.textContent='PAUSA';
         var brkL=document.createElement('span'); brkL.style.cssText='font-size:10px;font-weight:700;color:#1d4ed8;font-family:Lato,sans-serif;'; brkL.textContent='Descanso '+brk+' min';
         var brkT=document.createElement('span'); brkT.style.cssText='font-size:10px;color:#3b82f6;font-family:Lato,sans-serif;margin-left:auto;font-weight:600;';
         if(prev.endTime){var ep=prev.endTime.split(':');var em2=parseInt(ep[0])*60+parseInt(ep[1]);brkT.textContent=prev.endTime+' – '+_fromMins(em2+brk);}
@@ -14307,7 +14254,7 @@ function planRenderDomV5(container,dayPlan,todayStr){
       if(block.type==='practica'){
         var pDiv=document.createElement('div');
         pDiv.style.cssText='display:flex;align-items:center;gap:10px;padding:8px 12px;margin-bottom:5px;background:rgba(180,83,9,.10);border:2px solid rgba(180,83,9,.35);border-radius:10px;border-left:4px solid #b45309;';
-        var pI=document.createElement('span'); pI.textContent='✏️';
+        var pI=document.createElement('span'); pI.style.cssText='font-size:9px;font-weight:800;color:#92400e;background:rgba(180,83,9,.18);padding:2px 6px;border-radius:4px;font-family:Lato,sans-serif;'; pI.textContent='PRÁCTICA';
         var pInfo=document.createElement('div'); pInfo.style.cssText='flex:1;';
         var pTy=document.createElement('div'); pTy.style.cssText='font-size:12px;font-weight:800;color:#92400e;font-family:Lato,sans-serif;'; pTy.textContent=(block.practicaTipo||'Práctica')+' · '+block.asig;
         var pTm=document.createElement('div'); pTm.style.cssText='font-size:10px;color:#b45309;font-family:Lato,sans-serif;margin-top:1px;'; pTm.textContent=(block.startTime&&block.endTime?block.startTime+' – '+block.endTime+' · ':'')+block.mins+'min';
@@ -14330,8 +14277,8 @@ function planRenderDomV5(container,dayPlan,todayStr){
       var bHdr=document.createElement('div');
       bHdr.style.cssText='display:flex;align-items:center;gap:8px;padding:7px 12px;background:'+bg2+';border-bottom:2px solid '+bd+';';
       var bAsig=document.createElement('span'); bAsig.style.cssText='font-size:13px;font-weight:800;color:var(--td);font-family:Lato,sans-serif;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;'; bAsig.textContent=block.asig+' ';
-      var bIco=document.createElement('span'); bIco.style.cssText='font-size:13px;flex-shrink:0;'; bIco.textContent=_VIC2[vi]||'📖';
-      var bLbl=document.createElement('span'); bLbl.style.cssText='font-size:10px;font-weight:700;color:'+col+';font-family:Lato,sans-serif;flex-shrink:0;background:'+bg2+';padding:1px 7px;border-radius:10px;border:1px solid '+bd+';'; bLbl.textContent=block.vueltaLabel||_VN2[vi];
+      var bIco=document.createElement('span'); bIco.style.cssText='display:none;';
+      var bLbl=document.createElement('span'); bLbl.style.cssText='font-size:10px;font-weight:700;color:'+col+';font-family:Lato,sans-serif;flex-shrink:0;background:'+bg2+';padding:2px 8px;border-radius:10px;border:1px solid '+bd+';'; bLbl.textContent=_PHASE_NAMES[vi]||block.vueltaLabel||_VN2[vi];
       var bTime=document.createElement('span'); bTime.style.cssText='font-size:11px;font-weight:800;color:'+col+';font-family:Lato,sans-serif;flex-shrink:0;'; bTime.textContent=block.startTime&&block.endTime?block.startTime+' – '+block.endTime:'';
       var bMins=document.createElement('span'); bMins.style.cssText='font-size:10px;font-weight:800;color:'+col+';background:var(--w);border:1.5px solid '+bd+';padding:2px 8px;border-radius:8px;flex-shrink:0;font-family:Lato,sans-serif;'; bMins.textContent=block.mins+'min';
       bHdr.appendChild(bAsig);bHdr.appendChild(bIco);bHdr.appendChild(bLbl);bHdr.appendChild(bTime);bHdr.appendChild(bMins);
@@ -14353,7 +14300,7 @@ function planRenderDomV5(container,dayPlan,todayStr){
           if(!state.planVueltaDone) state.planVueltaDone={};
           if(!state.planVueltaDone[bl.examId]) state.planVueltaDone[bl.examId]={};
           var cur2=state.planVueltaDone[bl.examId][bl.key]||null;
-          var nv2=cur2?_CYC3[(_CYC3.indexOf(cur2)+1)%3]:'green';
+          var _CYC3b=[null,'green','orange','red']; var nv2=_CYC3b[(_CYC3b.indexOf(cur2)+1)%4];
           state.planVueltaDone[bl.examId][bl.key]=nv2;
           bl.completed=true; /* mark as done in snapshot — stays in cronograma */
           var nc=({'green':'#16a34a','orange':'#d97706','red':'#dc2626'}[nv2]||col);
@@ -14373,7 +14320,52 @@ function planRenderDomV5(container,dayPlan,todayStr){
         });
       })(block,dotEl,key);
       tile.appendChild(tTime);tile.appendChild(tName);tile.appendChild(dBadge);tile.appendChild(mBadge);tile.appendChild(dotEl);
-      bOuter.appendChild(tile);bWrap.appendChild(bOuter);
+      /* Phase instruction */
+      var instrDiv=document.createElement('div');
+      instrDiv.style.cssText='padding:5px 12px 7px;border-left:4px solid '+col+';background:'+bg2+';';
+      var instrHTML='<span style="font-size:10px;font-weight:800;color:'+col+';font-family:Lato,sans-serif;">'
+        +'Vuelta '+(vi+1)+' &middot; '+(_PHASE_NAMES[vi]||'')+': '
+        +'</span>'
+        +'<span style="font-size:10px;color:'+col+';font-family:Lato,sans-serif;font-style:italic;">'
+        +(_PHASE_INSTR[vi]||'')
+        +'</span>';
+      instrDiv.innerHTML=instrHTML;
+      /* Checklist per topic-vuelta */
+      var ckKey='ck_'+block.examId+'_'+block.key;
+      if(!state.planChecks) state.planChecks={};
+      if(!state.planChecks[ckKey]) state.planChecks[ckKey]=[];
+      var ckItems=_VUELTA_CHECKS[vi]||[];
+      var ckWrap=document.createElement('div');
+      ckWrap.style.cssText='border-left:4px solid '+col+';padding:4px 12px 8px;';
+      var ckToggle=document.createElement('div');
+      ckToggle.style.cssText='display:flex;align-items:center;justify-content:space-between;cursor:pointer;padding:3px 0;';
+      var doneCks=state.planChecks[ckKey].filter(Boolean).length;
+      var ckLabel=document.createElement('span'); ckLabel.style.cssText='font-size:10px;font-weight:700;color:'+col+';font-family:Lato,sans-serif;';
+      ckLabel.textContent='Tareas · '+doneCks+'/'+ckItems.length;
+      var ckArr=document.createElement('span'); ckArr.style.cssText='font-size:10px;color:var(--tl);transition:transform .2s;'; ckArr.textContent='▼';
+      var ckBody=document.createElement('div'); ckBody.style.cssText='display:none;padding-top:4px;';
+      ckToggle.appendChild(ckLabel); ckToggle.appendChild(ckArr); ckToggle.addEventListener('click',function(e){e.stopPropagation();var op=ckBody.style.display!=='none';ckBody.style.display=op?'none':'block';ckArr.style.transform=op?'':'rotate(180deg)';});
+      ckItems.forEach(function(item,ci){
+        var row=document.createElement('div'); row.style.cssText='display:flex;align-items:flex-start;gap:8px;padding:4px 0;border-bottom:0.5px solid var(--bd);';
+        var cb=document.createElement('input'); cb.type='checkbox'; cb.checked=!!(state.planChecks[ckKey][ci]);
+        cb.style.cssText='width:16px;height:16px;flex-shrink:0;cursor:pointer;accent-color:'+col+';margin-top:1px;';
+        (function(ci2,lbl){cb.addEventListener('change',function(){
+          if(!state.planChecks[ckKey]) state.planChecks[ckKey]=[];
+          state.planChecks[ckKey][ci2]=this.checked;
+          var done2=state.planChecks[ckKey].filter(Boolean).length;
+          ckLabel.textContent='Tareas · '+done2+'/'+ckItems.length;
+          lbl.style.textDecoration=this.checked?'line-through':'none';
+          lbl.style.color=this.checked?col:'var(--td)';
+          try{persist().catch(function(){});}catch(ex){}
+        });})(ci,null);
+        var lbl=document.createElement('span'); lbl.style.cssText='font-size:11px;color:'+(state.planChecks[ckKey][ci]?col:'var(--td)')+';font-family:Lato,sans-serif;text-decoration:'+(state.planChecks[ckKey][ci]?'line-through':'none')+';line-height:1.4;';
+        lbl.textContent=item;
+        /* fix closure */
+        (function(cb2,lbl2,ci2){ cb2.addEventListener('change',function(){lbl2.style.textDecoration=this.checked?'line-through':'none';lbl2.style.color=this.checked?col:'var(--td)';state.planChecks[ckKey][ci2]=this.checked;var d3=state.planChecks[ckKey].filter(Boolean).length;ckLabel.textContent='Tareas · '+d3+'/'+ckItems.length;try{persist().catch(function(){});}catch(ex){}},true);})(cb,lbl,ci);
+        row.appendChild(cb); row.appendChild(lbl); ckBody.appendChild(row);
+      });
+      ckWrap.appendChild(ckToggle); ckWrap.appendChild(ckBody);
+      bOuter.appendChild(tile);bOuter.appendChild(instrDiv);bOuter.appendChild(ckWrap);bWrap.appendChild(bOuter);
     });
     dayCard.appendChild(bWrap); container.appendChild(dayCard);
   });
@@ -14817,14 +14809,14 @@ renderSeguimiento = function(){
             var dot=document.createElement('div');
             dot.style.cssText='width:10px;height:10px;border-radius:50%;flex-shrink:0;border:2px solid '+(cc||'currentColor')+';background:'+(cc||'transparent')+';';
             var lbl=document.createElement('span');
-            lbl.textContent=(_SEG_ICONS[vi]||vi+'V');
+            lbl.textContent='V'+(vi+1)
             chip.appendChild(dot); chip.appendChild(lbl);
-            var _cyc=[null,'green','orange','red']; var _cyc2=['green','orange','red'];
+            var _cyc=[null,'green','orange','red']; var _cyc2=[null,'green','orange','red'];
             (function(chip2,dot2,ti2,vi2,tvk2){
               chip2.addEventListener('click',function(e){
                 e.stopPropagation();
                 var cur2=state.planVueltaDone[key]&&state.planVueltaDone[key][tvk2]||null;
-                var nxt=cur2?_cyc2[(_cyc2.indexOf(cur2)+1)%3]:'green';
+                var nxt=_cyc2[(_cyc2.indexOf(cur2)+1)%4];
                 if(!state.planVueltaDone[key]) state.planVueltaDone[key]={};
                 state.planVueltaDone[key][tvk2]=nxt;
                 seguimientoSyncVuelta(key,ti2,vi2,nxt);
@@ -14906,7 +14898,7 @@ renderSeguimiento = function(){
         // fixed exam col
         var thX=document.createElement('th');
         thX.style.cssText='font-size:9px;color:#dc2626;text-align:center;padding:0 2px 4px;width:46px;font-family:Lato,sans-serif;font-weight:700;line-height:1.2;';
-        thX.innerHTML=(examDate?examDate.toLocaleDateString('es',{day:'2-digit',month:'short'}):'Exam')+'<br>🎯';
+        thX.innerHTML=(examDate?examDate.toLocaleDateString('es',{day:'2-digit',month:'short'}):'Exam')+'<br>EXAM';
         hrow.appendChild(thX);
         thead.appendChild(hrow); tbl.appendChild(thead);
 
@@ -14936,14 +14928,14 @@ renderSeguimiento = function(){
               var cc2=val?_colors[val]:null;
               var _gbgs={green:'#A7F3D0',orange:'#FDE68A',red:'#FECACA'};
               cell.style.cssText='width:36px;height:26px;border-radius:6px;margin:0 auto;display:flex;align-items:center;justify-content:center;font-size:11px;cursor:pointer;transition:all .15s;border:2px solid '+(cc2||'var(--bd)')+';background:'+(val?(_gbgs[val]||'var(--bl)'):'var(--bl)')+';';
-              cell.textContent=(_SEG_ICONS[session.vi]||'?')+(val?(_SEG_DOTS[_cyc2.indexOf(val)]||''):'');
+              var _vl='V'+(session.vi+1);var _dt=val?(' '+({'green':'Facil','orange':'Regular','red':'Dificil'}[val]||'')):'';cell.textContent=_vl+_dt;cell.style.fontSize='9px'
               cell.title='Vuelta '+(session.vi+1)+(val?' \u00b7 '+val:'');
               (function(ti2,vi2,tvk2,cellEl){
                 cellEl.addEventListener('click',function(e){
                   e.stopPropagation();
                   var cur3=state.planVueltaDone[key]&&state.planVueltaDone[key][tvk2]||null;
-                  var _gc3=['green','orange','red'];
-                  var nxt2=cur3?_gc3[(_gc3.indexOf(cur3)+1)%3]:'green';
+                  var _gc3=[null,'green','orange','red'];
+                  var nxt2=_gc3[(_gc3.indexOf(cur3)+1)%4];
                   if(!state.planVueltaDone[key]) state.planVueltaDone[key]={};
                   state.planVueltaDone[key][tvk2]=nxt2;
                   seguimientoSyncVuelta(key,ti2,vi2,nxt2);
@@ -14963,7 +14955,7 @@ renderSeguimiento = function(){
           var tdX=document.createElement('td'); tdX.style.cssText='text-align:center;padding:2px 1px;';
           var xCell=document.createElement('div');
           xCell.style.cssText='width:38px;height:26px;border-radius:5px;margin:0 auto;background:#FCEBEB;border:1.5px solid #E24B4A;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.2;';
-          xCell.innerHTML='<span style="font-size:10px;color:#A32D2D;font-weight:700;">🎯</span>';
+          xCell.innerHTML='<span style="font-size:9px;font-weight:800;color:#A32D2D;">EXAM</span>';
           tdX.appendChild(xCell); row.appendChild(tdX);
           tbody.appendChild(row);
         });
@@ -15145,6 +15137,314 @@ function seguimientoMostrarSelector(){
   cancelBtn.style.cssText='width:100%;padding:8px;border:1px solid var(--bd);border-radius:8px;background:transparent;color:var(--tl);cursor:pointer;font-family:Lato,sans-serif;font-size:12px;margin-top:4px;';
   cancelBtn.textContent='Cancelar'; cancelBtn.onclick=function(){overlay.remove();};
   modal.appendChild(cancelBtn); overlay.appendChild(modal); document.body.appendChild(overlay);
+}
+
+</script>
+
+<script>
+
+/* ── Sugerencias de descanso Pomodoro ── */
+var _POM_SUGG={
+  movement:[
+    'Levántate y estira los brazos durante 1 minuto',
+    'Da un paseo corto por casa, mueve las piernas',
+    'Haz 10 sentadillas o saltos suaves',
+    'Abre la ventana y respira aire fresco unos minutos',
+    'Estira el cuello y los hombros, suéltalos despacio',
+    'Mueve las muñecas y los dedos, relaja las manos'
+  ],
+  water:[
+    'Bebe un vaso de agua — la hidratación mejora la memoria',
+    'Tómate una infusión o un café',
+    'Come algo ligero: fruta, frutos secos o yogur',
+    'Bebe agua, llevas mucho tiempo concentrado'
+  ],
+  relax:[
+    'Cierra los ojos 30 segundos. Solo respira.',
+    'Respira profundo: 4 seg inhala, 4 retén, 4 exhala. Repite 3 veces.',
+    'Mira por la ventana o a un punto lejano. Descansa los ojos.',
+    'Haz una mini-meditación: 2 minutos sin pensar en el estudio',
+    'Escucha 2 minutos de música que te guste sin hacer nada más'
+  ],
+  motivation:[
+    'El repaso espaciado que estás haciendo duplica la retención. ¡Sigue así!',
+    'Cada sesión que completas refuerza las conexiones neuronales. Tu cerebro trabaja.',
+    'Lo que estudias hoy se consolida mientras duermes esta noche.',
+    'La dificultad al recordar significa que tu cerebro está creciendo.',
+    'Recuerda por qué estás haciendo esto. Merece el esfuerzo.'
+  ]
+};
+var _pomSuggIdx={movement:0,water:0,relax:0,motivation:0};
+
+function pomGetSuggestion(isBreakEnd){
+  var cats=isBreakEnd?['movement','water']:['relax','motivation','water','movement'];
+  var cat=cats[Math.floor(Math.random()*cats.length)];
+  var arr=_POM_SUGG[cat];
+  var idx=_pomSuggIdx[cat]%arr.length;
+  _pomSuggIdx[cat]++;
+  return {cat:cat,text:arr[idx]};
+}
+
+function pomShowSuggestion(isBreakEnd){
+  var sugg=pomGetSuggestion(isBreakEnd);
+  var icons={movement:'🏃',water:'💧',relax:'🧘',motivation:'⚡'};
+  var colors={movement:'#047857',water:'#0e7490',relax:'#6d28d9',motivation:'#b45309'};
+  var col=colors[sugg.cat]||'#1d4ed8';
+  var icon=icons[sugg.cat]||'💡';
+  var box=document.getElementById('pom-suggestion-box');
+  if(!box){
+    box=document.createElement('div');
+    box.id='pom-suggestion-box';
+    box.style.cssText='margin:10px 0 0;border-radius:10px;padding:10px 14px;display:none;';
+    var pWrap=document.getElementById('pom-wrap')||document.getElementById('sec-pom');
+    if(pWrap){
+      var pTimer=pWrap.querySelector('#pom-circle-wrap')||pWrap.firstElementChild;
+      if(pTimer&&pTimer.parentNode) pTimer.parentNode.insertBefore(box,pTimer.nextSibling);
+      else pWrap.appendChild(box);
+    }
+  }
+  box.style.cssText='margin:10px 0 0;border-radius:10px;padding:10px 14px;background:rgba('+
+    (sugg.cat==='movement'?'4,120,87':sugg.cat==='water'?'14,116,144':sugg.cat==='relax'?'109,40,217':'180,83,9')+
+    ',.10);border:1.5px solid rgba('+
+    (sugg.cat==='movement'?'4,120,87':sugg.cat==='water'?'14,116,144':sugg.cat==='relax'?'109,40,217':'180,83,9')+
+    ',.30);display:block;';
+  box.innerHTML='<div style="display:flex;align-items:flex-start;gap:8px;">'
+    +'<span style="font-size:18px;flex-shrink:0;">'+icon+'</span>'
+    +'<div><div style="font-size:10px;font-weight:700;color:'+col+';font-family:Lato,sans-serif;text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px;">'
+    +(isBreakEnd?'¡Descanso terminado!':(_pom.mode==='break'?'Durante el descanso':'Sugerencia'))
+    +'</div><div style="font-size:12px;color:var(--td);font-family:Lato,sans-serif;line-height:1.5;">'+sugg.text+'</div></div></div>';
+}
+
+</script>
+
+<script>
+
+/* ── Drawer Más ── */
+function abrirMas(){
+  var ov=document.getElementById('mas-overlay');
+  var dr=document.getElementById('mas-drawer');
+  if(!ov||!dr) return;
+  ov.style.display='block';
+  dr.style.display='block';
+  /* Activate bnav button */
+  document.querySelectorAll('.bnav-btn').forEach(function(b){b.classList.remove('active');});
+  document.getElementById('bnav-mas').classList.add('active');
+  setTimeout(function(){dr.style.transform='translateY(0)';},10);
+}
+function cerrarMas(){
+  var ov=document.getElementById('mas-overlay');
+  var dr=document.getElementById('mas-drawer');
+  if(!ov||!dr) return;
+  dr.style.transform='translateY(100%)';
+  setTimeout(function(){ov.style.display='none';dr.style.display='none';},280);
+  document.getElementById('bnav-mas').classList.remove('active');
+}
+
+</script>
+
+<!-- ══ ONBOARDING WIZARD ══ -->
+<div id="onboarding-ov" style="display:none;position:fixed;inset:0;background:var(--gd);z-index:9000;overflow-y:auto;">
+  <div style="min-height:100%;display:flex;align-items:center;justify-content:center;padding:24px 16px;">
+    <div style="width:100%;max-width:360px;">
+
+      <!-- Logo -->
+      <div style="text-align:center;margin-bottom:28px;">
+        <div style="font-size:42px;margin-bottom:8px;">🐾</div>
+        <div style="font-size:22px;font-weight:900;color:#fff;font-family:Lato,sans-serif;letter-spacing:.3px;">Tapunto</div>
+        <div style="font-size:13px;color:rgba(255,255,255,.75);font-family:Lato,sans-serif;margin-top:4px;">Tu planificador de estudio</div>
+      </div>
+
+      <!-- Card -->
+      <div style="background:#fff;border-radius:16px;padding:24px;box-shadow:0 8px 32px rgba(0,0,0,.18);">
+
+        <!-- Step indicators -->
+        <div style="display:flex;justify-content:center;gap:8px;margin-bottom:24px;" id="ob-steps">
+          <div class="ob-step ob-step-active" id="ob-s1"></div>
+          <div class="ob-step" id="ob-s2"></div>
+          <div class="ob-step" id="ob-s3"></div>
+        </div>
+
+        <!-- Step 1: Nombre -->
+        <div id="ob-p1">
+          <div style="font-size:16px;font-weight:800;color:#1e293b;font-family:Lato,sans-serif;margin-bottom:6px;">¡Hola! ¿Cómo te llamas?</div>
+          <div style="font-size:12px;color:#64748b;font-family:Lato,sans-serif;margin-bottom:16px;">Lo usaremos para personalizar tu plan de estudio.</div>
+          <input id="ob-nombre" type="text" placeholder="Tu nombre o alias..." maxlength="40"
+            style="width:100%;padding:12px 14px;border:2px solid #e2e8f0;border-radius:10px;font-size:15px;font-family:Lato,sans-serif;color:#1e293b;box-sizing:border-box;outline:none;"
+            oninput="obValidate(1)" />
+          <button id="ob-btn1" onclick="obStep(2)"
+            style="width:100%;margin-top:14px;padding:13px;background:#16a34a;color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;font-family:Lato,sans-serif;opacity:.4;transition:opacity .2s;"
+            disabled>Siguiente →</button>
+        </div>
+
+        <!-- Step 2: Examen -->
+        <div id="ob-p2" style="display:none;">
+          <div style="font-size:16px;font-weight:800;color:#1e293b;font-family:Lato,sans-serif;margin-bottom:6px;">¿Tienes algún examen próximo?</div>
+          <div style="font-size:12px;color:#64748b;font-family:Lato,sans-serif;margin-bottom:16px;">Generaremos tu plan automáticamente.</div>
+          <input id="ob-asig" type="text" placeholder="Nombre del examen o asignatura..." maxlength="60"
+            style="width:100%;padding:12px 14px;border:2px solid #e2e8f0;border-radius:10px;font-size:15px;font-family:Lato,sans-serif;color:#1e293b;box-sizing:border-box;margin-bottom:10px;outline:none;"
+            oninput="obValidate(2)" />
+          <input id="ob-fecha" type="date"
+            style="width:100%;padding:12px 14px;border:2px solid #e2e8f0;border-radius:10px;font-size:15px;font-family:Lato,sans-serif;color:#1e293b;box-sizing:border-box;outline:none;"
+            oninput="obValidate(2)" />
+          <button id="ob-btn2" onclick="obStep(3)"
+            style="width:100%;margin-top:14px;padding:13px;background:#16a34a;color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;font-family:Lato,sans-serif;opacity:.4;transition:opacity .2s;"
+            disabled>Siguiente →</button>
+          <button onclick="obSkip()"
+            style="width:100%;margin-top:8px;padding:10px;background:transparent;color:#94a3b8;border:none;font-size:12px;cursor:pointer;font-family:Lato,sans-serif;">
+            Ahora no, entrar directamente
+          </button>
+        </div>
+
+        <!-- Step 3: Temas -->
+        <div id="ob-p3" style="display:none;">
+          <div style="font-size:16px;font-weight:800;color:#1e293b;font-family:Lato,sans-serif;margin-bottom:6px;">¿Cuántos temas tiene?</div>
+          <div style="font-size:12px;color:#64748b;font-family:Lato,sans-serif;margin-bottom:20px;">Una estimación aproximada es suficiente.</div>
+          <div style="display:flex;align-items:center;justify-content:center;gap:16px;margin-bottom:8px;">
+            <button onclick="obTemas(-1)" style="width:44px;height:44px;border-radius:50%;border:2px solid #e2e8f0;background:#fff;font-size:20px;cursor:pointer;font-weight:700;color:#1e293b;">−</button>
+            <span id="ob-temas-val" style="font-size:36px;font-weight:900;color:#16a34a;font-family:Lato,sans-serif;min-width:48px;text-align:center;">5</span>
+            <button onclick="obTemas(1)" style="width:44px;height:44px;border-radius:50%;border:2px solid #e2e8f0;background:#fff;font-size:20px;cursor:pointer;font-weight:700;color:#1e293b;">+</button>
+          </div>
+          <div style="text-align:center;font-size:11px;color:#94a3b8;font-family:Lato,sans-serif;margin-bottom:20px;">temas</div>
+          <button onclick="obGenerar()"
+            style="width:100%;padding:14px;background:linear-gradient(135deg,#16a34a,#15803d);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:800;cursor:pointer;font-family:Lato,sans-serif;box-shadow:0 4px 14px rgba(22,163,74,.35);">
+            🚀 Generar mi plan de estudio
+          </button>
+          <button onclick="obSkip()"
+            style="width:100%;margin-top:8px;padding:10px;background:transparent;color:#94a3b8;border:none;font-size:12px;cursor:pointer;font-family:Lato,sans-serif;">
+            Entrar sin plan por ahora
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+.ob-step{width:8px;height:8px;border-radius:50%;background:#e2e8f0;transition:all .3s;}
+.ob-step-active{width:24px;border-radius:4px;background:#16a34a;}
+</style>
+
+<script>
+
+/* ═══ ONBOARDING WIZARD ═══ */
+var _obTemasVal=5;
+
+function checkOnboarding(){
+  /* Only show if user has no records AND hasn't dismissed before */
+  var dismissed=localStorage.getItem('tp_ob_done_'+(currentUser||''));
+  if(dismissed) return;
+  if(state.records&&state.records.length>0) return;
+  /* Set min date for exam input to tomorrow */
+  var tomorrow=new Date(); tomorrow.setDate(tomorrow.getDate()+1);
+  var d=document.getElementById('ob-fecha');
+  if(d) d.min=tomorrow.toISOString().split('T')[0];
+  /* Pre-fill name if we know it */
+  var firma=typeof getFirma==='function'?getFirma():{};
+  var ni=document.getElementById('ob-nombre');
+  if(ni&&firma.nombre) ni.value=firma.nombre;
+  document.getElementById('onboarding-ov').style.display='flex';
+  obValidate(1);
+}
+
+function obValidate(step){
+  if(step===1){
+    var v=document.getElementById('ob-nombre').value.trim();
+    var btn=document.getElementById('ob-btn1');
+    if(btn){btn.disabled=!v;btn.style.opacity=v?'1':'.4';}
+  } else if(step===2){
+    var a=document.getElementById('ob-asig').value.trim();
+    var f=document.getElementById('ob-fecha').value;
+    var btn=document.getElementById('ob-btn2');
+    if(btn){btn.disabled=!(a&&f);btn.style.opacity=(a&&f)?'1':'.4';}
+  }
+}
+
+function obStep(n){
+  [1,2,3].forEach(function(i){
+    document.getElementById('ob-p'+i).style.display=i===n?'block':'none';
+    var s=document.getElementById('ob-s'+i);
+    if(s){
+      s.classList.remove('ob-step-active');
+      if(i<=n) s.classList.add('ob-step-active');
+    }
+  });
+  if(n===1){
+    /* Save name */
+    var nombre=document.getElementById('ob-nombre').value.trim();
+    if(nombre&&typeof setFirmaNombre==='function') setFirmaNombre(nombre);
+    else if(nombre){
+      var f=typeof getFirma==='function'?getFirma():{};
+      f.nombre=nombre;
+      try{localStorage.setItem('tp_firma_'+(currentUser||''),JSON.stringify(f));}catch(e){}
+    }
+  }
+}
+
+function obTemas(delta){
+  _obTemasVal=Math.max(1,Math.min(20,_obTemasVal+delta));
+  document.getElementById('ob-temas-val').textContent=_obTemasVal;
+}
+
+function obGenerar(){
+  var nombre=document.getElementById('ob-nombre').value.trim();
+  var asig=document.getElementById('ob-asig').value.trim();
+  var fecha=document.getElementById('ob-fecha').value;
+
+  /* Save name */
+  if(nombre){
+    var firma=typeof getFirma==='function'?getFirma():{};
+    firma.nombre=nombre;
+    try{localStorage.setItem('tp_firma_'+(currentUser||''),JSON.stringify(firma));}catch(e){}
+    var userGreet=document.getElementById('user-greet');
+    if(userGreet) userGreet.textContent='Hola, '+nombre.charAt(0).toUpperCase()+nombre.slice(1)+' 🐾';
+  }
+
+  /* Create exam record */
+  var newId='r'+Date.now();
+  var rec={id:newId,tema:asig,accion:'Examen',fechaEvento:fecha,
+    color:'#16a34a',prioridad:'alta',archivado:false,
+    notas:'',contacto:'',carpeta:'Exámenes',
+    createdAt:new Date().toISOString()};
+  if(!state.records) state.records=[];
+  state.records.push(rec);
+
+  /* Init plan data */
+  var topics=[];
+  for(var i=0;i<_obTemasVal;i++) topics.push({name:'Tema '+(i+1),diff:2});
+  _planData[newId]={topics:topics,numVueltas:3,vueltaBaseMins:60,pocosDias:'compress',
+    hasPractica:false,practicaMins:30,practicaTipo:'Problemas'};
+  state.planData[newId]=_planData[newId];
+  if(!state.planVueltaDone[newId]) state.planVueltaDone[newId]={};
+
+  try{persist().catch(function(){});}catch(e){}
+  obDismiss();
+
+  /* Go to plan and generate */
+  setTimeout(function(){
+    irSeccion('estudio');
+    setTimeout(function(){
+      estSwitchTab('plan');
+      setTimeout(function(){
+        try{planRenderExams();}catch(e){}
+        /* Show one-time tip */
+        setTimeout(function(){
+          if(typeof showToast==='function') showToast('¡Plan generado! Toca las bolitas al estudiar cada tema ✓');
+        },800);
+      },200);
+    },150);
+  },100);
+}
+
+function obSkip(){
+  localStorage.setItem('tp_ob_done_'+(currentUser||''),'1');
+  document.getElementById('onboarding-ov').style.display='none';
+  irHome();
+}
+
+function obDismiss(){
+  localStorage.setItem('tp_ob_done_'+(currentUser||''),'1');
+  document.getElementById('onboarding-ov').style.display='none';
 }
 
 </script>
