@@ -2160,10 +2160,6 @@ body.on-home #sec-home { display: block !important; }
 <script>(function(){try{if(localStorage.getItem('tp_dark_mode')==='1')document.documentElement.style.background='#1a1a2e';}catch(e){};}());</script>
 </head>
 <body data-theme="verde">
-<div id="version-banner" style="background:linear-gradient(90deg,#1d4ed8,#7c3aed);color:#fff;padding:6px 14px;font-size:11px;font-weight:700;font-family:Lato,sans-serif;display:flex;align-items:center;justify-content:space-between;letter-spacing:.3px;">
-  <span>✓ Tapunto actualizado — Fase 1 &amp; 2 activas</span>
-  <button onclick="this.parentElement.style.display='none'" style="background:rgba(255,255,255,.2);border:none;color:#fff;border-radius:4px;padding:2px 6px;cursor:pointer;font-size:10px;">✕</button>
-</div>
 
 <!-- CONFIRM DELETE -->
 <div class="confirm-ov" id="confirm-ov">
@@ -2475,7 +2471,7 @@ body.on-home #sec-home { display: block !important; }
 </div>
 <div id="offline-banner" style="display:none;background:#c53030;color:#fff;text-align:center;font-size:12px;font-weight:700;padding:4px;font-family:Lato,sans-serif;">📵 Sin conexión — Guardando localmente</div>
 <div class="hdr-section-title-bar" id="hdr-title-bar" style="display:none!important;">
-  <span id="hdr-section-title">TAPUNTO</span><span style="font-size:8px;background:rgba(255,255,255,.3);color:#fff;padding:1px 5px;border-radius:6px;margin-left:5px;font-weight:700;">v10</span><span style="font-size:9px;background:#16a34a;color:#fff;padding:1px 6px;border-radius:8px;margin-left:6px;font-weight:700;vertical-align:middle;">v10</span><span style="font-size:9px;background:#16a34a;color:#fff;padding:1px 6px;border-radius:8px;margin-left:6px;font-weight:700;vertical-align:middle;">v10</span>
+  <span id="hdr-section-title">TAPUNTO</span><span style="font-size:9px;background:#16a34a;color:#fff;padding:1px 6px;border-radius:8px;margin-left:6px;font-weight:700;vertical-align:middle;">v10</span><span style="font-size:9px;background:#16a34a;color:#fff;padding:1px 6px;border-radius:8px;margin-left:6px;font-weight:700;vertical-align:middle;">v10</span>
 </div>
 <!-- PAGE -->
     <div class="page">
@@ -8135,7 +8131,6 @@ checkTrial();
 checkLicenseExpiry();
 updatePortadaNombre();
 irHome();
-setTimeout(function(){try{checkOnboarding();}catch(e){}},300);
 if(isPremium&&state.sheetsUrl){
 syncFromSheets(false).catch(()=>{});
 setTimeout(function(){syncConfigToSheets();},3000);
@@ -12664,14 +12659,10 @@ switchTab=function(tab,btn){_origSwitchTabA(tab,btn);if(tab==='albumes')renderAl
 <div id="mas-overlay" onclick="cerrarMas()" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:600;"></div>
 <div id="mas-drawer" style="display:none;position:fixed;bottom:0;left:0;right:0;background:var(--w);border-radius:18px 18px 0 0;z-index:610;padding:0 0 30px;box-shadow:0 -4px 24px rgba(0,0,0,.18);transform:translateY(100%);transition:transform .28s cubic-bezier(.4,0,.2,1);">
   <div style="width:40px;height:4px;background:var(--bd);border-radius:4px;margin:12px auto 16px;"></div>
-    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:0 16px 8px;">
-    <button class="mas-btn" onclick="cerrarMas();irSeccion('estudio')" style="background:rgba(22,163,74,.08);border-color:rgba(22,163,74,.30);">
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:0 16px 8px;">
+    <button class="mas-btn" onclick="cerrarMas();irSeccion('estudio')" style="background:rgba(22,163,74,.08);border-color:rgba(22,163,74,.3);color:#15803d;font-weight:700;">
       <span style="font-size:26px;">&#128218;</span>
-      <span style="color:#15803d;font-weight:700;">Estudiar</span>
-    </button>
-    <button class="mas-btn" onclick="cerrarMas();irSeccion('estudio');setTimeout(function(){estSwitchTab('pom');},80)">
-      <span style="font-size:26px;">&#127813;</span>
-      <span>Pomodoro</span>
+      <span>Estudiar</span>
     </button>
     <button class="mas-btn" onclick="cerrarMas();irSeccion('notas')">
       <span style="font-size:26px;">&#9989;</span>
@@ -12704,8 +12695,8 @@ switchTab=function(tab,btn){_origSwitchTabA(tab,btn);if(tab==='albumes')renderAl
   <button class="bnav-btn" id="bnav-agenda" onclick="irSeccion('calendario')">
     <span class="bnav-ico">&#128197;</span><span class="bnav-lbl">Agenda</span>
   </button>
-  <button class="bnav-btn" id="bnav-mas" onclick="abrirMas()" style="position:relative;">
-    <span class="bnav-ico">&#9776;</span><span class="bnav-lbl">M&#225;s</span>
+  <button class="bnav-btn" id="bnav-mas" onclick="abrirMas()">
+    <span class="bnav-ico">&#9776;</span><span class="bnav-lbl">Más</span>
   </button>
 </nav>
 
@@ -15238,213 +15229,6 @@ function cerrarMas(){
   dr.style.transform='translateY(100%)';
   setTimeout(function(){ov.style.display='none';dr.style.display='none';},280);
   document.getElementById('bnav-mas').classList.remove('active');
-}
-
-</script>
-
-<!-- ══ ONBOARDING WIZARD ══ -->
-<div id="onboarding-ov" style="display:none;position:fixed;inset:0;background:var(--gd);z-index:9000;overflow-y:auto;">
-  <div style="min-height:100%;display:flex;align-items:center;justify-content:center;padding:24px 16px;">
-    <div style="width:100%;max-width:360px;">
-
-      <!-- Logo -->
-      <div style="text-align:center;margin-bottom:28px;">
-        <div style="font-size:42px;margin-bottom:8px;">🐾</div>
-        <div style="font-size:22px;font-weight:900;color:#fff;font-family:Lato,sans-serif;letter-spacing:.3px;">Tapunto</div>
-        <div style="font-size:13px;color:rgba(255,255,255,.75);font-family:Lato,sans-serif;margin-top:4px;">Tu planificador de estudio</div>
-      </div>
-
-      <!-- Card -->
-      <div style="background:#fff;border-radius:16px;padding:24px;box-shadow:0 8px 32px rgba(0,0,0,.18);">
-
-        <!-- Step indicators -->
-        <div style="display:flex;justify-content:center;gap:8px;margin-bottom:24px;" id="ob-steps">
-          <div class="ob-step ob-step-active" id="ob-s1"></div>
-          <div class="ob-step" id="ob-s2"></div>
-          <div class="ob-step" id="ob-s3"></div>
-        </div>
-
-        <!-- Step 1: Nombre -->
-        <div id="ob-p1">
-          <div style="font-size:16px;font-weight:800;color:#1e293b;font-family:Lato,sans-serif;margin-bottom:6px;">¡Hola! ¿Cómo te llamas?</div>
-          <div style="font-size:12px;color:#64748b;font-family:Lato,sans-serif;margin-bottom:16px;">Lo usaremos para personalizar tu plan de estudio.</div>
-          <input id="ob-nombre" type="text" placeholder="Tu nombre o alias..." maxlength="40"
-            style="width:100%;padding:12px 14px;border:2px solid #e2e8f0;border-radius:10px;font-size:15px;font-family:Lato,sans-serif;color:#1e293b;box-sizing:border-box;outline:none;"
-            oninput="obValidate(1)" />
-          <button id="ob-btn1" onclick="obStep(2)"
-            style="width:100%;margin-top:14px;padding:13px;background:#16a34a;color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;font-family:Lato,sans-serif;opacity:.4;transition:opacity .2s;"
-            disabled>Siguiente →</button>
-        </div>
-
-        <!-- Step 2: Examen -->
-        <div id="ob-p2" style="display:none;">
-          <div style="font-size:16px;font-weight:800;color:#1e293b;font-family:Lato,sans-serif;margin-bottom:6px;">¿Tienes algún examen próximo?</div>
-          <div style="font-size:12px;color:#64748b;font-family:Lato,sans-serif;margin-bottom:16px;">Generaremos tu plan automáticamente.</div>
-          <input id="ob-asig" type="text" placeholder="Nombre del examen o asignatura..." maxlength="60"
-            style="width:100%;padding:12px 14px;border:2px solid #e2e8f0;border-radius:10px;font-size:15px;font-family:Lato,sans-serif;color:#1e293b;box-sizing:border-box;margin-bottom:10px;outline:none;"
-            oninput="obValidate(2)" />
-          <input id="ob-fecha" type="date"
-            style="width:100%;padding:12px 14px;border:2px solid #e2e8f0;border-radius:10px;font-size:15px;font-family:Lato,sans-serif;color:#1e293b;box-sizing:border-box;outline:none;"
-            oninput="obValidate(2)" />
-          <button id="ob-btn2" onclick="obStep(3)"
-            style="width:100%;margin-top:14px;padding:13px;background:#16a34a;color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;font-family:Lato,sans-serif;opacity:.4;transition:opacity .2s;"
-            disabled>Siguiente →</button>
-          <button onclick="obSkip()"
-            style="width:100%;margin-top:8px;padding:10px;background:transparent;color:#94a3b8;border:none;font-size:12px;cursor:pointer;font-family:Lato,sans-serif;">
-            Ahora no, entrar directamente
-          </button>
-        </div>
-
-        <!-- Step 3: Temas -->
-        <div id="ob-p3" style="display:none;">
-          <div style="font-size:16px;font-weight:800;color:#1e293b;font-family:Lato,sans-serif;margin-bottom:6px;">¿Cuántos temas tiene?</div>
-          <div style="font-size:12px;color:#64748b;font-family:Lato,sans-serif;margin-bottom:20px;">Una estimación aproximada es suficiente.</div>
-          <div style="display:flex;align-items:center;justify-content:center;gap:16px;margin-bottom:8px;">
-            <button onclick="obTemas(-1)" style="width:44px;height:44px;border-radius:50%;border:2px solid #e2e8f0;background:#fff;font-size:20px;cursor:pointer;font-weight:700;color:#1e293b;">−</button>
-            <span id="ob-temas-val" style="font-size:36px;font-weight:900;color:#16a34a;font-family:Lato,sans-serif;min-width:48px;text-align:center;">5</span>
-            <button onclick="obTemas(1)" style="width:44px;height:44px;border-radius:50%;border:2px solid #e2e8f0;background:#fff;font-size:20px;cursor:pointer;font-weight:700;color:#1e293b;">+</button>
-          </div>
-          <div style="text-align:center;font-size:11px;color:#94a3b8;font-family:Lato,sans-serif;margin-bottom:20px;">temas</div>
-          <button onclick="obGenerar()"
-            style="width:100%;padding:14px;background:linear-gradient(135deg,#16a34a,#15803d);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:800;cursor:pointer;font-family:Lato,sans-serif;box-shadow:0 4px 14px rgba(22,163,74,.35);">
-            🚀 Generar mi plan de estudio
-          </button>
-          <button onclick="obSkip()"
-            style="width:100%;margin-top:8px;padding:10px;background:transparent;color:#94a3b8;border:none;font-size:12px;cursor:pointer;font-family:Lato,sans-serif;">
-            Entrar sin plan por ahora
-          </button>
-        </div>
-
-      </div>
-    </div>
-  </div>
-</div>
-
-<style>
-.ob-step{width:8px;height:8px;border-radius:50%;background:#e2e8f0;transition:all .3s;}
-.ob-step-active{width:24px;border-radius:4px;background:#16a34a;}
-</style>
-
-<script>
-
-/* ═══ ONBOARDING WIZARD ═══ */
-var _obTemasVal=5;
-
-function checkOnboarding(){
-  /* Only show if user has no records AND hasn't dismissed before */
-  var dismissed=localStorage.getItem('tp_ob_done_'+(currentUser||''));
-  if(dismissed) return;
-  if(state.records&&state.records.length>0) return;
-  /* Set min date for exam input to tomorrow */
-  var tomorrow=new Date(); tomorrow.setDate(tomorrow.getDate()+1);
-  var d=document.getElementById('ob-fecha');
-  if(d) d.min=tomorrow.toISOString().split('T')[0];
-  /* Pre-fill name if we know it */
-  var firma=typeof getFirma==='function'?getFirma():{};
-  var ni=document.getElementById('ob-nombre');
-  if(ni&&firma.nombre) ni.value=firma.nombre;
-  document.getElementById('onboarding-ov').style.display='flex';
-  obValidate(1);
-}
-
-function obValidate(step){
-  if(step===1){
-    var v=document.getElementById('ob-nombre').value.trim();
-    var btn=document.getElementById('ob-btn1');
-    if(btn){btn.disabled=!v;btn.style.opacity=v?'1':'.4';}
-  } else if(step===2){
-    var a=document.getElementById('ob-asig').value.trim();
-    var f=document.getElementById('ob-fecha').value;
-    var btn=document.getElementById('ob-btn2');
-    if(btn){btn.disabled=!(a&&f);btn.style.opacity=(a&&f)?'1':'.4';}
-  }
-}
-
-function obStep(n){
-  [1,2,3].forEach(function(i){
-    document.getElementById('ob-p'+i).style.display=i===n?'block':'none';
-    var s=document.getElementById('ob-s'+i);
-    if(s){
-      s.classList.remove('ob-step-active');
-      if(i<=n) s.classList.add('ob-step-active');
-    }
-  });
-  if(n===1){
-    /* Save name */
-    var nombre=document.getElementById('ob-nombre').value.trim();
-    if(nombre&&typeof setFirmaNombre==='function') setFirmaNombre(nombre);
-    else if(nombre){
-      var f=typeof getFirma==='function'?getFirma():{};
-      f.nombre=nombre;
-      try{localStorage.setItem('tp_firma_'+(currentUser||''),JSON.stringify(f));}catch(e){}
-    }
-  }
-}
-
-function obTemas(delta){
-  _obTemasVal=Math.max(1,Math.min(20,_obTemasVal+delta));
-  document.getElementById('ob-temas-val').textContent=_obTemasVal;
-}
-
-function obGenerar(){
-  var nombre=document.getElementById('ob-nombre').value.trim();
-  var asig=document.getElementById('ob-asig').value.trim();
-  var fecha=document.getElementById('ob-fecha').value;
-
-  /* Save name */
-  if(nombre){
-    var firma=typeof getFirma==='function'?getFirma():{};
-    firma.nombre=nombre;
-    try{localStorage.setItem('tp_firma_'+(currentUser||''),JSON.stringify(firma));}catch(e){}
-    var userGreet=document.getElementById('user-greet');
-    if(userGreet) userGreet.textContent='Hola, '+nombre.charAt(0).toUpperCase()+nombre.slice(1)+' 🐾';
-  }
-
-  /* Create exam record */
-  var newId='r'+Date.now();
-  var rec={id:newId,tema:asig,accion:'Examen',fechaEvento:fecha,
-    color:'#16a34a',prioridad:'alta',archivado:false,
-    notas:'',contacto:'',carpeta:'Exámenes',
-    createdAt:new Date().toISOString()};
-  if(!state.records) state.records=[];
-  state.records.push(rec);
-
-  /* Init plan data */
-  var topics=[];
-  for(var i=0;i<_obTemasVal;i++) topics.push({name:'Tema '+(i+1),diff:2});
-  _planData[newId]={topics:topics,numVueltas:3,vueltaBaseMins:60,pocosDias:'compress',
-    hasPractica:false,practicaMins:30,practicaTipo:'Problemas'};
-  state.planData[newId]=_planData[newId];
-  if(!state.planVueltaDone[newId]) state.planVueltaDone[newId]={};
-
-  try{persist().catch(function(){});}catch(e){}
-  obDismiss();
-
-  /* Go to plan and generate */
-  setTimeout(function(){
-    irSeccion('estudio');
-    setTimeout(function(){
-      estSwitchTab('plan');
-      setTimeout(function(){
-        try{planRenderExams();}catch(e){}
-        /* Show one-time tip */
-        setTimeout(function(){
-          if(typeof showToast==='function') showToast('¡Plan generado! Toca las bolitas al estudiar cada tema ✓');
-        },800);
-      },200);
-    },150);
-  },100);
-}
-
-function obSkip(){
-  localStorage.setItem('tp_ob_done_'+(currentUser||''),'1');
-  document.getElementById('onboarding-ov').style.display='none';
-  irHome();
-}
-
-function obDismiss(){
-  localStorage.setItem('tp_ob_done_'+(currentUser||''),'1');
-  document.getElementById('onboarding-ov').style.display='none';
 }
 
 </script>
