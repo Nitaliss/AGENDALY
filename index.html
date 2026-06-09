@@ -2344,7 +2344,7 @@ body.on-home #sec-home { display: block !important; }
         <!-- Aviso Gmail -->
         <div style="margin-top:8px;padding:10px 12px;background:#f0f9e8;border-radius:8px;border-left:3px solid var(--gm);font-size:11px;color:var(--td);font-family:Lato,sans-serif;line-height:1.7;">
           <strong>📌 Con cuenta Gmail</strong> podrás sincronizar tus datos entre dispositivos con <strong>Google Drive</strong> (Premium) y exportar registros a Google Sheets (Premium).<br>
-          <span style="color:var(--tl);">Con cualquier correo puedes usar Tapunto en <strong>modo local</strong> con todas las funciones básicas: horario, tareas, Pomodoro, agenda y álbumes.</span>
+          <span style="color:var(--tl);">Con cualquier correo puedes usar Tapunto en <strong>modo local</strong> con todas las funciones básicas: horario, tareas, Pomodoro, agenda y Mis Documentos.</span>
         </div>
       </div>
 
@@ -2518,11 +2518,7 @@ body.on-home #sec-home { display: block !important; }
       <div id="home-resumen-saludo" style="font-family:Caveat,cursive;font-size:26px;font-weight:700;color:var(--gd);margin-bottom:2px;">Hola!</div>
       <div id="home-resumen-fecha" style="font-size:12px;color:var(--tl);font-family:Lato,sans-serif;"></div>
     </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">
-      <div style="background:var(--w);border:1px solid var(--bd);border-radius:10px;padding:10px 12px;cursor:pointer;" onclick="irSeccion('registros')">
-        <div style="font-size:10px;font-weight:700;color:var(--tm);text-transform:uppercase;letter-spacing:.5px;font-family:Lato,sans-serif;margin-bottom:4px;">&#128197; Pr&#243;ximo</div>
-        <div id="home-next-deadline-text" style="font-size:12px;font-weight:700;color:var(--td);font-family:Lato,sans-serif;line-height:1.3;">Sin ex&#225;menes</div>
-      </div>
+    <div style="display:grid;grid-template-columns:1fr;gap:8px;margin-bottom:10px;">
       <div style="background:var(--w);border:1px solid var(--bd);border-radius:10px;padding:10px 12px;cursor:pointer;" onclick="irSeccion('estudio')">
         <div style="font-size:10px;font-weight:700;color:var(--tm);text-transform:uppercase;letter-spacing:.5px;font-family:Lato,sans-serif;margin-bottom:4px;">&#9201; Hoy</div>
         <div id="home-pom-today" style="font-size:12px;font-weight:700;color:var(--td);font-family:Lato,sans-serif;line-height:1.3;">0 sesiones</div>
@@ -2530,8 +2526,8 @@ body.on-home #sec-home { display: block !important; }
     </div>
     <div id="home-streak" style="display:flex;align-items:center;gap:6px;padding:6px 0;margin-bottom:6px;min-height:24px;"></div>
     <div id="home-motiv-card" style="display:none !important;align-items:flex-start;gap:10px;background:var(--w);border:0.5px solid var(--bd);border-radius:10px;padding:10px 12px;margin-bottom:8px;"></div>
+    <div id="home-alertas-panel" style="border-radius:8px;border:1px solid var(--bd);background:var(--w);margin-bottom:8px;"></div>
     <div id="home-exam-progress" style="display:none;background:var(--w);border:0.5px solid var(--bd);border-radius:12px;margin-bottom:8px;overflow:hidden;"></div>
-    <div id="home-alertas-panel" style="border-radius:8px;border:1px solid var(--bd);background:var(--w);"></div>
   </div>
   <div id="home-tab-horario-panel" style="padding:8px 9px 6px;display:none;">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
@@ -2614,11 +2610,11 @@ body.on-home #sec-home { display: block !important; }
   </div>
 </div>
 
-<!-- ══ ÁLBUMES DE FOTOS ══ -->
+<!-- ══ MIS DOCUMENTOS ══ -->
 <div id="sec-albumes" class="section">
   <div class="tap-header">
     <button class="tap-header-btn" onclick="irHome()" style="flex-direction:column;gap:1px;"><span style="font-size:22px;line-height:1;color:#fff;font-weight:900;">&#8592;</span><span style="font-size:9px;color:#fff;font-weight:700;font-family:Lato,sans-serif;letter-spacing:.3px;">Inicio</span></button>
-    <span class="tap-header-title">Mis álbumes</span>
+    <span class="tap-header-title">Mis Documentos</span>
     <button class="tap-header-btn" onclick="albNuevo()" style="font-size:22px;color:#fff;font-weight:900;line-height:1;">+</button>
   </div>
   <div id="albumes-filtro" style="padding:8px 14px 4px;display:flex;gap:6px;overflow-x:auto;background:var(--bl);border-bottom:1px solid var(--bd);"></div>
@@ -2762,7 +2758,7 @@ body.on-home #sec-home { display: block !important; }
 <!-- Modal crear álbum -->
 <div id="alb-modal">
   <div class="alb-sheet">
-    <h3>Nuevo álbum</h3>
+    <h3>Nueva carpeta</h3>
     <div class="fechaEvento-field">
       <label>Asignatura</label>
       <input type="text" id="alb-asig" list="list-temas" placeholder="Asignatura o práctica..." autocomplete="off" style="width:100%;padding:8px 10px;border:1.5px solid var(--bd);border-radius:8px;font-size:13px;font-family:Lato,sans-serif;background:var(--bp);color:var(--td);box-sizing:border-box;"/>
@@ -2793,7 +2789,7 @@ body.on-home #sec-home { display: block !important; }
     </div>
     <div style="display:flex;gap:8px;margin-top:14px;">
       <button onclick="albCancelar()" style="flex:1;padding:11px;background:var(--bp);border:1px solid var(--bd);border-radius:10px;font-family:Lato,sans-serif;font-size:14px;font-weight:600;color:var(--tl);cursor:pointer;">&#8592; Cancelar</button>
-      <button onclick="albGuardar()" style="flex:2;padding:11px;background:var(--gm);border:none;border-radius:10px;font-family:Lato,sans-serif;font-size:14px;font-weight:700;color:#fff;cursor:pointer;">&#128190; Guardar álbum</button>
+      <button onclick="albGuardar()" style="flex:2;padding:11px;background:var(--gm);border:none;border-radius:10px;font-family:Lato,sans-serif;font-size:14px;font-weight:700;color:#fff;cursor:pointer;">&#128190; Guardar carpeta</button>
     </div>
   </div>
 </div>
@@ -2801,7 +2797,7 @@ body.on-home #sec-home { display: block !important; }
 <!-- Visor de álbum -->
 <div id="alb-viewer">
   <div class="alb-viewer-top">
-    <div class="alb-viewer-title" id="alb-viewer-title">Álbum</div>
+    <div class="alb-viewer-title" id="alb-viewer-title">Documento</div>
     <button class="alb-viewer-close" onclick="albCerrarVisor()">&#10005;</button>
   </div>
   <div id="alb-viewer-meta" style="padding:4px 14px;font-size:11px;color:rgba(255,255,255,.6);font-family:Lato,sans-serif;flex-shrink:0;"></div>
@@ -6930,7 +6926,7 @@ if(darkLabel) darkLabel.textContent=isDark?'Claro':'Oscuro';
 function irSeccion(tab){
 document.body.classList.remove('on-home');
 switchTab(tab,null);
-var titles={nuevo:'NUEVA TAREA',registros:'MIS TAREAS',recordatorios:'ALERTAS',calendario:'MI AGENDA',notas:'TO DO',config:'AJUSTES',albumes:'MIS ÁLBUMES',estudio:'MI ESTUDIO',rutinas:'RUTINAS'};
+var titles={nuevo:'NUEVA TAREA',registros:'MIS TAREAS',recordatorios:'ALERTAS',calendario:'MI AGENDA',notas:'TO DO',config:'AJUSTES',albumes:'MIS DOCUMENTOS',estudio:'MI ESTUDIO',rutinas:'RUTINAS'};
 document.getElementById('hdr-section-title').textContent=titles[tab]||'TAPUNTO';
 /* Highlight correct nav button */
 document.querySelectorAll('.bnav-btn').forEach(function(b){b.classList.remove('active');});
@@ -7593,7 +7589,7 @@ function exportarDatosCompletos(){
   document.body.appendChild(a); a.click();
   setTimeout(function(){ document.body.removeChild(a); URL.revokeObjectURL(a.href); }, 500);
   var kb = Math.round(json.length/1024);
-  showWarn('✓ Backup completo exportado ('+kb+' KB) — horario, tareas, álbumes, planificador, Pomodoro y configuración');
+  showWarn('✓ Backup completo exportado ('+kb+' KB) — horario, tareas, documentos, planificador, Pomodoro y configuración');
 }
 function exportBackupJSON(){
 const backup={
@@ -7643,7 +7639,7 @@ function importBackupJSON(e){
         if(d.config.modo) state.modo=d.config.modo;
       }
       persist().catch(function(){});
-      showWarn('✓ Backup restaurado: tareas, horario, álbumes, planificador y configuración');
+      showWarn('✓ Backup restaurado: tareas, horario, documentos, planificador y configuración');
       renderRecords();
       try{ renderHorarioHome(); }catch(ex){}
     }catch(err){ showWarn('⚠ Error al leer el archivo JSON: '+err.message); }
@@ -10087,7 +10083,7 @@ function renderAlbumes(){
   var list=document.getElementById('albumes-list');if(!list)return;
   var albs=getAlbums().filter(function(a){return !_albFiltroAsig||a.asig===_albFiltroAsig;}).sort(function(a,b){return b.created.localeCompare(a.created);});
   list.innerHTML='';
-  if(!albs.length){var em=document.createElement('div');em.style.cssText='text-align:center;padding:40px;color:var(--tl);font-family:"Lato",sans-serif;font-size:14px;';em.textContent='Sin álbumes. Toca + para crear uno.';list.appendChild(em);albActualizarFiltros();return;}
+  if(!albs.length){var em=document.createElement('div');em.style.cssText='text-align:center;padding:40px;color:var(--tl);font-family:"Lato",sans-serif;font-size:14px;';em.textContent= 'Sin documentos. Toca + para crear uno.';list.appendChild(em);albActualizarFiltros();return;}
   albs.forEach(function(alb){
     var card=document.createElement('div');card.className='alb-card';card.addEventListener('click',function(){albVerAlbum(alb.id);});
     if(alb.fotos&&alb.fotos.length>0){var img=document.createElement('img');img.className='alb-card-thumb';img.src=alb.fotos[0].data;img.alt='';card.appendChild(img);}
@@ -10102,7 +10098,7 @@ function renderAlbumes(){
     list.appendChild(card);
   });
   albActualizarFiltros();
-  var hi=document.getElementById('home-info-albumes');if(hi){var n=getAlbums().length;hi.textContent=n>0?n+(n===1?' álbum':' álbumes'):'Guarda fotos por asignatura';}
+  var hi=document.getElementById('home-info-albumes');if(hi){var n=getAlbums().length;hi.textContent=n>0?n+(n===1? ' doc': ' docs'):'Guarda documentos por asignatura';}
 }
 function albActualizarFiltros(){
   var fDiv=document.getElementById('albumes-filtro');if(!fDiv)return;
@@ -12662,7 +12658,7 @@ var _origSwitchTabNav=switchTab;
 switchTab=function(tab,btn){_origSwitchTabNav(tab,btn);bnavSetActive(tab);};
 /* ── irHome / switchTab hooks ── */
 var _origIrHomeH=irHome;
-irHome=function(){_origIrHomeH();setTimeout(function(){renderHorarioHome();renderAlertas();},0);var hi=document.getElementById('home-info-albumes');if(hi){var n=getAlbums().length;hi.textContent=n>0?n+(n===1?' álbum':' álbumes'):'Guarda fotos por asignatura';}};
+irHome=function(){_origIrHomeH();setTimeout(function(){renderHorarioHome();renderAlertas();},0);var hi=document.getElementById('home-info-albumes');if(hi){var n=getAlbums().length;hi.textContent=n>0?n+(n===1? ' doc': ' docs'):'Guarda documentos por asignatura';}};
 var _origSwitchTabA=switchTab;
 switchTab=function(tab,btn){_origSwitchTabA(tab,btn);if(tab==='albumes')renderAlbumes();if(tab==='calendario')setTimeout(function(){try{renderAlertas();}catch(e){}},200);};
 </script>
@@ -12693,7 +12689,7 @@ switchTab=function(tab,btn){_origSwitchTabA(tab,btn);if(tab==='albumes')renderAl
     </button>
     <button class="mas-btn" onclick="cerrarMas();irSeccion('albumes')">
       <span style="font-size:26px;">&#128444;</span>
-      <span>&#193;lbumes</span>
+      <span>Mis Documentos</span>
     </button>
     <button class="mas-btn" onclick="cerrarMas();irSeccion('config')">
       <span style="font-size:26px;">&#9881;</span>
