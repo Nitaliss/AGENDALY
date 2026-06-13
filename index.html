@@ -3857,7 +3857,9 @@ async function subirADrive(){
   if(!_driveAccessToken){showToast('⚠️ Conecta Google Drive primero');return;}
   try{
     setSyncStatus('syncing','Subiendo a Drive...');
+    if(!state.horario||!state.horario.schedules){try{getHS();}catch(e){}}
     state._lastModified=Date.now();
+    state.ts=Date.now();
     var datos=JSON.stringify(state);
     var blob=new Blob([datos],{type:'application/json'});
     var metadata={name:_DRIVE_FILE_NAME,mimeType:'application/json'};
@@ -3924,20 +3926,16 @@ async function descargarDeDrive(){
     });
     state.records=Object.values(merged);
     // Para el resto de datos usar los de Drive si son más recientes
-    if(driveTs>localTs){
-      if(data.contactos) state.contactos=data.contactos;
-      if(data.temas) state.temas=data.temas;
-      if(data.notas) state.notas=data.notas;
-      if(data.rutinas) state.rutinas=data.rutinas;
-      if(data.horario&&data.horario.schedules) state.horario=data.horario;
-      if(data.planData) state.planData=data.planData;
-      if(data.seguimiento) state.seguimiento=data.seguimiento;
-      if(data.planVueltaDone) state.planVueltaDone=data.planVueltaDone;
-      if(data.albums) state.albums=data.albums;
-    } else {
-      /* Local más reciente pero merge de horario/plan también si Drive los tiene y local no */
-      if(data.horario&&data.horario.schedules&&(!state.horario||!state.horario.schedules||!state.horario.schedules.length)) state.horario=data.horario;
-    }
+    /* Merge campos no-record siempre desde Drive (el usuario decidió descargar) */
+    if(data.contactos) state.contactos=data.contactos;
+    if(data.temas) state.temas=data.temas;
+    if(data.notas) state.notas=data.notas;
+    if(data.rutinas) state.rutinas=data.rutinas;
+    if(data.horario&&data.horario.schedules) state.horario=data.horario;
+    if(data.planData) state.planData=data.planData;
+    if(data.seguimiento) state.seguimiento=data.seguimiento;
+    if(data.planVueltaDone) state.planVueltaDone=data.planVueltaDone;
+    if(data.albums&&data.albums.length) state.albums=data.albums;
     state.ts=Math.max(driveTs,localTs);
     await persist();
     renderStats(); renderRecords();
