@@ -3718,6 +3718,8 @@ function driveSyncAutoOnOpen(){
       Object.assign(state, remoteData);
       persist().catch(function(){});
       renderStats(); renderRecords();
+      try{renderHorarioHome&&renderHorarioHome();}catch(e){}
+      try{renderCalendario&&renderCalendario();}catch(e){}
       showToast('✓ Datos actualizados desde Drive');
     }
   }).catch(function(){});
@@ -3855,6 +3857,7 @@ async function subirADrive(){
   if(!_driveAccessToken){showToast('⚠️ Conecta Google Drive primero');return;}
   try{
     setSyncStatus('syncing','Subiendo a Drive...');
+    state._lastModified=Date.now();
     var datos=JSON.stringify(state);
     var blob=new Blob([datos],{type:'application/json'});
     var metadata={name:_DRIVE_FILE_NAME,mimeType:'application/json'};
@@ -3926,10 +3929,19 @@ async function descargarDeDrive(){
       if(data.temas) state.temas=data.temas;
       if(data.notas) state.notas=data.notas;
       if(data.rutinas) state.rutinas=data.rutinas;
+      if(data.horario&&data.horario.schedules) state.horario=data.horario;
+      if(data.planData) state.planData=data.planData;
+      if(data.seguimiento) state.seguimiento=data.seguimiento;
+      if(data.planVueltaDone) state.planVueltaDone=data.planVueltaDone;
+      if(data.albums) state.albums=data.albums;
+    } else {
+      /* Local más reciente pero merge de horario/plan también si Drive los tiene y local no */
+      if(data.horario&&data.horario.schedules&&(!state.horario||!state.horario.schedules||!state.horario.schedules.length)) state.horario=data.horario;
     }
     state.ts=Math.max(driveTs,localTs);
     await persist();
     renderStats(); renderRecords();
+    try{renderHorarioHome&&renderHorarioHome();}catch(e){}
     localStorage.setItem('tp_drive_lastsync_'+(currentUser||''),Date.now().toString());
     actualizarUIDrive(true);
     setSyncStatus('ok','Drive OK');
