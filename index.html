@@ -3720,7 +3720,8 @@ function driveSyncAutoOnOpen(){
       renderStats(); renderRecords();
       try{renderHorarioHome&&renderHorarioHome();}catch(e){}
       try{renderCalendario&&renderCalendario();}catch(e){}
-      showToast('✓ Datos actualizados desde Drive');
+      var _m=remoteData.horario&&remoteData.horario.schedules?' (incl. horario)':'';
+      showToast('✓ Datos actualizados desde Drive'+_m);
     }
   }).catch(function(){});
 }
@@ -3847,6 +3848,8 @@ async function _buscarOCrearArchivosDrive(){
     _driveFileId=data.files[0].id;
     localStorage.setItem('tp_drive_fileid_'+(currentUser||''),_driveFileId);
     console.log('Archivo Drive encontrado: '+_driveFileId);
+    /* Auto-download on first connect to new device */
+    try{ await descargarDeDrive(); }catch(e){ console.warn('Auto-download failed',e); }
   } else {
     // Crear el archivo vacío
     await subirADrive();
@@ -3940,10 +3943,12 @@ async function descargarDeDrive(){
     await persist();
     renderStats(); renderRecords();
     try{renderHorarioHome&&renderHorarioHome();}catch(e){}
+    try{renderCalendario&&renderCalendario();}catch(e){}
+    var _horMsg=data.horario&&data.horario.schedules?(' · horario '+data.horario.schedules.length+' sch'):''; 
     localStorage.setItem('tp_drive_lastsync_'+(currentUser||''),Date.now().toString());
     actualizarUIDrive(true);
     setSyncStatus('ok','Drive OK');
-    showToast('✓ Datos sincronizados desde Google Drive');
+    showToast('✓ Sincronizado desde Drive'+_horMsg);
   }catch(e){
     setSyncStatus('error','Error Drive');
     showToast('⚠️ Error al descargar de Drive: '+e.message);
