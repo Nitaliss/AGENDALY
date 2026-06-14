@@ -5448,6 +5448,13 @@ if(!pendingDelId) return;
 const id=pendingDelId;
 // Cerrar modal primero - siempre
 closeConfirm();
+// Limpiar snapshot del plan para este examen
+if(state.currentPlanSnapshot&&state.currentPlanSnapshot.dayPlan){
+  Object.keys(state.currentPlanSnapshot.dayPlan).forEach(function(dk){
+    state.currentPlanSnapshot.dayPlan[dk]=(state.currentPlanSnapshot.dayPlan[dk]||[]).filter(function(b){return b.examId!==id;});
+  });
+}
+if(state.seguimiento&&state.seguimiento.active&&state.seguimiento.active[id]) delete state.seguimiento.active[id];
 // Lista negra
 const blKey='tp_blacklist_records_'+(currentUser||'tapunto');
 try{const bl=JSON.parse(localStorage.getItem(blKey)||'[]');if(!bl.includes(id)){bl.push(id);localStorage.setItem(blKey,JSON.stringify(bl));}}catch(e){}
@@ -10642,6 +10649,18 @@ function estSwitchTab(tab){
   if(document.getElementById('est-seg')) document.getElementById('est-seg').style.display = tab==='seg'?'block':'none';
   if(tab==='seg'){ try{renderSeguimiento();}catch(e){} }
   if(tab==='plan'){
+    /* Remove stale examIds from snapshot if records were deleted */
+    if(state.currentPlanSnapshot&&state.currentPlanSnapshot.dayPlan){
+      var _activeIds=new Set((state.records||[]).map(function(r){return r.id;}));
+      var _snap=state.currentPlanSnapshot.dayPlan;
+      var _stale=false;
+      Object.keys(_snap).forEach(function(dk){
+        var orig=_snap[dk].length;
+        _snap[dk]=(_snap[dk]||[]).filter(function(b){return !b.examId||_activeIds.has(b.examId);});
+        if(_snap[dk].length!==orig) _stale=true;
+      });
+      if(_stale) state.currentPlanSnapshot.dayPlan=_snap;
+    }
     planRenderExams();
     setTimeout(planRenderConfig,50);
     // Restore saved plan if exists
@@ -16047,9 +16066,24 @@ renderSeguimiento = function(){
           });
         });
       }
+      /* Build date-based index for gantt */
+      var _snapDays=[];
+      var _dayMapByDate={};
+      if(state.currentPlanSnapshot&&state.currentPlanSnapshot.dayPlan){
+        Object.keys(state.currentPlanSnapshot.dayPlan).sort().forEach(function(dk){
+          var hasSess=(state.currentPlanSnapshot.dayPlan[dk]||[]).some(function(b){return b.examId===key;});
+          if(hasSess){
+            _snapDays.push(dk);
+            _dayMapByDate[dk]=[];
+            (state.currentPlanSnapshot.dayPlan[dk]||[]).forEach(function(b){
+              if(b.examId===key) _dayMapByDate[dk].push({ti:b.topicIdx,vi:b.vuelta});
+            });
+          }
+        });
+      }
 
       function buildGantt(){
-        var vis=[]; for(var ii=0;ii<WIN;ii++) vis.push(ganttOff+ii);
+        var vis=_snapDays; /* actual date strings */
         var gWrap=document.createElement('div'); gWrap.style.cssText='padding:8px 14px 4px;';
 
         /* No nav — show all days in scrollable table */
@@ -16061,17 +16095,21 @@ renderSeguimiento = function(){
         scrollWrap.style.cssText='overflow-x:auto;-webkit-overflow-scrolling:touch;';
 
         // table
-        var tbl=document.createElement('table'); tbl.style.cssText='min-width:100%;border-collapse:collapse;table-layout:fixed;';
+        var tbl=document.createElement('table'); tbl.style.cssText='border-collapse:collapse;';
         // header
         var thead=document.createElement('thead');
         var hrow=document.createElement('tr');
-        var thN=document.createElement('th'); thN.style.cssText='font-size:9px;color:var(--tl);text-align:left;padding:0 4px 4px 0;width:70px;font-family:Lato,sans-serif;font-weight:400;';
+        var thN=document.createElement('th'); thN.style.cssText='font-size:9px;color:var(--tl);text-align:left;padding:0 8px 4px 0;min-width:80px;max-width:100px;font-family:Lato,sans-serif;font-weight:400;';
         thN.textContent='Tema'; hrow.appendChild(thN);
-        vis.forEach(function(d){
+        var _todayStr2=hoy.getFullYear()+'-'+String(hoy.getMonth()+1).padStart(2,'0')+'-'+String(hoy.getDate()).padStart(2,'0');
+        vis.forEach(function(dk){
           var th=document.createElement('th');
-          var isT=d===0;
-          th.style.cssText='font-size:9px;color:'+(isT?'#2563eb':'var(--tl)')+';text-align:center;padding:0 2px 4px;width:42px;font-family:Lato,sans-serif;font-weight:'+(isT?'700':'400')+';';
-          th.textContent=(isT?'\u25cf ':'')+dLabel(d);
+          var isT=dk===_todayStr2;
+          var _d=new Date(dk+'T12:00:00');
+          var _months=['En','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+          var _wd=['D','L','M','X','J','V','S'][_d.getDay()];
+          th.style.cssText='font-size:9px;color:'+(isT?'#2563eb':'var(--tl)')+';text-align:center;padding:0 2px 4px;min-width:40px;font-family:Lato,sans-serif;font-weight:'+(isT?'700':'400')+';line-height:1.3;vertical-align:bottom;';
+          th.innerHTML=_wd+'<br>'+_d.getDate()+' '+_months[_d.getMonth()];
           hrow.appendChild(th);
         });
         // fixed exam col
@@ -16089,15 +16127,15 @@ renderSeguimiento = function(){
         topics.forEach(function(tp,ti){
           var row=document.createElement('tr');
           var tdN=document.createElement('td');
-          tdN.style.cssText='font-size:10px;color:var(--td);padding:2px 4px 2px 0;font-family:Lato,sans-serif;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:70px;vertical-align:middle;';
+          tdN.style.cssText='font-size:10px;color:var(--td);padding:2px 8px 2px 0;font-family:Lato,sans-serif;white-space:nowrap;min-width:80px;max-width:120px;overflow:hidden;text-overflow:ellipsis;vertical-align:middle;';
           tdN.title=tp.name||('Tema '+(ti+1));
           tdN.textContent=(tp.name||('T'+(ti+1))).substring(0,9)+(tp.name&&tp.name.length>9?'\u2026':'');
           row.appendChild(tdN);
-          vis.forEach(function(d){
+          vis.forEach(function(dk){
             var td=document.createElement('td'); td.style.cssText='text-align:center;padding:2px 1px;';
-            var bg=d===0?'rgba(59,130,246,0.05)':'transparent'; td.style.background=bg;
+            var bg=dk===_todayStr2?'rgba(59,130,246,0.05)':'transparent'; td.style.background=bg;
             // Find if this topic has a session on this day
-            var sessions=dayMap[d]||[];
+            var sessions=_dayMapByDate[dk]||[];
             var session=null;
             sessions.forEach(function(s){if(s.ti===ti)session=s;});
             if(session!==null){
