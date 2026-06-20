@@ -2527,7 +2527,8 @@ body.nb-mode #nb-pill-orden { display:none !important; }
   cursor:pointer;color:var(--td);padding:2px;transition:all .12s;
 }
 .lib-size.active{border-color:var(--gd);background:var(--bl);}
-#sec-libreta{display:flex;flex-direction:column;height:100%;overflow:hidden;}
+#sec-libreta{display:none;flex-direction:column;overflow:hidden;}
+#sec-libreta.active{display:flex;height:calc(100vh - 0px);max-height:100vh;}
 #lib-canvas-wrap{flex:1;overflow:hidden;}
 #lib-canvas{width:100%;height:100%;}
 </style>
@@ -3071,7 +3072,14 @@ body.nb-mode #nb-pill-orden { display:none !important; }
     <span class="tap-header-title">📓 Mi Libreta</span>
     <div style="display:flex;gap:2px;">
       <button class="tap-header-btn" id="lib-btn-add" onclick="libNuevaPagina()" title="Nueva página" style="font-size:18px;">➕</button>
-      <button class="tap-header-btn" id="lib-btn-export" onclick="libExportar()" title="Exportar" style="font-size:18px;">📤</button>
+      <button class="tap-header-btn" onclick="libEliminarHoja()" title="Eliminar hoja" style="font-size:18px;flex-direction:column;gap:1px;">
+        <span style="font-size:16px;line-height:1;">🗑</span>
+        <span style="font-size:7px;font-family:var(--font-main);">Borrar</span>
+      </button>
+      <button class="tap-header-btn" id="lib-btn-export" onclick="libMenuCompartir()" title="Compartir/Descargar" style="font-size:18px;flex-direction:column;gap:1px;">
+        <span style="font-size:16px;line-height:1;">📤</span>
+        <span style="font-size:7px;font-family:var(--font-main);">Compartir</span>
+      </button>
     </div>
   </div>
 
@@ -3109,17 +3117,17 @@ body.nb-mode #nb-pill-orden { display:none !important; }
   <!-- Navegación páginas -->
   <div id="lib-nav-pag" style="display:flex;align-items:center;justify-content:space-between;padding:4px 10px;background:var(--bp);border-bottom:1px solid var(--bd);font-size:11px;font-family:var(--font-main);color:var(--tl);">
     <button onclick="libPagAnterior()" style="background:none;border:none;font-size:16px;cursor:pointer;color:var(--tl);padding:2px 6px;">‹</button>
-    <span id="lib-pag-label">Página 1</span>
+    <span id="lib-pag-label" style="cursor:pointer;" onclick="libResetZoom()" title="Tap para resetear zoom">Página 1</span>
     <button onclick="libPagSiguiente()" style="background:none;border:none;font-size:16px;cursor:pointer;color:var(--tl);padding:2px 6px;">›</button>
   </div>
 
   <!-- Canvas -->
-  <div id="lib-canvas-wrap" style="flex:1;overflow:hidden;position:relative;touch-action:none;">
+  <div id="lib-canvas-wrap" style="flex:1;overflow:hidden;position:relative;touch-action:none;min-height:0;">
     <canvas id="lib-canvas" style="display:block;touch-action:none;cursor:crosshair;"></canvas>
   </div>
 
   <!-- Input texto flotante (oculto) -->
-  <div id="lib-text-input-wrap" style="display:none;position:absolute;z-index:200;">
+  <div id="lib-text-input-wrap" style="display:none;position:fixed;z-index:600;">
     <textarea id="lib-text-input" rows="2"
       style="background:rgba(255,255,255,.92);border:2px dashed var(--ga);border-radius:6px;padding:4px 8px;font-size:16px;font-family:var(--font-main);color:#222;resize:none;min-width:140px;outline:none;"
       placeholder="Escribe aquí..."></textarea>
@@ -13898,6 +13906,13 @@ var _lib = {
   historial: [],     // para undo
   textoPendX: 0,
   textoPendY: 0,
+  // Zoom y pan
+  zoom: 1,
+  panX: 0,
+  panY: 0,
+  _pinchDist: null,
+  _pinchMidX: 0,
+  _pinchMidY: 0,
 };
 
 function libInit(){
@@ -13906,6 +13921,11 @@ function libInit(){
     var saved = localStorage.getItem('tp_libreta');
     if(saved) _lib.paginas = JSON.parse(saved);
   }catch(e){}
+
+  // Limpiar trazos borrador residuales de versiones anteriores
+  _lib.paginas.forEach(function(p){
+    if(p.trazos) p.trazos=p.trazos.filter(function(t){return !t.borrador;});
+  });
 
   // Si no hay páginas, crear una para hoy
   if(!_lib.paginas.length) libNuevaPagina(true);
@@ -13925,9 +13945,20 @@ function libIniciarCanvas(){
   var canvas = document.getElementById('lib-canvas');
   if(!canvas||!wrap) return;
 
-  // Tamaño
-  canvas.width  = wrap.clientWidth  || window.innerWidth;
-  canvas.height = wrap.clientHeight || (window.innerHeight - 160);
+  // Tamaño — calcular tras render con fallback
+  function _setSize(){
+    var w = wrap.offsetWidth  || window.innerWidth;
+    var h = wrap.offsetHeight || Math.max(window.innerHeight - 200, 400);
+    if(canvas.width!==w||canvas.height!==h){
+      canvas.width=w; canvas.height=h;
+      libRedraw(false);
+    }
+  }
+  _setSize();
+  // ResizeObserver para ajustar si cambia el tamaño
+  if(window.ResizeObserver){
+    new ResizeObserver(_setSize).observe(wrap);
+  }
 
   // Eventos táctiles y mouse
   canvas.addEventListener('touchstart', libTouchStart, {passive:false});
@@ -13936,30 +13967,74 @@ function libIniciarCanvas(){
   canvas.addEventListener('mousedown',  libMouseDown);
   canvas.addEventListener('mousemove',  libMouseMove);
   canvas.addEventListener('mouseup',    libMouseUp);
+  // Zoom con rueda de ratón (desktop)
+  canvas.addEventListener('wheel', libWheel, {passive:false});
 }
 
 // ── Dibujo ──
 function _pos(e, canvas){
-  var r = canvas.getBoundingClientRect();
-  var scaleX = canvas.width  / r.width;
-  var scaleY = canvas.height / r.height;
-  var src = e.touches ? e.touches[0] : e;
-  return {x:(src.clientX-r.left)*scaleX, y:(src.clientY-r.top)*scaleY};
+  var r=canvas.getBoundingClientRect();
+  var scaleX=canvas.width/r.width;
+  var scaleY=canvas.height/r.height;
+  var src=e.touches?e.touches[0]:e;
+  // Aplicar inversa del zoom y pan para obtener coords en espacio del dibujo
+  var cx=(src.clientX-r.left)*scaleX;
+  var cy=(src.clientY-r.top)*scaleY;
+  return {
+    x:(cx-_lib.panX)/_lib.zoom,
+    y:(cy-_lib.panY)/_lib.zoom
+  };
 }
 
 function libTouchStart(e){
   e.preventDefault();
-  var p = _pos(e, this);
-  libStartDraw(p.x, p.y);
+  if(e.touches.length===2){
+    // Inicio de pinch-zoom
+    _lib.dibujando=false;
+    _lib._pinchDist=_pinchDist(e.touches);
+    _lib._pinchMidX=(e.touches[0].clientX+e.touches[1].clientX)/2;
+    _lib._pinchMidY=(e.touches[0].clientY+e.touches[1].clientY)/2;
+    return;
+  }
+  var p=_pos(e,this);
+  libStartDraw(p.x,p.y);
 }
 function libTouchMove(e){
   e.preventDefault();
-  var p = _pos(e, this);
-  libMoveDraw(p.x, p.y);
+  if(e.touches.length===2){
+    // Pinch en curso
+    var newDist=_pinchDist(e.touches);
+    if(_lib._pinchDist&&newDist){
+      var scale=newDist/_lib._pinchDist;
+      var newZoom=Math.max(0.3,Math.min(5,_lib.zoom*scale));
+      // Punto central del pinch en coords canvas
+      var canvas=document.getElementById('lib-canvas');
+      var rect=canvas.getBoundingClientRect();
+      var mx=(_lib._pinchMidX-rect.left)*(canvas.width/rect.width);
+      var my=(_lib._pinchMidY-rect.top)*(canvas.height/rect.height);
+      // Ajustar pan para zoom centrado en el punto medio
+      _lib.panX=mx-(_lib.panX?((mx-_lib.panX)*newZoom/_lib.zoom):0);
+      _lib.panY=my-(_lib.panY?((my-_lib.panY)*newZoom/_lib.zoom):0);
+      _lib.zoom=newZoom;
+      _lib._pinchDist=newDist;
+      libRedraw(false);
+      libActualizarZoomLabel();
+    }
+    return;
+  }
+  if(!_lib.dibujando)return;
+  var p=_pos(e,this);
+  libMoveDraw(p.x,p.y);
 }
 function libTouchEnd(e){
   e.preventDefault();
-  libEndDraw();
+  if(e.touches.length<2)_lib._pinchDist=null;
+  if(e.touches.length===0)libEndDraw();
+}
+function _pinchDist(touches){
+  var dx=touches[0].clientX-touches[1].clientX;
+  var dy=touches[0].clientY-touches[1].clientY;
+  return Math.sqrt(dx*dx+dy*dy);
 }
 function libMouseDown(e){
   var p = _pos(e, this);
@@ -13994,13 +14069,59 @@ function libEndDraw(){
   _lib.dibujando = false;
   var pag = _lib.paginas[_lib.pagActual];
   if(!pag) return;
-  if(_lib.trazoActual.length > 1){
+  if(_lib.trazoActual.length < 2){ _lib.trazoActual=[]; return; }
+
+  if(_lib.herramienta==='borrador'){
+    // Borrador: corta los trazos en la zona borrada (solo borra la parte que toca)
+    var radio = _lib.grosor * 3;
+    var bPts = _lib.trazoActual;
+    // Guardar estado para undo
+    _lib.historial.push({
+      tipo:'borrador',
+      pagIdx:_lib.pagActual,
+      trazos:JSON.parse(JSON.stringify(pag.trazos)),
+      textos:JSON.parse(JSON.stringify(pag.textos||[]))
+    });
+    // Para cada trazo: partirlo en segmentos que no toquen el borrador
+    var nuevosTrazos = [];
+    pag.trazos.forEach(function(t){
+      var segActual = [];
+      for(var i=0;i<t.pts.length;i++){
+        var pt = t.pts[i];
+        if(_puntoEnBorrador(pt.x, pt.y, bPts, radio)){
+          // Este punto está bajo el borrador — cortar aquí
+          if(segActual.length >= 2){
+            nuevosTrazos.push({pts:segActual,color:t.color,grosor:t.grosor,boli:t.boli,borrador:false});
+          }
+          segActual = [];
+        } else {
+          segActual.push(pt);
+        }
+      }
+      // Último segmento
+      if(segActual.length >= 2){
+        nuevosTrazos.push({pts:segActual,color:t.color,grosor:t.grosor,boli:t.boli,borrador:false});
+      } else if(segActual.length === 1 && nuevosTrazos.length && !_puntoEnBorrador(segActual[0].x,segActual[0].y,bPts,radio)){
+        // Trazo no tocado en absoluto — conservar
+        if(t.pts.every(function(p){return !_puntoEnBorrador(p.x,p.y,bPts,radio);})){
+          nuevosTrazos.push(t);
+        }
+      }
+    });
+    pag.trazos = nuevosTrazos;
+    // Textos: eliminar los que toca
+    if(pag.textos){
+      pag.textos = pag.textos.filter(function(tx){
+        return !_puntoEnBorrador(tx.x, tx.y, bPts, radio*2);
+      });
+    }
+  } else {
     var trazo = {
       pts: _lib.trazoActual.slice(),
-      color: _lib.herramienta==='borrador'?'#FONDO#':_lib.color,
-      grosor: _lib.herramienta==='borrador'?(_lib.grosor*4):_lib.grosor,
+      color: _lib.color,
+      grosor: _lib.grosor,
       boli: _lib.herramienta==='boli',
-      borrador: _lib.herramienta==='borrador'
+      borrador: false
     };
     pag.trazos.push(trazo);
     _lib.historial.push({tipo:'trazo',pagIdx:_lib.pagActual});
@@ -14008,6 +14129,26 @@ function libEndDraw(){
   _lib.trazoActual = [];
   libRedraw(false);
   libGuardar();
+}
+
+// Comprobar si algún punto de un trazo está cerca del borrador
+function _trazoTocaBorrador(tPts, bPts, radio){
+  if(!tPts||!bPts) return false;
+  for(var i=0;i<tPts.length;i+=2){
+    for(var j=0;j<bPts.length;j+=2){
+      var dx=tPts[i].x-bPts[j].x;
+      var dy=tPts[i].y-bPts[j].y;
+      if(dx*dx+dy*dy<=radio*radio) return true;
+    }
+  }
+  return false;
+}
+function _puntoEnBorrador(x,y,bPts,radio){
+  for(var j=0;j<bPts.length;j++){
+    var dx=x-bPts[j].x;var dy=y-bPts[j].y;
+    if(dx*dx+dy*dy<=radio*radio) return true;
+  }
+  return false;
 }
 
 function libRedraw(soloPreview){
@@ -14021,6 +14162,11 @@ function libRedraw(soloPreview){
   ctx.clearRect(0,0,canvas.width,canvas.height);
   libDibujarFondo(ctx, canvas.width, canvas.height, pag.fondo||_lib.fondo, pag.bgColor);
 
+  // Aplicar zoom y pan
+  ctx.save();
+  ctx.translate(_lib.panX,_lib.panY);
+  ctx.scale(_lib.zoom,_lib.zoom);
+
   // Trazos guardados
   (pag.trazos||[]).forEach(function(t){
     libDibujarTrazo(ctx, t, canvas);
@@ -14033,43 +14179,48 @@ function libRedraw(soloPreview){
     ctx.fillText(tx.texto, tx.x, tx.y);
   });
 
-  // Trazo en curso
-  if(_lib.trazoActual.length > 1){
+  // Preview trazo en curso (solo si no es borrador)
+  if(_lib.trazoActual.length > 1 && _lib.herramienta!=='borrador'){
     var t = {
       pts: _lib.trazoActual,
-      color: _lib.herramienta==='borrador'?null:_lib.color,
-      grosor: _lib.herramienta==='borrador'?(_lib.grosor*4):_lib.grosor,
+      color: _lib.color,
+      grosor: _lib.grosor,
       boli: _lib.herramienta==='boli',
-      borrador: _lib.herramienta==='borrador'
+      borrador: false
     };
     libDibujarTrazo(ctx, t, canvas);
+  } else if(_lib.trazoActual.length>1 && _lib.herramienta==='borrador'){
+    // Mostrar cursor del borrador como círculo semitransparente
+    var last=_lib.trazoActual[_lib.trazoActual.length-1];
+    ctx.save();
+    ctx.globalAlpha=0.25;
+    ctx.fillStyle='#ff6b6b';
+    ctx.beginPath();
+    ctx.arc(last.x,last.y,_lib.grosor*3,0,Math.PI*2);
+    ctx.fill();
+    ctx.restore();
   }
+  ctx.restore(); // fin zoom/pan
 }
 
 function libDibujarTrazo(ctx, t, canvas){
-  if(!t.pts||t.pts.length<2) return;
+  // Nunca dibujar trazos de borrador — se eliminan en libEndDraw
+  if(!t.pts||t.pts.length<2||t.borrador) return;
   ctx.save();
-  if(t.borrador){
-    ctx.globalCompositeOperation='destination-out';
-  } else {
-    ctx.globalCompositeOperation='source-over';
-    ctx.strokeStyle = t.color;
-  }
+  ctx.globalCompositeOperation='source-over';
+  ctx.strokeStyle = t.color||'#1a1a1a';
   ctx.lineWidth   = t.grosor||4;
   ctx.lineCap     = 'round';
   ctx.lineJoin    = 'round';
   ctx.globalAlpha = t.boli ? 1 : 0.88;
-
   ctx.beginPath();
   ctx.moveTo(t.pts[0].x, t.pts[0].y);
   for(var i=1;i<t.pts.length;i++){
-    var prev = t.pts[i-1];
-    var curr = t.pts[i];
-    var mx = (prev.x+curr.x)/2;
-    var my = (prev.y+curr.y)/2;
-    ctx.quadraticCurveTo(prev.x, prev.y, mx, my);
+    var prev=t.pts[i-1], curr=t.pts[i];
+    var mx=(prev.x+curr.x)/2, my=(prev.y+curr.y)/2;
+    ctx.quadraticCurveTo(prev.x,prev.y,mx,my);
   }
-  ctx.lineTo(t.pts[t.pts.length-1].x, t.pts[t.pts.length-1].y);
+  ctx.lineTo(t.pts[t.pts.length-1].x,t.pts[t.pts.length-1].y);
   ctx.stroke();
   ctx.restore();
 }
@@ -14173,6 +14324,11 @@ function libUndo(){
   if(!pag) return;
   if(ultimo.tipo==='trazo'&&pag.trazos.length) pag.trazos.pop();
   if(ultimo.tipo==='texto'&&pag.textos&&pag.textos.length) pag.textos.pop();
+  if(ultimo.tipo==='borrador'){
+    // Restaurar estado antes del borrador
+    pag.trazos=ultimo.trazos;
+    pag.textos=ultimo.textos;
+  }
   libRedraw(false);libGuardar();
 }
 
@@ -14228,6 +14384,7 @@ function libPagSiguiente(){
 }
 function libRenderPagina(){
   _lib.historial=[];
+  _lib.zoom=1;_lib.panX=0;_lib.panY=0;
   libRedraw(false);
 }
 function libActualizarNavPag(){
@@ -14260,6 +14417,107 @@ function libExportar(){
   var pag=_lib.paginas[_lib.pagActual];
   a.download='libreta_'+(pag?pag.fecha:new Date().toISOString().slice(0,10))+'.png';
   a.click();
+}
+
+function libMenuCompartir(){
+  var canvas=document.getElementById('lib-canvas');
+  if(!canvas) return;
+  var url=canvas.toDataURL('image/png');
+  var pag=_lib.paginas[_lib.pagActual];
+  var fecha=pag?pag.fecha:new Date().toISOString().slice(0,10);
+
+  // Panel compartir
+  var panel=document.createElement('div');
+  panel.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:700;display:flex;align-items:flex-end;';
+  panel.innerHTML='<div style="background:var(--w);width:100%;border-radius:18px 18px 0 0;padding:16px 16px 32px;">'
+    +'<div style="font-size:13px;font-weight:700;color:var(--td);margin-bottom:14px;font-family:var(--font-main);">📤 Compartir / Descargar</div>'
+    +'<div style="display:flex;flex-direction:column;gap:8px;">'
+    +'<button id="lib-share-dl" style="padding:12px;background:var(--gd);color:#fff;border:none;border-radius:10px;font-size:13px;font-family:var(--font-main);cursor:pointer;font-weight:700;">⬇️ Descargar como PNG</button>'
+    +'<button id="lib-share-wa" style="padding:12px;background:#25D366;color:#fff;border:none;border-radius:10px;font-size:13px;font-family:var(--font-main);cursor:pointer;font-weight:700;">💬 Compartir por WhatsApp</button>'
+    +'<button id="lib-share-native" style="padding:12px;background:var(--bl);color:var(--td);border:1px solid var(--bd);border-radius:10px;font-size:13px;font-family:var(--font-main);cursor:pointer;">📱 Compartir (sistema)</button>'
+    +'<button id="lib-share-close" style="padding:10px;background:var(--bd);color:var(--tl);border:none;border-radius:10px;font-size:12px;font-family:var(--font-main);cursor:pointer;">Cancelar</button>'
+    +'</div></div>';
+
+  document.body.appendChild(panel);
+
+  // Descargar
+  panel.querySelector('#lib-share-dl').addEventListener('click',function(){
+    var a=document.createElement('a');a.href=url;a.download='libreta_'+fecha+'.png';a.click();
+    panel.remove();
+  });
+  // WhatsApp — convertir a blob y abrir wa.me
+  panel.querySelector('#lib-share-wa').addEventListener('click',function(){
+    var txt='📓 Mi Libreta · '+fecha;
+    window.open('https://wa.me/?text='+encodeURIComponent(txt),'_blank');
+    // También descargar la imagen para que el usuario la adjunte
+    var a=document.createElement('a');a.href=url;a.download='libreta_'+fecha+'.png';a.click();
+    panel.remove();
+  });
+  // Compartir nativo (Web Share API)
+  panel.querySelector('#lib-share-native').addEventListener('click',function(){
+    canvas.toBlob(function(blob){
+      var file=new File([blob],'libreta_'+fecha+'.png',{type:'image/png'});
+      if(navigator.share&&navigator.canShare&&navigator.canShare({files:[file]})){
+        navigator.share({files:[file],title:'Mi Libreta Tapunto',text:'📓 '+fecha}).catch(function(){});
+      } else if(navigator.share){
+        navigator.share({title:'Mi Libreta Tapunto',text:'📓 '+fecha,url:url}).catch(function(){});
+      } else {
+        var a=document.createElement('a');a.href=url;a.download='libreta_'+fecha+'.png';a.click();
+      }
+      panel.remove();
+    },'image/png');
+  });
+  // Cerrar
+  panel.querySelector('#lib-share-close').addEventListener('click',function(){panel.remove();});
+  panel.addEventListener('click',function(e){if(e.target===panel)panel.remove();});
+}
+
+// Zoom con rueda de ratón
+function libWheel(e){
+  e.preventDefault();
+  var delta=e.deltaY>0?0.9:1.1;
+  var canvas=document.getElementById('lib-canvas');
+  var rect=canvas.getBoundingClientRect();
+  var mx=(e.clientX-rect.left)*(canvas.width/rect.width);
+  var my=(e.clientY-rect.top)*(canvas.height/rect.height);
+  var newZoom=Math.max(0.3,Math.min(5,_lib.zoom*delta));
+  _lib.panX=mx-(mx-_lib.panX)*newZoom/_lib.zoom;
+  _lib.panY=my-(my-_lib.panY)*newZoom/_lib.zoom;
+  _lib.zoom=newZoom;
+  libRedraw(false);
+  libActualizarZoomLabel();
+}
+function libActualizarZoomLabel(){
+  var lbl=document.getElementById('lib-pag-label');
+  if(!lbl)return;
+  var pag=_lib.paginas[_lib.pagActual];
+  var fecha='';
+  if(pag&&pag.fecha){try{var d=new Date(pag.fecha+'T00:00:00');fecha=' · '+d.getDate()+'/'+(d.getMonth()+1)+'/'+String(d.getFullYear()).slice(2);}catch(e){}}
+  var zoomTxt=_lib.zoom!==1?' · '+Math.round(_lib.zoom*100)+'%':'';
+  lbl.textContent='Pág '+(_lib.pagActual+1)+' de '+_lib.paginas.length+fecha+zoomTxt;
+}
+function libResetZoom(){
+  _lib.zoom=1;_lib.panX=0;_lib.panY=0;
+  libRedraw(false);libActualizarZoomLabel();
+}
+
+// Eliminar hoja actual con confirmación
+function libEliminarHoja(){
+  if(_lib.paginas.length===1){
+    if(!confirm('¿Borrar todo el contenido de esta hoja?\nNo se puede deshacer.')) return;
+    _lib.paginas[0]={fecha:new Date().toISOString().slice(0,10),fondo:_lib.paginas[0].fondo||'rayas',bgColor:null,trazos:[],textos:[]};
+    _lib.historial=[];
+    libRedraw(false);libGuardar();libActualizarNavPag();
+    return;
+  }
+  var pag=_lib.paginas[_lib.pagActual];
+  var fecha=pag?pag.fecha:'esta hoja';
+  if(!confirm('¿Eliminar la hoja del '+fecha+'?\nNo se puede deshacer.')) return;
+  _lib.paginas.splice(_lib.pagActual,1);
+  _lib.pagActual=Math.min(_lib.pagActual,_lib.paginas.length-1);
+  _lib.historial=[];
+  _lib.zoom=1;_lib.panX=0;_lib.panY=0;
+  libRedraw(false);libGuardar();libActualizarNavPag();
 }
 
 </script>
