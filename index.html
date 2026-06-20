@@ -2408,6 +2408,99 @@ body[data-theme="lavanda"] input,body[data-theme="lavanda"] textarea,body[data-t
 body[data-theme="lavanda"] .chip{background:#f0eaff;color:#4a3470;border-color:#ddd5f5;}
 body[data-theme="lavanda"] .chip.active-chip,body[data-theme="lavanda"] .tipo-chip-nuevo.sel{background:#5b4a8a;color:#fff;}
 body[data-theme="lavanda"] .tap-card{background:#fff;border-color:#ddd5f5;}
+
+/* ════ LIBRETA MIS TAREAS ════ */
+#rec-list{padding:0!important;overflow:hidden;}
+
+/* Portada */
+.nb-portada{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  min-height:60vh;padding:30px 24px;text-align:center;
+  background:linear-gradient(160deg,#fffef8 0%,#f4f8f2 100%);
+  position:relative;overflow:hidden;
+}
+.nb-portada::before{
+  content:'';position:absolute;inset:0;
+  background-image:repeating-linear-gradient(transparent,transparent 27px,#e8f0e4 27px,#e8f0e4 28px);
+  background-position:0 4px;opacity:.5;
+}
+.nb-portada::after{
+  content:'';position:absolute;left:28px;top:0;bottom:0;width:1.5px;background:#FFB3B3;opacity:.6;
+}
+.nb-portada-inner{position:relative;z-index:1;}
+
+/* Wrap libreta con separadores */
+.nb-libreta-wrap{
+  display:flex;height:calc(100vh - 130px);overflow:hidden;position:relative;
+}
+/* Ocultar elementos de vista-lista cuando estamos en modo libreta */
+body.nb-mode #search-bar,
+body.nb-mode #rec-list-header,
+body.nb-mode .filters,
+body.nb-mode #calendar-filter-view,
+body.nb-mode #nb-pill-orden { display:none !important; }
+.nb-page-area{
+  flex:1;overflow-y:auto;
+  background:#fffef8;
+  background-image:repeating-linear-gradient(transparent,transparent 27px,#e8f0e4 27px,#e8f0e4 28px);
+  background-position:0 8px;
+  position:relative;
+}
+.nb-page-area::before{
+  content:'';position:fixed;left:0;top:0;bottom:0;width:28px;
+  pointer-events:none;z-index:2;
+}
+.nb-left-margin{
+  position:sticky;top:0;left:22px;width:1.5px;height:100vh;
+  background:#FFB3B3;float:left;margin-right:6px;flex-shrink:0;
+}
+.nb-content-area{padding:8px 10px 100px 32px;}
+
+/* Separadores laterales */
+.nb-tabs-wrap{
+  display:flex;flex-direction:column;padding-top:10px;gap:3px;
+  flex-shrink:0;background:var(--bl);border-left:1px solid var(--bd);
+  min-width:34px;
+}
+@media(min-width:600px){
+  .nb-tab-btn{padding:16px 8px;font-size:12px;min-width:36px;min-height:60px;}
+  .nb-tab-btn.nb-active{padding:18px 10px;min-width:42px;}
+  .nb-tabs-wrap{min-width:42px;}
+}
+.nb-tab-btn{
+  writing-mode:vertical-rl;text-orientation:mixed;transform:rotate(180deg);
+  padding:14px 6px;font-size:10px;font-weight:700;color:#fff;
+  cursor:pointer;border-radius:8px 0 0 8px;white-space:nowrap;
+  transition:all .15s;letter-spacing:.3px;min-height:52px;
+  min-width:28px;
+  display:flex;align-items:center;justify-content:center;
+  border:none;font-family:var(--font-main);
+  opacity:.8;
+}
+.nb-tab-btn.nb-active{
+  opacity:1;padding:16px 8px;font-size:11px;
+  box-shadow:-4px 0 10px rgba(0,0,0,.2);
+  position:relative;z-index:1;min-width:34px;
+}
+
+/* Tareas dentro del cuaderno */
+.nb-task-row{
+  padding:5px 4px;border-bottom:1px solid transparent;
+  display:flex;align-items:center;gap:7px;min-height:28px;
+  cursor:pointer;
+}
+.nb-task-row:active{background:rgba(0,0,0,.04);}
+.nb-task-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+.nb-task-txt{flex:1;font-size:11px;color:#222;font-family:var(--font-main);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.nb-task-txt.done{text-decoration:line-through;color:#aaa;}
+.nb-task-badge{font-size:8px;padding:1px 5px;border-radius:5px;font-weight:700;flex-shrink:0;}
+.nb-section-sep{
+  font-size:8px;font-weight:700;color:var(--tl);letter-spacing:.6px;
+  text-transform:uppercase;padding:8px 4px 3px;
+  font-family:var(--font-main);
+}
+.nb-empty-lines{opacity:.2;}
+.nb-empty-line{height:28px;border-bottom:1px solid #d8eed0;}
 </style>
 <script>(function(){try{if(localStorage.getItem('tp_dark_mode')==='1')document.documentElement.style.background='#1a1a2e';}catch(e){};}());</script>
 </head>
@@ -3265,7 +3358,7 @@ body[data-theme="lavanda"] .tap-card{background:#fff;border-color:#ddd5f5;}
 
   <!-- HEADER REGISTROS -->
   <div class="tap-header">
-    <button class="tap-header-btn" id="btn-back-registros" onclick="tapuntoNavBack()" style="flex-direction:column;gap:1px;"><span style="font-size:22px;line-height:1;color:#fff;font-weight:900;">&#8592;</span><span style="font-size:9px;color:#fff;font-weight:700;font-family:var(--font-main);letter-spacing:.3px;">Inicio</span></button>
+    <button class="tap-header-btn" id="btn-back-registros" onclick="(btnBackRegistrosClick||tapuntoNavBack)()" style="flex-direction:column;gap:1px;"><span style="font-size:22px;line-height:1;color:#fff;font-weight:900;">&#8592;</span><span style="font-size:9px;color:#fff;font-weight:700;font-family:var(--font-main);letter-spacing:.3px;">Mis tareas</span></button>
     <span class="tap-header-title" id="rec-header-title">Mis tareas</span>
     <button class="tap-header-btn" onclick="irSeccion('calificaciones')" title="Calificaciones" style="font-size:11px;font-weight:700;color:#fff;flex-direction:column;gap:1px;">
       <span style="font-size:18px;line-height:1;">📋</span>
@@ -3278,12 +3371,9 @@ body[data-theme="lavanda"] .tap-card{background:#fff;border-color:#ddd5f5;}
     <button onclick="var b=this;b.style.opacity='0.5';syncFromSheets(true).then(function(){b.style.opacity='1';}).catch(function(){b.style.opacity='1';})" class="tap-header-btn" title="Sincronizar" style="font-size:22px;color:#fff;line-height:1;">&#10227;</button>
   </div>
 
-  <!-- Pills de estado con contadores -->
-  <div style="padding:8px 14px 4px;display:flex;gap:6px;background:var(--bl);overflow-x:auto;">
-    <button onclick="filtrarEstado('')" id="pill-todos" class="tap-pill tap-pill-active">Todas</button>
-    <button onclick="filtrarEstado('examen')" id="pill-examen" class="tap-pill tap-pill-inactive">📝 Exámenes</button>
-    <button onclick="filtrarEstado('deberes')" id="pill-deberes" class="tap-pill tap-pill-inactive">📚 Deberes</button>
-    <button onclick="filtrarEstado('trabajo')" id="pill-trabajo" class="tap-pill tap-pill-inactive">📋 Trabajos</button>
+  <!-- Sin pills de estado — el filtro está dentro de cada asignatura -->
+  <div style="padding:6px 12px 4px;display:flex;gap:5px;background:var(--bl);overflow-x:auto;border-bottom:1px solid var(--bd);">
+    <button onclick="nbOrden()" id="nb-pill-orden" class="tap-pill tap-pill-inactive" style="margin-left:auto;">A↓</button>
   </div>
 
         <div class="search-bar" id="search-bar" style="display:none">
@@ -3292,7 +3382,7 @@ body[data-theme="lavanda"] .tap-card{background:#fff;border-color:#ddd5f5;}
           <span class="search-results-count" id="search-count"></span>
           <button class="search-clear" onclick="limpiarBusqueda()" title="Limpiar">✕</button>
         </div>
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:2px;">
+        <div id="rec-list-header" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:2px;">
           <div class="stats-row" id="stats-row" style="flex:1"></div>
           <div style="display:flex;gap:4px;flex-shrink:0;margin-left:8px;">
             <button onclick="toggleSearch()" id="btn-search" title="Buscar" style="background:none;border:1px solid var(--bd);border-radius:8px;padding:6px 10px;cursor:pointer;font-size:15px;">🔍</button>
@@ -7276,6 +7366,7 @@ if(darkLabel) darkLabel.textContent=isDark?'Claro':'Oscuro';
 
 function irSeccion(tab){
 document.body.classList.remove('on-home');
+document.body.classList.remove('nb-mode');
 switchTab(tab,null);
 var titles={nuevo:'NUEVA TAREA',registros:'MIS TAREAS',recordatorios:'ALERTAS',calendario:'MI AGENDA',notas:'TO DO',config:'AJUSTES',albumes:'MIS APUNTES',estudio:'POMODORO',calificaciones:'CALIFICACIONES',rutinas:'RUTINAS',rutinas:'RUTINAS'};
 document.getElementById('hdr-section-title').textContent=titles[tab]||'TAPUNTO';
@@ -7304,7 +7395,7 @@ if(fEl&&!fEl.value){
   if(c){c.style.background='var(--gm)';c.style.color='#fff';c.style.borderColor='var(--gm)';}
 }
 },50);}
-if(tab==='registros'){renderStats();renderRecords();}
+if(tab==='registros'){window._nbMostrarPortada=true;window._nbAsigActiva=null;renderStats();renderRecords();}
 if(tab==='home'){try{renderResumen();renderHorarioHome();renderProximasTareas();}catch(e){}}
 if(tab==='config'){renderThemes();loadPinConfig();loadSheetsToken();loadFirmaConfig();renderLists();}
 if(tab==='recordatorios'){renderReminders();renderAlertasInteligentes();}
@@ -7442,6 +7533,10 @@ return '📅 '+key.charAt(0).toUpperCase()+key.slice(1);
 
 /* ══ VISTA CARPETAS ══ */
 var _vistaRegistros = localStorage.getItem('tp_vista_reg') || 'carpetas';
+if(!window._nbMostrarPortada) window._nbMostrarPortada=true;
+if(!window._nbFiltroEstado) window._nbFiltroEstado='';
+if(!window._nbFiltroTipo) window._nbFiltroTipo='';
+if(!window._nbOrden) window._nbOrden='alpha';
 var _carpetaActual = null; // tema seleccionado
 
 function toggleVistaRegistros(){
@@ -7454,6 +7549,10 @@ function toggleVistaRegistros(){
   if(btnBack) btnBack.onclick = function(){ irHome(); };
   var title = document.getElementById('rec-header-title');
   if(title) title.textContent = 'Registros';
+  // Restaurar vista lista
+  if(_vistaRegistros==='lista'){
+    document.body.classList.remove('nb-mode');
+  }
   renderRecords();
 }
 
@@ -7465,93 +7564,391 @@ function cambiarOrdenCarpetas(orden){
   renderCarpetas();
 }
 
+function _nbRenderPortada(el, asigs, _getColor, _darkColor){
+  window._nbPortadaAsigList = asigs.slice();
+  var allRecs = (state.records||[]).filter(function(r){return !r.archivado;});
+  var totalRecs = allRecs.length;
+  var hoy = new Date(); hoy.setHours(0,0,0,0);
+  var urgent = allRecs.filter(function(r){
+    if(!r.fechaEvento) return false;
+    return Math.ceil((new Date(r.fechaEvento+'T00:00:00')-hoy)/86400000) <= 2;
+  }).length;
+  var pendientes = allRecs.filter(function(r){ return r.estado !== 'resuelto'; }).length;
+  var hechas = allRecs.filter(function(r){ return r.estado === 'resuelto'; }).length;
+
+  // Fecha actual
+  var dias = ['domingo','lunes','martes','miércoles','jueves','viernes','sábado'];
+  var meses = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+  var now = new Date();
+  var fechaStr = dias[now.getDay()]+', '+now.getDate()+' de '+meses[now.getMonth()]+' de '+now.getFullYear();
+
+  var html = '<div class="nb-libreta-wrap">';
+  // ── Página portada ──
+  html += '<div class="nb-page-area" style="overflow-y:auto;">';
+  html += '<div style="min-height:100%;background:#fffef8;'
+    +'background-image:repeating-linear-gradient(transparent,transparent 27px,#e8f0e4 27px,#e8f0e4 28px);'
+    +'background-position:0 8px;position:relative;padding:24px 16px 24px 32px;">';
+  // Margen rojo
+  html += '<div style="position:absolute;left:22px;top:0;bottom:0;width:1.5px;background:#FFB3B3;pointer-events:none;"></div>';
+
+  // ── Contenido portada ──
+  html += '<div style="position:relative;z-index:1;">';
+
+  // Título grande estilo libreta
+  html += '<div style="text-align:center;padding:10px 0 16px;">';
+  html += '<div style="font-size:56px;margin-bottom:6px;filter:drop-shadow(0 3px 6px rgba(0,0,0,.12));">📒</div>';
+  html += '<div style="font-size:26px;font-weight:900;color:var(--gd);font-family:var(--font-main);letter-spacing:-.5px;line-height:1.1;">Mis Tareas</div>';
+  html += '<div style="width:60px;height:2px;background:var(--ga);border-radius:2px;margin:8px auto 10px;"></div>';
+  html += '<div style="font-size:11px;color:var(--tl);font-family:var(--font-main);">'+fechaStr+'</div>';
+  html += '</div>';
+
+  // Resumen compacto — sin grid de stats
+
+  // Badge urgente si hay
+  if(urgent > 0){
+    html += '<div style="display:flex;align-items:center;gap:8px;background:#FCEBEB;border:1px solid #F7C1C1;border-radius:10px;padding:8px 12px;margin-bottom:16px;">'
+      +'<span style="font-size:18px;">🔴</span>'
+      +'<div><div style="font-size:12px;font-weight:700;color:#A32D2D;font-family:var(--font-main);">'+urgent+' tarea'+(urgent>1?'s':'')+' urgente'+(urgent>1?'s':'')+'</div>'
+      +'<div style="font-size:10px;color:#791F1F;">Entrega en menos de 2 días</div></div>'
+      +'</div>';
+  }
+
+  // Lista de asignaturas clicables
+  html += '<div style="font-size:9px;font-weight:700;color:var(--tl);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">📚 Asignaturas</div>';
+  html += '<div style="display:flex;flex-direction:column;gap:5px;">';
+  asigs.forEach(function(asig){
+    var bg = _getColor(asig);
+    var solid = _darkColor(bg);
+    var asigRecs = allRecs.filter(function(r){return (r.tema||'Sin asignatura')===asig;});
+    var asigPend = asigRecs.filter(function(r){return r.estado!=='resuelto';}).length;
+    var maxUrg = asigRecs.reduce(function(mx,r){
+      if(!r.fechaEvento) return mx;
+      var d = Math.ceil((new Date(r.fechaEvento+'T00:00:00')-hoy)/86400000);
+      return (d<mx)?d:mx;
+    }, 999);
+    var urgBadge = '';
+    if(maxUrg<=0) urgBadge='<span style="font-size:9px;background:#FCEBEB;color:#A32D2D;padding:2px 6px;border-radius:6px;font-weight:700;">Hoy</span>';
+    else if(maxUrg<=2) urgBadge='<span style="font-size:9px;background:#FCEBEB;color:#A32D2D;padding:2px 6px;border-radius:6px;font-weight:700;">'+maxUrg+'d</span>';
+    else if(maxUrg<=7) urgBadge='<span style="font-size:9px;background:#FAEEDA;color:#633806;padding:2px 6px;border-radius:6px;font-weight:700;">'+maxUrg+'d</span>';
+
+    html += '<div onclick="nbAbrirAsig(\''+asig.replace(/'/g,"\\'")+'\')" style="display:flex;align-items:center;gap:10px;background:#fff;border:1px solid var(--bd);border-radius:10px;padding:8px 10px;cursor:pointer;border-left:5px solid '+solid+';">'
+      +'<div style="flex:1;">'
+        +'<div style="font-size:13px;font-weight:700;color:var(--td);font-family:var(--font-main);">'+asig+'</div>'
+        +'<div style="font-size:10px;color:var(--tl);margin-top:1px;">'+asigRecs.length+' tarea'+(asigRecs.length!==1?'s':'')+' · '+asigPend+' pendiente'+(asigPend!==1?'s':'')+'</div>'
+      +'</div>'
+      +(urgBadge||'')
+      +'<span style="color:var(--tl);font-size:16px;">›</span>'
+      +'</div>';
+  });
+  html += '</div>';
+  html += '</div></div></div>';
+
+  // ── Separadores laterales ──
+  html += '<div class="nb-tabs-wrap" id="nb-tabs-wrap">';
+  asigs.forEach(function(asig){
+    var bg = _getColor(asig);
+    var solid = _darkColor(bg);
+    html += '<button class="nb-tab-btn" data-asig="'+asig.replace(/"/g,'&quot;')+'" '
+      +'style="background:'+solid+';" onclick="nbAbrirAsig(this.dataset.asig)">'+asig.slice(0,10)+'</button>';
+  });
+  html += '</div>';
+  html += '</div>';
+
+  el.innerHTML = html;
+}
+
 function renderCarpetas(){
-  // Hide back btn on main view
-  var btnB = document.getElementById('btn-back-registros');
-  if(btnB){ btnB.style.visibility='hidden'; btnB.style.pointerEvents='none'; }
-  var t = document.getElementById('rec-header-title');
-  if(t) t.textContent = 'Mis Tareas';
+  document.body.classList.add('nb-mode');
   var el = document.getElementById('rec-list');
   if(!el) return;
-  var filtered = getFiltered();
-  if(!filtered.length){
-    el.innerHTML='<div class="empty">No hay registros 🐾</div>';
+
+  // Flecha oculta en portada
+  window.btnBackRegistrosClick = null; // reset a tapuntoNavBack
+  var btnB = document.getElementById('btn-back-registros');
+  if(btnB){ btnB.style.visibility='hidden'; btnB.style.pointerEvents='none'; }
+
+  var tHdr = document.getElementById('rec-header-title');
+  if(tHdr) tHdr.textContent = 'Mis Tareas';
+
+  var sch = getSch&&getSch();
+  var palette = typeof H_COLORS_EXT!=='undefined'?H_COLORS_EXT:H_COLORS;
+  function _getColor(asig){
+    if(sch&&sch.colores&&sch.colores[asig]!==undefined){var ci=sch.colores[asig];if(palette[ci])return palette[ci].bg;}
+    var h=0;for(var i=0;i<(asig||'').length;i++)h=(h+asig.charCodeAt(i))%palette.length;return palette[h].bg;
+  }
+  function _darkColor(hex){
+    var r=parseInt(hex.slice(1,3),16),g=parseInt(hex.slice(3,5),16),b=parseInt(hex.slice(5,7),16);
+    return 'rgb('+Math.round(r*.55)+','+Math.round(g*.55)+','+Math.round(b*.55)+')';
+  }
+
+  var allRecs=(state.records||[]).filter(function(r){return !r.archivado;});
+  var asigs=[...new Set(allRecs.map(function(r){return r.tema||'Sin asignatura';}))]
+    .sort(function(a,b){return a.localeCompare(b);});
+
+  if(!asigs.length){
+    el.innerHTML='<div style="text-align:center;padding:40px 20px;color:var(--tl);font-family:var(--font-main);">'
+      +'<div style="font-size:40px;margin-bottom:12px;">📒</div>'
+      +'<div style="font-size:15px;font-weight:700;color:var(--td);margin-bottom:8px;">Sin tareas aún</div>'
+      +'<div style="font-size:12px;">Toca + para añadir tu primera tarea</div>'
+      +'</div>';
     return;
   }
-  // Agrupar por tema
-  var grupos = {};
-  filtered.forEach(function(r){
-    var tema = r.tema || 'Sin asunto';
-    if(!grupos[tema]) grupos[tema] = [];
-    grupos[tema].push(r);
+
+  // Fecha
+  var dias=['domingo','lunes','martes','miércoles','jueves','viernes','sábado'];
+  var meses=['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+  var now=new Date();
+  var fechaStr=dias[now.getDay()]+', '+now.getDate()+' de '+meses[now.getMonth()];
+
+  // Stats rápidos
+  var pendientes=allRecs.filter(function(r){return r.estado!=='resuelto';}).length;
+  var hoy2=new Date();hoy2.setHours(0,0,0,0);
+  var urgentes=allRecs.filter(function(r){
+    if(!r.fechaEvento)return false;
+    return Math.ceil((new Date(r.fechaEvento+'T00:00:00')-hoy2)/86400000)<=2;
+  }).length;
+
+  // ── Portada chula (página de la libreta) ──
+  var portadaHTML='<div style="min-height:100%;background:#fffef8;'
+    +'background-image:repeating-linear-gradient(transparent,transparent 27px,#e8f0e4 27px,#e8f0e4 28px);'
+    +'background-position:0 8px;position:relative;padding:32px 16px 32px 34px;">'
+    +'<div style="position:absolute;left:22px;top:0;bottom:0;width:1.5px;background:#FFB3B3;pointer-events:none;"></div>'
+    +'<div style="position:relative;z-index:1;text-align:center;">'
+    +'<div style="font-size:64px;margin-bottom:8px;filter:drop-shadow(0 4px 8px rgba(0,0,0,.15));">📒</div>'
+    +'<div style="font-size:28px;font-weight:900;color:var(--gd);font-family:var(--font-main);letter-spacing:-.5px;">Mis Tareas</div>'
+    +'<div style="width:50px;height:2px;background:var(--ga);border-radius:2px;margin:8px auto;"></div>'
+    +'<div style="font-size:12px;color:var(--tl);font-family:var(--font-main);margin-bottom:20px;">'+fechaStr+'</div>'
+    // Badge urgente
+    +(urgentes>0?'<div style="display:inline-flex;align-items:center;gap:6px;background:#FCEBEB;border:1px solid #F7C1C1;border-radius:10px;padding:6px 14px;margin-bottom:20px;">'
+      +'<span style="font-size:14px;">🔴</span>'
+      +'<span style="font-size:12px;font-weight:700;color:#A32D2D;font-family:var(--font-main);">'+urgentes+' urgente'+(urgentes>1?'s':'')+'</span>'
+      +'</div>':'')
+    +'<div style="font-size:13px;color:var(--tl);font-family:var(--font-main);">'+pendientes+' tarea'+(pendientes!==1?'s':'')+' pendiente'+(pendientes!==1?'s':'')+'</div>'
+    +'<div style="margin-top:28px;font-size:11px;color:var(--tl);font-family:var(--font-main);">👉 Toca un separador para ver una asignatura</div>'
+    +'</div>'
+    +'</div>';
+
+  // Separadores
+  var tabsHTML='';
+  asigs.forEach(function(asig){
+    var solid=_darkColor(_getColor(asig));
+    tabsHTML+='<button class="nb-tab-btn" data-asig="'+asig.replace(/"/g,'&quot;')+'" '
+      +'style="background:'+solid+';" onclick="nbAbrirAsig(this.dataset.asig)">'+asig.slice(0,12)+'</button>';
   });
-  // Para cada grupo: icono más frecuente
-  function iconoMasFrecuente(recs){
-    var freq = {};
-    recs.forEach(function(r){ var ico=r.icono||'📋'; freq[ico]=(freq[ico]||0)+1; });
-    return Object.keys(freq).sort(function(a,b){return freq[b]-freq[a];})[0]||'📋';
-  }
-  // Ordenar temas por número de registros desc
-  var temas = Object.keys(grupos);
-  _ordenCarpetas = localStorage.getItem('tp_orden_carpetas') || 'alpha';
-  if(_ordenCarpetas==='alpha'){
-    temas.sort(function(a,b){return a.localeCompare(b,'es',{sensitivity:'base'});});
-  } else if(_ordenCarpetas==='cantidad'){
-    temas.sort(function(a,b){return grupos[b].length-grupos[a].length;});
-  } else if(_ordenCarpetas==='reciente'){
-    temas.sort(function(a,b){
-      var fa=Math.max.apply(null,grupos[a].map(function(r){return new Date(r.fecha||0).getTime();}));
-      var fb=Math.max.apply(null,grupos[b].map(function(r){return new Date(r.fecha||0).getTime();}));
-      return fb-fa;
-    });
-  }
-  var grid2 = document.createElement('div');
-  grid2.style.cssText = 'display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;padding:14px 10px 80px;';
-  temas.forEach(function(tema){
-    var recs = grupos[tema];
-    var ico = iconoMasFrecuente(recs);
-    var n = recs.length;
-    var btn = document.createElement('button');
-    btn.style.cssText = 'background:var(--w,#fff);border:1px solid var(--bd);border-radius:14px;padding:16px 12px;display:flex;flex-direction:column;align-items:center;gap:8px;cursor:pointer;box-shadow:0 2px 6px rgba(0,0,0,.06);text-align:center;';
-    btn.innerHTML = '<div style="font-size:32px;">'+ico+'</div>'
-      + '<div style="font-size:13px;font-weight:700;color:var(--td);font-family:var(--font-main);line-height:1.3;word-break:break-word;">'+tema+'</div>'
-      + '<div style="font-size:11px;color:var(--tl);font-family:var(--font-main);">'+n+' registro'+(n!==1?'s':'')+'</div>';
-    btn.onclick = (function(t){ return function(){ abrirCarpeta(t); }; })(tema);
-    grid2.appendChild(btn);
-  });
-  // Barra de orden
-  var ordenBar = document.createElement('div');
-  ordenBar.style.cssText = 'display:flex;gap:6px;padding:8px 10px 0;';
-  [['alpha','🔤 A-Z'],['cantidad','📊 Cantidad'],['reciente','🕐 Reciente']].forEach(function(op){
-    var b = document.createElement('button');
-    b.textContent = op[1];
-    b.style.cssText = 'padding:5px 10px;border-radius:20px;border:1px solid var(--bd);background:'
-      +(_ordenCarpetas===op[0]?'var(--gm)':'var(--bp)')
-      +';color:'+(_ordenCarpetas===op[0]?'#fff':'var(--tl)')
-      +';font-size:11px;font-weight:600;cursor:pointer;font-family:var(--font-main);';
-    b.onclick = (function(o){ return function(){ cambiarOrdenCarpetas(o); }; })(op[0]);
-    ordenBar.appendChild(b);
-  });
-  el.innerHTML = '';
-  el.appendChild(ordenBar);
-  el.appendChild(grid2);
+
+  el.innerHTML='<div class="nb-libreta-wrap">'
+    +'<div class="nb-page-area" id="nb-page-area" style="overflow-y:auto;">'+portadaHTML+'</div>'
+    +'<div class="nb-tabs-wrap" id="nb-tabs-wrap">'+tabsHTML+'</div>'
+    +'</div>';
 }
 
 
-function abrirCarpetaFiltrada(tema, filtro){
-  // Temporarily filter records before calling abrirCarpeta
-  var _origRecords = state.records;
-  if(filtro){
-    var tipos=['examen','deberes','trabajo','proyecto','apuntes','otro'];
-    if(tipos.includes(filtro.toLowerCase())){
-      state.records = _origRecords.filter(function(r){
-        return (r.accion||'').toLowerCase()===filtro.toLowerCase() || !filtro;
-      });
+function nbAbrirAsig(asig){
+  window._nbAsigActiva = asig;
+  document.body.classList.add('nb-mode');
+
+  var el = document.getElementById('rec-list');
+  if(!el) return;
+
+  // Flecha ← visible — vuelve a la portada
+  window.btnBackRegistrosClick = function(){ renderCarpetas(); };
+  var btnB = document.getElementById('btn-back-registros');
+  if(btnB){
+    btnB.style.visibility='visible';
+    btnB.style.pointerEvents='auto';
+  }
+
+  // Título = nombre asignatura
+  var tHdr = document.getElementById('rec-header-title');
+  if(tHdr) tHdr.textContent = asig;
+
+  // Colores
+  var sch=getSch&&getSch();
+  var palette=typeof H_COLORS_EXT!=='undefined'?H_COLORS_EXT:H_COLORS;
+  function _getColor(a){
+    if(sch&&sch.colores&&sch.colores[a]!==undefined){var ci=sch.colores[a];if(palette[ci])return palette[ci].bg;}
+    var h=0;for(var i=0;i<(a||'').length;i++)h=(h+a.charCodeAt(i))%palette.length;return palette[h].bg;
+  }
+  function _darkColor(hex){
+    var r=parseInt(hex.slice(1,3),16),g=parseInt(hex.slice(3,5),16),b=parseInt(hex.slice(5,7),16);
+    return 'rgb('+Math.round(r*.55)+','+Math.round(g*.55)+','+Math.round(b*.55)+')';
+  }
+
+  var allRecs=(state.records||[]).filter(function(r){return !r.archivado;});
+  var asigs=[...new Set(allRecs.map(function(r){return r.tema||'Sin asignatura';}))]
+    .sort(function(a,b){return a.localeCompare(b);});
+
+  // Siempre reconstruir la libreta completa
+  var tabsHTML='';
+  asigs.forEach(function(a){
+    var solid=_darkColor(_getColor(a));
+    var active=a===asig;
+    tabsHTML+='<button class="nb-tab-btn'+(active?' nb-active':'')+'" data-asig="'+a.replace(/"/g,'&quot;')+'" '
+      +'style="background:'+solid+';" onclick="nbAbrirAsig(this.dataset.asig)">'+a.slice(0,12)+'</button>';
+  });
+
+  el.innerHTML='<div class="nb-libreta-wrap">'
+    +'<div class="nb-page-area" id="nb-page-area" style="overflow-y:auto;">'
+    +'<div class="nb-content-area" id="nb-content-area">'
+    +'<div id="nb-inner-content"></div>'
+    +'</div></div>'
+    +'<div class="nb-tabs-wrap" id="nb-tabs-wrap">'+tabsHTML+'</div>'
+    +'</div>';
+
+  nbRenderInner(asig);
+}
+
+
+function nbRenderInner(asig){
+  var inner=document.getElementById('nb-inner-content');
+  if(!inner) return;
+  var filtroTipo=window._nbFiltroTipo||'';
+  var hoy=new Date(); hoy.setHours(0,0,0,0);
+
+  var recs=(state.records||[]).filter(function(r){
+    if(r.archivado) return false;
+    if((r.tema||'Sin asignatura')!==asig) return false;
+    if(filtroTipo&&(r.accion||'').toLowerCase().indexOf(filtroTipo.toLowerCase())<0) return false;
+    return true;
+  }).sort(function(a,b){
+    // Más reciente primero (por fecha de creación o registro)
+    var fa=a.created||a.fecha||'';
+    var fb=b.created||b.fecha||'';
+    return fb.localeCompare(fa);
+  });
+
+  inner.innerHTML='';
+
+  // ── Filtros tipo ──
+  var fb=document.createElement('div');
+  fb.style.cssText='display:flex;gap:4px;padding:6px 0 6px;flex-wrap:wrap;border-bottom:1px solid #e8f0e4;margin-bottom:4px;position:sticky;top:0;background:#fffef8;z-index:3;';
+  [['','Todos'],['Examen','📝'],['Trabajo','📚'],['Prácticas','🔬'],['Deberes','✏️']].forEach(function(pair){
+    var t=pair[0],lbl=pair[1];
+    var b=document.createElement('button');
+    b.textContent=lbl+(t?'':' Todos');
+    var act=filtroTipo===t;
+    b.style.cssText='padding:3px 8px;border-radius:8px;border:1px solid '+(act?'var(--ga)':'var(--bd)')+';background:'+(act?'var(--ga)':'transparent')+';color:'+(act?'#fff':'var(--tl)')+';font-size:10px;cursor:pointer;font-family:var(--font-main);';
+    (function(tipo){b.addEventListener('click',function(){window._nbFiltroTipo=tipo;nbRenderInner(asig);});})(t);
+    fb.appendChild(b);
+  });
+  inner.appendChild(fb);
+
+  if(!recs.length){
+    var empty=document.createElement('div');
+    empty.style.cssText='text-align:center;padding:30px 16px;color:var(--tl);font-family:var(--font-main);';
+    empty.innerHTML='<div style="font-size:32px;margin-bottom:8px;">📄</div><div style="font-size:13px;">Sin tareas</div><div style="font-size:11px;margin-top:4px;">Toca + para añadir</div>';
+    inner.appendChild(empty);
+    return;
+  }
+
+  function _fmt(s){
+    if(!s) return '';
+    try{var d=new Date(s.length<=10?s+'T00:00:00':s);return d.getDate()+'/'+(d.getMonth()+1)+'/'+String(d.getFullYear()).slice(2);}
+    catch(e){return '';}
+  }
+  function _dotColor(r){
+    if(r.estado==='resuelto') return '#b0c8b0';
+    if(!r.fechaEvento) return 'var(--ga)';
+    var d=Math.ceil((new Date(r.fechaEvento+'T00:00:00')-hoy)/86400000);
+    return d<=2?'#E24B4A':d<=7?'#EF9F27':'var(--ga)';
+  }
+
+  // ── Lista plana, orden cronológico, más reciente primero ──
+  recs.forEach(function(r){
+    var done=r.estado==='resuelto';
+
+    var row=document.createElement('div');
+    row.style.cssText='position:relative;padding:7px 8px 7px 16px;border-bottom:1px solid #e8f0e4;display:flex;align-items:center;gap:8px;min-height:36px;'
+      +(done?'background:#f5f5f0;opacity:.7;':'background:#fffef8;');
+
+    // Punto de color urgencia
+    var dot=document.createElement('div');
+    dot.style.cssText='position:absolute;left:4px;top:50%;transform:translateY(-50%);width:7px;height:7px;border-radius:50%;background:'+_dotColor(r)+';flex-shrink:0;';
+    row.appendChild(dot);
+
+    // Fecha de generación dd/mm/aa — columna compacta izq
+    var dateCol=document.createElement('div');
+    dateCol.style.cssText='flex-shrink:0;font-size:9px;color:var(--tl);font-family:var(--font-main);min-width:36px;text-align:right;';
+    dateCol.textContent=_fmt(r.created||r.fecha||'');
+    row.appendChild(dateCol);
+
+    // Contenido principal
+    var tw=document.createElement('div');
+    tw.style.cssText='flex:1;min-width:0;cursor:pointer;';
+    tw.addEventListener('click',function(){if(typeof viewRecord==='function')viewRecord(r.id);});
+
+    var ti=document.createElement('div');
+    ti.style.cssText='font-size:12px;font-weight:'+(done?'400':'600')+';color:'+(done?'var(--tl)':'var(--td)')+';font-family:var(--font-main);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;'+(done?'text-decoration:line-through;':'');
+    ti.textContent=(r.icono?r.icono+' ':'')+(r.titulo&&r.titulo.trim()?r.titulo:r.tema||'Sin título');
+    tw.appendChild(ti);
+
+    if(r.accion||r.fechaEvento){
+      var su=document.createElement('div');
+      su.style.cssText='font-size:10px;color:var(--tl);margin-top:1px;';
+      su.textContent=(r.accion||'')+(r.accion&&r.fechaEvento?' · ':'')+_fmt(r.fechaEvento);
+      tw.appendChild(su);
     }
+    row.appendChild(tw);
+
+    // Badge entrega
+    if(r.fechaEvento&&!done){
+      var d2=Math.ceil((new Date(r.fechaEvento+'T00:00:00')-hoy)/86400000);
+      var bg=d2<=2?'#FCEBEB':d2<=7?'#FAEEDA':'var(--bp)';
+      var col=d2<=2?'#A32D2D':d2<=7?'#633806':'var(--tl)';
+      var bd=document.createElement('span');
+      bd.style.cssText='background:'+bg+';color:'+col+';font-size:9px;padding:2px 5px;border-radius:5px;font-weight:700;white-space:nowrap;flex-shrink:0;';
+      bd.textContent=d2<=0?'Hoy':d2+'d';
+      row.appendChild(bd);
+    }
+
+    // Checkbox marcar hecha
+    var cb=document.createElement('button');
+    cb.style.cssText='width:22px;height:22px;border-radius:50%;border:2px solid '+(done?'#6dac82':'var(--bd)')+';background:'+(done?'#6dac82':'transparent')+';cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:12px;';
+    cb.textContent=done?'✓':'';
+    cb.title=done?'Marcar pendiente':'Marcar como hecha';
+    (function(rec,rowEl,cbEl){
+      cbEl.addEventListener('click',function(e){
+        e.stopPropagation();
+        rec.estado=rec.estado==='resuelto'?'pendiente':'resuelto';
+        try{persist();}catch(err){}
+        nbRenderInner(asig);
+      });
+    })(r,row,cb);
+    row.appendChild(cb);
+
+    inner.appendChild(row);
+  });
+
+  // Líneas vacías estilo libreta
+  for(var i=0;i<4;i++){
+    var ln=document.createElement('div');
+    ln.style.cssText='height:28px;border-bottom:1px solid #e8f0e4;opacity:'+(0.2-i*0.04)+';';
+    inner.appendChild(ln);
   }
-  abrirCarpeta(tema);
-  state.records = _origRecords;
 }
+
+function nbFiltroEstado(val, btn){
+  window._nbFiltroEstado=val;
+  document.querySelectorAll('#nb-pill-todos,#nb-pill-pend,#nb-pill-hecho').forEach(function(b){
+    b.className='tap-pill tap-pill-inactive';
+  });
+  if(btn) btn.className='tap-pill tap-pill-active';
+  renderCarpetas();
+}
+
+function nbFiltroTipo(val, btn){
+  window._nbFiltroTipo=val;
+  nbRenderInner(window._nbAsigActiva||'');
+}
+
+function nbOrden(){
+  window._nbOrden=(window._nbOrden==='alpha'?'fecha':'alpha');
+  var b=document.getElementById('nb-pill-orden');
+  if(b) b.textContent=window._nbOrden==='alpha'?'A↓':'🕐';
+  renderCarpetas();
+}
+
+
 function abrirCarpeta(tema){
   _carpetaActual = tema;
   var title = document.getElementById('rec-header-title');
@@ -10649,6 +11046,87 @@ function viewRecord(id){
     },200);
   };
   sheet.appendChild(albBtn);
+  // Fecha de registro
+  var fechaReg = document.createElement('div');
+  var fechaCreada = '';
+  if(r.created){try{var dc=new Date(r.created);fechaCreada=dc.toLocaleDateString('es',{day:'2-digit',month:'short',year:'numeric'})+' · '+dc.toLocaleTimeString('es',{hour:'2-digit',minute:'2-digit'});}catch(e){}}
+  else if(r.fecha){try{var df=new Date(r.fecha.length<=10?r.fecha+'T00:00:00':r.fecha);fechaCreada=df.toLocaleDateString('es',{day:'2-digit',month:'short',year:'numeric'});}catch(e){}}
+  fechaReg.setAttribute('style','font-size:10px;color:var(--tl);text-align:center;margin-bottom:10px;font-family:var(--font-main);');
+  fechaReg.textContent=fechaCreada?'📌 Registrado el '+fechaCreada:'';
+  if(fechaCreada) sheet.appendChild(fechaReg);
+  // Acciones: Archivar · Duplicar · Eliminar
+  var actRow=document.createElement('div');
+  actRow.setAttribute('style','display:flex;gap:6px;margin-bottom:10px;');
+  // Archivar
+  var archBtn=document.createElement('button');
+  var yaArchivado=r.archivado;
+  archBtn.setAttribute('style','flex:1;padding:8px 4px;background:var(--bl);border:1px solid var(--bd);border-radius:10px;font-size:12px;font-family:var(--font-main);cursor:pointer;color:var(--td);');
+  archBtn.innerHTML=yaArchivado?'📤 Restaurar':'📥 Archivar';
+  archBtn.onclick=function(){
+    if(typeof archivarRegistro==='function') archivarRegistro(id);
+    modal.remove();
+  };
+  actRow.appendChild(archBtn);
+  // Duplicar
+  var dupBtn=document.createElement('button');
+  dupBtn.setAttribute('style','flex:1;padding:8px 4px;background:var(--bl);border:1px solid var(--bd);border-radius:10px;font-size:12px;font-family:var(--font-main);cursor:pointer;color:var(--td);');
+  dupBtn.innerHTML='📋 Duplicar';
+  dupBtn.onclick=function(){
+    if(typeof duplicarRegistro==='function') duplicarRegistro(id);
+    modal.remove();
+    setTimeout(function(){try{renderRecords();}catch(e){}},200);
+  };
+  actRow.appendChild(dupBtn);
+  // Eliminar
+  var delBtn=document.createElement('button');
+  delBtn.setAttribute('style','flex:1;padding:8px 4px;background:#FCEBEB;border:1px solid #F7C1C1;border-radius:10px;font-size:12px;font-family:var(--font-main);cursor:pointer;color:#A32D2D;');
+  delBtn.innerHTML='🗑 Eliminar';
+  delBtn.onclick=function(){
+    if(!confirm('¿Eliminar esta tarea? Esta acción no se puede deshacer.')) return;
+    state.records=state.records.filter(function(x){return x.id!==id;});
+    try{persist();}catch(e){}
+    modal.remove();
+    try{renderRecords();}catch(e){}
+  };
+  actRow.appendChild(delBtn);
+  sheet.appendChild(actRow);
+  // Fila compartir: WhatsApp + Email
+  var shareRow=document.createElement('div');
+  shareRow.setAttribute('style','display:flex;gap:8px;margin-bottom:8px;');
+  var waBtn=document.createElement('button');
+  waBtn.setAttribute('style','flex:1;padding:10px 6px;background:#25D366;border:none;border-radius:10px;font-size:13px;font-family:var(--font-main);cursor:pointer;color:#fff;font-weight:700;');
+  waBtn.innerHTML='💬 WhatsApp';
+  waBtn.onclick=function(){
+    var msg='📋 *'+(r.icono||'')+' '+(r.tema||'Tarea')+'*'
+      +(r.accion?'\n'+r.accion:'')
+      +(r.titulo&&r.titulo!==r.tema?'\n'+r.titulo:'')
+      +(r.fechaEvento?'\n📅 Entrega: '+new Date(r.fechaEvento+'T00:00:00').toLocaleDateString('es',{weekday:'long',day:'2-digit',month:'long'}):'')
+      +(r.notas?'\n📝 '+r.notas:'');
+    window.open('https://wa.me/?text='+encodeURIComponent(msg),'_blank');
+  };
+  shareRow.appendChild(waBtn);
+  var mailBtn=document.createElement('button');
+  mailBtn.setAttribute('style','flex:1;padding:10px 6px;background:var(--bl);border:1px solid var(--bd);border-radius:10px;font-size:13px;font-family:var(--font-main);cursor:pointer;color:var(--td);font-weight:700;');
+  mailBtn.innerHTML='✉️ Correo';
+  mailBtn.onclick=function(){
+    var asunto='Tarea: '+(r.icono||'')+' '+(r.tema||'');
+    var cuerpo='Tarea: '+(r.titulo||r.tema||'')+(r.accion?'\nTipo: '+r.accion:'')+(r.fechaEvento?'\nEntrega: '+new Date(r.fechaEvento+'T00:00:00').toLocaleDateString('es',{day:'2-digit',month:'long',year:'numeric'}):'')+(r.notas?'\n\nNotas: '+r.notas:'');
+    window.open('mailto:?subject='+encodeURIComponent(asunto)+'&body='+encodeURIComponent(cuerpo),'_blank');
+  };
+  shareRow.appendChild(mailBtn);
+  sheet.appendChild(shareRow);
+  // Calendario
+  var calBtn=document.createElement('button');
+  calBtn.setAttribute('style','width:100%;padding:10px;background:var(--bl);border:1px solid var(--bd);border-radius:10px;margin-bottom:8px;font-size:13px;font-family:var(--font-main);cursor:pointer;color:var(--td);text-align:center;');
+  calBtn.innerHTML='📅 Añadir al calendario';
+  calBtn.onclick=function(){
+    if(!r.fechaEvento){alert('Añade una fecha de entrega a esta tarea para poder añadirla al calendario.');return;}
+    var start=r.fechaEvento.replace(/-/g,'');
+    var titulo=encodeURIComponent((r.icono||'')+' '+(r.titulo||r.tema||'Tarea'));
+    var details=encodeURIComponent((r.accion||'')+(r.notas?'\n'+r.notas:''));
+    window.open('https://calendar.google.com/calendar/render?action=TEMPLATE&text='+titulo+'&dates='+start+'/'+start+'&details='+details,'_blank');
+  };
+  sheet.appendChild(calBtn);
   modal.appendChild(sheet);
   modal.onclick=function(e){if(e.target===modal)modal.remove();};
   document.body.appendChild(modal);
@@ -11949,7 +12427,7 @@ function pomSetSound(type){
     <span class="bnav-ico">&#127968;</span><span class="bnav-lbl">Inicio</span>
   </button>
   <button class="bnav-btn" id="bnav-tareas" onclick="irSeccion('registros')">
-    <span class="bnav-ico">&#128203;</span><span class="bnav-lbl">Tareas</span>
+    <span class="bnav-ico">&#128203;</span><span class="bnav-lbl">Mis tareas</span>
   </button>
   <div style="width:54px;flex-shrink:0;" aria-hidden="true"></div>
   <button class="bnav-btn" id="bnav-todo" onclick="irSeccion('notas')">
@@ -12939,6 +13417,24 @@ renderThemes = function(){
     _applyFontInit();
   }
 })();
+
+
+function nbPortadaClick(el){
+  var i=parseInt(el.dataset.i||'0');
+  var asig=(window._nbPortadaAsigList||[])[i];
+  if(!asig) return;
+  window._nbMostrarPortada=false;
+  window._nbAsigActiva=asig;
+  renderCarpetas();
+}
+
+
+function nbFiltroTipoEl(btn){
+  window._nbFiltroTipo = btn.dataset.tipo || '';
+  nbRenderInner(window._nbAsigActiva||'');
+}
+
+function nbTaskClick(el){try{viewRecord&&viewRecord(el.dataset.rid);}catch(e){}}
 
 </script>
 </body>
