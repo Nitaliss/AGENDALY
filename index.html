@@ -3365,8 +3365,8 @@ body.nb-mode #nb-pill-orden { display:none !important; }
       <span style="font-size:6px;font-family:var(--font-main);letter-spacing:-.2px;">Calificaciones</span>
     </button>
     <button class="tap-header-btn" onclick="toggleSearch()" title="Buscar" id="btn-search">🔍</button>
-    <button class="tap-header-btn" onclick="toggleFiltros()" title="Filtros" id="btn-filtros">⚙️</button>
-    <button class="tap-header-btn" id="btn-vista-toggle" onclick="toggleVistaRegistros()" title="Cambiar vista">⊞</button>
+
+
   
     <button onclick="var b=this;b.style.opacity='0.5';syncFromSheets(true).then(function(){b.style.opacity='1';}).catch(function(){b.style.opacity='1';})" class="tap-header-btn" title="Sincronizar" style="font-size:22px;color:#fff;line-height:1;">&#10227;</button>
   </div>
@@ -7532,7 +7532,7 @@ return '📅 '+key.charAt(0).toUpperCase()+key.slice(1);
 }
 
 /* ══ VISTA CARPETAS ══ */
-var _vistaRegistros = localStorage.getItem('tp_vista_reg') || 'carpetas';
+var _vistaRegistros = 'carpetas' // vista libreta siempre;
 if(!window._nbMostrarPortada) window._nbMostrarPortada=true;
 if(!window._nbFiltroEstado) window._nbFiltroEstado='';
 if(!window._nbFiltroTipo) window._nbFiltroTipo='';
@@ -7901,24 +7901,45 @@ function nbRenderInner(asig){
     ti.style.cssText='font-size:12px;font-weight:'+(done?'400':'600')+';color:'+(done?'var(--tl)':'var(--td)')+';font-family:var(--font-main);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;'+(done?'text-decoration:line-through;':'');
     ti.textContent=(r.icono?r.icono+' ':'')+(r.titulo&&r.titulo.trim()?r.titulo:r.tema||'Sin título');
     tw.appendChild(ti);
-    // Icono adjuntos si la asignatura tiene archivos en Mis Apuntes
+    // Preview de notas (primeros 60 chars)
+    if(r.notas&&r.notas.trim()){
+      var notaEl=document.createElement('div');
+      notaEl.style.cssText='font-size:9px;color:var(--tl);margin-top:2px;font-style:italic;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;';
+      notaEl.textContent='📝 '+(r.notas.length>60?r.notas.slice(0,60)+'…':r.notas);
+      tw.appendChild(notaEl);
+    }
+    // Adjuntos en Mis Apuntes
     var asigAlbs=(state.albums||[]).filter(function(a){return a.asig===asig;});
     var hasFiles=asigAlbs.some(function(a){return (a.fotos&&a.fotos.length)||(a.docs&&a.docs.length);});
-    var hasImg=!!(r.imagenUrl&&r.imagenUrl.length>10);
-    if(hasFiles||hasImg){
+    if(hasFiles){
       var aRow=document.createElement('div');
       aRow.style.cssText='display:flex;align-items:center;gap:3px;margin-top:2px;cursor:pointer;';
-      aRow.title='Ver archivos de '+asig;
-      aRow.innerHTML='<span style="font-size:11px;">📎</span><span style="font-size:9px;color:var(--ga);text-decoration:underline;">Archivos adjuntos</span>';
-      aRow.addEventListener('click',function(e){
-        e.stopPropagation();
-        irSeccion('albumes');
-        setTimeout(function(){
-          window._albFiltroAsig=asig;
-          renderAlbumes();
-          setTimeout(function(){try{albVerAsig(asig);}catch(_){}},150);
-        },200);
-      });
+      aRow.innerHTML='<span style="font-size:11px;">📎</span><span style="font-size:9px;color:var(--ga);text-decoration:underline;">Archivos en Mis Apuntes</span>';
+      (function(recId, recTema){
+        aRow.addEventListener('click',function(e){
+          e.stopPropagation();
+          irSeccion('albumes');
+          setTimeout(function(){
+            window._albFiltroAsig=recTema;
+            renderAlbumes();
+            setTimeout(function(){
+              try{
+                // Intentar abrir álbum específico de esta tarea
+                var albs=(state.albums||[]).filter(function(a){return a.asig===recTema;});
+                var taskAlb=albs.find(function(a){return a.recordId===recId;});
+                if(taskAlb){
+                  // Abrir directamente el visor de ese álbum
+                  _albViewingId=taskAlb.id;
+                  albVerAsig(recTema);
+                } else {
+                  // Fallback: abrir todos los de la asignatura
+                  albVerAsig(recTema);
+                }
+              }catch(_){}
+            },150);
+          },200);
+        });
+      })(r.id, asig);
       tw.appendChild(aRow);
     }
 
@@ -7930,6 +7951,17 @@ function nbRenderInner(asig){
     }
     row.appendChild(tw);
 
+    // Foto thumbnail si tiene imagen principal
+    if(r.imagenUrl&&r.imagenUrl.length>10&&!done){
+      var thumb=document.createElement('img');
+      thumb.src=r.imagenUrl;
+      thumb.style.cssText='width:36px;height:36px;border-radius:6px;object-fit:cover;flex-shrink:0;border:1px solid var(--bd);cursor:pointer;';
+      thumb.addEventListener('click',function(e){
+        e.stopPropagation();
+        try{mostrarFotoAmpliada(r.imagenUrl,false,'');}catch(_){window.open(r.imagenUrl,'_blank');}
+      });
+      row.appendChild(thumb);
+    }
     // Badge entrega
     if(r.fechaEvento&&!done){
       var d2=Math.ceil((new Date(r.fechaEvento+'T00:00:00')-hoy)/86400000);
@@ -11079,6 +11111,7 @@ function viewRecord(id){
   albBtn.textContent='\uD83D\uDCF7 Fotos y archivos de esta tarea';
   albBtn.onclick=function(){
     modal.remove();
+    window._albRecordId = r.id; // vincular álbum a esta tarea
     irSeccion('albumes');
     setTimeout(function(){
       _albFiltroAsig=r.tema||'';
@@ -11260,7 +11293,9 @@ function albGuardar(){
   if(!fecha)fecha=new Date().toISOString().slice(0,10);
   var _albColor=(document.getElementById('alb-color')||{}).value||'';
   var _albEmoji=(document.getElementById('alb-emoji')||{}).value||'';
-  var alb={id:'alb'+Date.now(),asig:asig,fecha:fecha,notas:notas,fotos:(_albCurrent&&_albCurrent.fotos)||[],docs:(_albCurrent&&_albCurrent.docs)||[],created:new Date().toISOString(),color:_albColor,emoji:_albEmoji};
+  var _albRecordId = window._albRecordId||'';
+  var alb={id:'alb'+Date.now(),asig:asig,fecha:fecha,notas:notas,fotos:(_albCurrent&&_albCurrent.fotos)||[],docs:(_albCurrent&&_albCurrent.docs)||[],created:new Date().toISOString(),color:_albColor,emoji:_albEmoji,recordId:_albRecordId};
+  window._albRecordId='';
   getAlbums().unshift(alb);
   if(!state.temas.includes(asig)){state.temas.push(asig);try{fillSelect('inp-tema',state.temas);}catch(e){}}
   try{persist().catch(function(){});}catch(e){}
