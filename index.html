@@ -3362,7 +3362,7 @@ body.nb-mode #nb-pill-orden { display:none !important; }
     <span class="tap-header-title" id="rec-header-title">Mis tareas</span>
     <button class="tap-header-btn" onclick="irSeccion('calificaciones')" title="Calificaciones" style="font-size:11px;font-weight:700;color:#fff;flex-direction:column;gap:1px;">
       <span style="font-size:18px;line-height:1;">📋</span>
-      <span style="font-size:8px;font-family:var(--font-main);">Notas</span>
+      <span style="font-size:6px;font-family:var(--font-main);letter-spacing:-.2px;">Calificaciones</span>
     </button>
     <button class="tap-header-btn" onclick="toggleSearch()" title="Buscar" id="btn-search">🔍</button>
     <button class="tap-header-btn" onclick="toggleFiltros()" title="Filtros" id="btn-filtros">⚙️</button>
@@ -7666,6 +7666,9 @@ function renderCarpetas(){
   window.btnBackRegistrosClick = null; // reset a tapuntoNavBack
   var btnB = document.getElementById('btn-back-registros');
   if(btnB){ btnB.style.visibility='hidden'; btnB.style.pointerEvents='none'; }
+  // Ocultar botón PDF
+  var pdfBtn2 = document.getElementById('btn-pdf-asig');
+  if(pdfBtn2) pdfBtn2.style.display='none';
 
   var tHdr = document.getElementById('rec-header-title');
   if(tHdr) tHdr.textContent = 'Mis Tareas';
@@ -7758,9 +7761,26 @@ function nbAbrirAsig(asig){
     btnB.style.pointerEvents='auto';
   }
 
-  // Título = nombre asignatura
+  // Título = nombre asignatura + botón PDF
   var tHdr = document.getElementById('rec-header-title');
   if(tHdr) tHdr.textContent = asig;
+  // Añadir botón PDF al header si no existe
+  var existPdf = document.getElementById('btn-pdf-asig');
+  if(!existPdf){
+    var tapHdr = document.querySelector('#sec-registros .tap-header');
+    if(tapHdr){
+      var pdfBtn = document.createElement('button');
+      pdfBtn.id = 'btn-pdf-asig';
+      pdfBtn.className = 'tap-header-btn';
+      pdfBtn.title = 'Exportar PDF';
+      pdfBtn.style.cssText = 'font-size:11px;font-weight:700;color:#fff;flex-direction:column;gap:1px;';
+      pdfBtn.innerHTML = '<span style="font-size:18px;line-height:1;">📄</span><span style="font-size:7px;font-family:var(--font-main);">PDF</span>';
+      pdfBtn.addEventListener('click', function(){ nbExportarPDF(window._nbAsigActiva); });
+      tapHdr.appendChild(pdfBtn);
+    }
+  } else {
+    existPdf.style.display = 'flex';
+  }
 
   // Colores
   var sch=getSch&&getSch();
@@ -7881,6 +7901,26 @@ function nbRenderInner(asig){
     ti.style.cssText='font-size:12px;font-weight:'+(done?'400':'600')+';color:'+(done?'var(--tl)':'var(--td)')+';font-family:var(--font-main);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;'+(done?'text-decoration:line-through;':'');
     ti.textContent=(r.icono?r.icono+' ':'')+(r.titulo&&r.titulo.trim()?r.titulo:r.tema||'Sin título');
     tw.appendChild(ti);
+    // Icono adjuntos si la asignatura tiene archivos en Mis Apuntes
+    var asigAlbs=(state.albums||[]).filter(function(a){return a.asig===asig;});
+    var hasFiles=asigAlbs.some(function(a){return (a.fotos&&a.fotos.length)||(a.docs&&a.docs.length);});
+    var hasImg=!!(r.imagenUrl&&r.imagenUrl.length>10);
+    if(hasFiles||hasImg){
+      var aRow=document.createElement('div');
+      aRow.style.cssText='display:flex;align-items:center;gap:3px;margin-top:2px;cursor:pointer;';
+      aRow.title='Ver archivos de '+asig;
+      aRow.innerHTML='<span style="font-size:11px;">📎</span><span style="font-size:9px;color:var(--ga);text-decoration:underline;">Archivos adjuntos</span>';
+      aRow.addEventListener('click',function(e){
+        e.stopPropagation();
+        irSeccion('albumes');
+        setTimeout(function(){
+          window._albFiltroAsig=asig;
+          renderAlbumes();
+          setTimeout(function(){try{albVerAsig(asig);}catch(_){}},150);
+        },200);
+      });
+      tw.appendChild(aRow);
+    }
 
     if(r.accion||r.fechaEvento){
       var su=document.createElement('div');
@@ -13435,6 +13475,84 @@ function nbFiltroTipoEl(btn){
 }
 
 function nbTaskClick(el){try{viewRecord&&viewRecord(el.dataset.rid);}catch(e){}}
+
+// Exportar tareas de una asignatura como PDF
+function nbExportarPDF(asig){
+  if(!asig) return;
+  var filtroTipo = window._nbFiltroTipo || '';
+  var hoy = new Date(); hoy.setHours(0,0,0,0);
+
+  var recs = (state.records||[]).filter(function(r){
+    if(r.archivado) return false;
+    if((r.tema||'Sin asignatura') !== asig) return false;
+    if(filtroTipo && (r.accion||'').toLowerCase().indexOf(filtroTipo.toLowerCase()) < 0) return false;
+    return true;
+  }).sort(function(a,b){
+    return (b.created||b.fecha||'').localeCompare(a.created||a.fecha||'');
+  });
+
+  function _fmt(s){
+    if(!s) return '—';
+    try{var d=new Date(s.length<=10?s+'T00:00:00':s);return d.getDate()+'/'+(d.getMonth()+1)+'/'+String(d.getFullYear()).slice(2);}catch(e){return s;}
+  }
+  function _e(s){ return s?String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'):''; }
+
+  var pendientes = recs.filter(function(r){return r.estado!=='resuelto';}).length;
+  var hechas = recs.filter(function(r){return r.estado==='resuelto';}).length;
+
+  var filas = recs.map(function(r){
+    var done = r.estado==='resuelto';
+    var dias = r.fechaEvento ? Math.ceil((new Date(r.fechaEvento+'T00:00:00')-hoy)/86400000) : null;
+    var urgBg = dias!==null ? (dias<=2?'#FCEBEB':dias<=7?'#FAEEDA':'#f5f5f5') : '#f5f5f5';
+    var urgColor = dias!==null ? (dias<=2?'#A32D2D':dias<=7?'#633806':'#666') : '#666';
+    var urgTxt = dias!==null ? (dias<=0?'Hoy':dias+'d') : '';
+    return '<tr style="'+(done?'opacity:.5;':'')+'background:'+(done?'#f9f9f9':'#fff')+';">'
+      +'<td style="padding:6px 8px;border-bottom:1px solid #eee;font-size:11px;color:#888;">'+_fmt(r.created||r.fecha||'')+'</td>'
+      +'<td style="padding:6px 8px;border-bottom:1px solid #eee;font-size:12px;font-weight:'+(done?'400':'600')+';color:'+(done?'#999':'#222')+';'+(done?'text-decoration:line-through;':'')+';">'
+        +(r.icono?r.icono+' ':'')+_e(r.titulo||r.tema||'Sin título')+'</td>'
+      +'<td style="padding:6px 8px;border-bottom:1px solid #eee;font-size:11px;color:#555;">'+_e(r.accion||'')+'</td>'
+      +'<td style="padding:6px 8px;border-bottom:1px solid #eee;font-size:11px;text-align:center;background:'+urgBg+';color:'+urgColor+';font-weight:700;">'+urgTxt+'</td>'
+      +'<td style="padding:6px 8px;border-bottom:1px solid #eee;font-size:11px;text-align:center;color:'+(done?'#27ae60':'#e74c3c')+';">'+(done?'✓':'○')+'</td>'
+      +'</tr>';
+  }).join('');
+
+  var fecha = new Date().toLocaleDateString('es',{day:'2-digit',month:'long',year:'numeric'});
+  var firma = typeof getFirma==='function'?getFirma():{};
+  var alumno = firma.nombre||'';
+
+  var html = '<!DOCTYPE html><html lang="es"><head><meta charset="utf-8">'
+    +'<title>Tareas — '+_e(asig)+'</title>'
+    +'<style>*{box-sizing:border-box;margin:0;padding:0;}body{font-family:Arial,sans-serif;padding:24px 32px;color:#222;font-size:13px;}'
+    +'h1{font-size:20px;color:#2D5016;margin-bottom:4px;}h2{font-size:14px;color:#555;font-weight:400;margin-bottom:16px;}'
+    +'.stats{display:flex;gap:12px;margin-bottom:20px;}'
+    +'.stat{background:#f5f5f5;border-radius:8px;padding:8px 16px;text-align:center;min-width:70px;}'
+    +'.stat-v{font-size:20px;font-weight:800;color:#2D5016;}'
+    +'.stat-l{font-size:9px;color:#888;margin-top:2px;}'
+    +'table{width:100%;border-collapse:collapse;}th{background:#2D5016;color:#fff;padding:7px 8px;text-align:left;font-size:11px;}'
+    +'.np{margin-bottom:16px;}@media print{.np{display:none;}body{padding:12px;}}'
+    +'</style></head><body>'
+    +'<div class="np"><button onclick="window.print()" style="padding:9px 20px;background:#2D5016;color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:13px;font-weight:700;margin-right:8px;">🖨 Imprimir / PDF</button>'
+    +'<button onclick="window.close()" style="padding:9px 14px;background:#eee;color:#333;border:none;border-radius:8px;cursor:pointer;">✕ Cerrar</button></div>'
+    +'<h1>📒 '+_e(asig)+'</h1>'
+    +'<h2>'+(alumno?alumno+' · ':'')+fecha+(filtroTipo?' · '+filtroTipo:'')+'</h2>'
+    +'<div class="stats">'
+      +'<div class="stat"><div class="stat-v">'+recs.length+'</div><div class="stat-l">Total</div></div>'
+      +'<div class="stat"><div class="stat-v" style="color:#e74c3c;">'+pendientes+'</div><div class="stat-l">Pendientes</div></div>'
+      +'<div class="stat"><div class="stat-v" style="color:#27ae60;">'+hechas+'</div><div class="stat-l">Hechas</div></div>'
+    +'</div>'
+    +'<table><thead><tr>'
+      +'<th style="width:60px;">Fecha</th><th>Título</th><th style="width:80px;">Tipo</th>'
+      +'<th style="width:40px;text-align:center;">Entrega</th><th style="width:30px;text-align:center;">✓</th>'
+    +'</tr></thead><tbody>'+filas+'</tbody></table>'
+    +'<div style="margin-top:20px;font-size:10px;color:#aaa;text-align:center;">Generado con Tapunto · tapunto.app</div>'
+    +'</body></html>';
+
+  var w = window.open('','_blank');
+  if(!w){ alert('Activa las ventanas emergentes para generar el PDF.'); return; }
+  w.document.write(html);
+  w.document.close();
+  w.focus();
+}
 
 </script>
 </body>
