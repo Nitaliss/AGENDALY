@@ -152,8 +152,8 @@ body[data-theme="minimal"]{
   --body-bg:#f3f4f6;}
 
 *{box-sizing:border-box;margin:0;padding:0;}
-:root{--font-main:'Nunito',sans-serif;}
-body{font-family:var(--font-main);background:var(--body-bg);min-height:100vh;
+:root{--font-main:'Nunito',sans-serif;--font-scale:1;}
+body{font-family:var(--font-main);font-size:calc(14px * var(--font-scale,1));background:var(--body-bg);min-height:100vh;
   display:flex;justify-content:center;align-items:flex-start;padding:20px 12px 40px;
   transition:background .3s;}
 
@@ -1052,7 +1052,7 @@ body[data-theme="minimal"]{
   --body-bg:#f3f4f6;}
 
 *{box-sizing:border-box;margin:0;padding:0;}
-body{font-family:var(--font-main);background:var(--body-bg);min-height:100vh;
+body{font-family:var(--font-main);font-size:calc(14px * var(--font-scale,1));background:var(--body-bg);min-height:100vh;
   display:flex;justify-content:center;align-items:flex-start;padding:20px 12px 40px;
   transition:background .3s;}
 
@@ -2867,16 +2867,20 @@ body.nb-mode #nb-pill-orden { display:none !important; }
   <!-- SECCIÓN PRÓXIMAS TAREAS — con colores de urgencia -->
   <div style="padding:6px 12px 100px;">
 
-    <!-- ACCESO RÁPIDO: Calificaciones -->
-    <button onclick="irSeccion('calificaciones')" style="width:100%;margin-bottom:8px;display:flex;align-items:center;gap:10px;padding:11px 14px;background:var(--w);border:1.5px solid var(--bd);border-radius:12px;cursor:pointer;text-align:left;font-family:var(--font-main);">
-      <span style="font-size:26px;line-height:1;flex-shrink:0;">📋</span>
-      <div style="flex:1;min-width:0;">
-        <div style="font-size:13px;font-weight:700;color:var(--td);">Calificaciones</div>
-        <div style="font-size:11px;color:var(--tl);" id="home-calif-resumen">Registro de notas y exámenes</div>
-      </div>
-      <span style="font-size:18px;color:var(--tl);">›</span>
-    </button>
-
+    <!-- FILA ACCESOS RÁPIDOS -->
+    <div style="display:flex;gap:8px;margin-bottom:8px;">
+      <button onclick="irSeccion('calendario')" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 6px;background:var(--w);border:1.5px solid var(--bd);border-radius:12px;cursor:pointer;font-family:var(--font-main);">
+        <span style="font-size:26px;line-height:1;">📅</span>
+        <div style="font-size:12px;font-weight:700;color:var(--td);">Mi Calendario</div>
+        <div style="font-size:10px;color:var(--tl);">Mensual · Semanal</div>
+      </button>
+      <button onclick="irSeccion('calificaciones')" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 6px;background:var(--w);border:1.5px solid var(--bd);border-radius:12px;cursor:pointer;font-family:var(--font-main);">
+        <span style="font-size:26px;line-height:1;">📋</span>
+        <div style="font-size:12px;font-weight:700;color:var(--td);">Mis Calificaciones</div>
+        <div style="font-size:10px;color:var(--tl);" id="home-calif-resumen">Notas y exámenes</div>
+      </button>
+    </div>
+    
     <!-- Pomodoro hoy (compacto) -->
     <div id="home-pom-strip" style="display:none;background:var(--w);border:1px solid var(--bd);border-radius:8px;padding:6px 10px;margin-bottom:8px;cursor:pointer;" onclick="irSeccion('estudio')">
       <div style="font-size:10px;font-weight:700;color:var(--tm);font-family:var(--font-main);">🕐 Pomodoro hoy</div>
@@ -3358,8 +3362,8 @@ body.nb-mode #nb-pill-orden { display:none !important; }
 
   <!-- HEADER REGISTROS -->
   <div class="tap-header">
-    <button class="tap-header-btn" id="btn-back-registros" onclick="(btnBackRegistrosClick||tapuntoNavBack)()" style="flex-direction:column;gap:1px;"><span style="font-size:22px;line-height:1;color:#fff;font-weight:900;">&#8592;</span><span style="font-size:9px;color:#fff;font-weight:700;font-family:var(--font-main);letter-spacing:.3px;">Mis tareas</span></button>
-    <span class="tap-header-title" id="rec-header-title">Mis tareas</span>
+    <button class="tap-header-btn" id="btn-back-registros" onclick="(btnBackRegistrosClick||tapuntoNavBack)()" style="flex-direction:column;gap:1px;"><span style="font-size:22px;line-height:1;color:#fff;font-weight:900;">&#8592;</span><span style="font-size:9px;color:#fff;font-weight:700;font-family:var(--font-main);letter-spacing:.3px;">Mi agenda</span></button>
+    <span class="tap-header-title" id="rec-header-title">Mi agenda</span>
     <button class="tap-header-btn" onclick="irSeccion('calificaciones')" title="Calificaciones" style="font-size:11px;font-weight:700;color:#fff;flex-direction:column;gap:1px;">
       <span style="font-size:18px;line-height:1;">📋</span>
       <span style="font-size:6px;font-family:var(--font-main);letter-spacing:-.2px;">Calificaciones</span>
@@ -3779,6 +3783,18 @@ body.nb-mode #nb-pill-orden { display:none !important; }
             <div style="margin-top:14px;">
               <div style="font-size:11px;font-weight:700;color:var(--tm);text-transform:uppercase;letter-spacing:.4px;margin-bottom:8px;">🔡 Tipografía</div>
               <div id="fonts-grid" style="display:flex;flex-direction:column;gap:6px;"></div>
+            </div>
+            <!-- Tamaño de texto -->
+            <div style="margin-top:14px;">
+              <div style="font-size:11px;font-weight:700;color:var(--tm);text-transform:uppercase;letter-spacing:.4px;margin-bottom:8px;">🔤 Tamaño de texto</div>
+              <div style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--bl);border:1px solid var(--bd);border-radius:10px;">
+                <span style="font-size:11px;color:var(--tl);">A</span>
+                <input type="range" id="font-scale-slider" min="0.85" max="1.3" step="0.05" value="1"
+                  style="flex:1;accent-color:var(--ga);"
+                  oninput="applyFontScale(this.value)" onchange="saveFontScale(this.value)"/>
+                <span style="font-size:16px;color:var(--td);">A</span>
+                <span id="font-scale-label" style="font-size:11px;color:var(--tl);min-width:28px;text-align:right;">100%</span>
+              </div>
             </div>
             <div id="custom-cover-block" style="margin-top:14px;display:none;">
               <div style="font-size:11px;font-weight:700;color:var(--tm);text-transform:uppercase;letter-spacing:.4px;margin-bottom:6px;">🖼 Imagen personalizada en portada</div>
@@ -5257,7 +5273,8 @@ resolve(canvas.toDataURL('image/jpeg',0.7));
 }
 async function syncConfigFromSheets(data){
 if(!data) return;
-if(data.theme&&data.theme!==state.theme){state.theme=data.theme;document.body.setAttribute('data-theme',state.theme);try{applyFont(state.font||'Nunito');}catch(_e){}}
+if(data.theme&&data.theme!==state.theme){state.theme=data.theme;document.body.setAttribute('data-theme',state.theme);try{applyFont(state.font||'Nunito');}catch(_e){}
+try{initFontScale();}catch(_e){}}
 if(data.firma){try{const f=JSON.parse(data.firma);if(f)localStorage.setItem('tp_firma_'+currentUser,JSON.stringify(f));}catch(e){}}
 if(data.coverImage&&data.coverImage.startsWith('data:')){state.coverImageData=data.coverImage;if(isPremium)applyCoverImage(data.coverImage);}
 await persist();
@@ -5721,6 +5738,36 @@ try{resetForm();}catch(e){}
 try{resetCalendarForm();}catch(e){}
 try{resetConfidencial();}catch(e){}
 try{updateFreeBar();}catch(e){}
+// Sugerir recordatorio ANTES de navegar
+try{
+  if(rec.fechaEvento){
+    var _dEnt=new Date(rec.fechaEvento+'T00:00:00');
+    var _hoyR=new Date();_hoyR.setHours(0,0,0,0);
+    var _diasR=Math.ceil((_dEnt-_hoyR)/86400000);
+    if(_diasR>1){
+      var _alertaD=new Date(_dEnt);
+      _alertaD.setDate(_alertaD.getDate()-1);
+      _alertaD.setHours(8,0,0,0);
+      if(_alertaD>new Date()){
+        var _fechaLabel=_alertaD.toLocaleDateString('es',{weekday:'long',day:'2-digit',month:'long'});
+        var _ok=confirm('⏰ ¿Añadir recordatorio?\n\n'
+          +(rec.icono?rec.icono+' ':'')+( rec.titulo||rec.tema||'Tarea')
+          +'\n\nTe avisaremos el '+ _fechaLabel +' a las 8:00');
+        if(_ok){
+          if(!state.recordatorios) state.recordatorios=[];
+          state.recordatorios.push({
+            id:'rem'+Date.now(),
+            fecha:_alertaD.toISOString().slice(0,16),
+            titulo:(rec.icono||'📋')+' '+(rec.titulo||rec.tema||'Tarea'),
+            asig:rec.tema||'',
+            recordId:rec.id
+          });
+          persist().catch(function(){});
+        }
+      }
+    }
+  }
+}catch(_re){}
 irSeccion('registros');
 setTimeout(function(){showToast('toast-ok');},200);
 
@@ -7287,6 +7334,7 @@ if(sb) sb.style.display='none';
 var home=document.getElementById('sec-home');
 if(home){home.classList.add('active');home.style.display='block';}
 document.body.classList.add('on-home');
+try{renderSemanaStrip&&renderSemanaStrip();}catch(_){}
 document.querySelectorAll('.bnav-btn').forEach(function(b){b.classList.remove('active');});
 var bh=document.getElementById('bnav-home'); if(bh) bh.classList.add('active');
 cerrarMas&&cerrarMas();
@@ -7368,7 +7416,7 @@ function irSeccion(tab){
 document.body.classList.remove('on-home');
 document.body.classList.remove('nb-mode');
 switchTab(tab,null);
-var titles={nuevo:'NUEVA TAREA',registros:'MIS TAREAS',recordatorios:'ALERTAS',calendario:'MI AGENDA',notas:'TO DO',config:'AJUSTES',albumes:'MIS APUNTES',estudio:'POMODORO',calificaciones:'CALIFICACIONES',rutinas:'RUTINAS',rutinas:'RUTINAS'};
+var titles={nuevo:'NUEVA TAREA',registros:'MI AGENDA',recordatorios:'ALERTAS',calendario:'MI AGENDA',notas:'TO DO',config:'AJUSTES',albumes:'MIS APUNTES',estudio:'POMODORO',calificaciones:'CALIFICACIONES',rutinas:'RUTINAS',calendario:'MI AGENDA',rutinas:'RUTINAS'};
 document.getElementById('hdr-section-title').textContent=titles[tab]||'TAPUNTO';
 /* Highlight correct nav button */
 document.querySelectorAll('.bnav-btn').forEach(function(b){b.classList.remove('active');});
@@ -7404,6 +7452,7 @@ if(tab==='notas'){if(!state.notas) state.notas=[];renderNotas();setTimeout(funct
 if(tab==='rutinas'){if(!state.rutinas) state.rutinas=[];renderRutinasHoy();}
 if(tab==='albumes'){renderAlbumes();}
 if(tab==='calificaciones'){renderCalificaciones();}
+if(tab==='calendario'){try{renderCalendario();}catch(e){}}
 }
 function filtrarEstado(estado){
 var pills=['pill-todos','pill-pendiente','pill-curso','pill-resuelto'];
@@ -7671,7 +7720,7 @@ function renderCarpetas(){
   if(pdfBtn2) pdfBtn2.style.display='none';
 
   var tHdr = document.getElementById('rec-header-title');
-  if(tHdr) tHdr.textContent = 'Mis Tareas';
+  if(tHdr) tHdr.textContent = 'Mi agenda';
 
   var sch = getSch&&getSch();
   var palette = typeof H_COLORS_EXT!=='undefined'?H_COLORS_EXT:H_COLORS;
@@ -7718,7 +7767,7 @@ function renderCarpetas(){
     +'<div style="position:absolute;left:22px;top:0;bottom:0;width:1.5px;background:#FFB3B3;pointer-events:none;"></div>'
     +'<div style="position:relative;z-index:1;text-align:center;">'
     +'<div style="font-size:64px;margin-bottom:8px;filter:drop-shadow(0 4px 8px rgba(0,0,0,.15));">📒</div>'
-    +'<div style="font-size:28px;font-weight:900;color:var(--gd);font-family:var(--font-main);letter-spacing:-.5px;">Mis Tareas</div>'
+    +'<div style="font-size:28px;font-weight:900;color:var(--gd);font-family:var(--font-main);letter-spacing:-.5px;">Mi agenda</div>'
     +'<div style="width:50px;height:2px;background:var(--ga);border-radius:2px;margin:8px auto;"></div>'
     +'<div style="font-size:12px;color:var(--tl);font-family:var(--font-main);margin-bottom:20px;">'+fechaStr+'</div>'
     // Badge urgente
@@ -8939,6 +8988,7 @@ document.getElementById('user-greet').textContent='Hola, '+_dispName.charAt(0).t
 document.getElementById('cfg-email').textContent=currentUser;
 document.body.setAttribute('data-theme',state.theme||'azul');
 try{applyFont(state.font||'Nunito');}catch(_e){}
+try{initFontScale();}catch(_e){}
 await _cp();
 if(state.coverImageData&&isPremium) applyCoverImage(state.coverImageData);
 if(state.sheetsUrl){
@@ -10001,32 +10051,66 @@ if(panel){panel.style.display='block';panel.scrollIntoView({behavior:'smooth',bl
 var _origCancelEdit=cancelEdit;
 function dictarCampo(campoId,btn){
 var SR=window.SpeechRecognition||window.webkitSpeechRecognition;
-if(!SR){alert('Usa Chrome para el dictado.');return;}
+if(!SR){alert('Dictado no disponible. Usa Chrome o Edge.');return;}
 var isTA=document.getElementById(campoId).tagName==='TEXTAREA';
 var orig=btn.innerHTML;
-var done=false;
-function restore(){if(!done){done=true;btn.innerHTML=orig;btn.style.background='var(--gm)';}}
-btn.innerHTML='⏹';btn.style.background='#c53030';
-var sr=new SR();sr.lang='es-ES';sr.continuous=false;sr.interimResults=false;sr.maxAlternatives=1;
-sr.onresult=function(e){
-if(!e.results||!e.results.length) return;
-var result=e.results[e.results.length-1];
-if(!result.isFinal) return;
-var t=result[0].transcript.trim();
-if(!t) return;
-var el=document.getElementById(campoId);
-if(isTA){
-el.value=el.value?(el.value+' '+t):t;
-}else{
-var v=t.charAt(0).toUpperCase()+t.slice(1);
-el.value=v;
-if(campoId==='inp-tema'&&!state.temas.includes(v)){state.temas.push(v);fillSelect('inp-tema',state.temas);}
-if(campoId==='inp-contacto'&&!state.contactos.includes(v)){state.contactos.push(v);fillSelect('inp-contacto',state.contactos);}
+var finalizado=false; // bandera para evitar procesar más de una vez
+var textoProcesado=false;
+function restore(){
+  if(finalizado) return;
+  finalizado=true;
+  btn.innerHTML=orig;
+  btn.style.background='var(--gm)';
 }
-restore();
+btn.innerHTML='⏹';btn.style.background='#c53030';
+// Click en botón = parar
+btn.onclick=function(e){
+  e.stopPropagation();
+  try{sr.stop();}catch(_){}
+  btn.onclick=null; // restaurar onclick original
 };
-sr.onerror=function(){restore();};
-sr.onend=function(){restore();};
+var sr=new SR();
+sr.lang='es-ES';
+sr.continuous=false;
+sr.interimResults=false;
+sr.maxAlternatives=1;
+sr.onresult=function(e){
+  if(textoProcesado) return; // evitar doble procesado
+  if(!e.results||!e.results.length) return;
+  // Buscar el primer resultado final
+  var t='';
+  for(var i=0;i<e.results.length;i++){
+    if(e.results[i].isFinal){
+      t=e.results[i][0].transcript.trim();
+      break;
+    }
+  }
+  if(!t) return;
+  textoProcesado=true;
+  var el=document.getElementById(campoId);
+  if(!el) return;
+  if(isTA){
+    // Textarea: añadir al final con espacio
+    var prev=el.value?el.value.trimEnd():'';
+    el.value=prev?(prev+' '+t):t;
+  }else{
+    // Input: reemplazar valor completo
+    var v=t.charAt(0).toUpperCase()+t.slice(1);
+    el.value=v;
+    if(campoId==='inp-tema'&&state.temas&&!state.temas.includes(v)){state.temas.push(v);try{fillSelect('inp-tema',state.temas);}catch(_){}}
+    if(campoId==='inp-contacto'&&state.contactos&&!state.contactos.includes(v)){state.contactos.push(v);try{fillSelect('inp-contacto',state.contactos);}catch(_){}}
+  }
+  try{sr.stop();}catch(_){}
+  restore();
+};
+sr.onerror=function(e){
+  console.warn('Dictado error:',e.error);
+  restore();
+};
+sr.onend=function(){
+  restore();
+  btn.onclick=null;
+};
 try{sr.start();}catch(e){restore();}
 }
 function cancelEdit(){
@@ -10297,8 +10381,10 @@ splash.classList.remove('fade-out');
 // En este punto el splash ya no existe y sec-home es completamente visible
 renderHorarioHome();
 renderAlertas();
+try{renderSemanaStrip&&renderSemanaStrip();}catch(_){}
 renderResumen&&renderResumen();
 setTimeout(function(){ renderProximasTareas&&renderProximasTareas(); }, 50);
+setTimeout(function(){ try{renderSemanaStrip();}catch(e){}}, 80);
 setTimeout(function(){ try{renderCalificaciones&&renderCalificaciones();}catch(e){} }, 100);
 },520);
 }
@@ -12502,7 +12588,7 @@ function pomSetSound(type){
     <span class="bnav-ico">&#127968;</span><span class="bnav-lbl">Inicio</span>
   </button>
   <button class="bnav-btn" id="bnav-tareas" onclick="irSeccion('registros')">
-    <span class="bnav-ico">&#128203;</span><span class="bnav-lbl">Mis tareas</span>
+    <span class="bnav-ico">&#128203;</span><span class="bnav-lbl">Mi agenda</span>
   </button>
   <div style="width:54px;flex-shrink:0;" aria-hidden="true"></div>
   <button class="bnav-btn" id="bnav-todo" onclick="irSeccion('notas')">
@@ -13587,6 +13673,69 @@ function nbExportarPDF(asig){
   w.document.write(html);
   w.document.close();
   w.focus();
+}
+
+// ── Tamaño de texto ──
+function applyFontScale(val){
+  var v=parseFloat(val)||1;
+  document.documentElement.style.setProperty('--font-scale', v);
+  var lbl=document.getElementById('font-scale-label');
+  if(lbl) lbl.textContent=Math.round(v*100)+'%';
+}
+function saveFontScale(val){
+  var v=parseFloat(val)||1;
+  state.fontScale=v;
+  try{persist();}catch(e){}
+}
+function initFontScale(){
+  var v=state.fontScale||1;
+  document.documentElement.style.setProperty('--font-scale',v);
+  var sl=document.getElementById('font-scale-slider');
+  if(sl) sl.value=v;
+  var lbl=document.getElementById('font-scale-label');
+  if(lbl) lbl.textContent=Math.round(v*100)+'%';
+}
+
+// ── Vista semanal en home ──
+function renderSemanaStrip(){
+  var strip = document.getElementById('home-semana-strip');
+  if(!strip) return;
+  var hoy = new Date(); hoy.setHours(0,0,0,0);
+  var diasNom = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
+  var dias = [];
+  // Lunes de esta semana
+  var lunes = new Date(hoy);
+  var dow = hoy.getDay(); // 0=dom
+  lunes.setDate(hoy.getDate() - (dow===0?6:dow-1));
+  for(var i=0;i<5;i++){
+    var d = new Date(lunes); d.setDate(lunes.getDate()+i);
+    dias.push(d);
+  }
+  strip.innerHTML='';
+  dias.forEach(function(d){
+    var esHoy = d.getTime()===hoy.getTime();
+    var fStr = d.toISOString().slice(0,10);
+    // Tareas con fecha en este día
+    var tareas = (state.records||[]).filter(function(r){
+      return !r.archivado && r.fechaEvento===fStr;
+    });
+    var urgente = tareas.some(function(r){return r.estado!=='resuelto';});
+    var col = document.createElement('div');
+    col.style.cssText = 'flex-shrink:0;width:52px;border-radius:10px;padding:6px 4px;text-align:center;cursor:pointer;'
+      +'background:'+(esHoy?'var(--gd)':'var(--bl)')+';'
+      +'border:1.5px solid '+(esHoy?'var(--ga)':'var(--bd)')+';';
+    col.innerHTML = '<div style="font-size:9px;font-weight:700;color:'+(esHoy?'rgba(255,255,255,.8)':'var(--tl)')+';">'+diasNom[d.getDay()]+'</div>'
+      +'<div style="font-size:16px;font-weight:800;color:'+(esHoy?'#fff':'var(--td)')+';">'+d.getDate()+'</div>'
+      +(tareas.length?'<div style="margin-top:3px;"><span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:'+(urgente?'#E24B4A':'var(--ga)')+'"></span></div>':'<div style="height:9px;"></div>');
+    col.addEventListener('click',function(fecha){
+      return function(){
+        // Ir a Mis Tareas filtrando por esa fecha
+        irSeccion('registros');
+        window._nbFiltroFecha = fecha;
+      };
+    }(fStr));
+    strip.appendChild(col);
+  });
 }
 
 </script>
