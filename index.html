@@ -2454,33 +2454,41 @@ body.nb-mode #nb-pill-orden { display:none !important; }
   position:sticky;top:0;left:22px;width:1.5px;height:100vh;
   background:#FFB3B3;float:left;margin-right:6px;flex-shrink:0;
 }
-.nb-content-area{padding:8px 10px 100px 32px;}
+.nb-content-area{padding:8px 10px 100px 32px;position:relative;}
+/* Sin efecto de paso de página */
 
 /* Separadores laterales */
 .nb-tabs-wrap{
-  display:flex;flex-direction:column;padding-top:10px;gap:3px;
+  display:flex;flex-direction:column;padding-top:6px;gap:3px;
   flex-shrink:0;background:var(--bl);border-left:1px solid var(--bd);
-  min-width:34px;
-}
-@media(min-width:600px){
-  .nb-tab-btn{padding:16px 8px;font-size:12px;min-width:36px;min-height:60px;}
-  .nb-tab-btn.nb-active{padding:18px 10px;min-width:42px;}
-  .nb-tabs-wrap{min-width:42px;}
+  min-width:42px;overflow-y:auto;
 }
 .nb-tab-btn{
   writing-mode:vertical-rl;text-orientation:mixed;transform:rotate(180deg);
-  padding:14px 6px;font-size:10px;font-weight:700;color:#fff;
-  cursor:pointer;border-radius:8px 0 0 8px;white-space:nowrap;
-  transition:all .15s;letter-spacing:.3px;min-height:52px;
-  min-width:28px;
+  padding:12px 7px;font-size:10px;font-weight:700;color:#fff;
+  cursor:pointer;border-radius:8px 0 0 8px;
+  white-space:normal;word-break:break-all;
+  transition:all .15s;letter-spacing:.2px;min-height:54px;
+  min-width:42px;width:42px;
   display:flex;align-items:center;justify-content:center;
+  text-align:center;line-height:1.25;
   border:none;font-family:var(--font-main);
-  opacity:.8;
+  opacity:.82;flex-shrink:0;
 }
 .nb-tab-btn.nb-active{
-  opacity:1;padding:16px 8px;font-size:11px;
-  box-shadow:-4px 0 10px rgba(0,0,0,.2);
-  position:relative;z-index:1;min-width:34px;
+  opacity:1;
+  box-shadow:-3px 0 10px rgba(0,0,0,.25);
+  position:relative;z-index:1;
+  width:50px;min-width:50px;
+}
+.nb-tab-mas{
+  font-size:18px;letter-spacing:0;min-height:40px;opacity:.9;
+  background:rgba(0,0,0,.25) !important;
+}
+@media(min-width:600px){
+  .nb-tabs-wrap{min-width:48px;}
+  .nb-tab-btn{font-size:11px;min-width:48px;width:48px;min-height:60px;}
+  .nb-tab-btn.nb-active{width:56px;min-width:56px;}
 }
 
 /* Tareas dentro del cuaderno */
@@ -2501,6 +2509,27 @@ body.nb-mode #nb-pill-orden { display:none !important; }
 }
 .nb-empty-lines{opacity:.2;}
 .nb-empty-line{height:28px;border-bottom:1px solid #d8eed0;}
+
+/* ── Mi Libreta ── */
+.lib-tool{
+  padding:3px 7px;border-radius:6px;border:1px solid var(--bd);
+  font-size:13px;cursor:pointer;background:transparent;
+  color:var(--td);font-family:var(--font-main);transition:all .12s;
+}
+.lib-tool.active,.lib-tool:active{background:var(--gd);color:#fff;border-color:var(--gd);}
+.lib-color{
+  width:20px;height:20px;border-radius:50%;cursor:pointer;
+  border:2px solid transparent;transition:transform .1s;flex-shrink:0;
+}
+.lib-color.active{border-color:#333;transform:scale(1.25);}
+.lib-size{
+  background:none;border:1px solid transparent;border-radius:6px;
+  cursor:pointer;color:var(--td);padding:2px;transition:all .12s;
+}
+.lib-size.active{border-color:var(--gd);background:var(--bl);}
+#sec-libreta{display:flex;flex-direction:column;height:100%;overflow:hidden;}
+#lib-canvas-wrap{flex:1;overflow:hidden;}
+#lib-canvas{width:100%;height:100%;}
 </style>
 <script>(function(){try{if(localStorage.getItem('tp_dark_mode')==='1')document.documentElement.style.background='#1a1a2e';}catch(e){};}());</script>
 </head>
@@ -2881,6 +2910,16 @@ body.nb-mode #nb-pill-orden { display:none !important; }
       </button>
     </div>
     
+    <!-- ACCESO RÁPIDO: Mi Libreta -->
+    <button onclick="irSeccion('libreta')" style="width:100%;margin-bottom:8px;display:flex;align-items:center;gap:10px;padding:11px 14px;background:var(--w);border:1.5px solid var(--bd);border-radius:12px;cursor:pointer;text-align:left;font-family:var(--font-main);">
+      <span style="font-size:26px;line-height:1;flex-shrink:0;">📓</span>
+      <div style="flex:1;min-width:0;">
+        <div style="font-size:13px;font-weight:700;color:var(--td);">Mi Libreta</div>
+        <div style="font-size:11px;color:var(--tl);">Dibujar · Escribir · Guardar por día</div>
+      </div>
+      <span style="font-size:18px;color:var(--tl);">›</span>
+    </button>
+
     <!-- Pomodoro hoy (compacto) -->
     <div id="home-pom-strip" style="display:none;background:var(--w);border:1px solid var(--bd);border-radius:8px;padding:6px 10px;margin-bottom:8px;cursor:pointer;" onclick="irSeccion('estudio')">
       <div style="font-size:10px;font-weight:700;color:var(--tm);font-family:var(--font-main);">🕐 Pomodoro hoy</div>
@@ -3015,13 +3054,101 @@ body.nb-mode #nb-pill-orden { display:none !important; }
     </select>
   </div>
 
-  <!-- Stats resumen -->
-  <div id="calif-stats" style="display:flex;gap:6px;padding:8px 12px;background:var(--bp);border-bottom:1px solid var(--bd);overflow-x:auto;"></div>
+  <!-- Stats eliminados -->
 
   <!-- Lista -->
   <div id="calif-lista" style="padding:8px 12px 100px;overflow-y:auto;"></div>
 </div><!-- /sec-calificaciones -->
 
+
+<!-- ══ MI LIBRETA ══ -->
+<div id="sec-libreta" class="section">
+  <div class="tap-header">
+    <button class="tap-header-btn" onclick="irHome()" style="flex-direction:column;gap:1px;">
+      <span style="font-size:22px;line-height:1;color:#fff;font-weight:900;">&#8592;</span>
+      <span style="font-size:9px;color:#fff;font-weight:700;font-family:var(--font-main);">Inicio</span>
+    </button>
+    <span class="tap-header-title">📓 Mi Libreta</span>
+    <div style="display:flex;gap:2px;">
+      <button class="tap-header-btn" id="lib-btn-add" onclick="libNuevaPagina()" title="Nueva página" style="font-size:18px;">➕</button>
+      <button class="tap-header-btn" id="lib-btn-export" onclick="libExportar()" title="Exportar" style="font-size:18px;">📤</button>
+    </div>
+  </div>
+
+  <!-- Toolbar herramientas -->
+  <div id="lib-toolbar" style="display:flex;align-items:center;gap:4px;padding:5px 8px;background:var(--w);border-bottom:1px solid var(--bd);overflow-x:auto;flex-wrap:wrap;">
+    <!-- Herramientas -->
+    <button class="lib-tool active" id="lt-lapiz"    onclick="libSetTool('lapiz',this)"   title="Lápiz">✏️</button>
+    <button class="lib-tool"        id="lt-boli"     onclick="libSetTool('boli',this)"    title="Bolígrafo">🖊</button>
+    <button class="lib-tool"        id="lt-text"     onclick="libSetTool('texto',this)"   title="Texto">T</button>
+    <button class="lib-tool"        id="lt-emoji"    onclick="libInsertarEmoji()"         title="Emoji">😊</button>
+    <button class="lib-tool"        id="lt-borrador" onclick="libSetTool('borrador',this)"title="Borrador">🧹</button>
+    <button class="lib-tool"        id="lt-undo"     onclick="libUndo()"                  title="Deshacer">↩</button>
+    <div style="width:1px;height:20px;background:var(--bd);margin:0 2px;flex-shrink:0;"></div>
+    <!-- Colores -->
+    <div id="lib-colores" style="display:flex;gap:3px;align-items:center;">
+      <div class="lib-color active" style="background:#1a1a1a;" data-color="#1a1a1a" onclick="libSetColor('#1a1a1a',this)"></div>
+      <div class="lib-color" style="background:#e74c3c;" data-color="#e74c3c" onclick="libSetColor('#e74c3c',this)"></div>
+      <div class="lib-color" style="background:#2980b9;" data-color="#2980b9" onclick="libSetColor('#2980b9',this)"></div>
+      <div class="lib-color" style="background:#27ae60;" data-color="#27ae60" onclick="libSetColor('#27ae60',this)"></div>
+      <div class="lib-color" style="background:#f39c12;" data-color="#f39c12" onclick="libSetColor('#f39c12',this)"></div>
+      <div class="lib-color" style="background:#8e44ad;" data-color="#8e44ad" onclick="libSetColor('#8e44ad',this)"></div>
+      <input type="color" id="lib-color-custom" value="#1a1a1a" onchange="libSetColor(this.value,null)"
+        style="width:22px;height:22px;border:none;border-radius:50%;padding:0;cursor:pointer;background:none;">
+    </div>
+    <div style="width:1px;height:20px;background:var(--bd);margin:0 2px;flex-shrink:0;"></div>
+    <!-- Grosores -->
+    <button class="lib-size" data-size="2"  onclick="libSetSize(2,this)"  style="width:26px;height:20px;display:flex;align-items:center;justify-content:center;"><div style="width:16px;height:2px;background:currentColor;border-radius:2px;"></div></button>
+    <button class="lib-size active" data-size="4" onclick="libSetSize(4,this)" style="width:26px;height:20px;display:flex;align-items:center;justify-content:center;"><div style="width:16px;height:4px;background:currentColor;border-radius:2px;"></div></button>
+    <button class="lib-size" data-size="8"  onclick="libSetSize(8,this)"  style="width:26px;height:20px;display:flex;align-items:center;justify-content:center;"><div style="width:16px;height:8px;background:currentColor;border-radius:3px;"></div></button>
+    <div style="width:1px;height:20px;background:var(--bd);margin:0 2px;flex-shrink:0;"></div>
+    <!-- Fondo -->
+    <button class="lib-tool" onclick="libCambiarFondo()" title="Fondo" style="font-size:10px;padding:3px 6px;">🎨 Fondo</button>
+  </div>
+
+  <!-- Navegación páginas -->
+  <div id="lib-nav-pag" style="display:flex;align-items:center;justify-content:space-between;padding:4px 10px;background:var(--bp);border-bottom:1px solid var(--bd);font-size:11px;font-family:var(--font-main);color:var(--tl);">
+    <button onclick="libPagAnterior()" style="background:none;border:none;font-size:16px;cursor:pointer;color:var(--tl);padding:2px 6px;">‹</button>
+    <span id="lib-pag-label">Página 1</span>
+    <button onclick="libPagSiguiente()" style="background:none;border:none;font-size:16px;cursor:pointer;color:var(--tl);padding:2px 6px;">›</button>
+  </div>
+
+  <!-- Canvas -->
+  <div id="lib-canvas-wrap" style="flex:1;overflow:hidden;position:relative;touch-action:none;">
+    <canvas id="lib-canvas" style="display:block;touch-action:none;cursor:crosshair;"></canvas>
+  </div>
+
+  <!-- Input texto flotante (oculto) -->
+  <div id="lib-text-input-wrap" style="display:none;position:absolute;z-index:200;">
+    <textarea id="lib-text-input" rows="2"
+      style="background:rgba(255,255,255,.92);border:2px dashed var(--ga);border-radius:6px;padding:4px 8px;font-size:16px;font-family:var(--font-main);color:#222;resize:none;min-width:140px;outline:none;"
+      placeholder="Escribe aquí..."></textarea>
+    <div style="display:flex;gap:4px;margin-top:3px;">
+      <button onclick="libConfirmarTexto()" style="flex:1;background:var(--gd);color:#fff;border:none;border-radius:6px;padding:4px;font-size:12px;cursor:pointer;">✓ OK</button>
+      <button onclick="libCancelarTexto()" style="flex:1;background:var(--bd);color:var(--td);border:none;border-radius:6px;padding:4px;font-size:12px;cursor:pointer;">✕</button>
+    </div>
+  </div>
+
+  <!-- Panel fondo -->
+  <div id="lib-fondo-panel" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:500;align-items:flex-end;">
+    <div style="background:var(--w);width:100%;border-radius:18px 18px 0 0;padding:16px 16px 32px;">
+      <div style="font-size:13px;font-weight:700;color:var(--td);margin-bottom:12px;font-family:var(--font-main);">🎨 Fondo de página</div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px;">
+        <button onclick="libSetFondo('rayas')" class="lib-fondo-btn" style="padding:10px;border-radius:10px;border:1.5px solid var(--bd);background:#fffef8;font-size:11px;font-family:var(--font-main);">📓 Rayas</button>
+        <button onclick="libSetFondo('cuadros')" class="lib-fondo-btn" style="padding:10px;border-radius:10px;border:1.5px solid var(--bd);background:#f8f9ff;font-size:11px;font-family:var(--font-main);">⬜ Cuadros</button>
+        <button onclick="libSetFondo('puntos')" class="lib-fondo-btn" style="padding:10px;border-radius:10px;border:1.5px solid var(--bd);background:#fff;font-size:11px;font-family:var(--font-main);">· · Puntos</button>
+        <button onclick="libSetFondo('blanco')" class="lib-fondo-btn" style="padding:10px;border-radius:10px;border:1.5px solid var(--bd);background:#fff;font-size:11px;font-family:var(--font-main);">⬜ Blanco</button>
+        <button onclick="libSetFondo('negro')" class="lib-fondo-btn" style="padding:10px;border-radius:10px;border:1.5px solid var(--bd);background:#1a1a1a;color:#fff;font-size:11px;font-family:var(--font-main);">⬛ Negro</button>
+        <button onclick="libSetFondo('kraft')" class="lib-fondo-btn" style="padding:10px;border-radius:10px;border:1.5px solid var(--bd);background:#d4a574;font-size:11px;font-family:var(--font-main);">📦 Kraft</button>
+      </div>
+      <div style="font-size:11px;color:var(--tl);margin-bottom:6px;font-family:var(--font-main);">Color personalizado:</div>
+      <input type="color" id="lib-fondo-color" value="#fffef8" onchange="libSetFondo('custom',this.value)"
+        style="width:100%;height:36px;border:none;border-radius:10px;cursor:pointer;padding:2px;">
+      <button onclick="document.getElementById('lib-fondo-panel').style.display='none'"
+        style="width:100%;margin-top:10px;padding:10px;background:var(--bd);border:none;border-radius:10px;font-size:13px;cursor:pointer;font-family:var(--font-main);">Cerrar</button>
+    </div>
+  </div>
+</div><!-- /sec-libreta -->
 
 <!-- ══ MI ESTUDIO ══ -->
 <div id="sec-estudio" class="section">
@@ -7324,7 +7451,7 @@ function initNotificaciones(){
 /* ══ FIN NOTIFICACIONES ══ */
 
 function irHome(){
-var secs=['home','nuevo','registros','recordatorios','calendario','notas','config','albumes','estudio','calificaciones','rutinas'];
+var secs=['home','nuevo','registros','recordatorios','calendario','notas','config','albumes','estudio','calificaciones','rutinas','libreta'];
 secs.forEach(function(s){
 var el=document.getElementById('sec-'+s);
 if(el){el.classList.remove('active');el.style.display='none';}
@@ -7416,7 +7543,7 @@ function irSeccion(tab){
 document.body.classList.remove('on-home');
 document.body.classList.remove('nb-mode');
 switchTab(tab,null);
-var titles={nuevo:'NUEVA TAREA',registros:'MI AGENDA',recordatorios:'ALERTAS',calendario:'MI AGENDA',notas:'TO DO',config:'AJUSTES',albumes:'MIS APUNTES',estudio:'POMODORO',calificaciones:'CALIFICACIONES',rutinas:'RUTINAS',calendario:'MI AGENDA',rutinas:'RUTINAS'};
+var titles={nuevo:'NUEVA TAREA',registros:'MI AGENDA',recordatorios:'ALERTAS',calendario:'MI AGENDA',notas:'TO DO',config:'AJUSTES',albumes:'MIS APUNTES',estudio:'POMODORO',calificaciones:'CALIFICACIONES',rutinas:'RUTINAS',calendario:'MI AGENDA',libreta:'MI LIBRETA',rutinas:'RUTINAS'};
 document.getElementById('hdr-section-title').textContent=titles[tab]||'TAPUNTO';
 /* Highlight correct nav button */
 document.querySelectorAll('.bnav-btn').forEach(function(b){b.classList.remove('active');});
@@ -7453,6 +7580,7 @@ if(tab==='rutinas'){if(!state.rutinas) state.rutinas=[];renderRutinasHoy();}
 if(tab==='albumes'){renderAlbumes();}
 if(tab==='calificaciones'){renderCalificaciones();}
 if(tab==='calendario'){try{renderCalendario();}catch(e){}}
+if(tab==='libreta'){try{libInit();}catch(e){}}
 }
 function filtrarEstado(estado){
 var pills=['pill-todos','pill-pendiente','pill-curso','pill-resuelto'];
@@ -7780,13 +7908,27 @@ function renderCarpetas(){
     +'</div>'
     +'</div>';
 
-  // Separadores
+  // Separadores con paginación si hay muchas asignaturas
+  var MAX_TABS = 6;
+  var _nbTabPag = window._nbTabPag || 0;
+  window._nbTabPag = _nbTabPag;
+  var visibles = asigs.slice(_nbTabPag * MAX_TABS, (_nbTabPag + 1) * MAX_TABS);
+  var hayMas = asigs.length > (_nbTabPag + 1) * MAX_TABS;
+  var hayAntes = _nbTabPag > 0;
   var tabsHTML='';
-  asigs.forEach(function(asig){
+  if(hayAntes){
+    tabsHTML+='<button class="nb-tab-btn nb-tab-mas" onclick="nbTabPagina(-1)" title="Anteriores">▲</button>';
+  }
+  visibles.forEach(function(asig){
     var solid=_darkColor(_getColor(asig));
+    // Truncar a 2 palabras / 10 chars por línea
+    var nombre=asig.length>12?asig.slice(0,10)+'…':asig;
     tabsHTML+='<button class="nb-tab-btn" data-asig="'+asig.replace(/"/g,'&quot;')+'" '
-      +'style="background:'+solid+';" onclick="nbAbrirAsig(this.dataset.asig)">'+asig.slice(0,12)+'</button>';
+      +'style="background:'+solid+';" onclick="nbAbrirAsig(this.dataset.asig)">'+nombre+'</button>';
   });
+  if(hayMas){
+    tabsHTML+='<button class="nb-tab-btn nb-tab-mas" onclick="nbTabPagina(1)" title="Más asignaturas">▼</button>';
+  }
 
   el.innerHTML='<div class="nb-libreta-wrap">'
     +'<div class="nb-page-area" id="nb-page-area" style="overflow-y:auto;">'+portadaHTML+'</div>'
@@ -7848,13 +7990,29 @@ function nbAbrirAsig(asig){
     .sort(function(a,b){return a.localeCompare(b);});
 
   // Siempre reconstruir la libreta completa
+  var MAX_TABS2=6;
+  var _pag2=window._nbTabPag||0;
+  // Asegurar que la asig activa sea visible
+  var idxAsig=asigs.indexOf(asig);
+  if(idxAsig>=0) _pag2=Math.floor(idxAsig/MAX_TABS2);
+  window._nbTabPag=_pag2;
+  var visibles2=asigs.slice(_pag2*MAX_TABS2,(_pag2+1)*MAX_TABS2);
+  var hayMas2=asigs.length>(_pag2+1)*MAX_TABS2;
+  var hayAntes2=_pag2>0;
   var tabsHTML='';
-  asigs.forEach(function(a){
+  if(hayAntes2){
+    tabsHTML+='<button class="nb-tab-btn nb-tab-mas" onclick="nbTabPagina(-1)" title="Anteriores">▲</button>';
+  }
+  visibles2.forEach(function(a){
     var solid=_darkColor(_getColor(a));
     var active=a===asig;
+    var nombre=a.length>12?a.slice(0,10)+'…':a;
     tabsHTML+='<button class="nb-tab-btn'+(active?' nb-active':'')+'" data-asig="'+a.replace(/"/g,'&quot;')+'" '
-      +'style="background:'+solid+';" onclick="nbAbrirAsig(this.dataset.asig)">'+a.slice(0,12)+'</button>';
+      +'style="background:'+solid+';" onclick="nbAbrirAsig(this.dataset.asig)">'+nombre+'</button>';
   });
+  if(hayMas2){
+    tabsHTML+='<button class="nb-tab-btn nb-tab-mas" onclick="nbTabPagina(1)" title="Más asignaturas">▼</button>';
+  }
 
   el.innerHTML='<div class="nb-libreta-wrap">'
     +'<div class="nb-page-area" id="nb-page-area" style="overflow-y:auto;">'
@@ -7871,6 +8029,7 @@ function nbAbrirAsig(asig){
 function nbRenderInner(asig){
   var inner=document.getElementById('nb-inner-content');
   if(!inner) return;
+
   var filtroTipo=window._nbFiltroTipo||'';
   var hoy=new Date(); hoy.setHours(0,0,0,0);
 
@@ -13194,32 +13353,8 @@ function renderCalificaciones(){
     return (b.fechaEvento||b.fecha||'').localeCompare(a.fechaEvento||a.fecha||''); // fecha-desc
   });
 
-  // ── Stats ──
-  if(stats){
-    var conNota   = recs.filter(function(r){ return r.calificacion && r.calificacion !== ''; });
-    var notas     = conNota.map(function(r){ return parseFloat(r.calificacion); }).filter(function(n){ return !isNaN(n); });
-    var media     = notas.length ? (notas.reduce(function(a,b){return a+b;},0)/notas.length) : null;
-    var aprobados = notas.filter(function(n){return n>=5;}).length;
-    var suspensos = notas.filter(function(n){return n<5;}).length;
-    stats.innerHTML =
-      '<div style="flex-shrink:0;background:var(--w);border:1px solid var(--bd);border-radius:8px;padding:5px 12px;text-align:center;">'
-        +'<div style="font-size:18px;font-weight:700;color:var(--gd);font-family:var(--font-main);">'+recs.length+'</div>'
-        +'<div style="font-size:9px;color:var(--tl);">Total</div></div>'
-      +'<div style="flex-shrink:0;background:var(--w);border:1px solid var(--bd);border-radius:8px;padding:5px 12px;text-align:center;">'
-        +'<div style="font-size:18px;font-weight:700;color:'+(media!==null&&media>=5?'#27ae60':'var(--tl)')+';font-family:var(--font-main);">'+(media!==null?media.toFixed(1):'—')+'</div>'
-        +'<div style="font-size:9px;color:var(--tl);">Media</div></div>'
-      +'<div style="flex-shrink:0;background:#EAF3DE;border:1px solid #C0DD97;border-radius:8px;padding:5px 12px;text-align:center;">'
-        +'<div style="font-size:18px;font-weight:700;color:#27500A;font-family:var(--font-main);">'+aprobados+'</div>'
-        +'<div style="font-size:9px;color:#3B6D11;">✓ Aprob.</div></div>'
-      +(suspensos>0?'<div style="flex-shrink:0;background:#FCEBEB;border:1px solid #F7C1C1;border-radius:8px;padding:5px 12px;text-align:center;">'
-        +'<div style="font-size:18px;font-weight:700;color:#A32D2D;font-family:var(--font-main);">'+suspensos+'</div>'
-        +'<div style="font-size:9px;color:#791F1F;">✗ Susp.</div></div>':'')
-      +'<div style="flex-shrink:0;background:var(--bp);border:1px solid var(--bd);border-radius:8px;padding:5px 12px;text-align:center;">'
-        +'<div style="font-size:18px;font-weight:700;color:var(--tl);font-family:var(--font-main);">'+(recs.length-conNota.length)+'</div>'
-        +'<div style="font-size:9px;color:var(--tl);">Sin nota</div></div>';
-  }
-
-  // ── Resumen en home ──
+  // Stats eliminados
+    // ── Resumen en home ──
   try{
     var hcr=document.getElementById('home-calif-resumen');
     if(hcr){
@@ -13736,6 +13871,395 @@ function renderSemanaStrip(){
     }(fStr));
     strip.appendChild(col);
   });
+}
+
+// Paginar separadores de la libreta
+function nbTabPagina(dir){
+  window._nbTabPag = Math.max(0, (window._nbTabPag||0) + dir);
+  // Rerenderizar con la asignatura activa actual
+  var asig = window._nbAsigActiva;
+  if(asig) nbAbrirAsig(asig);
+  else renderCarpetas();
+}
+
+// ════════════════════════════════════════════════════
+// MI LIBRETA — Canvas táctil con páginas por día
+// ════════════════════════════════════════════════════
+
+var _lib = {
+  paginas: [],       // array de {fecha, fondo, trazos[], textos[], dataURL}
+  pagActual: 0,
+  herramienta: 'lapiz',
+  color: '#1a1a1a',
+  grosor: 4,
+  fondo: 'rayas',
+  dibujando: false,
+  trazoActual: [],
+  historial: [],     // para undo
+  textoPendX: 0,
+  textoPendY: 0,
+};
+
+function libInit(){
+  // Cargar páginas guardadas
+  try{
+    var saved = localStorage.getItem('tp_libreta');
+    if(saved) _lib.paginas = JSON.parse(saved);
+  }catch(e){}
+
+  // Si no hay páginas, crear una para hoy
+  if(!_lib.paginas.length) libNuevaPagina(true);
+
+  // Ir a la página de hoy si existe
+  var hoy = new Date().toISOString().slice(0,10);
+  var idxHoy = _lib.paginas.findIndex(function(p){return p.fecha===hoy;});
+  _lib.pagActual = idxHoy >= 0 ? idxHoy : _lib.paginas.length - 1;
+
+  libIniciarCanvas();
+  libRenderPagina();
+  libActualizarNavPag();
+}
+
+function libIniciarCanvas(){
+  var wrap = document.getElementById('lib-canvas-wrap');
+  var canvas = document.getElementById('lib-canvas');
+  if(!canvas||!wrap) return;
+
+  // Tamaño
+  canvas.width  = wrap.clientWidth  || window.innerWidth;
+  canvas.height = wrap.clientHeight || (window.innerHeight - 160);
+
+  // Eventos táctiles y mouse
+  canvas.addEventListener('touchstart', libTouchStart, {passive:false});
+  canvas.addEventListener('touchmove',  libTouchMove,  {passive:false});
+  canvas.addEventListener('touchend',   libTouchEnd,   {passive:false});
+  canvas.addEventListener('mousedown',  libMouseDown);
+  canvas.addEventListener('mousemove',  libMouseMove);
+  canvas.addEventListener('mouseup',    libMouseUp);
+}
+
+// ── Dibujo ──
+function _pos(e, canvas){
+  var r = canvas.getBoundingClientRect();
+  var scaleX = canvas.width  / r.width;
+  var scaleY = canvas.height / r.height;
+  var src = e.touches ? e.touches[0] : e;
+  return {x:(src.clientX-r.left)*scaleX, y:(src.clientY-r.top)*scaleY};
+}
+
+function libTouchStart(e){
+  e.preventDefault();
+  var p = _pos(e, this);
+  libStartDraw(p.x, p.y);
+}
+function libTouchMove(e){
+  e.preventDefault();
+  var p = _pos(e, this);
+  libMoveDraw(p.x, p.y);
+}
+function libTouchEnd(e){
+  e.preventDefault();
+  libEndDraw();
+}
+function libMouseDown(e){
+  var p = _pos(e, this);
+  libStartDraw(p.x, p.y);
+}
+function libMouseMove(e){
+  if(!_lib.dibujando) return;
+  var p = _pos(e, this);
+  libMoveDraw(p.x, p.y);
+}
+function libMouseUp(){ libEndDraw(); }
+
+function libStartDraw(x,y){
+  var pag = _lib.paginas[_lib.pagActual];
+  if(!pag) return;
+  if(_lib.herramienta==='texto'){
+    libMostrarInputTexto(x,y);
+    return;
+  }
+  _lib.dibujando = true;
+  _lib.trazoActual = [{x:x,y:y}];
+}
+
+function libMoveDraw(x,y){
+  if(!_lib.dibujando) return;
+  _lib.trazoActual.push({x:x,y:y});
+  libRedraw(true); // redraw rápido
+}
+
+function libEndDraw(){
+  if(!_lib.dibujando) return;
+  _lib.dibujando = false;
+  var pag = _lib.paginas[_lib.pagActual];
+  if(!pag) return;
+  if(_lib.trazoActual.length > 1){
+    var trazo = {
+      pts: _lib.trazoActual.slice(),
+      color: _lib.herramienta==='borrador'?'#FONDO#':_lib.color,
+      grosor: _lib.herramienta==='borrador'?(_lib.grosor*4):_lib.grosor,
+      boli: _lib.herramienta==='boli',
+      borrador: _lib.herramienta==='borrador'
+    };
+    pag.trazos.push(trazo);
+    _lib.historial.push({tipo:'trazo',pagIdx:_lib.pagActual});
+  }
+  _lib.trazoActual = [];
+  libRedraw(false);
+  libGuardar();
+}
+
+function libRedraw(soloPreview){
+  var canvas = document.getElementById('lib-canvas');
+  if(!canvas) return;
+  var ctx = canvas.getContext('2d');
+  var pag = _lib.paginas[_lib.pagActual];
+  if(!pag) return;
+
+  // Fondo
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  libDibujarFondo(ctx, canvas.width, canvas.height, pag.fondo||_lib.fondo, pag.bgColor);
+
+  // Trazos guardados
+  (pag.trazos||[]).forEach(function(t){
+    libDibujarTrazo(ctx, t, canvas);
+  });
+
+  // Textos guardados
+  (pag.textos||[]).forEach(function(tx){
+    ctx.font = (tx.size||18)+'px '+tx.font;
+    ctx.fillStyle = tx.color||'#222';
+    ctx.fillText(tx.texto, tx.x, tx.y);
+  });
+
+  // Trazo en curso
+  if(_lib.trazoActual.length > 1){
+    var t = {
+      pts: _lib.trazoActual,
+      color: _lib.herramienta==='borrador'?null:_lib.color,
+      grosor: _lib.herramienta==='borrador'?(_lib.grosor*4):_lib.grosor,
+      boli: _lib.herramienta==='boli',
+      borrador: _lib.herramienta==='borrador'
+    };
+    libDibujarTrazo(ctx, t, canvas);
+  }
+}
+
+function libDibujarTrazo(ctx, t, canvas){
+  if(!t.pts||t.pts.length<2) return;
+  ctx.save();
+  if(t.borrador){
+    ctx.globalCompositeOperation='destination-out';
+  } else {
+    ctx.globalCompositeOperation='source-over';
+    ctx.strokeStyle = t.color;
+  }
+  ctx.lineWidth   = t.grosor||4;
+  ctx.lineCap     = 'round';
+  ctx.lineJoin    = 'round';
+  ctx.globalAlpha = t.boli ? 1 : 0.88;
+
+  ctx.beginPath();
+  ctx.moveTo(t.pts[0].x, t.pts[0].y);
+  for(var i=1;i<t.pts.length;i++){
+    var prev = t.pts[i-1];
+    var curr = t.pts[i];
+    var mx = (prev.x+curr.x)/2;
+    var my = (prev.y+curr.y)/2;
+    ctx.quadraticCurveTo(prev.x, prev.y, mx, my);
+  }
+  ctx.lineTo(t.pts[t.pts.length-1].x, t.pts[t.pts.length-1].y);
+  ctx.stroke();
+  ctx.restore();
+}
+
+function libDibujarFondo(ctx, w, h, tipo, bgColor){
+  // Base
+  var base = bgColor || (tipo==='negro'?'#1a1a1a':tipo==='kraft'?'#d4a574':'#fffef8');
+  ctx.fillStyle = base;
+  ctx.fillRect(0,0,w,h);
+  var lineColor = tipo==='negro'?'rgba(255,255,255,.15)':tipo==='kraft'?'rgba(0,0,0,.15)':'#e8f0e4';
+
+  if(tipo==='rayas'){
+    ctx.strokeStyle=lineColor;ctx.lineWidth=1;
+    for(var y=28;y<h;y+=28){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(w,y);ctx.stroke();}
+    // Margen rojo
+    ctx.strokeStyle=tipo==='negro'?'rgba(255,80,80,.3)':'#FFB3B3';
+    ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(32,0);ctx.lineTo(32,h);ctx.stroke();
+  } else if(tipo==='cuadros'){
+    ctx.strokeStyle=lineColor;ctx.lineWidth=.8;
+    for(var x2=24;x2<w;x2+=24){ctx.beginPath();ctx.moveTo(x2,0);ctx.lineTo(x2,h);ctx.stroke();}
+    for(var y2=24;y2<h;y2+=24){ctx.beginPath();ctx.moveTo(0,y2);ctx.lineTo(w,y2);ctx.stroke();}
+  } else if(tipo==='puntos'){
+    ctx.fillStyle=lineColor;
+    for(var px=20;px<w;px+=24){for(var py=20;py<h;py+=24){ctx.beginPath();ctx.arc(px,py,1.5,0,Math.PI*2);ctx.fill();}}
+  }
+  // 'blanco', 'negro', 'kraft', 'custom' — solo el color de base
+}
+
+// ── Texto ──
+function libMostrarInputTexto(x,y){
+  _lib.textoPendX = x;
+  _lib.textoPendY = y;
+  var wrap = document.getElementById('lib-text-input-wrap');
+  var inp  = document.getElementById('lib-text-input');
+  if(!wrap||!inp) return;
+  var canvas = document.getElementById('lib-canvas');
+  var rect = canvas.getBoundingClientRect();
+  var scaleX = rect.width/canvas.width;
+  var scaleY = rect.height/canvas.height;
+  wrap.style.left = (rect.left + x*scaleX)+'px';
+  wrap.style.top  = (rect.top  + y*scaleY - 40)+'px';
+  wrap.style.display='block';
+  inp.value='';
+  inp.style.color=_lib.color;
+  setTimeout(function(){inp.focus();},80);
+}
+
+function libConfirmarTexto(){
+  var inp = document.getElementById('lib-text-input');
+  var txt = (inp.value||'').trim();
+  if(txt){
+    var pag = _lib.paginas[_lib.pagActual];
+    if(pag){
+      if(!pag.textos) pag.textos=[];
+      pag.textos.push({texto:txt, x:_lib.textoPendX, y:_lib.textoPendY, color:_lib.color, size:18, font:"'"+(_lib.herramienta==='texto'?'var(--font-main)':'Caveat')+"'"});
+      _lib.historial.push({tipo:'texto',pagIdx:_lib.pagActual});
+    }
+    libRedraw(false);
+    libGuardar();
+  }
+  document.getElementById('lib-text-input-wrap').style.display='none';
+}
+function libCancelarTexto(){
+  document.getElementById('lib-text-input-wrap').style.display='none';
+}
+
+// ── Emoji ──
+var _libEmojis=['😊','😂','❤️','🔥','⭐','✅','❌','📌','📝','🎯','💡','🚀','📚','✏️','🎉','💯','🤔','😴','🙌','👍'];
+function libInsertarEmoji(){
+  var panel=document.createElement('div');
+  panel.style.cssText='position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:var(--w);border:1px solid var(--bd);border-radius:12px;padding:10px;display:flex;flex-wrap:wrap;gap:6px;z-index:600;max-width:280px;box-shadow:0 4px 20px rgba(0,0,0,.2);';
+  _libEmojis.forEach(function(em){
+    var btn=document.createElement('button');
+    btn.textContent=em;
+    btn.style.cssText='font-size:24px;background:none;border:none;cursor:pointer;padding:2px;line-height:1;';
+    btn.addEventListener('click',function(){
+      panel.remove();
+      var pag=_lib.paginas[_lib.pagActual];
+      if(!pag){return;}
+      if(!pag.textos)pag.textos=[];
+      pag.textos.push({texto:em,x:canvas_cx(),y:canvas_cy(),color:'#222',size:28,font:'serif'});
+      libRedraw(false);libGuardar();
+    });
+    panel.appendChild(btn);
+  });
+  var close=document.createElement('button');
+  close.textContent='✕ Cerrar';
+  close.style.cssText='width:100%;margin-top:6px;padding:6px;background:var(--bd);border:none;border-radius:8px;font-size:12px;cursor:pointer;font-family:var(--font-main);';
+  close.addEventListener('click',function(){panel.remove();});
+  panel.appendChild(close);
+  document.body.appendChild(panel);
+}
+function canvas_cx(){var c=document.getElementById('lib-canvas');return c?c.width/2:100;}
+function canvas_cy(){var c=document.getElementById('lib-canvas');return c?c.height/2:100;}
+
+// ── Undo ──
+function libUndo(){
+  var ultimo=_lib.historial.pop();
+  if(!ultimo) return;
+  var pag=_lib.paginas[ultimo.pagIdx];
+  if(!pag) return;
+  if(ultimo.tipo==='trazo'&&pag.trazos.length) pag.trazos.pop();
+  if(ultimo.tipo==='texto'&&pag.textos&&pag.textos.length) pag.textos.pop();
+  libRedraw(false);libGuardar();
+}
+
+// ── Herramientas, color, grosor ──
+function libSetTool(t,btn){
+  _lib.herramienta=t;
+  document.querySelectorAll('.lib-tool').forEach(function(b){b.classList.remove('active');});
+  if(btn)btn.classList.add('active');
+  var canvas=document.getElementById('lib-canvas');
+  if(canvas)canvas.style.cursor=t==='borrador'?'cell':t==='texto'?'text':'crosshair';
+}
+function libSetColor(c,el){
+  _lib.color=c;
+  document.querySelectorAll('.lib-color').forEach(function(b){b.classList.remove('active');});
+  if(el)el.classList.add('active');
+  document.getElementById('lib-color-custom').value=c;
+}
+function libSetSize(s,btn){
+  _lib.grosor=s;
+  document.querySelectorAll('.lib-size').forEach(function(b){b.classList.remove('active');});
+  if(btn)btn.classList.add('active');
+}
+
+// ── Fondo ──
+function libCambiarFondo(){
+  var p=document.getElementById('lib-fondo-panel');
+  if(p)p.style.display='flex';
+}
+function libSetFondo(tipo,color){
+  var pag=_lib.paginas[_lib.pagActual];
+  if(!pag)return;
+  pag.fondo=tipo;
+  if(tipo==='custom'&&color)pag.bgColor=color;
+  else pag.bgColor=null;
+  libRedraw(false);libGuardar();
+  if(tipo!=='custom')document.getElementById('lib-fondo-panel').style.display='none';
+}
+
+// ── Páginas ──
+function libNuevaPagina(silencioso){
+  var hoy=new Date().toISOString().slice(0,10);
+  var nueva={fecha:hoy,fondo:'rayas',bgColor:null,trazos:[],textos:[]};
+  _lib.paginas.push(nueva);
+  _lib.pagActual=_lib.paginas.length-1;
+  _lib.historial=[];
+  if(!silencioso){libRedraw(false);libGuardar();libActualizarNavPag();}
+}
+function libPagAnterior(){
+  if(_lib.pagActual>0){_lib.pagActual--;libRenderPagina();libActualizarNavPag();}
+}
+function libPagSiguiente(){
+  if(_lib.pagActual<_lib.paginas.length-1){_lib.pagActual++;libRenderPagina();libActualizarNavPag();}
+}
+function libRenderPagina(){
+  _lib.historial=[];
+  libRedraw(false);
+}
+function libActualizarNavPag(){
+  var lbl=document.getElementById('lib-pag-label');
+  if(!lbl)return;
+  var pag=_lib.paginas[_lib.pagActual];
+  var fecha='';
+  if(pag&&pag.fecha){
+    try{var d=new Date(pag.fecha+'T00:00:00');fecha=' · '+d.getDate()+'/'+(d.getMonth()+1)+'/'+String(d.getFullYear()).slice(2);}catch(e){}
+  }
+  lbl.textContent='Pág '+(_lib.pagActual+1)+' de '+_lib.paginas.length+fecha;
+}
+
+// ── Guardar y exportar ──
+function libGuardar(){
+  try{
+    // Guardar como JSON (sin dataURL para no llenar localStorage)
+    var toSave=_lib.paginas.map(function(p){
+      return {fecha:p.fecha,fondo:p.fondo,bgColor:p.bgColor,trazos:p.trazos,textos:p.textos};
+    });
+    localStorage.setItem('tp_libreta',JSON.stringify(toSave));
+  }catch(e){console.warn('Libreta: error guardando',e);}
+}
+function libExportar(){
+  var canvas=document.getElementById('lib-canvas');
+  if(!canvas)return;
+  var url=canvas.toDataURL('image/png');
+  var a=document.createElement('a');
+  a.href=url;
+  var pag=_lib.paginas[_lib.pagActual];
+  a.download='libreta_'+(pag?pag.fecha:new Date().toISOString().slice(0,10))+'.png';
+  a.click();
 }
 
 </script>
