@@ -3155,6 +3155,7 @@ body.nb-mode #nb-pill-orden { display:none !important; }
     <button class="lib-size" data-size="10" onclick="libSetSize(10,this)" style="width:26px;height:20px;display:flex;align-items:center;justify-content:center;"><div style="width:16px;height:9px;background:#222;border-radius:3px;"></div></button>
     <div style="width:1px;height:20px;background:var(--bd);margin:0 2px;flex-shrink:0;"></div>
     <!-- Fondo + Plantillas unificados -->
+    <button id="lt-figura" class="lib-tool" onclick="libMenuFiguras()" title="Figuras geométricas" style="font-size:13px;padding:2px 6px;color:#222;">◻</button>
     <button class="lib-tool" onclick="libMenuFondoPlantilla()" title="Fondo y Plantillas" style="font-size:10px;padding:3px 6px;color:#222;">🎨📄</button>
     <!-- Indicador guardado — al final, color negro -->
     <div style="flex:1;min-width:4px;"></div>
@@ -13990,7 +13991,7 @@ function nbTabPagina(dir){
 }
 
 // ══ MI LIBRETA ══
-var _lib={paginas:[],pagActual:0,herramienta:'lapiz',color:'#1a1a1a',grosor:4,radioGoma:6,fondo:'rayas',dibujando:false,trazoActual:[],historial:[],textoPendX:0,textoPendY:0,zoom:1,panX:0,panY:0,_pd0:null,sel:{active:false,x0:0,y0:0,x1:0,y1:0,dragging:false},selTrazos:[],selTextos:[],selIdxTrazos:[],selIdxTextos:[],txtBold:false,txtItalic:false,txtUnder:false,txtSize:16};
+var _lib={paginas:[],pagActual:0,herramienta:'lapiz',color:'#1a1a1a',grosor:4,radioGoma:6,fondo:'rayas',dibujando:false,trazoActual:[],historial:[],textoPendX:0,textoPendY:0,zoom:1,panX:0,panY:0,_pd0:null,_touchEndTime:0,figTipo:'rect',figX0:0,figY0:0,figX1:0,figY1:0,sel:{active:false,dragging:false,moving:false,resizing:null,resizeIdx:-1,x0:0,y0:0,x1:0,y1:0,mx:0,my:0,idxTrazos:[],idxTextos:[]},txtBold:false,txtItalic:false,txtUnder:false,txtSize:16};
 function libInit(){
   try{var s=localStorage.getItem('tp_libreta');if(s)_lib.paginas=JSON.parse(s);}catch(e){}
   _lib.paginas.forEach(function(p){if(p.trazos)p.trazos=p.trazos.filter(function(t){return !t.borrador;});});
@@ -14010,10 +14011,31 @@ function libIniciarCanvas(){
   _sz();
   if(window.ResizeObserver)new ResizeObserver(_sz).observe(wrap);
   cv.addEventListener('touchstart',function(e){e.preventDefault();if(e.touches.length===2){_lib.dibujando=false;_lib._pd0=_pd(e.touches);_lib._pmx=(e.touches[0].clientX+e.touches[1].clientX)/2;_lib._pmy=(e.touches[0].clientY+e.touches[1].clientY)/2;return;}var p=_pos(e,cv);libStartDraw(p.x,p.y);},{passive:false});
-  cv.addEventListener('touchmove',function(e){e.preventDefault();if(e.touches.length===2){var nd=_pd(e.touches);if(_lib._pd0&&nd){var sc=nd/_lib._pd0,nz=Math.max(0.3,Math.min(5,_lib.zoom*sc));var r=cv.getBoundingClientRect(),mx=(_lib._pmx-r.left)*(cv.width/r.width),my=(_lib._pmy-r.top)*(cv.height/r.height);_lib.panX=mx-((mx-_lib.panX)*nz/_lib.zoom);_lib.panY=my-((my-_lib.panY)*nz/_lib.zoom);_lib.zoom=nz;_lib._pd0=nd;libRedraw();libActualizarNavPag();}return;}if(!_lib.dibujando)return;var p=_pos(e,cv);libMoveDraw(p.x,p.y);},{passive:false});
-  cv.addEventListener('touchend',function(e){e.preventDefault();if(e.touches.length<2)_lib._pd0=null;if(e.touches.length===0)libEndDraw();},{passive:false});
-  cv.addEventListener('mousedown',function(e){var p=_pos(e,cv);libStartDraw(p.x,p.y);});
-  cv.addEventListener('mousemove',function(e){if(!_lib.dibujando)return;var p=_pos(e,cv);libMoveDraw(p.x,p.y);});
+  cv.addEventListener('touchmove',function(e){e.preventDefault();if(e.touches.length===2){var nd=_pd(e.touches);if(_lib._pd0&&nd){
+  var r=cv.getBoundingClientRect();
+  var sc=cv.width/r.width,sy=cv.height/r.height;
+  // Nuevo centro en píxeles de pantalla
+  var nmx=(e.touches[0].clientX+e.touches[1].clientX)/2;
+  var nmy=(e.touches[0].clientY+e.touches[1].clientY)/2;
+  // 1. Pan: mover canvas según desplazamiento del centro
+  _lib.panX+=(nmx-_lib._pmx)*sc;
+  _lib.panY+=(nmy-_lib._pmy)*sy;
+  // 2. Zoom: escalar respecto al centro actual en coordenadas canvas
+  var ratio=nd/_lib._pd0;
+  var nz=Math.max(0.2,Math.min(8,_lib.zoom*ratio));
+  var cx=(nmx-r.left)*sc;
+  var cy=(nmy-r.top)*sy;
+  // Ajustar pan para que el punto bajo el centro no se mueva
+  _lib.panX=cx-(cx-_lib.panX)*(nz/_lib.zoom);
+  _lib.panY=cy-(cy-_lib.panY)*(nz/_lib.zoom);
+  _lib.zoom=nz;
+  // Guardar para siguiente frame
+  _lib._pd0=nd; _lib._pmx=nmx; _lib._pmy=nmy;
+  libRedraw();libActualizarNavPag();
+}return;}if(!_lib.dibujando&&!(_lib.herramienta==='seleccion'&&(_lib.sel.dragging||_lib.sel.moving||_lib.sel.resizing))&&_lib.herramienta!=='figura')return;var p=_pos(e,cv);libMoveDraw(p.x,p.y);},{passive:false});
+  cv.addEventListener('touchend',function(e){e.preventDefault();if(e.touches.length<2)_lib._pd0=null;if(e.touches.length===0){libEndDraw();_lib._touchEndTime=Date.now();}},{passive:false});
+  cv.addEventListener('mousedown',function(e){if(_lib._touchEndTime&&Date.now()-_lib._touchEndTime<400)return;var p=_pos(e,cv);libStartDraw(p.x,p.y);});
+  cv.addEventListener('mousemove',function(e){if(!_lib.dibujando&&!(_lib.herramienta==='seleccion'&&(_lib.sel.dragging||_lib.sel.moving||_lib.sel.resizing))&&_lib.herramienta!=='figura')return;var p=_pos(e,cv);libMoveDraw(p.x,p.y);});
   cv.addEventListener('mouseup',function(){libEndDraw();});
   cv.addEventListener('wheel',function(e){e.preventDefault();var d=e.deltaY>0?0.9:1.1,nz=Math.max(0.3,Math.min(5,_lib.zoom*d));var r=cv.getBoundingClientRect(),mx=(e.clientX-r.left)*(cv.width/r.width),my=(e.clientY-r.top)*(cv.height/r.height);_lib.panX=mx-(mx-_lib.panX)*nz/_lib.zoom;_lib.panY=my-(my-_lib.panY)*nz/_lib.zoom;_lib.zoom=nz;libRedraw();libActualizarNavPag();},{passive:false});
 }
@@ -14021,68 +14043,130 @@ function _pd(t){var dx=t[0].clientX-t[1].clientX,dy=t[0].clientY-t[1].clientY;re
 function _pos(e,cv){var r=cv.getBoundingClientRect(),sx=cv.width/r.width,sy=cv.height/r.height,src=e.touches?e.touches[0]:e;return{x:((src.clientX-r.left)*sx-_lib.panX)/_lib.zoom,y:((src.clientY-r.top)*sy-_lib.panY)/_lib.zoom};}
 function libStartDraw(x,y){
   if(_lib.herramienta==='texto'){libMostrarTexto(x,y);return;}
-
   if(_lib.herramienta==='seleccion'){
-    // ¿Toca un texto/sticker ya seleccionado? → mover
-    if(_lib.sel.active&&_lib.sel.idxTextos&&_lib.sel.idxTextos.length){
-      var pag=_lib.paginas[_lib.pagActual];
-      if(pag&&pag.textos){
-        for(var ii=0;ii<_lib.sel.idxTextos.length;ii++){
-          var tx=pag.textos[_lib.sel.idxTextos[ii]];
-          if(!tx)continue;
-          var sz=tx.size||16;
-          var bx=tx.x,by=tx.y-sz,bw=sz*tx.texto.length*0.65+sz,bh=sz*1.4;
-          if(x>=bx-8&&x<=bx+bw+8&&y>=by-8&&y<=by+bh+8){
-            _lib.sel.moving=true;_lib.sel.mx=x;_lib.sel.my=y;
-            return;
+    var pag=_lib.paginas[_lib.pagActual];
+    // Si hay selección activa: comprobar handles de esquina (resize) o interior (move)
+    if(_lib.sel.active&&pag){
+      var hs=20/_lib.zoom; // tamaño hit area handle (grande para touch)
+      var resizing=false;
+      // Comprobar handles de figura (trazo con figData)
+      (_lib.sel.idxTrazos||[]).forEach(function(i){
+        if(resizing)return;
+        var t=pag.trazos&&pag.trazos[i];if(!t||!t.figura||!t.figData)return;
+        var d=t.figData;
+        var minX=Math.min(d.x0,d.x1)-4,maxX=Math.max(d.x0,d.x1)+4;
+        var minY=Math.min(d.y0,d.y1)-4,maxY=Math.max(d.y0,d.y1)+4;
+        var bw=maxX-minX,bh=maxY-minY;
+        var corners=[[minX,minY,'TL'],[minX+bw,minY,'TR'],[minX,minY+bh,'BL'],[minX+bw,minY+bh,'BR']];
+        corners.forEach(function(c){
+          if(resizing)return;
+          if(Math.abs(x-c[0])<=hs&&Math.abs(y-c[1])<=hs){
+            _lib.sel.resizing=c[2];_lib.sel.resizeIdx=i;_lib.sel.resizeFig=true;
+            _lib.sel.mx=x;_lib.sel.my=y;
+            resizing=true;
           }
-        }
+        });
+      });
+      (_lib.sel.idxTextos||[]).forEach(function(i){
+        if(resizing)return;
+        var tx=pag.textos&&pag.textos[i];if(!tx)return;
+        var sz=tx.size||16,w=Math.max(sz,sz*tx.texto.length*0.6);
+        var bx=tx.x-4,by=tx.y-sz-4,bw=w+8,bh=sz+10;
+        var corners=[[bx,by,'TL'],[bx+bw,by,'TR'],[bx,by+bh,'BL'],[bx+bw,by+bh,'BR']];
+        corners.forEach(function(c){
+          if(resizing)return;
+          if(Math.abs(x-c[0])<=hs&&Math.abs(y-c[1])<=hs){
+            // Drag desde esta esquina → resize
+            _lib.sel.resizing=c[2]; _lib.sel.resizeIdx=i;
+            _lib.sel.mx=x; _lib.sel.my=y;
+            resizing=true;
+          }
+        });
+      });
+      if(resizing)return;
+      // Comprobar si toca dentro de texto → mover
+      var inSel=false;
+      (_lib.sel.idxTextos||[]).forEach(function(i){
+        var tx=pag.textos&&pag.textos[i];if(!tx)return;
+        var sz=tx.size||16,w=Math.max(sz,sz*tx.texto.length*0.6);
+        if(x>=tx.x-8&&x<=tx.x+w+8&&y>=tx.y-sz-8&&y<=tx.y+8)inSel=true;
+      });
+      // Comprobar si toca dentro del bounding box de un trazo → mover
+      if(!inSel){
+        (_lib.sel.idxTrazos||[]).forEach(function(i){
+          if(inSel)return;
+          var t=pag.trazos&&pag.trazos[i];if(!t||!t.pts||!t.pts.length)return;
+          var minX=t.pts[0].x,maxX=t.pts[0].x,minY=t.pts[0].y,maxY=t.pts[0].y;
+          t.pts.forEach(function(p){minX=Math.min(minX,p.x);maxX=Math.max(maxX,p.x);minY=Math.min(minY,p.y);maxY=Math.max(maxY,p.y);});
+          if(x>=minX-12&&x<=maxX+12&&y>=minY-12&&y<=maxY+12)inSel=true;
+        });
       }
+      if(inSel){_lib.sel.moving=true;_lib.sel.resizing=null;_lib.sel.mx=x;_lib.sel.my=y;return;}
     }
     // Nueva selección
     var old=document.getElementById('lib-sel-panel');if(old)old.remove();
-    _lib.sel={active:false,dragging:true,moving:false,
-              x0:x,y0:y,x1:x,y1:y,mx:0,my:0,
-              idxTrazos:[],idxTextos:[]};
+    _lib.sel={active:false,dragging:true,moving:false,x0:x,y0:y,x1:x,y1:y,mx:0,my:0,idxTrazos:[],idxTextos:[]};
+    return;
+  }
+  if(_lib.herramienta==='figura'){
+    _lib.dibujando=true;_lib.figX0=x;_lib.figY0=y;_lib.figX1=x;_lib.figY1=y;
     return;
   }
   _lib.dibujando=true;_lib.trazoActual=[{x:x,y:y}];
 }
-
 function libMoveDraw(x,y){
   if(_lib.herramienta==='seleccion'){
-    if(_lib.sel.moving){
-      // Mover textos seleccionados
+    if(_lib.sel.resizing){
       var dx=x-_lib.sel.mx,dy=y-_lib.sel.my;
       _lib.sel.mx=x;_lib.sel.my=y;
       var pag=_lib.paginas[_lib.pagActual];
-      if(pag&&pag.textos){
-        _lib.sel.idxTextos.forEach(function(i){
-          if(pag.textos[i]){pag.textos[i].x+=dx;pag.textos[i].y+=dy;}
-        });
+      if(_lib.sel.resizeFig){
+        // Resize figura geométrica — mover la esquina correspondiente
+        var t=pag&&pag.trazos&&pag.trazos[_lib.sel.resizeIdx];
+        if(t&&t.figData){
+          var c=_lib.sel.resizing;
+          if(c==='TL'){t.figData.x0+=dx;t.figData.y0+=dy;}
+          else if(c==='TR'){t.figData.x1+=dx;t.figData.y0+=dy;}
+          else if(c==='BL'){t.figData.x0+=dx;t.figData.y1+=dy;}
+          else{t.figData.x1+=dx;t.figData.y1+=dy;}
+          libRecalcFigura(t);
+          libRedraw();
+        }
+      }else{
+        // Resize sticker/texto
+        var tx=pag&&pag.textos&&pag.textos[_lib.sel.resizeIdx];
+        if(tx){
+          var corner=_lib.sel.resizing;
+          var delta=(corner==='BR')?(dx+dy)/2:(corner==='TR')?(dx-dy)/2:(corner==='BL')?(-dx+dy)/2:(-dx-dy)/2;
+          tx.size=Math.max(8,Math.min(200,(tx.size||16)+delta));
+          libRedraw();
+        }
       }
-      if(pag&&pag.trazos){
-        _lib.sel.idxTrazos.forEach(function(i){
-          if(pag.trazos[i]){
-            pag.trazos[i].pts=pag.trazos[i].pts.map(function(p){
-              return{x:p.x+dx,y:p.y+dy};
-            });
-          }
-        });
-      }
+      return;
+    }
+    if(_lib.sel.moving){
+      var dx=x-_lib.sel.mx,dy=y-_lib.sel.my;_lib.sel.mx=x;_lib.sel.my=y;
+      var pag=_lib.paginas[_lib.pagActual];if(!pag)return;
+      (_lib.sel.idxTextos||[]).forEach(function(i){
+        if(pag.textos&&pag.textos[i]){pag.textos[i].x+=dx;pag.textos[i].y+=dy;}
+      });
+      (_lib.sel.idxTrazos||[]).forEach(function(i){
+        if(pag.trazos&&pag.trazos[i])
+          pag.trazos[i].pts=pag.trazos[i].pts.map(function(p){return{x:p.x+dx,y:p.y+dy};});
+      });
       libRedraw();return;
     }
     if(_lib.sel.dragging){_lib.sel.x1=x;_lib.sel.y1=y;libRedraw();}
     return;
   }
-  if(!_lib.dibujando)return;_lib.trazoActual.push({x:x,y:y});libRedraw();
+  if(!_lib.dibujando)return;
+  if(_lib.herramienta==='figura'){_lib.figX1=x;_lib.figY1=y;libRedraw();return;}
+  _lib.trazoActual.push({x:x,y:y});libRedraw();
 }
-
 function libEndDraw(){
   if(_lib.herramienta==='seleccion'){
-    if(_lib.sel.moving){
-      _lib.sel.moving=false;libGuardar();return;
-    }
+    if(_lib.sel.resizing){_lib.sel.resizing=null;_lib.sel.resizeFig=false;libGuardar();return;}
+    if(_lib.sel.moving){_lib.sel.moving=false;libGuardar();return;}
     if(!_lib.sel.dragging)return;
     _lib.sel.dragging=false;
     var x0=Math.min(_lib.sel.x0,_lib.sel.x1),x1=Math.max(_lib.sel.x0,_lib.sel.x1);
@@ -14090,37 +14174,83 @@ function libEndDraw(){
     _lib.sel.x0=x0;_lib.sel.y0=y0;_lib.sel.x1=x1;_lib.sel.y1=y1;
     _lib.sel.idxTrazos=[];_lib.sel.idxTextos=[];
     var pag=_lib.paginas[_lib.pagActual];
-    if((x1-x0>8||y1-y0>8)&&pag){
-      // Detectar trazos
+    // Tap (<=12px) → seleccionar elemento tocado directamente
+    if((x1-x0<=12&&y1-y0<=12)&&pag){
+      var tapX=(x0+x1)/2, tapY=(y0+y1)/2;
+      (pag.textos||[]).forEach(function(itx,i){
+        var sz=itx.size||16,w=Math.max(sz,sz*itx.texto.length*0.6);
+        if(tapX>=itx.x-8&&tapX<=itx.x+w+8&&tapY>=itx.y-sz-8&&tapY<=itx.y+8)
+          _lib.sel.idxTextos.push(i);
+      });
+      if(_lib.sel.idxTextos.length){
+        var f0=pag.textos[_lib.sel.idxTextos[0]];
+        var sz0=f0.size||16,w0=Math.max(sz0,sz0*f0.texto.length*0.6);
+        _lib.sel.x0=f0.x-4;_lib.sel.y0=f0.y-sz0-4;
+        _lib.sel.x1=f0.x+w0+4;_lib.sel.y1=f0.y+sz0*0.4;
+        _lib.sel.active=true;libRedraw();libMenuSeleccion();
+      }else{_lib.sel.active=false;libRedraw();}
+      return;
+    }
+    if((x1-x0>6||y1-y0>6)&&pag){
       (pag.trazos||[]).forEach(function(t,i){
-        if(t.pts&&t.pts.some(function(p){
-          return p.x>=x0&&p.x<=x1&&p.y>=y0&&p.y<=y1;
-        })) _lib.sel.idxTrazos.push(i);
+        if(t.pts&&t.pts.some(function(p){return p.x>=x0&&p.x<=x1&&p.y>=y0&&p.y<=y1;}))
+          _lib.sel.idxTrazos.push(i);
       });
-      // Detectar textos/stickers con caja real
       (pag.textos||[]).forEach(function(tx,i){
-        var sz=tx.size||16;
-        var bL=tx.x, bR=tx.x+sz*tx.texto.length*0.65+sz;
-        var bT=tx.y-sz, bB=tx.y+sz*0.4;
-        if(bR>=x0&&bL<=x1&&bB>=y0&&bT<=y1) _lib.sel.idxTextos.push(i);
+        var sz=tx.size||16,w=Math.max(sz,sz*tx.texto.length*0.6);
+        if((tx.x+w)>=x0&&tx.x<=x1&&tx.y>=y0&&(tx.y-sz)<=y1)
+          _lib.sel.idxTextos.push(i);
       });
-      _lib.sel.active=true;
-      libRedraw();
       var n=_lib.sel.idxTrazos.length+_lib.sel.idxTextos.length;
-      if(n>0){libMenuSeleccion();}
+      if(n>0){_lib.sel.active=true;libRedraw();libMenuSeleccion();}
       else{
         _lib.sel.active=false;libRedraw();
         var fb=document.createElement('div');
-        fb.style.cssText='position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(0,0,0,.75);color:#fff;padding:10px 18px;border-radius:10px;font-size:13px;font-family:var(--font-main);z-index:800;pointer-events:none;text-align:center;';
-        fb.textContent='Nada dentro del rectángulo';
-        document.body.appendChild(fb);
-        setTimeout(function(){fb.remove();},1800);
+        fb.style.cssText='position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(0,0,0,.75);color:#fff;padding:10px 18px;border-radius:10px;font-size:13px;font-family:var(--font-main);z-index:900;pointer-events:none;';
+        fb.textContent='Nada seleccionado';document.body.appendChild(fb);
+        setTimeout(function(){fb.remove();},1500);
       }
     }else{_lib.sel.active=false;libRedraw();}
     return;
   }
   if(!_lib.dibujando)return;_lib.dibujando=false;
-  var pag=_lib.paginas[_lib.pagActual];if(!pag||_lib.trazoActual.length<2){_lib.trazoActual=[];return;}
+  var pag=_lib.paginas[_lib.pagActual];if(!pag){_lib.trazoActual=[];return;}
+  // Figura geométrica — procesar antes del check de trazoActual
+  if(_lib.herramienta==='figura'){
+    var fx0=_lib.figX0,fy0=_lib.figY0,fx1=_lib.figX1,fy1=_lib.figY1;
+    if(Math.abs(fx1-fx0)<4&&Math.abs(fy1-fy0)<4){return;} // demasiado pequeño
+    var pts=[],tipo=_lib.figTipo;
+    if(tipo==='rect'){
+      pts=[{x:fx0,y:fy0},{x:fx1,y:fy0},{x:fx1,y:fy1},{x:fx0,y:fy1},{x:fx0,y:fy0}];
+    }else if(tipo==='circulo'){
+      var cc_x=(fx0+fx1)/2,cc_y=(fy0+fy1)/2,cc_rx=Math.abs(fx1-fx0)/2,cc_ry=Math.abs(fy1-fy0)/2;
+      for(var ai=0;ai<=64;ai++){var ang=ai/64*Math.PI*2;pts.push({x:cc_x+cc_rx*Math.cos(ang),y:cc_y+cc_ry*Math.sin(ang)});}
+    }else if(tipo==='triangulo'){
+      pts=[{x:(fx0+fx1)/2,y:fy0},{x:fx1,y:fy1},{x:fx0,y:fy1},{x:(fx0+fx1)/2,y:fy0}];
+    }else if(tipo==='linea'){
+      pts=[{x:fx0,y:fy0},{x:fx1,y:fy1}];
+    }else if(tipo==='flecha'){
+      var f_dx=fx1-fx0,f_dy=fy1-fy0,f_len=Math.sqrt(f_dx*f_dx+f_dy*f_dy)||1;
+      var f_ux=f_dx/f_len,f_uy=f_dy/f_len,f_as=Math.min(f_len*0.35,40);
+      var f_px=-f_uy*f_as*0.4,f_py=f_ux*f_as*0.4;
+      pts=[{x:fx0,y:fy0},{x:fx1,y:fy1},{x:fx1-f_ux*f_as+f_px,y:fy1-f_uy*f_as+f_py},{x:fx1,y:fy1},{x:fx1-f_ux*f_as-f_px,y:fy1-f_uy*f_as-f_py}];
+    }else if(tipo==='estrella'){
+      var es_cx=(fx0+fx1)/2,es_cy=(fy0+fy1)/2;
+      var es_r1=Math.min(Math.abs(fx1-fx0),Math.abs(fy1-fy0))/2,es_r2=es_r1*0.4;
+      for(var ki=0;ki<=10;ki++){var a2i=ki/10*Math.PI*2-Math.PI/2,r3i=ki%2===0?es_r1:es_r2;pts.push({x:es_cx+r3i*Math.cos(a2i),y:es_cy+r3i*Math.sin(a2i)});}
+    }else if(tipo==='rombo'){
+      var ro_cx=(fx0+fx1)/2,ro_cy=(fy0+fy1)/2;
+      pts=[{x:ro_cx,y:fy0},{x:fx1,y:ro_cy},{x:ro_cx,y:fy1},{x:fx0,y:ro_cy},{x:ro_cx,y:fy0}];
+    }
+    if(pts.length>1){
+      pag.trazos.push({pts:pts,color:_lib.color,grosor:_lib.grosor,boli:false,figura:tipo,
+        figData:{x0:fx0,y0:fy0,x1:fx1,y1:fy1}});
+      _lib.historial.push({tipo:'trazo',pagIdx:_lib.pagActual});
+      libRedraw();libGuardar();
+    }
+    return;
+  }
+  if(_lib.trazoActual.length<2){_lib.trazoActual=[];return;}
   if(_lib.herramienta==='borrador'){
     var r=_lib.radioGoma,bp=_lib.trazoActual;
     _lib.historial.push({tipo:'borrador',pagIdx:_lib.pagActual,trazos:JSON.parse(JSON.stringify(pag.trazos)),textos:JSON.parse(JSON.stringify(pag.textos||[]))});
@@ -14128,7 +14258,10 @@ function libEndDraw(){
     pag.trazos.forEach(function(t){var seg=[];for(var i=0;i<t.pts.length;i++){var pt=t.pts[i];if(_enB(pt.x,pt.y,bp,r)){if(seg.length>=2)nt.push({pts:seg,color:t.color,grosor:t.grosor,boli:t.boli});seg=[];}else{seg.push(pt);}}if(seg.length>=2)nt.push({pts:seg,color:t.color,grosor:t.grosor,boli:t.boli});else if(seg.length>0&&t.pts.every(function(p){return !_enB(p.x,p.y,bp,r);}))nt.push(t);});
     pag.trazos=nt;
     if(pag.textos)pag.textos=pag.textos.filter(function(tx){return !_enB(tx.x,tx.y,bp,r*2);});
-  }else{pag.trazos.push({pts:_lib.trazoActual.slice(),color:_lib.color,grosor:_lib.grosor,boli:_lib.herramienta==='boli'});_lib.historial.push({tipo:'trazo',pagIdx:_lib.pagActual});}
+  }else{
+    pag.trazos.push({pts:_lib.trazoActual.slice(),color:_lib.color,grosor:_lib.grosor,boli:_lib.herramienta==='boli'});
+    _lib.historial.push({tipo:'trazo',pagIdx:_lib.pagActual});
+  }
   _lib.trazoActual=[];libRedraw();libGuardar();
 }
 function _enB(x,y,bp,r){for(var j=0;j<bp.length;j++){var dx=x-bp[j].x,dy=y-bp[j].y;if(dx*dx+dy*dy<=r*r)return true;}return false;}
@@ -14141,7 +14274,7 @@ function libRedraw(){
   (pag.trazos||[]).forEach(function(t){libTrazo(ctx,t);});
   (pag.textos||[]).forEach(function(tx){
     var style=(tx.italic?'italic ':'')+(tx.bold?'bold ':'')+'normal';
-    ctx.font=style+' '+(tx.size||16)+'px var(--font-main,Nunito,sans-serif)';
+    ctx.font=style+' '+(Math.round(tx.size)||16)+'px sans-serif';
     ctx.fillStyle=tx.color||'#222';
     ctx.fillText(tx.texto,tx.x,tx.y);
     if(tx.underline){
@@ -14150,22 +14283,97 @@ function libRedraw(){
       ctx.beginPath();ctx.moveTo(tx.x,tx.y+2);ctx.lineTo(tx.x+w,tx.y+2);ctx.stroke();ctx.restore();
     }
   });
+  // Preview figura mientras se dibuja
+  if(_lib.dibujando&&_lib.herramienta==='figura'){
+    var pfx0=_lib.figX0,pfy0=_lib.figY0,pfx1=_lib.figX1,pfy1=_lib.figY1;
+    var ppts=[];
+    var ptipo=_lib.figTipo;
+    if(ptipo==='rect')ppts=[{x:pfx0,y:pfy0},{x:pfx1,y:pfy0},{x:pfx1,y:pfy1},{x:pfx0,y:pfy1},{x:pfx0,y:pfy0}];
+    else if(ptipo==='circulo'){var cx=(pfx0+pfx1)/2,cy=(pfy0+pfy1)/2,rx=Math.abs(pfx1-pfx0)/2,ry=Math.abs(pfy1-pfy0)/2;for(var a=0;a<=32;a++){var ang=a/32*Math.PI*2;ppts.push({x:cx+rx*Math.cos(ang),y:cy+ry*Math.sin(ang)});}}
+    else if(ptipo==='triangulo')ppts=[{x:(pfx0+pfx1)/2,y:pfy0},{x:pfx1,y:pfy1},{x:pfx0,y:pfy1},{x:(pfx0+pfx1)/2,y:pfy0}];
+    else if(ptipo==='linea')ppts=[{x:pfx0,y:pfy0},{x:pfx1,y:pfy1}];
+    else if(ptipo==='flecha'){var dx=pfx1-pfx0,dy=pfy1-pfy0,len=Math.sqrt(dx*dx+dy*dy)||1,ux=dx/len,uy=dy/len,as=Math.min(len*0.35,40),px=-uy*as*0.4,py=ux*as*0.4;ppts=[{x:pfx0,y:pfy0},{x:pfx1,y:pfy1},{x:pfx1-ux*as+px,y:pfy1-uy*as+py},{x:pfx1,y:pfy1},{x:pfx1-ux*as-px,y:pfy1-uy*as-py}];}
+    else if(ptipo==='estrella'){var cx2=(pfx0+pfx1)/2,cy2=(pfy0+pfy1)/2,r1=Math.min(Math.abs(pfx1-pfx0),Math.abs(pfy1-pfy0))/2,r2=r1*0.4;for(var k=0;k<=10;k++){var a2=k/10*Math.PI*2-Math.PI/2,r3=k%2===0?r1:r2;ppts.push({x:cx2+r3*Math.cos(a2),y:cy2+r3*Math.sin(a2)});}}
+    else if(ptipo==='rombo'){var cx3=(pfx0+pfx1)/2,cy3=(pfy0+pfy1)/2;ppts=[{x:cx3,y:pfy0},{x:pfx1,y:cy3},{x:cx3,y:pfy1},{x:pfx0,y:cy3},{x:cx3,y:pfy0}];}
+    if(ppts.length>1)libTrazo(ctx,{pts:ppts,color:_lib.color,grosor:_lib.grosor,boli:false});
+  }
   if(_lib.trazoActual.length>1){
     if(_lib.herramienta!=='borrador')libTrazo(ctx,{pts:_lib.trazoActual,color:_lib.color,grosor:_lib.grosor,boli:_lib.herramienta==='boli'});
     else{var last=_lib.trazoActual[_lib.trazoActual.length-1];ctx.save();ctx.globalAlpha=.3;ctx.fillStyle='#ff6b6b';ctx.beginPath();ctx.arc(last.x,last.y,_lib.radioGoma,0,Math.PI*2);ctx.fill();ctx.restore();}
   }
-  // Dibujar rectángulo de selección
-  if(_lib.herramienta==='seleccion'&&(_lib.sel.dragging||_lib.sel.active)){
-    var sx0=Math.min(_lib.sel.x0,_lib.sel.x1),sx1=Math.max(_lib.sel.x0,_lib.sel.x1);
-    var sy0=Math.min(_lib.sel.y0,_lib.sel.y1),sy1=Math.max(_lib.sel.y0,_lib.sel.y1);
-    ctx.save();ctx.strokeStyle='#2980b9';ctx.lineWidth=1.5/_lib.zoom;ctx.setLineDash([5/_lib.zoom,3/_lib.zoom]);
-    ctx.strokeRect(sx0,sy0,sx1-sx0,sy1-sy0);
-    ctx.fillStyle='rgba(41,128,185,.08)';ctx.fillRect(sx0,sy0,sx1-sx0,sy1-sy0);
-    ctx.restore();
+  // Selección: solo dibujar si herramienta activa
+  if(_lib.herramienta==='seleccion'){
+    if(_lib.sel.dragging){
+      // Rectángulo de arrastre (azul punteado + relleno)
+      var sx0=Math.min(_lib.sel.x0,_lib.sel.x1),sx1=Math.max(_lib.sel.x0,_lib.sel.x1);
+      var sy0=Math.min(_lib.sel.y0,_lib.sel.y1),sy1=Math.max(_lib.sel.y0,_lib.sel.y1);
+      ctx.save();ctx.strokeStyle='#2980b9';ctx.lineWidth=1.5/_lib.zoom;
+      ctx.setLineDash([5/_lib.zoom,3/_lib.zoom]);
+      ctx.strokeRect(sx0,sy0,sx1-sx0,sy1-sy0);
+      ctx.fillStyle='rgba(41,128,185,.07)';ctx.fillRect(sx0,sy0,sx1-sx0,sy1-sy0);
+      ctx.restore();
+    } else if(_lib.sel.active){
+      var pag2=_lib.paginas[_lib.pagActual];if(!pag2)return;
+      // Highlight trazos seleccionados
+      (_lib.sel.idxTrazos||[]).forEach(function(i){
+        var t=pag2.trazos&&pag2.trazos[i];if(!t||!t.pts||!t.pts.length)return;
+        var minX=t.pts[0].x,maxX=t.pts[0].x,minY=t.pts[0].y,maxY=t.pts[0].y;
+        t.pts.forEach(function(p){minX=Math.min(minX,p.x);maxX=Math.max(maxX,p.x);minY=Math.min(minY,p.y);maxY=Math.max(maxY,p.y);});
+        var bx=minX-4,by=minY-4,bw=maxX-minX+8,bh=maxY-minY+8;
+        ctx.save();ctx.strokeStyle='#2980b9';ctx.lineWidth=1.5/_lib.zoom;
+        ctx.setLineDash(t.figura?[]:[4/_lib.zoom,3/_lib.zoom]);
+        ctx.strokeRect(bx,by,bw,bh);
+        // Handles de esquina para figuras (para resize)
+        if(t.figura){
+          var hs=14/_lib.zoom;
+          [[bx,by],[bx+bw,by],[bx,by+bh],[bx+bw,by+bh]].forEach(function(pt){
+            ctx.fillStyle='#2980b9';ctx.setLineDash([]);
+            ctx.beginPath();ctx.arc(pt[0],pt[1],hs/2,0,Math.PI*2);ctx.fill();
+            ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(pt[0],pt[1],hs/3,0,Math.PI*2);ctx.fill();
+          });
+        }
+        ctx.restore();
+      });
+      // Highlight + handles textos/stickers
+      (_lib.sel.idxTextos||[]).forEach(function(i){
+        var tx=pag2.textos&&pag2.textos[i];if(!tx)return;
+        var sz=Math.round(tx.size)||16,w=Math.max(sz,sz*tx.texto.length*0.6);
+        var bx=tx.x-4,by=tx.y-sz-4,bw=w+8,bh=sz+10;
+        ctx.save();ctx.strokeStyle='#2980b9';ctx.lineWidth=1.5/_lib.zoom;ctx.setLineDash([]);
+        ctx.strokeRect(bx,by,bw,bh);
+        var hs=14/_lib.zoom;
+        [[bx,by],[bx+bw,by],[bx,by+bh],[bx+bw,by+bh]].forEach(function(pt){
+          ctx.fillStyle='#2980b9';ctx.beginPath();ctx.arc(pt[0],pt[1],hs/2,0,Math.PI*2);ctx.fill();
+          ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(pt[0],pt[1],hs/3,0,Math.PI*2);ctx.fill();
+        });
+        ctx.restore();
+      });
+    }
   }
   ctx.restore();
 }
-function libTrazo(ctx,t){if(!t.pts||t.pts.length<2)return;ctx.save();ctx.strokeStyle=t.color||'#1a1a1a';ctx.lineWidth=t.grosor||4;ctx.lineCap='round';ctx.lineJoin='round';ctx.globalAlpha=t.boli?1:.88;ctx.beginPath();ctx.moveTo(t.pts[0].x,t.pts[0].y);for(var i=1;i<t.pts.length;i++){var p=t.pts[i-1],c=t.pts[i],mx=(p.x+c.x)/2,my=(p.y+c.y)/2;ctx.quadraticCurveTo(p.x,p.y,mx,my);}ctx.lineTo(t.pts[t.pts.length-1].x,t.pts[t.pts.length-1].y);ctx.stroke();ctx.restore();}
+function libTrazo(ctx,t){
+  if(!t.pts||t.pts.length<2)return;
+  ctx.save();
+  ctx.strokeStyle=t.color||'#1a1a1a';
+  ctx.lineWidth=t.grosor||4;
+  ctx.lineCap='round';ctx.lineJoin='round';
+  ctx.globalAlpha=t.boli?1:.88;
+  ctx.beginPath();
+  ctx.moveTo(t.pts[0].x,t.pts[0].y);
+  if(t.figura){
+    // Figuras geométricas: líneas rectas
+    for(var i=1;i<t.pts.length;i++) ctx.lineTo(t.pts[i].x,t.pts[i].y);
+  }else{
+    // Trazos libres: curvas suaves
+    for(var i=1;i<t.pts.length;i++){
+      var p=t.pts[i-1],c=t.pts[i],mx=(p.x+c.x)/2,my=(p.y+c.y)/2;
+      ctx.quadraticCurveTo(p.x,p.y,mx,my);
+    }
+    ctx.lineTo(t.pts[t.pts.length-1].x,t.pts[t.pts.length-1].y);
+  }
+  ctx.stroke();ctx.restore();
+}
 function libFondo(ctx,w,h,tipo,bgColor,plantilla){
   ctx.fillStyle=bgColor||(tipo==='negro'?'#1a1a1a':tipo==='kraft'?'#d4a574':'#fffef8');
   ctx.fillRect(0,0,w,h);
@@ -14202,12 +14410,12 @@ function libSetTool(t,btn){
   else if(t==='borrador-m'){_lib.radioGoma=14;t='borrador';}
   else if(t==='borrador-l'){_lib.radioGoma=28;t='borrador';}
   // Limpiar selección al cambiar herramienta
-  if(t!=='seleccion'){_lib.sel.active=false;_lib.selTrazos=[];_lib.selTextos=[];_lib.selIdxTrazos=[];_lib.selIdxTextos=[];libRedraw();}
+  if(t!=='seleccion'){var op=document.getElementById('lib-sel-panel');if(op)op.remove();_lib.sel={active:false,dragging:false,moving:false,x0:0,y0:0,x1:0,y1:0,mx:0,my:0,idxTrazos:[],idxTextos:[]};libRedraw();}
   _lib.herramienta=t;
   document.querySelectorAll('.lib-tool').forEach(function(b){b.classList.remove('active');});
   if(btn)btn.classList.add('active');
   var cv=document.getElementById('lib-canvas');
-  if(cv)cv.style.cursor=t==='borrador'?'cell':t==='texto'?'text':t==='seleccion'?'crosshair':'crosshair';
+  if(cv)cv.style.cursor=t==='borrador'?'cell':t==='texto'?'text':'crosshair';
   // Mostrar controles de texto solo en modo texto
   var ts=document.getElementById('lib-text-styles');
   if(ts)ts.style.display=t==='texto'?'flex':'none';
@@ -14633,24 +14841,20 @@ function albLiberarEspacio(){
 function libMenuSeleccion(){
   var idxT=_lib.sel.idxTrazos||[];
   var idxTx=_lib.sel.idxTextos||[];
-  var n=idxT.length+idxTx.length;
-  if(!n)return;
-
+  var n=idxT.length+idxTx.length;if(!n)return;
   var old=document.getElementById('lib-sel-panel');if(old)old.remove();
+  var pag=_lib.paginas[_lib.pagActual];
+
   var panel=document.createElement('div');
   panel.id='lib-sel-panel';
-  panel.style.cssText='position:fixed;bottom:130px;left:50%;transform:translateX(-50%);background:var(--w);border:2px solid #2980b9;border-radius:14px;padding:12px 14px;z-index:800;box-shadow:0 6px 24px rgba(0,0,0,.35);font-family:var(--font-main);min-width:260px;max-width:92vw;';
+  panel.style.cssText='position:fixed;top:70px;left:50%;transform:translateX(-50%);background:var(--w);border:2px solid #2980b9;border-radius:14px;padding:12px 14px;z-index:900;box-shadow:0 6px 24px rgba(0,0,0,.4);font-family:var(--font-main);min-width:260px;max-width:94vw;';
 
   var title=document.createElement('div');
   title.style.cssText='font-size:11px;font-weight:700;color:#2980b9;margin-bottom:10px;text-align:center;';
   title.textContent='⬚ '+n+' elemento'+(n!==1?'s':'')+' — arrastra para mover';
   panel.appendChild(title);
 
-  function mkB(t,bg,col,brd){
-    var b=document.createElement('button');
-    b.style.cssText='flex:1;padding:8px 4px;background:'+bg+';color:'+col+';border:'+(brd||'none')+';border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;font-family:var(--font-main);';
-    b.textContent=t;return b;
-  }
+  function mkB(t,bg,col,brd){var b=document.createElement('button');b.style.cssText='flex:1;padding:9px 6px;background:'+bg+';color:'+col+';border:'+(brd||'none')+';border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;font-family:var(--font-main);white-space:nowrap;';b.textContent=t;return b;}
 
   var row1=document.createElement('div');row1.style.cssText='display:flex;gap:6px;margin-bottom:6px;';
   var bDup=mkB('📋 Duplicar','var(--gd)','#fff');
@@ -14659,67 +14863,57 @@ function libMenuSeleccion(){
   [bDup,bDel,bCan].forEach(function(b){row1.appendChild(b);});
   panel.appendChild(row1);
 
-  // Tamaño — solo si hay textos/stickers
+  // Tamaño con botones ➕➖ (más fiable en móvil)
   if(idxTx.length>0){
-    var row2=document.createElement('div');row2.style.cssText='display:flex;gap:6px;align-items:center;';
-    var lbl=document.createElement('div');lbl.style.cssText='font-size:10px;color:var(--tl);flex-shrink:0;white-space:nowrap;';lbl.textContent='Tamaño:';
-    var bM=mkB('➖','var(--bl)','var(--td)','1px solid var(--bd)');
-    var bP=mkB('➕','var(--bl)','var(--td)','1px solid var(--bd)');
-    var szLabel=document.createElement('div');szLabel.style.cssText='font-size:11px;color:var(--td);min-width:32px;text-align:center;font-weight:700;';
-    var pag=_lib.paginas[_lib.pagActual];
-    if(pag&&pag.textos&&pag.textos[idxTx[0]]) szLabel.textContent=pag.textos[idxTx[0]].size||16;
-    [lbl,bM,szLabel,bP].forEach(function(b){row2.appendChild(b);});
+    var pag0=_lib.paginas[_lib.pagActual];
+    var row2=document.createElement('div');
+    row2.style.cssText='display:flex;gap:6px;align-items:center;margin-top:6px;';
+    var lbl=document.createElement('div');lbl.style.cssText='font-size:10px;color:var(--tl);flex-shrink:0;';lbl.textContent='Tamaño:';
+    var bM=document.createElement('button');bM.style.cssText='flex:1;padding:8px;background:var(--bl);color:var(--td);border:1px solid var(--bd);border-radius:8px;font-size:16px;cursor:pointer;font-weight:700;';bM.textContent='−';
+    var szLbl=document.createElement('div');szLbl.style.cssText='font-size:13px;font-weight:700;color:var(--td);min-width:36px;text-align:center;';
+    szLbl.textContent=(pag0&&pag0.textos&&pag0.textos[idxTx[0]])?Math.round(pag0.textos[idxTx[0]].size||16)+'px':'?';
+    var bP=document.createElement('button');bP.style.cssText='flex:1;padding:8px;background:var(--bl);color:var(--td);border:1px solid var(--bd);border-radius:8px;font-size:16px;cursor:pointer;font-weight:700;';bP.textContent='+';
+    [lbl,bM,szLbl,bP].forEach(function(e){row2.appendChild(e);});
     panel.appendChild(row2);
-
+    var tip2=document.createElement('div');tip2.style.cssText='font-size:9px;color:var(--tl);text-align:center;margin-top:4px;';tip2.textContent='O arrastra los círculos azules de las esquinas';panel.appendChild(tip2);
+    function updateSz(){
+      if(pag0&&pag0.textos&&pag0.textos[idxTx[0]])
+        szLbl.textContent=Math.round(pag0.textos[idxTx[0]].size||16)+'px';
+    }
     bM.addEventListener('click',function(){
-      var pag=_lib.paginas[_lib.pagActual];if(!pag||!pag.textos)return;
-      idxTx.forEach(function(i){if(pag.textos[i])pag.textos[i].size=Math.max(8,(pag.textos[i].size||16)-4);});
-      libRedraw();libGuardar();
-      if(pag.textos[idxTx[0]])szLabel.textContent=pag.textos[idxTx[0]].size;
+      if(!pag0||!pag0.textos)return;
+      idxTx.forEach(function(i){if(pag0.textos[i])pag0.textos[i].size=Math.max(8,(pag0.textos[i].size||16)-8);});
+      updateSz();libRedraw();libGuardar();
     });
     bP.addEventListener('click',function(){
-      var pag=_lib.paginas[_lib.pagActual];if(!pag||!pag.textos)return;
-      idxTx.forEach(function(i){if(pag.textos[i])pag.textos[i].size=Math.min(200,(pag.textos[i].size||16)+4);});
-      libRedraw();libGuardar();
-      if(pag.textos[idxTx[0]])szLabel.textContent=pag.textos[idxTx[0]].size;
+      if(!pag0||!pag0.textos)return;
+      idxTx.forEach(function(i){if(pag0.textos[i])pag0.textos[i].size=Math.min(200,(pag0.textos[i].size||16)+8);});
+      updateSz();libRedraw();libGuardar();
     });
   }
 
   document.body.appendChild(panel);
 
   bDup.addEventListener('click',function(){
-    panel.remove();
-    var pag=_lib.paginas[_lib.pagActual];if(!pag)return;
+    panel.remove();if(!pag)return;
     var off=28/_lib.zoom;
     _lib.historial.push({tipo:'trazo',pagIdx:_lib.pagActual});
-    idxT.forEach(function(i){
-      var t=pag.trazos[i];if(!t)return;
-      pag.trazos.push({pts:t.pts.map(function(p){return{x:p.x+off,y:p.y+off};}),color:t.color,grosor:t.grosor,boli:t.boli});
-    });
+    idxT.forEach(function(i){var t=pag.trazos&&pag.trazos[i];if(!t)return;pag.trazos.push({pts:t.pts.map(function(p){return{x:p.x+off,y:p.y+off};}),color:t.color,grosor:t.grosor,boli:t.boli});});
     if(!pag.textos)pag.textos=[];
-    idxTx.forEach(function(i){
-      var tx=pag.textos[i];if(!tx)return;
-      pag.textos.push({texto:tx.texto,x:tx.x+off,y:tx.y+off,color:tx.color,size:tx.size,bold:tx.bold,italic:tx.italic,underline:tx.underline});
-    });
+    idxTx.forEach(function(i){var tx=pag.textos[i];if(!tx)return;pag.textos.push({texto:tx.texto,x:tx.x+off,y:tx.y+off,color:tx.color,size:tx.size,bold:tx.bold,italic:tx.italic,underline:tx.underline});});
     _lib.sel.active=false;_lib.sel.idxTrazos=[];_lib.sel.idxTextos=[];
     libRedraw();libGuardar();
   });
-
   bDel.addEventListener('click',function(){
-    panel.remove();
-    var pag=_lib.paginas[_lib.pagActual];if(!pag)return;
-    _lib.historial.push({tipo:'borrador',pagIdx:_lib.pagActual,
-      trazos:JSON.parse(JSON.stringify(pag.trazos)),
-      textos:JSON.parse(JSON.stringify(pag.textos||[]))});
-    idxT.slice().sort(function(a,b){return b-a;}).forEach(function(i){pag.trazos.splice(i,1);});
-    if(pag.textos)idxTx.slice().sort(function(a,b){return b-a;}).forEach(function(i){pag.textos.splice(i,1);});
+    panel.remove();if(!pag)return;
+    _lib.historial.push({tipo:'borrador',pagIdx:_lib.pagActual,trazos:JSON.parse(JSON.stringify(pag.trazos)),textos:JSON.parse(JSON.stringify(pag.textos||[]))});
+    idxT.slice().sort(function(a,b){return b-a;}).forEach(function(i){if(pag.trazos)pag.trazos.splice(i,1);});
+    idxTx.slice().sort(function(a,b){return b-a;}).forEach(function(i){if(pag.textos)pag.textos.splice(i,1);});
     _lib.sel.active=false;_lib.sel.idxTrazos=[];_lib.sel.idxTextos=[];
     libRedraw();libGuardar();
   });
-
   bCan.addEventListener('click',function(){
-    panel.remove();
-    _lib.sel.active=false;_lib.sel.idxTrazos=[];_lib.sel.idxTextos=[];libRedraw();
+    panel.remove();_lib.sel.active=false;_lib.sel.idxTrazos=[];_lib.sel.idxTextos=[];libRedraw();
   });
 }
 function libToggleEstilo(tipo){
@@ -14992,6 +15186,78 @@ function libMenuFondoPlantilla(){
   panel.appendChild(sheet);panel.addEventListener('click',function(e){if(e.target===panel)panel.remove();});document.body.appendChild(panel);
 }
 
+// ── Menú selector de figuras geométricas ──
+function libMenuFiguras(){
+  var figs=[
+    {id:'linea',  emoji:'╱', nombre:'Línea'},
+    {id:'rect',   emoji:'▭', nombre:'Rectángulo'},
+    {id:'circulo',emoji:'◯', nombre:'Círculo/Elipse'},
+    {id:'triangulo',emoji:'△',nombre:'Triángulo'},
+    {id:'flecha', emoji:'→', nombre:'Flecha'},
+    {id:'estrella',emoji:'★',nombre:'Estrella'},
+    {id:'rombo',  emoji:'◇', nombre:'Rombo'},
+  ];
+  var panel=document.createElement('div');
+  panel.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:700;display:flex;align-items:flex-end;';
+  var sheet=document.createElement('div');
+  sheet.style.cssText='background:var(--w);width:100%;border-radius:18px 18px 0 0;padding:16px 16px 32px;font-family:var(--font-main);';
+  var h=document.createElement('div');h.style.cssText='font-size:14px;font-weight:800;color:var(--td);margin-bottom:12px;';h.textContent='◻ Figuras geométricas';
+  sheet.appendChild(h);
+  var grid=document.createElement('div');grid.style.cssText='display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px;';
+  figs.forEach(function(f){
+    var btn=document.createElement('button');
+    var active=_lib.figTipo===f.id&&_lib.herramienta==='figura';
+    btn.style.cssText='padding:10px 6px;background:'+(active?'var(--gd)':'var(--bl)')+';color:'+(active?'#fff':'var(--td)')+';border:1.5px solid '+(active?'var(--gd)':'var(--bd)')+';border-radius:10px;cursor:pointer;font-family:var(--font-main);display:flex;flex-direction:column;align-items:center;gap:4px;';
+    btn.innerHTML='<span style="font-size:22px;line-height:1;">'+f.emoji+'</span><span style="font-size:10px;">'+f.nombre+'</span>';
+    btn.addEventListener('click',function(){
+      _lib.figTipo=f.id;
+      // Activar herramienta figura
+      document.querySelectorAll('.lib-tool').forEach(function(b){b.classList.remove('active');});
+      var ft=document.getElementById('lt-figura');if(ft)ft.classList.add('active');
+      _lib.herramienta='figura';
+      panel.remove();
+    });
+    grid.appendChild(btn);
+  });
+  sheet.appendChild(grid);
+  var tip=document.createElement('div');tip.style.cssText='font-size:11px;color:var(--tl);text-align:center;margin-bottom:10px;';
+  tip.textContent='Selecciona una figura y arrastra en la hoja para dibujarla';
+  sheet.appendChild(tip);
+  var cc=document.createElement('button');cc.style.cssText='width:100%;padding:11px;background:var(--bd);border:none;border-radius:10px;font-size:13px;cursor:pointer;';cc.textContent='Cancelar';cc.addEventListener('click',function(){panel.remove();});sheet.appendChild(cc);
+  panel.appendChild(sheet);panel.addEventListener('click',function(e){if(e.target===panel)panel.remove();});
+  document.body.appendChild(panel);
+}
+
+
+// Recalcular puntos de una figura desde su figData (para resize)
+function libRecalcFigura(t){
+  if(!t.figura||!t.figData)return;
+  var d=t.figData,fx0=d.x0,fy0=d.y0,fx1=d.x1,fy1=d.y1;
+  var pts=[],tipo=t.figura;
+  if(tipo==='rect'){
+    pts=[{x:fx0,y:fy0},{x:fx1,y:fy0},{x:fx1,y:fy1},{x:fx0,y:fy1},{x:fx0,y:fy0}];
+  }else if(tipo==='circulo'){
+    var cc_x=(fx0+fx1)/2,cc_y=(fy0+fy1)/2,cc_rx=Math.abs(fx1-fx0)/2,cc_ry=Math.abs(fy1-fy0)/2;
+    for(var ai=0;ai<=64;ai++){var ang=ai/64*Math.PI*2;pts.push({x:cc_x+cc_rx*Math.cos(ang),y:cc_y+cc_ry*Math.sin(ang)});}
+  }else if(tipo==='triangulo'){
+    pts=[{x:(fx0+fx1)/2,y:fy0},{x:fx1,y:fy1},{x:fx0,y:fy1},{x:(fx0+fx1)/2,y:fy0}];
+  }else if(tipo==='linea'){
+    pts=[{x:fx0,y:fy0},{x:fx1,y:fy1}];
+  }else if(tipo==='flecha'){
+    var f_dx=fx1-fx0,f_dy=fy1-fy0,f_len=Math.sqrt(f_dx*f_dx+f_dy*f_dy)||1;
+    var f_ux=f_dx/f_len,f_uy=f_dy/f_len,f_as=Math.min(f_len*0.35,40);
+    var f_px=-f_uy*f_as*0.4,f_py=f_ux*f_as*0.4;
+    pts=[{x:fx0,y:fy0},{x:fx1,y:fy1},{x:fx1-f_ux*f_as+f_px,y:fy1-f_uy*f_as+f_py},{x:fx1,y:fy1},{x:fx1-f_ux*f_as-f_px,y:fy1-f_uy*f_as-f_py}];
+  }else if(tipo==='estrella'){
+    var es_cx=(fx0+fx1)/2,es_cy=(fy0+fy1)/2;
+    var es_r1=Math.min(Math.abs(fx1-fx0),Math.abs(fy1-fy0))/2,es_r2=es_r1*0.4;
+    for(var ki=0;ki<=10;ki++){var a2i=ki/10*Math.PI*2-Math.PI/2,r3i=ki%2===0?es_r1:es_r2;pts.push({x:es_cx+r3i*Math.cos(a2i),y:es_cy+r3i*Math.sin(a2i)});}
+  }else if(tipo==='rombo'){
+    var ro_cx=(fx0+fx1)/2,ro_cy=(fy0+fy1)/2;
+    pts=[{x:ro_cx,y:fy0},{x:fx1,y:ro_cy},{x:ro_cx,y:fy1},{x:fx0,y:ro_cy},{x:ro_cx,y:fy0}];
+  }
+  t.pts=pts;
+}
 </script>
 </body>
 </html>
