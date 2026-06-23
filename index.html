@@ -4208,7 +4208,15 @@ async function driveSyncSubir(){
     // Incluir libreta (localStorage) en la sincronización
   var _libreta=null;
   try{var _ls=localStorage.getItem('tp_libreta');if(_ls)_libreta=JSON.parse(_ls);}catch(e){}
-  var dataObj=Object.assign({},state,{_libreta:_libreta||[]});
+  var dataObj=Object.assign({},state,{
+    _libreta:_libreta||[],
+    config:{
+      theme:state.theme||'sage',
+      font:state.font||'Nunito',
+      fontScale:state.fontScale||1,
+      sheetsUrl:state.sheetsUrl||''
+    }
+  });
   var data = JSON.stringify(dataObj);
     var blob = new Blob([data], {type:'application/json'});
     var metadata = {name: DRIVE_FILE_NAME, mimeType:'application/json'};
@@ -8774,14 +8782,19 @@ function importBackupJSON(e){
       try{renderHorarioHome();}catch(ex){}
       try{renderCalificaciones&&renderCalificaciones();}catch(ex){}
       try{renderAlertas&&renderAlertas();}catch(ex){}
+      try{if(typeof renderRutinas==='function')renderRutinas();}catch(ex){}
       // Mensaje resumen
       var resumen=[];
-      if((d.records||d.registros||[]).length) resumen.push((d.records||d.registros).length+' tareas');
-      if((d.calificaciones||[]).length) resumen.push((d.calificaciones).length+' calificaciones');
-      if((d.albums||[]).length) resumen.push('apuntes');
+      var recs=d.records||d.registros||[];
+      if(recs.length) resumen.push(recs.length+' tareas');
+      if((d.calificaciones||[]).length) resumen.push(d.calificaciones.length+' calificaciones');
+      if((d.rutinas||[]).length) resumen.push(d.rutinas.length+' rutinas');
+      if((d.recordatorios||[]).length) resumen.push(d.recordatorios.length+' recordatorios');
+      if((d.albums||[]).length) resumen.push('apuntes ('+d.albums.length+' carpetas)');
       if(d.libreta&&d.libreta.length) resumen.push('libreta ('+d.libreta.length+' pág.)');
       if(d.horario) resumen.push('horario');
-      showWarn('✅ Restaurado: '+resumen.join(', '));
+      if(d.config&&d.config.theme) resumen.push('tema '+d.config.theme);
+      showWarn('✅ Restaurado: '+resumen.join(' · '));
     }catch(err){showWarn('⚠ Error: '+err.message);}
   };
   reader.readAsText(file);
