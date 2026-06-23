@@ -2419,6 +2419,23 @@ body[data-theme="lavanda"] .tap-card{background:#fff;border-color:#ddd5f5;}
   background:linear-gradient(160deg,#fffef8 0%,#f4f8f2 100%);
   position:relative;overflow:hidden;
 }
+/* ── Modo oscuro automático del sistema ── */
+@media (prefers-color-scheme: dark) {
+  body:not([data-theme]) {
+    --gd:#4a7c59;--gm:#5a9268;--ga:#6aab78;--gl:#e8f5ea;
+    --w:#1a1a1a;--bp:#242424;--bl:#2a2a2a;--bd:#333;
+    --td:#f0f0f0;--tm:#c8e6c9;--tl:#999;--th:#777;
+    --bc:#4a7c59;--body-bg:#121212;
+  }
+}
+/* Forzar modo oscuro si usuario lo elige en ajustes */
+[data-dark="1"] {
+  --w:#1a1a1a!important;--bp:#242424!important;--bl:#2a2a2a!important;
+  --bd:#333!important;--td:#f0f0f0!important;--tm:#c8e6c9!important;
+  --tl:#999!important;--th:#777!important;--body-bg:#121212!important;
+}
+[data-dark="1"] body, body[data-dark="1"] { background:var(--body-bg)!important; }
+
 .nb-portada::before{
   content:'';position:absolute;inset:0;
   background-image:repeating-linear-gradient(transparent,transparent 27px,#e8f0e4 27px,#e8f0e4 28px);
@@ -2774,6 +2791,7 @@ body.nb-mode #nb-pill-orden { display:none !important; }
     <!-- Saludo personalizado -->
     <div class="splash-name" id="splash-name" style="font-size:18px;font-weight:700;color:#fff;font-family:var(--font-main);margin-bottom:32px;"></div>
 
+
     <!-- Botón entrar -->
     <div style="display:flex;flex-direction:column;gap:8px;width:100%;max-width:280px;margin-bottom:20px;">
       <button onclick="doLogin()" style="width:100%;padding:13px;background:#fff;color:var(--gd);border:none;border-radius:10px;font-family:var(--font-main);font-size:15px;font-weight:800;cursor:pointer;">Entrar en Tapunto</button>
@@ -2886,13 +2904,22 @@ body.nb-mode #nb-pill-orden { display:none !important; }
         <div id="home-premium-badge" style="position:absolute;top:-4px;right:-4px;background:#EF9F27;border-radius:50%;width:15px;height:15px;display:none;align-items:center;justify-content:center;font-size:9px;">&#11088;</div>
       </div>
     </div>
-    <div style="display:flex;align-items:center;justify-content:flex-end;gap:5px;padding-bottom:5px;">
-      <button id="btn-notif" onclick="toggleNotificaciones()" style="background:rgba(255,255,255,0.15);border:none;border-radius:8px;padding:3px 8px;display:flex;align-items:center;gap:4px;cursor:pointer;">
-        <span id="home-notif-icon" style="font-size:12px;">&#128276;</span>
-        <span id="home-notif-label" style="font-size:9px;color:rgba(255,255,255,0.85);font-weight:600;font-family:var(--font-main);">Notif. ON</span>
-      </button>
+    <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;padding-bottom:6px;">
+      <!-- Fila 1: buscador + notif -->
+      <div style="display:flex;align-items:center;gap:5px;">
+        <button onclick="abrirBuscador()" title="Buscar" style="background:rgba(255,255,255,0.15);border:none;border-radius:8px;padding:4px 8px;cursor:pointer;font-size:16px;color:#fff;line-height:1;">🔍</button>
+        <button id="btn-notif" onclick="toggleNotificaciones()" style="background:rgba(255,255,255,0.15);border:none;border-radius:8px;padding:3px 8px;display:flex;align-items:center;gap:4px;cursor:pointer;">
+          <span id="home-notif-icon" style="font-size:12px;">&#128276;</span>
+          <span id="home-notif-label" style="font-size:9px;color:rgba(255,255,255,0.85);font-weight:600;font-family:var(--font-main);">Notif. ON</span>
+        </button>
+      </div>
+      <!-- Fila 2: modo oscuro (solo iconos, pequeños, derecha) -->
+      <div style="display:flex;gap:3px;">
+        <button onclick="applyDarkMode('off');persist().catch(function(){})" id="dm-btn-off" title="Claro" style="padding:2px 5px;border-radius:5px;border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.1);font-size:12px;cursor:pointer;line-height:1;">☀️</button>
+        <button onclick="applyDarkMode('auto');persist().catch(function(){})" id="dm-btn-auto" title="Auto" style="padding:2px 5px;border-radius:5px;border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.1);font-size:12px;cursor:pointer;line-height:1;">🔄</button>
+        <button onclick="applyDarkMode('on');persist().catch(function(){})" id="dm-btn-on" title="Oscuro" style="padding:2px 5px;border-radius:5px;border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.1);font-size:12px;cursor:pointer;line-height:1;">🌙</button>
+      </div>
     </div>
-  </div>
 
   <!-- SECCIÓN HORARIO HOY — siempre visible sin tabs -->
   <div id="home-horario-hoy" style="background:var(--bp);border-bottom:1px solid var(--bd);padding:6px 10px 8px;">
@@ -3516,6 +3543,18 @@ body.nb-mode #nb-pill-orden { display:none !important; }
 
   </div>
 
+  <!-- RECURRENCIA -->
+  <div style="padding:12px 16px;">
+    <label class="tap-label">🔁 Repetir tarea</label>
+    <div style="display:flex;gap:6px;flex-wrap:wrap;">
+      <button class="chip active" id="chip-rec-no" onclick="setRecurrencia('',this)">Sin repetir</button>
+      <button class="chip" id="chip-rec-sem" onclick="setRecurrencia('semanal',this)">Cada semana</button>
+      <button class="chip" id="chip-rec-qui" onclick="setRecurrencia('quincenal',this)">Cada 15 días</button>
+      <button class="chip" id="chip-rec-mes" onclick="setRecurrencia('mensual',this)">Cada mes</button>
+    </div>
+    <input type="hidden" id="inp-recurrencia" value=""/>
+  </div>
+
   <!-- BOTONES FIJOS AL PIE -->
   <div style="position:sticky;bottom:0;background:var(--w,#fff);border-top:1px solid var(--bd);padding:12px 16px;display:flex;gap:10px;z-index:10;">
     <button id="btn-cancelar-nuevo" onclick="cancelEdit?cancelEdit():irHome()" style="flex:1;padding:12px;background:var(--bp);border:1px solid var(--bd);border-radius:10px;font-family:var(--font-main);font-size:14px;font-weight:600;color:var(--tl);cursor:pointer;">
@@ -3938,8 +3977,12 @@ body.nb-mode #nb-pill-orden { display:none !important; }
             <span class="cfg-arrow">▶</span>
           </div>
           <div class="cfg-body">
-            <p style="font-size:12px;color:var(--tl);margin-bottom:8px;">Las notificaciones se gestionan desde el botón 🔔 en la portada.</p>
-            <div id="notif-estado-cfg" style="font-size:13px;font-family:var(--font-main);padding:10px;background:var(--bl);border-radius:8px;"></div>
+            <p style="font-size:12px;color:var(--tl);margin-bottom:8px;">Controla los avisos de recordatorios. El icono 🔔/🔕 del inicio y este ajuste están sincronizados.</p>
+            <div style="display:flex;gap:8px;margin-bottom:8px;">
+              <button onclick="if(localStorage.getItem('tp_notif')==='0'||!localStorage.getItem('tp_notif')){toggleNotificaciones();}else{}" style="flex:1;padding:10px;background:var(--gd);color:#fff;border:none;border-radius:10px;font-size:13px;cursor:pointer;font-family:var(--font-main);font-weight:700;">🔔 Activar</button>
+              <button onclick="if(localStorage.getItem('tp_notif')!=='0'){toggleNotificaciones();}" style="flex:1;padding:10px;background:#FCEBEB;color:#A32D2D;border:1px solid #F7C1C1;border-radius:10px;font-size:13px;cursor:pointer;font-family:var(--font-main);font-weight:700;">🔕 Desactivar</button>
+            </div>
+            <div id="notif-estado-cfg" style="font-size:12px;font-family:var(--font-main);padding:8px;background:var(--bl);border-radius:8px;color:var(--tl);text-align:center;"></div>
           </div>
         </div>
 <div class="cfg-block">
@@ -5908,7 +5951,8 @@ const confidencial=getConfidencial();
 if(tema&&!state.temas.includes(tema)){state.temas.push(tema);fillSelect('inp-tema',state.temas);}
 if(contacto&&!state.contactos.includes(contacto)){state.contactos.push(contacto);fillSelect('inp-contacto',state.contactos);}
 const icono=(document.getElementById('inp-icono')||{value:'📋'}).value||'📋';
-const fechaEvento=(document.getElementById('inp-fecha-evento')&&document.getElementById('inp-fecha-evento').value||'').trim();const rec={id:newId,fecha,contacto,tema,titulo,accion,comunicado,estado,notas,icono,fechaEvento,
+const fechaEvento=(document.getElementById('inp-fecha-evento')&&document.getElementById('inp-fecha-evento').value||'').trim();const recurrenciaVal=(document.getElementById('inp-recurrencia')||{}).value||'';
+const rec={id:newId,fecha,contacto,tema,titulo,accion,comunicado,estado,notas,icono,fechaEvento,recurrencia:recurrenciaVal,
 recordatorio:calcReminder(fecha),created:new Date().toISOString(),
 imagenUrl:imagenUrl||'',confidencial:confidencial};
 if(state.records.find(r=>r.id===rec.id)){
@@ -5916,6 +5960,7 @@ if(saveBtn) saveBtn.disabled=false;
 return;
 }
 state.records.unshift(rec);
+try{if(rec.recurrencia)crearTareasRecurrentes(rec);}catch(e){}
 const _seen=new Set();
 state.records=state.records.filter(r=>{if(!r.id||_seen.has(r.id))return false;_seen.add(r.id);return true;});
 await persist();
@@ -7502,10 +7547,24 @@ function toggleNotificaciones(){
   var nuevas=!activas;
   localStorage.setItem('tp_notif',nuevas?'1':'0');
   actualizarBtnNotif(nuevas);
+  // Sincronizar con icono de config
+  actualizarEstadoNotifCfg(nuevas);
   showOk(nuevas?'Alertas activadas 🔔':'Alertas silenciadas 🔕');
   if(nuevas&&'Notification' in window&&Notification.permission==='default'){
-    Notification.requestPermission();
+    Notification.requestPermission().then(function(p){
+      actualizarEstadoNotifCfg(p==='granted');
+    });
   }
+}
+function actualizarEstadoNotifCfg(activas){
+  var el=document.getElementById('notif-estado-cfg');
+  if(!el)return;
+  var permiso='Notification' in window?Notification.permission:'no soportado';
+  el.textContent=activas&&permiso==='granted'
+    ? '✅ Notificaciones activadas y con permiso'
+    : activas&&permiso!=='granted'
+    ? '⚠ Activadas pero sin permiso del navegador — pulsa Activar'
+    : '🔕 Notificaciones desactivadas';
 }
 function actualizarBtnNotif(activas){
   var icon=document.getElementById('home-notif-icon');
@@ -7514,8 +7573,12 @@ function actualizarBtnNotif(activas){
   if(label) label.textContent=activas?'Notif. ON':'Notif. OFF';
   var btnCfg=document.getElementById('btn-notif-cfg');
   if(btnCfg) btnCfg.textContent=activas?'🔔':'🔕';
+  // Actualizar estado en config
+  actualizarEstadoNotifCfg(activas);
 }
 function initNotificaciones(){
+  // Sincronizar estado config al cargar
+  setTimeout(function(){try{actualizarEstadoNotifCfg(localStorage.getItem('tp_notif')!=='0');}catch(e){}},500);
   var activas=localStorage.getItem('tp_notif')!=='0';
   actualizarBtnNotif(activas);
 }
@@ -7642,7 +7705,7 @@ if(fEl&&!fEl.value){
 }
 },50);}
 if(tab==='registros'){window._nbMostrarPortada=true;window._nbAsigActiva=null;renderStats();renderRecords();}
-if(tab==='home'){try{renderResumen();renderHorarioHome();renderProximasTareas();}catch(e){}}
+if(tab==='home'){try{renderStreak();}catch(e){}try{renderResumen();renderHorarioHome();renderProximasTareas();}catch(e){}}
 if(tab==='config'){renderThemes();loadPinConfig();loadSheetsToken();loadFirmaConfig();renderLists();}
 if(tab==='recordatorios'){renderReminders();renderAlertasInteligentes();}
 if(tab==='calendario') renderCalendario();
@@ -9306,6 +9369,8 @@ mostrarSplash();
 setTimeout(cerrarSplash, 800);
 setTimeout(checkBackupSemanal, 5000);
 requestAnimationFrame(()=>{
+try{initDarkMode();}catch(e){}
+try{solicitarPermisoNotif();}catch(e){}
 applyMode('trabajo');
 initForm();
 checkTodayReminders();
@@ -13502,15 +13567,36 @@ function renderCalificaciones(){
     return;
   }
 
-  // ── Render cards ──
   lista.innerHTML = '';
+  // ── Render cards por asignatura (3 por fila) ──
   var uid = 0;
+  // Agrupar por asignatura
+  var grupos={},ordenGrupos=[];
   recs.forEach(function(r){
+    var a=r.tema||'Sin asignatura';
+    if(!grupos[a]){grupos[a]=[];ordenGrupos.push(a);}
+    grupos[a].push(r);
+  });
+  ordenGrupos.forEach(function(asig){
+    // Cabecera de asignatura
+    var asigHdr=document.createElement('div');
+    asigHdr.style.cssText='font-size:11px;font-weight:800;color:var(--tm);text-transform:uppercase;letter-spacing:.5px;margin:12px 0 6px;font-family:var(--font-main);padding-left:2px;';
+    asigHdr.textContent=asig;
+    lista.appendChild(asigHdr);
+    // Grid 3 columnas
+    var grid=document.createElement('div');
+    grid.style.cssText='display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:4px;';
+    lista.appendChild(grid);
+    grupos[asig].forEach(function(r){
+      var card=document.createElement('div');
+      card.style.cssText='background:var(--w);border:1px solid var(--bd);border-radius:10px;padding:8px;position:relative;';
+      // uid for obs
+      uid++;
     uid++;
     var nota     = r.calificacion || '';
     var notaNum  = parseFloat(nota);
-    var notaColor= isNaN(notaNum)?'var(--tl)':notaNum>=9?'#1a7a4a':notaNum>=7?'#27ae60':notaNum>=5?'#e67e22':'#e74c3c';
-    var notaBg   = isNaN(notaNum)?'var(--bp)':notaNum>=9?'#d4f4e4':notaNum>=7?'#EAF3DE':notaNum>=5?'#FAEEDA':'#FCEBEB';
+    var notaColor= isNaN(notaNum)?'var(--td)':notaNum>=9?'#1a7a4a':notaNum>=7?'#27ae60':notaNum>=5?'#e67e22':'#e74c3c';
+    var notaBg   = isNaN(notaNum)?'transparent':notaNum>=9?'#d4f4e4':notaNum>=7?'#EAF3DE':notaNum>=5?'#FAEEDA':'#FCEBEB';
     var aprobTxt = (nota!==''&&!isNaN(notaNum))?(notaNum>=5?'✓':'✗'):'';
     var aprobColor = notaNum>=5?'#27ae60':'#e74c3c';
 
@@ -13523,35 +13609,13 @@ function renderCalificaciones(){
     card.style.cssText='background:var(--w);border:1px solid var(--bd);border-radius:12px;padding:10px 12px;margin-bottom:7px;';
 
     card.innerHTML =
-      // ── Fila superior: asignatura + tipo + fecha + botón eliminar ──
-      '<div style="display:flex;align-items:center;gap:5px;margin-bottom:6px;flex-wrap:wrap;">'
-        +'<span style="font-size:11px;font-weight:700;color:var(--gd);background:var(--bp);padding:1px 7px;border-radius:7px;border:1px solid var(--bd);">'+_e(r.tema||'—')+'</span>'
-        +(r.accion?'<span style="font-size:10px;color:var(--tl);">'+_e(r.accion)+'</span>':'')
-        +(fechaStr?'<span style="font-size:10px;color:var(--tl);">· '+fechaStr+'</span>':'')
-        +'<button onclick="califEliminar(\''+r.id+'\')" title="Eliminar" style="margin-left:auto;background:none;border:none;font-size:16px;cursor:pointer;color:var(--tl);padding:0 2px;line-height:1;" title="Eliminar registro">🗑</button>'
-      +'</div>'
-      // ── Título ──
-      +'<div style="font-size:13px;font-weight:700;color:var(--td);font-family:var(--font-main);margin-bottom:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'
-        +(r.icono?r.icono+' ':'')+_e(r.titulo||r.tema||'Sin título')
-      +'</div>'
-      // ── Nota inline + aprobado ──
-      +'<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">'
-        +'<span style="font-size:12px;font-weight:700;color:var(--tm);white-space:nowrap;">📊 Nota:</span>'
-        +'<input type="number" min="0" max="10" step="0.1" placeholder="0–10" value="'+_e(nota)+'" data-rid="'+r.id+'" '
-          +'style="width:72px;padding:5px 6px;border:1.5px solid var(--bd);border-radius:8px;font-size:15px;font-weight:700;color:'+notaColor+';background:'+notaBg+';font-family:var(--font-main);text-align:center;box-sizing:border-box;" '
-          +'oninput="califActualizarNota(this)" onchange="califGuardar(this)"/>'
-        +(aprobTxt?'<span style="font-size:13px;font-weight:700;color:'+aprobColor+';">'+aprobTxt+'</span>':'')
-        // Botón colapsar observaciones
-        +'<button onclick="califToggleObs(\''+obsId+'\')" style="margin-left:auto;background:var(--bp);border:1px solid var(--bd);border-radius:6px;padding:3px 8px;font-size:11px;font-family:var(--font-main);color:var(--tl);cursor:pointer;">📝 Obs.</button>'
-      +'</div>'
-      // ── Observaciones colapsadas ──
-      +'<div id="'+obsId+'" style="display:none;">'
-        +'<textarea data-rid="'+r.id+'" rows="2" placeholder="Temas a revisar, comentarios del profesor..." '
-          +'style="width:100%;padding:7px 9px;border:1px solid var(--bd);border-radius:8px;font-size:12px;font-family:var(--font-main);color:var(--td);background:var(--bp);resize:vertical;box-sizing:border-box;" '
-          +'onchange="califGuardarObs(this)">'+_e(r.observacionesNota||'')+'</textarea>'
-      +'</div>';
-
-    lista.appendChild(card);
+      // Fila superior: tipo + fecha + X roja
+      '<div style="display:flex;align-items:center;gap:3px;margin-bottom:4px;">'        +(r.accion?'<span style="font-size:9px;font-weight:700;color:var(--gd);background:var(--bp);padding:1px 5px;border-radius:5px;border:1px solid var(--bd);">'+_e(r.accion)+'</span>':'')        +(fechaStr?'<span style="font-size:9px;color:var(--tl);">'+fechaStr+'</span>':'')        +'<button onclick="califEliminar(\''+r.id+'\',this)" style="margin-left:auto;background:none;border:none;font-size:14px;font-weight:900;cursor:pointer;color:#e74c3c;padding:0 2px;line-height:1;" title="Eliminar">✕</button>'      +'</div>'      // Título
+      +'<div style="font-size:11px;font-weight:700;color:var(--td);font-family:var(--font-main);margin-bottom:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;" title="'+_e(r.titulo||r.tema||'')+'">'        +(r.icono?r.icono+' ':'')+_e(r.titulo||r.tema||'Sin título')      +'</div>'      // Input nota
+      +'<div style="display:flex;align-items:center;gap:4px;margin-bottom:4px;">'        +'<input type="number" min="0" max="10" step="0.1" placeholder="0–10" value="'+(nota||'')+'" data-rid="'+r.id+'" '          +'style="flex:1;min-width:0;padding:4px 5px;border:2px solid var(--bd);border-radius:8px;font-size:14px;font-weight:700;color:'+notaColor+';background:'+notaBg+';font-family:var(--font-main);text-align:center;box-sizing:border-box;" '          +'oninput="califActualizarNota(this)" onchange="califGuardar(this)"/>'        +(aprobTxt?'<span style="font-size:11px;font-weight:700;color:'+aprobColor+';">'+aprobTxt+'</span>':'')      +'</div>'      // Observaciones colapsadas
+      +'<button onclick="califToggleObs(\''+obsId+'\')" style="background:var(--bp);border:1px solid var(--bd);border-radius:6px;padding:2px 6px;font-size:10px;font-family:var(--font-main);color:var(--tl);cursor:pointer;width:100%;">📝 Obs.</button>'      +'<div id="'+obsId+'" style="display:none;margin-top:4px;">'        +'<textarea data-rid="'+r.id+'" rows="2" placeholder="Observaciones..." '          +'style="width:100%;font-size:11px;border:1px solid var(--bd);border-radius:6px;padding:4px;font-family:var(--font-main);color:var(--td);background:var(--bp);resize:vertical;box-sizing:border-box;" '          +'onchange="califGuardarObs(this)">'+_e(r.observacionesNota||'')+'</textarea>'      +'</div>'
+    grid.appendChild(card);
+    });
   });
 }
 
@@ -13788,6 +13852,35 @@ function applyFont(fontId){
   if(!fontId) fontId = state.font || 'Nunito';
   document.documentElement.style.setProperty('--font-main', "'"+fontId+"', sans-serif");
   state.font = fontId;
+}
+
+// ── Modo oscuro ──
+function applyDarkMode(val){
+  // val: 'auto'|'on'|'off'
+  state.darkMode=val;
+  if(val==='on'){
+    document.body.setAttribute('data-dark','1');
+  }else if(val==='off'){
+    document.body.removeAttribute('data-dark');
+  }else{
+    // auto: seguir el sistema
+    document.body.removeAttribute('data-dark');
+    var mq=window.matchMedia('(prefers-color-scheme: dark)');
+    if(mq&&mq.matches) document.body.setAttribute('data-dark','1');
+  }
+}
+function initDarkMode(){
+  var dm=state.darkMode||'auto';
+  applyDarkMode(dm);
+  // Escuchar cambios del sistema
+  try{
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',function(e){
+      if((state.darkMode||'auto')==='auto'){
+        if(e.matches) document.body.setAttribute('data-dark','1');
+        else document.body.removeAttribute('data-dark');
+      }
+    });
+  }catch(ex){}
 }
 
 function renderFonts(){
@@ -15271,6 +15364,83 @@ function libRecalcFigura(t){
   }
   t.pts=pts;
 }
+
+// ── Buscador global ──
+function abrirBuscador(){
+  var ov=document.getElementById('buscador-overlay');
+  if(!ov)return;
+  ov.style.display='flex';
+  setTimeout(function(){
+    var inp=document.getElementById('buscador-input');
+    if(inp){inp.value='';inp.focus();}
+    renderBuscador('');
+  },80);
+}
+function cerrarBuscador(){
+  var ov=document.getElementById('buscador-overlay');
+  if(ov)ov.style.display='none';
+}
+function renderBuscador(q){
+  var res=document.getElementById('buscador-results');if(!res)return;
+  q=(q||'').trim().toLowerCase();
+  var items=[];
+  (state.records||[]).forEach(function(r){
+    if(r.archivado)return;
+    var txt=((r.titulo||'')+(r.tema||'')+(r.notas||'')).toLowerCase();
+    if(!q||txt.includes(q))
+      items.push({icono:r.icono||'📋',titulo:r.titulo||r.tema||'Sin título',
+        sub:(r.tema||'')+(r.fechaEvento?' · '+r.fechaEvento:''),
+        id:r.id,color:'var(--gd)',tipo:'tarea'});
+  });
+  (state.albums||[]).forEach(function(a){
+    var txt=(a.nombre||'').toLowerCase();
+    if(!q||txt.includes(q))
+      items.push({icono:'📁',titulo:a.nombre||'Carpeta',
+        sub:((a.items||[]).length)+' archivos',
+        id:a.id,color:'#8e44ad',tipo:'apunte'});
+  });
+  if(!items.length){
+    res.innerHTML='<div style="text-align:center;padding:40px 20px;color:var(--tl);font-family:var(--font-main);font-size:13px;">'
+      +(q?'Sin resultados para &laquo;'+q+'&raquo;':'Escribe para buscar...')+'</div>';
+    return;
+  }
+  var html='';
+  items.slice(0,40).forEach(function(it){
+    var safeId=it.id.replace(/'/g,'');
+    html+='<div onclick="cerrarBuscador()" data-id="'+safeId+'" '
+      +'style="display:flex;align-items:center;gap:10px;padding:10px;background:var(--w);border:1px solid var(--bd);border-left:4px solid '+it.color+';border-radius:0 10px 10px 0;margin-bottom:6px;cursor:pointer;">'
+      +'<span style="font-size:20px;flex-shrink:0;">'+it.icono+'</span>'
+      +'<div style="flex:1;min-width:0;">'
+      +'<div style="font-size:13px;font-weight:700;color:var(--td);font-family:var(--font-main);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'+it.titulo+'</div>'
+      +'<div style="font-size:11px;color:var(--tl);font-family:var(--font-main);">'+it.sub+'</div>'
+      +'</div>'
+      +'<span style="font-size:9px;color:var(--tl);background:var(--bp);padding:2px 6px;border-radius:6px;flex-shrink:0;">'+it.tipo+'</span>'
+      +'</div>';
+  });
+  res.innerHTML='<div style="font-size:10px;color:var(--tl);font-family:var(--font-main);padding:6px 0 10px;text-transform:uppercase;letter-spacing:.5px;">'+items.length+' resultado'+(items.length!==1?'s':'')+'</div>'+html;
+  // Add click handlers
+  res.querySelectorAll('[data-id]').forEach(function(el){
+    el.addEventListener('click',function(){
+      var id=this.getAttribute('data-id');
+      try{viewRecord(id);}catch(ex){irSeccion('registros');}
+    });
+  });
+}
+document.addEventListener('keydown',function(e){if(e.key==='Escape')cerrarBuscador();});
 </script>
+
+
+<!-- Buscador global -->
+<div id="buscador-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:800;flex-direction:column;">
+  <div style="background:var(--w);padding:12px 16px;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--bd);">
+    <span style="font-size:18px;">🔍</span>
+    <input id="buscador-input" type="text" placeholder="Buscar tareas, apuntes, calificaciones..." autocomplete="off"
+      style="flex:1;border:none;outline:none;font-size:15px;font-family:var(--font-main);color:var(--td);background:transparent;"
+      oninput="renderBuscador(this.value)"/>
+    <button onclick="cerrarBuscador()" style="background:none;border:none;font-size:20px;cursor:pointer;color:var(--tl);">✕</button>
+  </div>
+  <div id="buscador-results" style="flex:1;overflow-y:auto;padding:8px 16px;background:var(--body-bg,var(--bp));"></div>
+</div>
+
 </body>
 </html>
