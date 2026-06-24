@@ -12819,6 +12819,13 @@ function nbNuevaAsigConColor(){
   nbPickColor(n);
 }
 
+
+function navVolverAtras(){
+  if(!window._navHistory||!window._navHistory.length) return;
+  var prev=window._navHistory.pop();
+  if(prev==='home'||prev==='') irHome();
+  else irSeccion(prev);
+}
 </script>
 
 <script>
