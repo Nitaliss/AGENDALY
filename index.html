@@ -297,7 +297,7 @@ body{font-family:var(--font-main);font-size:calc(14px * var(--font-scale,1));bac
   display:flex;align-items:center;justify-content:center;z-index:9999;padding:20px;}
 .login-card{background:var(--w);border-radius:16px;padding:32px 28px;width:100%;
   max-width:360px;box-shadow:0 24px 64px rgba(0,0,0,.35);text-align:center;}
-.login-logo{width:56px;height:56px;border-radius:14px;
+.login-logo{width:64px;height:64px;border-radius:14px;
   background:linear-gradient(135deg,var(--gd),var(--gl));
   display:flex;align-items:center;justify-content:center;
   font-family:var(--font-main);font-weight:700;font-size:18px;
@@ -2416,25 +2416,22 @@ body[data-theme="lavanda"] .tap-card{background:#fff;border-color:#ddd5f5;}
 .nb-portada{
   display:flex;flex-direction:column;align-items:center;justify-content:center;
   min-height:60vh;padding:30px 24px;text-align:center;
-  background:linear-gradient(160deg,#fffef8 0%,#f4f8f2 100%);
+  background:var(--nb-portada-bg,linear-gradient(160deg,#fffef8 0%,#f4f8f2 100%));
   position:relative;overflow:hidden;
 }
-/* ── Modo oscuro automático del sistema ── */
+/* ── Modo oscuro automático ── */
 @media (prefers-color-scheme: dark) {
   body:not([data-theme]) {
-    --gd:#4a7c59;--gm:#5a9268;--ga:#6aab78;--gl:#e8f5ea;
     --w:#1a1a1a;--bp:#242424;--bl:#2a2a2a;--bd:#333;
-    --td:#f0f0f0;--tm:#c8e6c9;--tl:#999;--th:#777;
-    --bc:#4a7c59;--body-bg:#121212;
+    --td:#f0f0f0;--tm:#c8e6c9;--tl:#999;--th:#777;--body-bg:#121212;
   }
 }
-/* Forzar modo oscuro si usuario lo elige en ajustes */
-[data-dark="1"] {
-  --w:#1a1a1a!important;--bp:#242424!important;--bl:#2a2a2a!important;
-  --bd:#333!important;--td:#f0f0f0!important;--tm:#c8e6c9!important;
-  --tl:#999!important;--th:#777!important;--body-bg:#121212!important;
-}
-[data-dark="1"] body, body[data-dark="1"] { background:var(--body-bg)!important; }
+[data-dark="1"]{--w:#1a1a1a!important;--bp:#242424!important;--bl:#2a2a2a!important;--bd:#333!important;--td:#f0f0f0!important;--tl:#999!important;--body-bg:#121212!important;}
+
+[data-theme="navidad"]{--gd:#c0392b;--gm:#e74c3c;--ga:#ff6b6b;--gl:#fde8e8;--w:#fffaf9;--bp:#fff5f4;--bl:#ffeae8;--bd:#f5c6c6;--td:#1a0a0a;--tm:#922b21;--tl:#7b241c;--bc:#c0392b;}
+[data-theme="halloween"]{--gd:#e67e22;--gm:#d35400;--ga:#f39c12;--gl:#fef5e7;--w:#1a1a2e;--bp:#16213e;--bl:#0f3460;--bd:#533483;--td:#e8e8e8;--tm:#f39c12;--tl:#bbb;--bc:#e67e22;}
+[data-theme="verano"]{--gd:#f39c12;--gm:#e67e22;--ga:#f1c40f;--gl:#fef9e7;--w:#fff;--bp:#fffde7;--bl:#fff9c4;--bd:#f9e79f;--td:#1a1a00;--tm:#b7950b;--tl:#7d6608;--bc:#f39c12;}
+[data-theme="vueltacole"]{--gd:#1565c0;--gm:#1976d2;--ga:#42a5f5;--gl:#e3f2fd;--w:#fff;--bp:#e3f2fd;--bl:#bbdefb;--bd:#90caf9;--td:#0d1b2a;--tm:#0d47a1;--tl:#1565c0;--bc:#1565c0;}
 
 .nb-portada::before{
   content:'';position:absolute;inset:0;
@@ -2588,10 +2585,10 @@ body.nb-mode #nb-pill-orden { display:none !important; }
   <div class="tc-modal">
     <div class="tc-header">
       <h3>📋 Términos y Condiciones</h3>
-      <p>Lee el documento completo antes de continuar · Versión 4.0 · Junio 2026</p>
+      <p>Lee el documento completo antes de continuar · Versión 5.1 · Junio 2026</p>
     </div>
     <div class="tc-body" id="tc-body" onscroll="checkTCScroll()">
-      <p style="font-size:11px;color:#888;margin-bottom:12px;">Versión 4.0 · Junio 2026 · ES/EN</p>
+      <p style="font-size:11px;color:#888;margin-bottom:12px;">Versión 5.1 · Junio 2026 · ES/EN</p>
 
       <h4>1. Titular / Owner</h4>
       <p>Tapunto es desarrollada y mantenida por <strong>Alicia Prats</strong> · Marca registrada OEPM M4377915 · Valencia, España · <a href="https://tapunto.app">tapunto.app</a> · <a href="mailto:agenda@tapunto.app">agenda@tapunto.app</a></p>
@@ -2619,9 +2616,9 @@ body.nb-mode #nb-pill-orden { display:none !important; }
 
       <h4>6. Planes y funciones / Plans and features</h4>
       <p><strong>Plan Gratuito:</strong> hasta 20 registros · almacenamiento local · temas básicos · 1 dispositivo · Mi Libreta (páginas ilimitadas) · Mis Calificaciones.</p>
-      <p><strong>Plan Premium (licencia anual):</strong> registros ilimitados · 🎤 dictado de voz · 📷 fotos en Google Drive · 📊 sincronización Google Sheets · 💾 backup automático · 📁 carpetas ilimitadas en Apuntes · 🌱 Mis Rutinas completo · 🎨 16 temas y personalización · 📄 exportar PDF · múltiples dispositivos.</p>
+      <p><strong>Plan Premium (licencia anual):</strong> registros ilimitados · 🎤 dictado de voz · 📷 fotos en Google Drive · ☁️ sincronización Google Drive · 💾 backup automático · 📁 carpetas ilimitadas en Apuntes · 🌱 Mis Rutinas completo · 🎨 16 temas y personalización · 📄 exportar PDF · múltiples dispositivos.</p>
       <p>El precio se publica en <strong>tapunto.app</strong>. La licencia se activa con un código personal e intransferible. Tapunto se reserva el derecho de modificar precios con aviso de 30 días en tapunto.app.</p>
-      <p style="font-size:11px;color:#888;"><em>Free Plan: up to 20 records, local storage, basic themes, 1 device, Mi Libreta, grades. Premium (annual): unlimited records, voice dictation, Drive photos, Sheets sync, auto-backup, unlimited folders, routines, 16 themes, PDF export, multi-device.</em></p>
+      <p style="font-size:11px;color:#888;"><em>Free Plan: up to 20 records, local storage, basic themes, 1 device, Mi Libreta, grades. Premium (annual): unlimited records, voice dictation, Drive photos, Drive sync, auto-backup, unlimited folders, routines, 16 themes, PDF export, multi-device.</em></p>
 
       <h4>7. Derechos del usuario / User rights (RGPD / GDPR)</h4>
       <p>El usuario tiene derecho a: <strong>Acceso</strong> (exportar todos sus datos desde Configuración → Backup); <strong>Rectificación</strong> (editar cualquier dato en la app); <strong>Supresión</strong> (eliminar cuenta y datos desde Configuración); <strong>Portabilidad</strong> (exportar en formato JSON estándar); <strong>Limitación y oposición</strong> (desactivar funciones opcionales en Configuración); <strong>No ser objeto de decisiones automatizadas</strong> (Tapunto no toma decisiones automatizadas sobre usuarios).</p>
@@ -2629,7 +2626,7 @@ body.nb-mode #nb-pill-orden { display:none !important; }
       <p style="font-size:11px;color:#888;"><em>Rights: Access (export via Settings), Rectification, Erasure, Portability (JSON), Restriction, Objection, no automated decisions. Response within 1 month (GDPR Art. 12). Contact: privacidad@tapunto.app. Complaints: AEPD (Spain) or your national supervisory authority.</em></p>
 
       <h4>8. Transferencias internacionales / International transfers</h4>
-      <p>Si el usuario activa la sincronización con Google (Drive/Sheets), los datos se transfieren a Google LLC (EE.UU.), certificada bajo el <strong>Marco de Privacidad de Datos UE-EE.UU.</strong> (Decisión CE 10/07/2023) y respaldada por Cláusulas Contractuales Tipo (SCCs). Esta transferencia es opcional y controlada íntegramente por el usuario. Sin sincronización Google, no hay transferencia de datos fuera del dispositivo.</p>
+      <p>Si el usuario activa la sincronización con Google Drive, los datos se transfieren a Google LLC (EE.UU.), certificada bajo el <strong>Marco de Privacidad de Datos UE-EE.UU.</strong> (Decisión CE 10/07/2023) y respaldada por Cláusulas Contractuales Tipo (SCCs). Esta transferencia es opcional y controlada íntegramente por el usuario. Sin sincronización Google, no hay transferencia de datos fuera del dispositivo.</p>
       <p style="font-size:11px;color:#888;"><em>If Google sync is enabled, data transfers to Google LLC (USA) under the EU-U.S. Data Privacy Framework (EC Decision 10/07/2023) and Standard Contractual Clauses. This is optional and user-controlled. Without Google sync, no data leaves the device.</em></p>
 
       <h4>9. Garantías del contenido digital / Digital content guarantees</h4>
@@ -2658,8 +2655,8 @@ body.nb-mode #nb-pill-orden { display:none !important; }
       <p style="font-size:11px;color:#888;"><em>Users are solely responsible for photo content and image rights. Photos stored in user's Drive or locally. Minors: prohibited to attach photos violating third parties' privacy or image rights, especially other minors (LO 1/1996).</em></p>
 
       <h4>15. Servicios de Google / Google services</h4>
-      <p>Funciones opcionales de Drive, Sheets y Gmail dependen de Google LLC. Tapunto no es responsable de interrupciones, pérdidas de datos o brechas de seguridad en los servicios de Google. Los datos en Drive/Sheets se rigen por la <a href="https://policies.google.com/privacy" target="_blank">Política de Privacidad de Google</a>. Se recomienda activar la <strong>verificación en dos pasos</strong> en la cuenta Google.</p>
-      <p style="font-size:11px;color:#888;"><em>Optional Drive/Sheets/Gmail features depend on Google LLC. Tapunto is not responsible for Google service outages or breaches. Google's privacy policy governs data in Drive/Sheets. Enable 2-step verification.</em></p>
+      <p>Funciones opcionales de Drive y Gmail dependen de Google LLC. Tapunto no es responsable de interrupciones, pérdidas de datos o brechas de seguridad en los servicios de Google. Los datos en Drive se rigen por la <a href="https://policies.google.com/privacy" target="_blank">Política de Privacidad de Google</a>. Se recomienda activar la <strong>verificación en dos pasos</strong> en la cuenta Google.</p>
+      <p style="font-size:11px;color:#888;"><em>Optional Drive/Gmail features depend on Google LLC. Tapunto is not responsible for Google service outages or breaches. Google's privacy policy governs data in Drive. Enable 2-step verification.</em></p>
 
       <h4>16. Ciberseguridad / Cybersecurity</h4>
       <p>Tapunto implementa: <strong>hash SHA-256</strong> para el PIN (nunca almacenado en claro); <strong>almacenamiento 100% local</strong> (sin servidores propios, superficie de ataque mínima); backups cifrados opcionales. Al no haber servidores propios, no existe riesgo de filtración masiva de datos desde Tapunto.</p>
@@ -2679,24 +2676,32 @@ body.nb-mode #nb-pill-orden { display:none !important; }
       <p><strong>Responsable:</strong> Alicia Prats · <a href="mailto:privacidad@tapunto.app">privacidad@tapunto.app</a> · Valencia, España</p>
       <p><strong>Datos tratados:</strong> email (identificador), PIN (hash SHA-256), contenido personal (solo en dispositivo o Google del usuario), preferencias.</p>
       <p><strong>Base legal:</strong> Art. 6.1.b RGPD (ejecución del contrato); Art. 6.1.a RGPD (consentimiento para funciones opcionales).</p>
-      <p><strong>Transferencias internacionales:</strong> Solo si el usuario activa sincronización Google (LLC, EE.UU.) bajo el Marco UE-EE.UU. y SCCs.</p>
+      <p><strong>Transferencias internacionales:</strong> Solo si el usuario activa sincronización con Google Drive (Google LLC, EE.UU.) bajo el Marco UE-EE.UU. y SCCs.</p>
       <p><strong>Conservación:</strong> Hasta que el usuario elimina su cuenta. Sin retención en servidores propios.</p>
       <p><strong>Cookies:</strong> Solo localStorage técnico. Sin cookies de seguimiento, publicidad ni analítica de terceros.</p>
       <p><strong>Derechos ARCO+:</strong> Acceso · Rectificación · Supresión · Portabilidad · Limitación · Oposición · No decisión automatizada. Respuesta en 1 mes. Reclamaciones: <a href="https://www.aepd.es" target="_blank">AEPD</a>.</p>
       <p style="font-size:11px;color:#888;"><em>Controller: Alicia Prats · privacidad@tapunto.app · Valencia, Spain. Data: email, PIN hash, personal content (device/Google only). Legal basis: GDPR 6.1.b and 6.1.a. International transfers: Google LLC (EU-U.S. DPF + SCCs), optional. No tracking cookies. ARCO+ rights, 1-month response. Supervisory authority: AEPD (Spain).</em></p>
 
-      <h4>20. Legislación y jurisdicción / Applicable law</h4>
+      <h4>20. Funcionalidades específicas / Specific features</h4>
+      <p><strong>Buscador global (🔍):</strong> El buscador accede únicamente a los datos almacenados en el propio dispositivo del usuario (localStorage). No envía datos a ningún servidor externo.</p>
+      <p><strong>Tareas recurrentes (🔁):</strong> Al activar la recurrencia, la app crea automáticamente hasta 4 copias de la tarea con fechas futuras. El usuario puede editar o eliminar cada copia de forma independiente.</p>
+      <p><strong>Streak de estudio (🔥):</strong> El contador de días consecutivos se almacena únicamente en el localStorage del dispositivo. No se comparte ni se envía a ningún servicio externo.</p>
+      <p><strong>Temas de temporada (🎄):</strong> Los temas visuales son meramente estéticos y no afectan al almacenamiento ni tratamiento de datos. La preferencia de tema se guarda en el backup del usuario.</p>
+      <p><strong>Modo oscuro (🌙):</strong> La preferencia se guarda en el estado local de la app. En modo automático, respeta la configuración del sistema operativo sin acceder a ningún dato personal.</p>
+      <p style="font-size:11px;color:#888;"><em>Global search accesses only device-local data. Recurring tasks create independent copies. Study streak is stored locally only. Seasonal themes are purely visual. Dark mode respects OS settings without accessing personal data.</em></p>
+
+      <h4>21. Legislación y jurisdicción / Applicable law</h4>
       <p>Estos términos se rigen por: <strong>RGPD (UE) 2016/679</strong> · <strong>LOPDGDD</strong> · <strong>Directiva 2011/83/UE</strong> · <strong>Directiva 2019/770/UE</strong> · <strong>DSA Reglamento (UE) 2022/2065</strong> · <strong>LSSI-CE</strong> · <strong>LO 1/1996 de Protección Jurídica del Menor</strong> · <strong>COPPA</strong> (para usuarios en EE.UU.) · Legislación española aplicable.</p>
       <p>Jurisdicción: <strong>Tribunales de Valencia, España</strong>. Consumidores UE: <a href="https://ec.europa.eu/consumers/odr" target="_blank">ec.europa.eu/consumers/odr</a>. En caso de conflicto entre versiones idiomáticas, prevalece el texto en español.</p>
       <p style="font-size:11px;color:#888;"><em>Governed by: GDPR, LOPDGDD, EU Directives 2011/83 and 2019/770, DSA (EU 2022/2065), LSSI-CE, LO 1/1996 (child protection), COPPA (US). Jurisdiction: Valencia, Spain. EU consumers: ec.europa.eu/consumers/odr. Spanish text prevails in case of conflict.</em></p>
 
-      <p style="margin-top:20px;padding:10px;background:#f5f5f5;border-radius:6px;font-size:11px;color:#888;">Has llegado al final · Versión 4.0 · Junio 2026 · You have reached the end. You may now accept.</p>
+      <p style="margin-top:20px;padding:10px;background:#f5f5f5;border-radius:6px;font-size:11px;color:#888;">Has llegado al final · Versión 5.1 · Junio 2026 · You have reached the end. You may now accept.</p>
     </div>
     <div class="tc-footer">
       <div class="tc-scroll-hint" id="tc-hint">↓ Desplázate hasta el final para aceptar</div>
       <div class="tc-check-row">
         <input type="checkbox" id="tc-check" disabled onchange="checkTCReady()"/>
-        <label for="tc-check">He leído y acepto los <a href="#" onclick="return false">Términos y Condiciones</a> de Tapunto v4.0. Confirmo que tengo 14 años o más (o cuento con consentimiento del tutor legal) y que he entendido las condiciones de uso, privacidad y exoneración de responsabilidad.</label>
+        <label for="tc-check">He leído y acepto los <a href="#" onclick="return false">Términos y Condiciones</a> de Tapunto v5.1. Confirmo que tengo 14 años o más (o cuento con consentimiento del tutor legal) y que he entendido las condiciones de uso, privacidad y exoneración de responsabilidad.</label>
       </div>
       <button class="btn-tc-ok" id="btn-tc-ok" onclick="acceptTC()">✓ Acepto y continúo</button>
     </div>
@@ -2731,7 +2736,7 @@ body.nb-mode #nb-pill-orden { display:none !important; }
         </div>
         <!-- Aviso Gmail -->
         <div style="margin-top:8px;padding:10px 12px;background:#f0f9e8;border-radius:8px;border-left:3px solid var(--gm);font-size:11px;color:var(--td);font-family:var(--font-main);line-height:1.7;">
-          <strong>📌 Con cuenta Gmail</strong> podrás sincronizar tus datos entre dispositivos con <strong>Google Drive</strong> (Premium) y exportar registros a Google Sheets (Premium).<br>
+          <strong>📌 Con cuenta Gmail</strong> podrás sincronizar tus datos entre dispositivos con <strong>Google Drive</strong> (Premium) 
           <span style="color:var(--tl);">Con cualquier correo puedes usar Tapunto en <strong>modo local</strong> con todas las funciones básicas: horario, tareas, Pomodoro, agenda y Mis Documentos.</span>
         </div>
       </div>
@@ -2765,6 +2770,7 @@ body.nb-mode #nb-pill-orden { display:none !important; }
       <div style="font-size:11px;color:var(--tl);text-align:center;line-height:1.7;">
         Agenda 100% privada · Solo tú tienes acceso<br>
         Desarrollado por <strong>Alicia Prats</strong> © 2026
+        </div>
       </div>
     </div>
   </div>
@@ -2791,7 +2797,6 @@ body.nb-mode #nb-pill-orden { display:none !important; }
     <!-- Saludo personalizado -->
     <div class="splash-name" id="splash-name" style="font-size:18px;font-weight:700;color:#fff;font-family:var(--font-main);margin-bottom:32px;"></div>
 
-
     <!-- Botón entrar -->
     <div style="display:flex;flex-direction:column;gap:8px;width:100%;max-width:280px;margin-bottom:20px;">
       <button onclick="doLogin()" style="width:100%;padding:13px;background:#fff;color:var(--gd);border:none;border-radius:10px;font-family:var(--font-main);font-size:15px;font-weight:800;cursor:pointer;">Entrar en Tapunto</button>
@@ -2803,6 +2808,10 @@ body.nb-mode #nb-pill-orden { display:none !important; }
       <span style="font-size:11px;color:rgba(255,255,255,.8);background:rgba(255,255,255,.15);border-radius:20px;padding:3px 10px;">📋 Calificaciones</span>
       <span style="font-size:11px;color:rgba(255,255,255,.8);background:rgba(255,255,255,.15);border-radius:20px;padding:3px 10px;">📓 Libreta</span>
       <span style="font-size:11px;color:rgba(255,255,255,.8);background:rgba(255,255,255,.15);border-radius:20px;padding:3px 10px;">📚 Apuntes</span>
+      <span style="font-size:11px;color:rgba(255,255,255,.8);background:rgba(255,255,255,.15);border-radius:20px;padding:3px 10px;">🔍 Buscador</span>
+      <span style="font-size:11px;color:rgba(255,255,255,.8);background:rgba(255,255,255,.15);border-radius:20px;padding:3px 10px;">🔁 Recurrentes</span>
+      <span style="font-size:11px;color:rgba(255,255,255,.8);background:rgba(255,255,255,.15);border-radius:20px;padding:3px 10px;">🔥 Streak</span>
+      <span style="font-size:11px;color:rgba(255,255,255,.8);background:rgba(255,255,255,.15);border-radius:20px;padding:3px 10px;">🎄 Temas</span>
       <span style="font-size:11px;color:rgba(255,255,255,.8);background:rgba(255,255,255,.15);border-radius:20px;padding:3px 10px;">⏱ Pomodoro</span>
       <span style="font-size:11px;color:rgba(255,255,255,.8);background:rgba(255,255,255,.15);border-radius:20px;padding:3px 10px;">📅 Calendario</span>
     </div>
@@ -2867,7 +2876,7 @@ body.nb-mode #nb-pill-orden { display:none !important; }
 <div class="hdr-top" style="display:none!important;">
   <button class="btn-home" style="display:none!important;" onclick="irHome()" title="Página principal">⬅ INICIO</button>
   <div class="hdr-actions">
-    <button class="sync-btn" onclick="syncFromSheets(true)" title="Sincronizar" style="font-size:22px;padding:2px 10px;line-height:1;">⟳</button>
+    
     <button id="btn-notif-cfg" onclick="toggleNotificaciones()" title="Notificaciones">🔔</button>
     <button class="logout-btn" onclick="doLogout()">Salir</button>
   </div>
@@ -2883,7 +2892,7 @@ body.nb-mode #nb-pill-orden { display:none !important; }
       <div id="sec-home" class="section active">
 
   <div style="background:var(--gd);padding:0 16px;width:100%;box-sizing:border-box;display:flex;flex-direction:column;">
-    <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0 4px;">
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0 2px;">
       <div style="display:flex;align-items:center;gap:10px;">
         <div style="background:#fff;border-radius:14px;border:2px solid rgba(255,255,255,0.4);box-shadow:3px 3px 0px rgba(0,0,0,0.2);padding:7px;flex-shrink:0;">
           <img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAgAAAQABAAD/wAARCAREBEQDACIAAREBAhEB/9sAQwAIBgYHBgUIBwcHCQkICgwUDQwLCwwZEhMPFB0aHx4dGhwcICQuJyAiLCMcHCg3KSwwMTQ0NB8nOT04MjwuMzQy/9sAQwEJCQkMCwwYDQ0YMiEcITIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIy/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMAAAERAhEAPwD3+iiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKAEooopALRSUtABRRRTAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKQBRRRQAUUUUwCiiigAooooAKKKKACiiigAooooAKKKKACiiigAooopAFFFFMAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiikAUUUUAFFFFMAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKQBRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRTAKKKKQBRRRTAKKKKACiiikAUUUUAFFFFMAooopAFFFFABSGlpKYC0UlFABRRRSAWiiigAooooAKKKKACiiigAooooAKKKKYBRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFIAooopgFFFFABRRRSAKKKKYBRRRQAUUUUAFFFFIAooopgFFFFABRRRSAKKKKACiiimAUUUUAFFFFIAooopgFFFFABRRRQAUUUUAFFFFABRRRSAKKKKACiiigAooooAKKKKACiiigAooopgFFFFABRRRQAUUUUgCiiimAUUUUgCiiimAUUUUAFFFFIAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKYBRRRSAKKKKACiiimAUUUUgCiiigAooooAKKKKACiiigAooooAKSg0UAFFFFMAooopALRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUwCiiigAooooAKKKKACiiigAooooAKKKKQBRRRQAUUUUwCiiikAUUUUwCiiigAooooAKKKKACiiikAUUUUwCiiigAooooAKKKKACiiigAooopAFFFFABRRRTAKKKKACiiigAooooAKKKKQBRRRQAUUUUAFFFFABRRRQAUUUUAFFFFMAooooAKKKKACiiigAooooAKKKKACiiikAUUUUAFFFFMAooopAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFMAooopAFFFFABRRRQAUUUUAFJS0lABRRRTAKKKKQxaKM0UCCiiigAooooAKKKKACiiigAooooAKKKKACiiigAooopgFFFFIAooooAKKKKYBRRRQAUUUUAFFFFIAooopgFFFFABRRRSAKKKKYBRRRQAUUUUgCiiigAooooAKKKKYBRRRQAUUUUAFFFFIAooooAKKKKACiiigAooopgFFFFABRRRSAKKKKACiiigAooooAKKKKACiiigAooooAKKKKYBRRRQAUUUUAFFFFABRRRQAUUUUgCiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKYBRRRSAKKKKYBRRRSAKKKKACiiigAooooAKMUUlABRS0UwEooopAFLRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFMAooooAKKKKACiiikAUUUUwCiiigAooopAFFFFMAooooAKKKKQBRRRQAUUUUAFFFFMAooooAKKKKACiiikAUUUUAFFFFABRRRTAKKKKQBRRRTAKKKKQBRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUwCiiigAooooAKKKKACiiikAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFMAooopAFFFFMAooopAFFFFABSUtJTAKKWigBKKKKACloopAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRTAKKKKACiiigAooooAKKKKQBRRRTAKKKKQBRRRQAUUUUwCiiikAUUUUAFFFFMAooooAKKKKACiiigAooopAFFFFABRRRQAUUUUAFFFFMAooopAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRTAKKKKQBRRRQAUUUUwCiiikAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAIaKDRTAKXFGaM0AJRRRQAUtFFIAooooAKKKKACiiigAooooAKKKKACiiigAooopgFFFFIAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooopgFFFFIAooooAKKKKACiiimAUUUUgCiiimAUUUUgCiiigAooooAKKKKACiiigAopO9LTAKKKKQBRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUwCiiigAooopAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAJS0UUAFFFFABRRRQAlFLSUAFLxSUUwCiiigApaKKQBRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRTAKKKKACiiikAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRTAKKKKACiiikAUUUUAFFFFMAooopAFFFFMAooopAFFFFMAooopAFFFFABRRRTAKKKKACiiikAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRTAKKKKQBRRRTAKKKKACiiikAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAlFLSUAFFFFMAooooAKWkpaQBRRRQAUUUUAFFFFABRRRTAKKKKACiiikAUUUUwCiiigAooooAKKKKQBRRRTAKKKKACiiigAooopAFFFFMAooooAKKKKQBRRRQAUUUUwCiiikAUUUUAFFFFMAooooAKKKKACiiikAUUUUAFFFFABRRRQAUUUUAFFFFMAooopAFFFFMAooopAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFMAooooAKKKKACiiikAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUwCiiikAUUUUAFFFFABRRRTAKKKKQBRRRQAlFLSUAFFFFMAooooAWiiikAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFMAooooAKKKKACiiigAooooAKKKKACiiikAUUUUwCiiigAooopAFFFFABRRRTAKKKKQBRRRTAKKKKACiiigAooooAKKKKACiiikAUUUUAFFFFABRRRTAKKKKQBRRRQAUUUUwCiiikAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUwCiiigAooooAKKKKACiiikAUUUUAFFFFMAooooAKKKKQBRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUwCiiikAUUUUAFFFFMAooooAKKKKQBRRRQAUlLSUwCiiigAooooAWiiikAUUUUAFFFFABRRRQAUUUUwCiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKQBRRRTAKKKKACiiigAooopAFFFFMAooooAKKKKACiiigAooooAKKKKACiiigAooopAFFFFMAooooAKKKKACiiigAooopAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFMAooooAKKKKACiiikAUUUUAFFFFABRRRTAKKKKACiiikAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUwCiiikAUUUUAFFFFABRRRTAKKKKQBRRRQAUUUUwCiiigAooopAFFFFABSUtIaACilopgJRRRSAWiiimAUUUUgCiiigAooooAKKKKYBRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUgCiiimAUUUUAFFFFABRRRSAKKKKACiiigAooooAKKKKYBRRRQAUUUUAFFFFABRRRSAKKKKACiiigAooooAKKKKACiiigAooooAKKKKYBRRRQAUUUUAFFFFABRRRQAUUUUAFFFFIAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooopgFFFFABRRRSAKKKKYBRRRQAUUUUgCjNFFABSUtFACUvNFHNMBKKKKQC0UlLTAKKKKACiiigAooopAFFFFMAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKQBRRRTAKKKKACiiigAooooAKKKKQBRRRQAUUUUwCiiigAooooAKKKKACiiigAooooAKKKKQBRRRQAUUUUAFFFFABRRRTAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiikAUUUUwCiiikAUUUUAFFFFMAooopAFFFFABRRRTAKKKKACiiikAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUwCiiigAooopAFFFFABRRSUALmjNJRTAKKKKAFooopAFFFFABRRRTAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooopAFFFFMAooooAKKKKACiiigAooooAKKKKACiiikAUUUUwCiiigAooooAKKKKACiiigAooopAFFFFMAooooAKKKKACiiigAooooAKKKKQBRRRQAUUUUAFFFFABRRRQAUUUUAFFFFMAooopAFFFFMAooooAKKKKACiiigAooooAKKKKQBRRRTAKKKKQBRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUwCiiikAUUUUwCiiikAUUUUAFFFFMAooooAKKKKACiiikAUUUUAIaKWkoAWiiimAlFFFAC0UUUgCiiigAooooAKKKKACiiimAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFIAooopgFFFFABRRRQAUUUUgCiiigAooooAKKKKYBRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRSAKKKKACiiigAooooAKKKKACiiimAUUUUgCiiimAUUUUAFFFFABRRRQAUUUUgCiiimAUUUUgCiiimAUUUUgCiiigAooooAKKKKACiiigAooooAKKKKYBRRRQAUUUUAFFFFIAooooAKKKKACiiigAooooAKKKKACiiigAoopKACl4pKOKYBRRRSAWiiigAooooAKKKKACiiigAooopgFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFIAooopgFFFFABRRRQAUUUUAFFFFABRRRSAKKKKACiiimAUUUUAFFFFABRRRQAUUUUgCiiigAooooAKKKKYBRRRQAUUV5/wDEH4o6d4LjNtGBc6kw4iB4T3agD0CivkjVfiz4w1act/ab20Z6JB8oxWUnjPxKW/5Dt8Mn/nqadgPsyivjP/hMvEoY412+6/8APU06H4g+LLG5EsOuXZP+1ITmjlA+yqK+fvB/x6u0uEtfEsCyxswAuYhgr9R3r3qzvIL+0iurWVZYZVDI6ngikBPRRRSAKKKKACiiigAooopgFFFF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ACiiigAooooAKKKKACiiigAooooAKKKKAPFv2iR/xTmmnIB+0H+VfPy52HJ6ivoD9or/AJF3TPXzz/Kvn9c7Tk9RVrYR9q+GP+RV0n/rzi/9AFatZXhj/kVNJ/684v8A0AVq1AwooooAKKKKACiiigAooopgFFFFIAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigBKKDRTAKKKKACiiigBaKSlpAFFFFABRRRQAUUUUAFFFFABRRRTAKKKKACiiigAooopAFFFFMAooooAKKKKACiiikAUUUUAFFFFABRRRQAUUUUwCiiikB8tfGz/ko9zxwIk/HiuT8Hgf8J7of/X0v866z42H/i4911wIk/lXJ+D/APkfdDH/AE8r/OrWwj7QFLSDpS1AwooooAKKKKACiiimAUUUUgCiiimAUUUUgCiiimAUUUUgCiiigAooooAKKKKAPKvj8M/D9eM/6Sv8jXzWvQfSvpT4/jPw+U4zi5X+Rr5rX7o+lVED63+FY2/DrSuOqE/rXZVxvwsGPh1pXvGT+tdlSAKKKKQHyN8UcD4iavgY/e/0FN+FoB+KGjdfvHp9Kf8AFED/AIWJq/8A11/oKZ8LR/xdDRuSPmbp9KvoI+uxRRRUDCiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooA8V/aKGfDumHGf9IP8q+fhnac+lfQH7RYP/CO6Z3/AH54/Cvn4Z2nPpVLYR9r+GP+RV0n/rzi/wDQRWrWT4Y/5FTSf+vOL/0EVrVIwooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKSgAooopgFFFFABRRRQAtFJS0gCiiigAooooAKKKKACiiimAUUUUgCiiigAooooAKKKKYBRRRQAUUUUgCiiigAooooAKKKKACiiigAooopgFFFFIAooooA+WvjZj/hY9zz/yyTP5Vyfg4f8AFfaGM4/0lf511vxrwfiPdc/8skz+Vcl4O/5H3Q+eftSY/OrWwj7QHSlpB0pagYUUUUAFFFFABRRRTAKKKKACiiigAooopAFFFFMAooooAKKKKQBRRRTAKKKKAPKvj8P+LfqfS5X+Rr5rToPpX0p8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vLOP9pT0P0zVRYD/AIDj/ivbj/rwk/8AQ0r6Prz/AOGfw4HgmCe6vJ0n1O5UI7R52RoOdq5689T7CvQKUncA70UlLUgFFFFABXH+P/Adp430oISsGowAm2ucdP8AZb1U/p1rsKKaA+MdZ0TUfD+pyafqls9vcRno3Rh6qe496z6+xvEHhnSPE9ibTVrNLhB9xujxn1VhyK8c1/4CX8LvLoGox3EXUQXXyOPbcOD+lWpCPJLS/vbBt1neXFs3rDKyfyNWrjxFrl3GY7jWdQlQ9Ve5cg/hmtm7+GfjOycrJ4fupMd4MSA/98k1Xj8AeLpW2r4b1MH/AGoCo/M1WgHOd80V6JpPwV8Xai6m6gt9OiPVp5Qzf98rn+leseEvhDoHhqRLq5B1K/XkSzqAiH1VOn4nNJyQHA/DD4UTajPBrniG3aOxUh7e1kGGmPUMw7L7d/p19/AAGAMClorNu4wooopAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUwCiiikAUUUUAFFFFABRR3ooAKKKKACiiigAopKKACiiigAxS4oopgJRRRSAWiiigAooooAKKKKACiiigAooopgFFFFABRRRQAUUUUAFFFFIAooooAKKKKYBRRRSAKKKKACiiigAooooAKKKKYBRRRSAKKKKACiiigAooopgFFFFIAooooAKKKKYBRRRSAKKKKYBRRRSAKKKKACiiigAooooAKKKKACiiimAUUUUgCiiigAooooAKKKKYBRRRSAKKKKACiijvQAUUUUAFFFFABRRRTAKKKKQBRRRQAUUUUAFFFFMAooopAFFFFABRRRQAUUUUAFFFFABRRRTAKKKKQBRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAlLRRQAlFLSUwClxSUUALSUUUgFooooAKKKKACiiimAUUUUAFFFFABRRRQAUUUUgCiiimAUUUUgCiiimAUUUUAFFFFABRRRSAKKKKACiiigAooopgFFFFABRRRSAKKKKACiiimAUUUUgCiiigAooopgFFFFABRRRSAKKKKACiiigAooooAKKKKACiiigAooopgFFFFIAooooAKKKKYBRRRQAUUUUgCiiigAooooAKKKKACiiigAooopgFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFIAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAoozRQAUUUUAFFFFACGiiimAUUUUAFFFFIApaKKACiiigAooooAKKKKACiiimAUUUUAFFFFIAooopgFFFFIAooopgFFFFIAooopgFFFFIAooooAKKKKYBRRRSAKKKKYBRRRSAKKKKACiiimAUUUUgCiiigAooopgFFFFABRRRSAKKKKACiiigAooooAKKKKACiiigAooopgFFFFIAooopgFFFFABRRRQAUUUUgCiiimAUUUUgCiikoAWiiigAooopgFFFFABRRRQAUUUUgCiiigAooopgFFFFABRRRSAKKKKAA0UUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAJS0UUAGKKKKACiiigAooooASiiimAUvFJRQAUUUUgCloooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKYBRRRSAKKKKACiiimAUUUUgCkpaKACjFFFMAooooAKKKKQBRRRQAUUUUAFFFFMAooopAFFFFMAooopAFFFFABRRRTAKKKKACiiigAooopAFFFFABRRRQAUUUUAFFFFABRRRTAKKKKACiiikAUUUUwCiiigAooooAKKKKACiiikAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRTAKKKKQBRRRQAUUUUAJRRRTAKKKKACilpKQC0UUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFMAooopAFFFFABRRRTAKKKKQBRRRTAKKKKQBRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFMAooooAKKKKACiiigAooooAKKKKACiiikAUUUUAFFFFABRRRQAUUUUAFFFFABR3oooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKAEooopgFFFFABRRRSAWiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooopgFFFFIAooooAKKKKYBRRRSAKKKKACiiimAUUUUgCiiigAooooAKKKKACiiigAooooAKKKKACiiimAUUUUAFFFFIAooooAKSlooAKKKKACiiigAooopgFFFFABRRRQAUUUUgCiiimAUUUUgCiiigAooooAKKKKACiiigAooooAKKKKAA0lLRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAJS0UUAFFFFACUtFFACUUtJTAKKKWgBKKKKQC0UUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFMAooopAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFMAooopAFFFFABRRRQAUUUUwCiiikAUUUUAFFFFMAooopAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFACUtFFABRRRQAUUUUwCiiikAUUUUwCiiikAUlLRQAUUUUAFFFFABRRRTAKKKKACiiigAooooAKKKKACiiigAooooAKKKKQBRRRQAUUUUAFFFFABSClooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKYBRRRQAUUUUgCiiigBKWiigBDRQaKYBRRRQAUUUUALRRRSAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooopgFFFFIAooooAKKKKACiiimAUUUUgCiiigAooopgFFFFIAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooopgFFFFABRRRQAUUUUgCiiigAooooAKKKKYBRRRQAUUUUAFFFFABRRRQAUUUUAFFFFIAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiimAUUUUgCiiigApKWigAooooAKKKKACiiigAooooAKKKKYBRRRSASlpKWgBKXtRRQAlFBopgFFFFABRRRSAWiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKYBRRRSAKKKKACiiigAooooAKKKKACiiigAooooAKKKKYBRRRSAKKKKACiiimAUUUUgCiiigAooopgFFFFABRRRQAUUUUgCiiigAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFMAooooAKKKKQBRRRTAKKKKACiiikAUUUUwCiiikAUUUUAFFFFABRRRQAUUUUAFFFFABR3oooAKO9FFABSUtFABRRRQAUUUUAFJS0UAFJS0UAFFAooAKKKKAEpaQUtACUtFFABRRRQAlLRRQAlLRRQAhooNFMAoopcUAJmilxSUgFooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooopgFFFFABRRRSAKKKKYBRRRSAKKKKACiiigAooopgFFFFIAooooAKKKKYBRRRSAKKKKACiiimAUUUGgAooFFIAooFFABRRRQAUUUUwCiiikAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUwCiiigAooooAKKKKQB3ooooAKKKKACiiigAooooAM0UUUAGaKKKACgUUUAFFFFABR3oooAKSlpKAFoooxQAUUUUAFFFFABSUtFAAKKKKACiiigBKWiigAopKWgBM0tJS0AJS0lLTAM0UUUgEopaSmAUtJRzQAuaSiigBaKSlpAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRTAKKKKQBRRRQAUUUUwCiiigAooooAKKKKQBRRRTAKKKKQBRRRQAUUUUwCiiigAooopAFGaKKYBRRRQAUUUUAFFFFABRRRQAUUUUgCiiigAooooAKKKKACiiigAzRRRQAUUUUAFFFFABRRRTAKKKKACiiikAUUUUAFFFFABRRRTAKKKKACiiigAooooAKKKKACiiigAooopAFFFFABRRRTAKKKKQBRRRQAUUUUAFFFFABRRRQAUZoooAKM0UlAC0ZooxTAKKKKQBRRRQAUUUUAFFFFABRRRQAUUUUAFFHeimAUUUUgCikpaACikpe1ACUUtJQAUUtFMAzSUUUgFooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKYBRRRQAUUUUAFFFFIAooopgFFFFIAooooAKKKKACiiimAUUUUgCig0UAFFFFABRRRTAKKKKQBRRRQAUUUUwCiiikAUUUUAFFFFABRRRTAKKKKACiiikAUUUUAFFFFABRRRQAUUUUAFFFFMAooooAKKKKACiiikAUUUUAFFFFABRRRQAUUUUAFFFFMAooooAKKKKACiiikAUUUUwCiiikAUUUUAFFFFMAooooAKKKKQBRRQKACiiigAooooAKKKKACiiigAooooAKKKKACiiimAUUgpaACiiigAooopAFFHeigAooooAKKSloASlpKUUAFJS0lABRRilwKYCUtJRSAWiiigAooooAKKKKACiiigAooopgFFFFABRRRSAKKKKACiiigAooooAKKKKYBRRRQAUUd6KQBRRRQAUUUUAFFFFABRRRQAUUGigAooooAKKKKYBRRRSAKKKKACiikpgLRRRSAKKKKACiiigAooooAKKKKYBRRRSAKKKKACiiigAooooAKKKKYBRRRQAUUUUAFFFFIAooooAKKKKACiiigAooopgFFFFABRRRSAKKKKACiiigAooooAKKKKACiiimAUUUUgCiiigAooooAKKKKACiiigAooopgFFFFIAooooAKKKKACiiigAooooAKKKKACiiimAUUUUAFFFFIAooooAKKKKACig0UAFFFHagApKWkoAXNGaSlzTAKSiigBaKKKQBRRRQAUUUUwCiiigAooopAFFFFABRRRQAUUUUAFFFFMAooopAFFFFMAooooAKKKKACiiigAopKWkAUUUUwCiiigAooopAFFFFABRRRTAKKKKQBRRRQAUUUUAFFFFMAooopAFFFFABRRQaACiiigAooopgFFFFABRRRSAKKKKACiiigAooopgFFFFIAooooAKKKKYBRRRSAKKKKYBRRRQAUUUUAFFFFABRRRQAUUUUAFFFFIAooooAKKKKACiiigAooooAKKKKACiiimAUUUUAFFFFIAooooAKKKKACiiigAooooAKKKKACiiigAooFFMAooooAKKKKQBRRRQAUUUUAFFFFABRSUtABSUtJQAUtJS8UwCkoopALRRRQAUUUUwCiiikAUUUUwCiiigAooooAKKKKQBRRRQAUUUUAFFFFMAooopAFFFFMAooopAFFFFABRRRTAKKKKACiiikAUUUUAFFFFMAooooAKKKKQBRRRQAUUUUwCiiikAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFJS0AFFFFABRRRTAKKKKQBRRRQAUUUUwCiiigAooooAKKKKACiiigAooooAKKKKACiiigAooopAFFFFABRRRTAKKKKQBRRRQAUUUUAFFFFABRRRQAUUUUAFFFFMAooopAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRSd6WgAooooAKKKKACikpaACkpaKAEopaKYBRSUtIAooooAKKKKYBRRRSAKKKKACiiimAUUUUAFFFFABRRRSAKKKKYBRRRSAKKKKYBRRRSAKKKKACiiigAooooAKKKKYBRRRSAKKKKYBRRRQAUUUUAFFFFIAoopKAFooopgFFFJSAWiiigAooooAKKKKACiiigAooooAKKKKYBRRRSAKKKKACiiigAooopgFFFFIAooooAKKKKACiijvQAUUUUwCiiigAooooAKKKKACiiigAooooAKKKKACiiikAUUUUwCiiikAUUUUAFFFFMAooopAFFFFABRRRQAUUUUwCiiikAUUUUAFFFFABRRRQAUUUUwCiiikAUUUUAFFFFABRSd6WgAooooADRRRQAUUUUAFJS0lAC0UlLmmAUlFLSAKKKKACiiigAooopgFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUgCiiigAooopgFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFIAooooAKKKKYBRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUgCiiigAooopgFFFFABRRRQAUUUUAFFFFIAooopgFFFFABRRRQAUUUUAFFFFABRRRQAUUUUgCiiimAUUUUgCiiigAooooASiiigAopaKYBRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFIAooopgFFFFABRRRQAUUUUgCiiimAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUmaAFooooAKKKKQBRRRQAUUmaWmAUUUUgCiiigAooopgFFFFABRRRQAUUUUAFFFFABRRRSAKKKKYBRRRQAUUUUAFFFFABRRRQAUUUUAFFFBpAFFFFMAooooAKKKKACikpaACiiigAooopAFFFFMAooopAFFFFMAooopAFFFFABRRRQAUUUlAC0UUUAFFFFMAooopAFFFFABRRRQAUUUUAFFJRQAtFJmloAKKSjNAC0UUUAFFJRQAtFFFMAooooAKSlo7UAHajtR2o7UAFAooFABQKKBQAUd6KO9ABSUtJQAveijvRQAUUUUAFBooNABRRRQAUUUUAAooFFACCl70gpe9ACd6O9L3pO9AC96Sl70lAC0Gig0AJ2o7UvajtQAdqKO1FAAaSlNJQAoooFFABSClpBQAvek70vek70ALSUtJQAtBooNABRRRQAUdqO1HagA7UUdqKACkpRSUAApe9IKXvQAlL3pKXvQAlHeijvQAUUUUALRRRQAUdqKO1AB2o7UdqO1AAKBQKBQAUd6KO9ACd6XvR3o70AFIaWkNABS0lL2oAKSlo7UAFFFFACUvajtR2oASlFJSigAooooAKTvS0negBe9HejvR3oADQaDQaAEpaSloAO1HajtR2oAKTtS0nagAooooAKKKKAF70Ud6KACjvRR3oASiiigApe1JS9qAEpaSloAKKKKAEopRSCgAFLSCloATvRR3oNABRSmg0AJRRRQAUUUUAFFFFABRRRQAtFHagUAFFFFAH/9k=" style="width:38px;height:38px;object-fit:contain;display:block;" alt="Tapunto"/>
@@ -2897,15 +2906,14 @@ body.nb-mode #nb-pill-orden { display:none !important; }
         </div>
       </div>
       <div style="position:relative;cursor:pointer;" onclick="mostrarMenuAvatar()">
-        <div id="home-avatar" style="width:42px;height:42px;border-radius:50%;background:rgba(255,255,255,0.2);border:2px solid rgba(255,255,255,0.4);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff;font-family:var(--font-main);overflow:hidden;">
+        <div id="home-avatar" style="width:56px;height:56px;border-radius:50%;background:rgba(255,255,255,0.2);border:2.5px solid rgba(255,255,255,0.5);display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:700;color:#fff;font-family:var(--font-main);overflow:hidden;flex-shrink:0;cursor:pointer;">
           <img id="home-avatar-photo" src="" alt="" style="display:none;width:100%;height:100%;object-fit:cover;border-radius:50%;"/>
-          <span id="home-avatar-initials">AP</span>
+          <span id="home-avatar-initials" style="font-size:18px;font-weight:800;">AP</span>
         </div>
         <div id="home-premium-badge" style="position:absolute;top:-4px;right:-4px;background:#EF9F27;border-radius:50%;width:15px;height:15px;display:none;align-items:center;justify-content:center;font-size:9px;">&#11088;</div>
       </div>
     </div>
-    <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;padding-bottom:6px;">
-      <!-- Fila 1: buscador + notif -->
+    <div style="display:flex;align-items:center;justify-content:flex-end;gap:5px;padding-bottom:5px;flex-direction:column;align-items:flex-end;">
       <div style="display:flex;align-items:center;gap:5px;">
         <button onclick="abrirBuscador()" title="Buscar" style="background:rgba(255,255,255,0.15);border:none;border-radius:8px;padding:4px 8px;cursor:pointer;font-size:16px;color:#fff;line-height:1;">🔍</button>
         <button id="btn-notif" onclick="toggleNotificaciones()" style="background:rgba(255,255,255,0.15);border:none;border-radius:8px;padding:3px 8px;display:flex;align-items:center;gap:4px;cursor:pointer;">
@@ -2913,13 +2921,19 @@ body.nb-mode #nb-pill-orden { display:none !important; }
           <span id="home-notif-label" style="font-size:9px;color:rgba(255,255,255,0.85);font-weight:600;font-family:var(--font-main);">Notif. ON</span>
         </button>
       </div>
-      <!-- Fila 2: modo oscuro (solo iconos, pequeños, derecha) -->
-      <div style="display:flex;gap:3px;">
-        <button onclick="applyDarkMode('off');persist().catch(function(){})" id="dm-btn-off" title="Claro" style="padding:2px 5px;border-radius:5px;border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.1);font-size:12px;cursor:pointer;line-height:1;">☀️</button>
-        <button onclick="applyDarkMode('auto');persist().catch(function(){})" id="dm-btn-auto" title="Auto" style="padding:2px 5px;border-radius:5px;border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.1);font-size:12px;cursor:pointer;line-height:1;">🔄</button>
-        <button onclick="applyDarkMode('on');persist().catch(function(){})" id="dm-btn-on" title="Oscuro" style="padding:2px 5px;border-radius:5px;border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.1);font-size:12px;cursor:pointer;line-height:1;">🌙</button>
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:6px;">
+        <div id="home-streak-badge" style="display:none;align-items:center;gap:4px;font-size:11px;color:#fff;background:rgba(255,255,255,.15);border-radius:8px;padding:2px 8px;font-family:var(--font-main);"></div>
+        <div style="display:flex;gap:3px;">
+        <button onclick="applyDarkMode('off');persist().catch(function(){})" title="Claro" style="padding:2px 5px;border-radius:5px;border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.1);font-size:11px;cursor:pointer;line-height:1;">☀️</button>
+        <button onclick="applyDarkMode('auto');persist().catch(function(){})" title="Auto" style="padding:2px 5px;border-radius:5px;border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.1);font-size:11px;cursor:pointer;line-height:1;">🔄</button>
+        <button onclick="applyDarkMode('on');persist().catch(function(){})" title="Oscuro" style="padding:2px 5px;border-radius:5px;border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.1);font-size:11px;cursor:pointer;line-height:1;">🌙</button>
+        </div>
       </div>
     </div>
+  </div>
+
+  <!-- Cita motivacional diaria -->
+  <div id="home-cita" style="padding:8px 16px;border-bottom:1px solid rgba(255,255,255,.1);background:rgba(0,0,0,.08);min-height:44px;display:flex;flex-direction:column;justify-content:center;"></div>
 
   <!-- SECCIÓN HORARIO HOY — siempre visible sin tabs -->
   <div id="home-horario-hoy" style="background:var(--bp);border-bottom:1px solid var(--bd);padding:6px 10px 8px;">
@@ -3408,7 +3422,7 @@ body.nb-mode #nb-pill-orden { display:none !important; }
     <button class="tap-header-btn" onclick="irHome()" style="flex-direction:column;gap:1px;"><span style="font-size:22px;line-height:1;color:#fff;font-weight:900;">&#8592;</span><span style="font-size:9px;color:#fff;font-weight:700;font-family:var(--font-main);letter-spacing:.3px;">Inicio</span></button>
     <span class="tap-header-title" id="nuevo-titulo">Nuevo registro</span>
   
-    <button onclick="var b=this;b.style.opacity='0.5';syncFromSheets(true).then(function(){b.style.opacity='1';}).catch(function(){b.style.opacity='1';})" class="tap-header-btn" title="Sincronizar" style="font-size:22px;color:#fff;line-height:1;">&#10227;</button>
+
   </div>
 
   <div class="edit-banner" id="edit-banner">
@@ -3554,7 +3568,6 @@ body.nb-mode #nb-pill-orden { display:none !important; }
     </div>
     <input type="hidden" id="inp-recurrencia" value=""/>
   </div>
-
   <!-- BOTONES FIJOS AL PIE -->
   <div style="position:sticky;bottom:0;background:var(--w,#fff);border-top:1px solid var(--bd);padding:12px 16px;display:flex;gap:10px;z-index:10;">
     <button id="btn-cancelar-nuevo" onclick="cancelEdit?cancelEdit():irHome()" style="flex:1;padding:12px;background:var(--bp);border:1px solid var(--bd);border-radius:10px;font-family:var(--font-main);font-size:14px;font-weight:600;color:var(--tl);cursor:pointer;">
@@ -3582,7 +3595,7 @@ body.nb-mode #nb-pill-orden { display:none !important; }
 
 
   
-    <button onclick="var b=this;b.style.opacity='0.5';syncFromSheets(true).then(function(){b.style.opacity='1';}).catch(function(){b.style.opacity='1';})" class="tap-header-btn" title="Sincronizar" style="font-size:22px;color:#fff;line-height:1;">&#10227;</button>
+    
   </div>
 
   <!-- Sin pills de estado — el filtro está dentro de cada asignatura -->
@@ -3657,7 +3670,7 @@ body.nb-mode #nb-pill-orden { display:none !important; }
   
     <label style="cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:44px;height:44px;border-radius:8px;background:rgba(255,255,255,0.15);padding:0 4px;gap:1px;"><input type="file" accept=".ics" style="display:none;" onchange="if(!isPremium){showUpgrade();return;}if(!confirm('¿Importar los eventos de este calendario a tu agenda Tapunto?\n\nSe abrirá una vista previa para que puedas seleccionar qué eventos añadir.')){this.value='';return;}icsImport(this.files[0]);this.value='';"><span style="font-size:18px;line-height:1;">📅</span><span style="font-size:8px;color:#fff;font-weight:700;font-family:var(--font-main);white-space:nowrap;">ICS</span></label>
   
-    <button onclick="var b=this;b.style.opacity='0.5';syncFromSheets(true).then(function(){b.style.opacity='1';}).catch(function(){b.style.opacity='1';})" class="tap-header-btn" title="Sincronizar" style="font-size:22px;color:#fff;line-height:1;">&#10227;</button>
+    
   </div>
 
         <div class="cal-nav">
@@ -3709,7 +3722,7 @@ body.nb-mode #nb-pill-orden { display:none !important; }
     <label class="tap-header-btn" style="cursor:pointer;" title="Restaurar">📂<input type="file" accept=".json" style="display:none" onchange="importNotasJSON(event)"></label>
     <button class="tap-header-btn" onclick="mostrarPDFNotas()" title="PDF ⭐">📄</button>
   
-    <button onclick="var b=this;b.style.opacity='0.5';syncFromSheets(true).then(function(){b.style.opacity='1';}).catch(function(){b.style.opacity='1';})" class="tap-header-btn" title="Sincronizar" style="font-size:22px;color:#fff;line-height:1;">&#10227;</button>
+    
   </div>
 
   <div style="padding:12px 16px;">
@@ -3745,7 +3758,7 @@ body.nb-mode #nb-pill-orden { display:none !important; }
     <button class="tap-header-btn" onclick="irHome()" style="flex-direction:column;gap:1px;"><span style="font-size:22px;line-height:1;color:#fff;font-weight:900;">&#8592;</span><span style="font-size:9px;color:#fff;font-weight:700;font-family:var(--font-main);letter-spacing:.3px;">Inicio</span></button>
     <span class="tap-header-title">Mis rutinas</span>
   
-    <button onclick="var b=this;b.style.opacity='0.5';syncFromSheets(true).then(function(){b.style.opacity='1';}).catch(function(){b.style.opacity='1';})" class="tap-header-btn" title="Sincronizar" style="font-size:22px;color:#fff;line-height:1;">&#10227;</button>
+    
   </div>
 
   <div style="padding:12px 16px;">
@@ -3771,7 +3784,7 @@ body.nb-mode #nb-pill-orden { display:none !important; }
 <div id="sec-config" class="section">
   <!-- HEADER CONFIGURACIÓN -->
   <div class="tap-header"><button class="tap-header-btn" onclick="irHome()" style="flex-direction:column;gap:1px;"><span style="font-size:22px;line-height:1;color:#fff;font-weight:900;">&#8592;</span><span style="font-size:9px;color:#fff;font-weight:700;font-family:var(--font-main);letter-spacing:.3px;">Inicio</span></button><span class="tap-header-title">Configuración</span>
-    <button onclick="var b=this;b.style.opacity='0.5';syncFromSheets(true).then(function(){b.style.opacity='1';}).catch(function(){b.style.opacity='1';})" class="tap-header-btn" title="Sincronizar" style="font-size:22px;color:#fff;line-height:1;">&#10227;</button>
+    
   </div>
 
 
@@ -3870,44 +3883,7 @@ body.nb-mode #nb-pill-orden { display:none !important; }
           </div>
         </div>
 
-<div class="cfg-block">
-          <div class="cfg-hdr" onclick="toggleCfg(this)">
-            <span class="cfg-hdr-title">🔗 Google Sheets
-              <span style="font-size:10px;background:linear-gradient(135deg,#16a34a,#15803d);color:white;padding:1px 6px;border-radius:6px;margin-left:4px;">Premium</span>
-            </span>
-            <span class="cfg-arrow">▶</span>
-          </div>
-          <div class="cfg-body">
-            <div id="sheets-premium-lock" style="display:flex;flex-direction:column;align-items:center;padding:20px;text-align:center;gap:12px;">
-              <div style="font-size:36px;">🔒</div>
-              <div style="font-size:14px;font-weight:700;color:var(--td);">Sincronización Google Sheets</div>
-              <div style="font-size:12px;color:var(--tl);">Guarda tus registros en tu propio Google Sheets. Accede desde cualquier dispositivo. Tus datos nunca pasan por servidores de Tapunto.</div>
-              <button onclick="if(typeof showToast==='function')showToast('Todas las funciones incluidas ✓')" style="padding:10px 24px;background:linear-gradient(135deg,#16a34a,#15803d);color:#fff;border:none;border-radius:8px;font-family:var(--font-main);font-size:13px;font-weight:700;cursor:pointer;">✓ Todo incluido</button>
-            </div>
-            <div id="sheets-premium-content" style="display:none;">
-              <p style="font-size:12px;color:var(--tl);margin-bottom:10px;">Sincroniza tus registros en tu propia hoja de Google.</p>
-              <span id="sheets-status" style="font-size:12px;display:block;margin-bottom:8px;"></span>
-              <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;"><span style="font-size:12px;font-weight:700;color:var(--td);">URL del Apps Script</span><button onclick="document.getElementById('sheets-help-panel').style.display=document.getElementById('sheets-help-panel').style.display==='none'?'block':'none'" style="background:none;border:1.5px solid var(--bd);border-radius:50%;width:20px;height:20px;font-size:11px;cursor:pointer;color:var(--tl);padding:0;flex-shrink:0;">?</button></div><div id="sheets-help-panel" style="display:none;background:var(--bl);border:1px solid var(--bd);border-radius:8px;padding:10px 12px;margin-bottom:8px;font-size:11px;color:var(--tl);line-height:1.5;"><b style="color:var(--td);">Cómo conectar Google Sheets:</b><br>1. Ve a <a href="https://sheets.google.com" target="_blank" style="color:var(--gm);">Google Sheets</a> y crea una hoja nueva en blanco. En la barra de URL verás algo así: <code style="background:var(--bd);padding:1px 4px;border-radius:3px;font-size:10px;">docs.google.com/spreadsheets/d/<b>1BxiM…Xm2E</b>/edit</code>. Copia ese fragmento largo entre <b>/d/</b> y <b>/edit</b> — es el <b>ID de la hoja</b>.<br>2. En esa misma hoja, ve a <b>Extensiones → Apps Script</b>. Se abrirá el editor de código. Borra lo que haya y pega el script de Tapunto (disponible en <b>tapunto.app/script</b>).<br>3. En el script, busca la línea <code style="background:var(--bd);padding:1px 4px;border-radius:3px;font-size:10px;">const SHEET_ID = '...'</code> y reemplaza el contenido por el ID copiado en el paso 1.<br>4. Haz clic en <b>Implementar → Nueva implementación</b>. Tipo: <b>Aplicación web</b>. Ejecutar como: <b>Yo</b>. Acceso: <b>Cualquiera</b>. Pulsa <b>Implementar</b> y autoriza los permisos que pida.<br>5. Copia la <b>URL de implementación</b> (acaba en <code style="background:var(--bd);padding:1px 4px;border-radius:3px;font-size:10px;">/exec</code>) y pégala en el campo de <b>abajo</b>.<br></div><input type="url" id="sheets-url" placeholder="URL del Apps Script..." style="width:100%;padding:8px;border:1px solid var(--bd);border-radius:6px;font-size:12px;background:var(--bp);color:var(--td);margin-bottom:8px;box-sizing:border-box;"/>
-              <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;">
-                <button onclick="saveSheetsUrl()" style="padding:8px 14px;background:var(--gm);color:#fff;border:none;border-radius:6px;font-size:12px;cursor:pointer;">💾 Conectar</button>
-                <button onclick="syncFromSheets(true)" style="padding:8px 14px;background:var(--bl);color:var(--td);border:1px solid var(--bd);border-radius:6px;font-size:12px;cursor:pointer;">⟳ Sincronizar</button>
-                <button onclick="formatearSheets()" style="padding:8px 14px;background:var(--bl);color:var(--td);border:1px solid var(--bd);border-radius:6px;font-size:12px;cursor:pointer;">🎨 Formatear hoja</button>
-                <button onclick="desconectarSheets()" style="padding:8px 14px;background:var(--bl);color:#c53030;border:1px solid #f5c6c6;border-radius:6px;font-size:12px;cursor:pointer;">✕ Desconectar</button>
-              </div>
-              <div style="margin-bottom:6px;font-size:12px;font-weight:700;color:var(--td);display:flex;align-items:center;gap:6px;">
-                Token de acceso
-                <button onclick="mostrarTooltipToken(this)" style="width:18px;height:18px;border-radius:50%;background:var(--gm);color:#fff;border:none;font-size:10px;font-weight:700;cursor:pointer;flex-shrink:0;line-height:1;">ⓘ</button>
-              </div>
-              <input type="text" id="cfg-sheets-token" placeholder="Token..." style="width:100%;padding:8px;border:1px solid var(--bd);border-radius:6px;font-size:12px;background:var(--bp);color:var(--td);margin-bottom:8px;box-sizing:border-box;"/>
-              <button onclick="saveSheetsToken()" style="padding:8px 14px;background:var(--bl);color:var(--td);border:1px solid var(--bd);border-radius:6px;font-size:12px;cursor:pointer;margin-bottom:12px;">💾 Guardar token</button>
-              <div style="padding:10px;background:var(--bl);border-radius:8px;border:1px solid var(--bd);">
-                <div style="font-size:12px;font-weight:700;margin-bottom:6px;">📋 Código Apps Script</div>
-                <textarea class="script-box" readonly id="script-box-content"></textarea>
-                <button onclick="copiarScript()" style="margin-top:6px;padding:6px 14px;background:var(--gm);color:#fff;border:none;border-radius:6px;font-size:12px;cursor:pointer;">📋 Copiar código</button>
-              </div>
-            </div>
-          </div>
-        </div>
+
 <div class="cfg-block">
           <div class="cfg-hdr" onclick="toggleCfg(this)">
             <span class="cfg-hdr-title">🔐 Mi PIN y seguridad</span>
@@ -3977,9 +3953,9 @@ body.nb-mode #nb-pill-orden { display:none !important; }
             <span class="cfg-arrow">▶</span>
           </div>
           <div class="cfg-body">
-            <p style="font-size:12px;color:var(--tl);margin-bottom:8px;">Controla los avisos de recordatorios. El icono 🔔/🔕 del inicio y este ajuste están sincronizados.</p>
+            <p style="font-size:12px;color:var(--tl);margin-bottom:8px;">El icono 🔔/🔕 del inicio y estos botones están sincronizados.</p>
             <div style="display:flex;gap:8px;margin-bottom:8px;">
-              <button onclick="if(localStorage.getItem('tp_notif')==='0'||!localStorage.getItem('tp_notif')){toggleNotificaciones();}else{}" style="flex:1;padding:10px;background:var(--gd);color:#fff;border:none;border-radius:10px;font-size:13px;cursor:pointer;font-family:var(--font-main);font-weight:700;">🔔 Activar</button>
+              <button onclick="if(localStorage.getItem('tp_notif')==='0'){toggleNotificaciones();}" style="flex:1;padding:10px;background:var(--gd);color:#fff;border:none;border-radius:10px;font-size:13px;cursor:pointer;font-family:var(--font-main);font-weight:700;">🔔 Activar</button>
               <button onclick="if(localStorage.getItem('tp_notif')!=='0'){toggleNotificaciones();}" style="flex:1;padding:10px;background:#FCEBEB;color:#A32D2D;border:1px solid #F7C1C1;border-radius:10px;font-size:13px;cursor:pointer;font-family:var(--font-main);font-weight:700;">🔕 Desactivar</button>
             </div>
             <div id="notif-estado-cfg" style="font-size:12px;font-family:var(--font-main);padding:8px;background:var(--bl);border-radius:8px;color:var(--tl);text-align:center;"></div>
@@ -4055,13 +4031,13 @@ body.nb-mode #nb-pill-orden { display:none !important; }
             <span class="cfg-arrow">▶</span>
           </div>
           <div class="cfg-body">
-            <p style="font-size:14px;color:var(--td);font-weight:700;margin-bottom:4px;">Tapunto v30 · Junio 2026</p>
-            <p style="font-size:12px;color:var(--tl);margin-bottom:8px;">Agenda · Calificaciones · Libreta · Apuntes · Pomodoro</p>
+            <p style="font-size:14px;color:var(--td);font-weight:700;margin-bottom:4px;">Tapunto v32 · Junio 2026</p>
+            <p style="font-size:12px;color:var(--tl);margin-bottom:8px;">Agenda · Calificaciones · Libreta · Apuntes · Drive sync</p>
             <p style="font-size:11px;color:var(--tl);">© 2026 Alicia Prats · Valencia, España</p>
             <p style="font-size:11px;color:var(--tl);margin-top:2px;"><a href="https://tapunto.app" style="color:var(--gm)">tapunto.app</a> · <a href="mailto:agenda@tapunto.app" style="color:var(--gm)">agenda@tapunto.app</a></p>
             <p style="font-size:10px;color:var(--tl);margin-top:4px;">Marca registrada OEPM M4377915 · Clase 42</p>
             <p style="font-size:10px;color:var(--tl);margin-top:4px;">Almacenamiento 100% local · Sin servidores propios · Sin publicidad</p>
-            <p style="font-size:10px;color:var(--tl);margin-top:4px;">Cumple RGPD · LOPDGDD · COPPA · DSA · Directiva 2019/770/UE</p>
+            <p style="font-size:10px;color:var(--tl);margin-top:4px;">Cumple RGPD · LOPDGDD · COPPA · DSA · Directiva 2019/770/UE · Sin Sheets</p>
           </div>
         </div>
 
@@ -4257,7 +4233,7 @@ async function driveSyncSubir(){
       theme:state.theme||'sage',
       font:state.font||'Nunito',
       fontScale:state.fontScale||1,
-      sheetsUrl:state.sheetsUrl||''
+      
     }
   });
   var data = JSON.stringify(dataObj);
@@ -5452,22 +5428,8 @@ setTimeout(function(){btn.textContent='🎨 Formatear hoja';},2000);
 });
 }
 function startAutoSync(){ clearInterval(autoSyncTimer); autoSyncTimer=setInterval(()=>syncFromSheets(false),30*60*1000); }
-function setSyncStatus(s,msg){ const dot=document.getElementById('sync-dot'),lbl=document.getElementById('sync-label'); dot.className='sync-dot'+(s==='syncing'?' syncing':s==='error'?' error':''); lbl.textContent=msg; }
-async function syncToSheets(){
-if(!state.sheetsUrl) return;
-setSyncStatus('syncing','Subiendo...');
-try{
-await fetch(state.sheetsUrl,{method:'POST',
-body:JSON.stringify({action:'sync',token:localStorage.getItem('tp_sheets_token_'+currentUser)||'',
-records:state.records,contactos:state.contactos,temas:state.temas,
-notas:(state.notas||[]).map(function(n){return {id:n.id,texto:n.texto,fecha:n.fecha,archivado:n.archivado||false};}),
-horario:state.horario||{},
-rutinas:state.rutinas||[]
-})});
-setSyncStatus('ok','Sincronizado');
-if(data.sheetName){var ss_el=document.getElementById('sheets-status');if(ss_el)ss_el.innerHTML='<div class="connected-tag">✓ Conectado · 📊 '+data.sheetName+'</div>';}
-}catch(e){setSyncStatus('error','Error al subir');}
-}
+function setSyncStatus(s,msg){}
+async function syncToSheets(){}
 async function syncNotasToSheets(){
 if(!state.sheetsUrl||!isPremium) return;
 if(!state.notas||!state.notas.length) return;
@@ -5600,13 +5562,7 @@ if(secNotas&&secNotas.classList.contains('active')) renderNotas();
 }
 }catch(e){ setSyncStatus('error','Sin conexión'); }
 }
-function connectSheets(){
-const url=document.getElementById('sheets-url').value.trim();
-if(!url.includes('script.google.com')){alert('URL no válida.');return;}
-state.sheetsUrl=url; persist().catch(()=>{});
-document.getElementById('sheets-status').innerHTML='<div class="connected-tag">✓ Google Sheets conectado</div>';
-startAutoSync(); syncFromSheets(false);
-}
+function connectSheets(){}
 
 /* ══ SELECTOR ICONO Y ESTADO TACTIL ══ */
 function selEstado(estado, btn){
@@ -5951,8 +5907,8 @@ const confidencial=getConfidencial();
 if(tema&&!state.temas.includes(tema)){state.temas.push(tema);fillSelect('inp-tema',state.temas);}
 if(contacto&&!state.contactos.includes(contacto)){state.contactos.push(contacto);fillSelect('inp-contacto',state.contactos);}
 const icono=(document.getElementById('inp-icono')||{value:'📋'}).value||'📋';
-const fechaEvento=(document.getElementById('inp-fecha-evento')&&document.getElementById('inp-fecha-evento').value||'').trim();const recurrenciaVal=(document.getElementById('inp-recurrencia')||{}).value||'';
-const rec={id:newId,fecha,contacto,tema,titulo,accion,comunicado,estado,notas,icono,fechaEvento,recurrencia:recurrenciaVal,
+const fechaEvento=(document.getElementById('inp-fecha-evento')&&document.getElementById('inp-fecha-evento').value||'').trim();var _recVal=(document.getElementById('inp-recurrencia')||{}).value||'';
+const rec={id:newId,fecha,contacto,tema,titulo,accion,comunicado,estado,notas,icono,fechaEvento,recurrencia:_recVal,
 recordatorio:calcReminder(fecha),created:new Date().toISOString(),
 imagenUrl:imagenUrl||'',confidencial:confidencial};
 if(state.records.find(r=>r.id===rec.id)){
@@ -7352,20 +7308,22 @@ hdr.appendChild(btnX);
 var body=document.createElement('div');
 body.style.cssText='overflow-y:auto;padding:16px 20px 32px;flex:1;';
 var secciones=[
-{id:'s0',titulo:'🏠 Inicio',texto:'La pantalla principal muestra el horario del día, tus tareas urgentes y accesos rápidos a Mi Agenda, Calendario, Calificaciones y Mi Libreta. Toca el avatar (esquina superior derecha) para acceder a Pomodoro, Rutinas, Ayuda y Ajustes. La barra inferior permite navegar entre las secciones principales.'},
-{id:'s1',titulo:'📒 Mi Agenda',texto:'Libreta digital organizada por asignaturas con separadores de colores. La portada muestra dos contadores: tareas urgentes (🔴 entrega en ≤2 días) y tareas pendientes — toca cualquiera para ver el listado completo. Toca un separador para ver las tareas de esa asignatura. Usa el botón 🗑 Eliminar del header para gestionar separadores: elige si conservar las tareas (pasan a Sin asignatura) o borrarlas todas. El botón 📄 exporta a PDF.'},
-{id:'s2',titulo:'📅 Mi Calendario',texto:'Vista mensual y semanal de todos tus eventos y tareas con fecha de entrega. Toca un día para ver sus tareas. Accesible desde el inicio o el menú ☰ Más. Puedes importar calendarios externos (.ics) de Google Calendar, Outlook o Moodle.'},
-{id:'s3',titulo:'📋 Mis Calificaciones',texto:'Registra tus notas por asignatura. Añade tipo (Examen, Trabajo, Prácticas, Proyecto, Oral), nota del 0 al 10 y observaciones. Filtra por asignatura o tipo. Exporta a PDF. Colores: verde (≥5), naranja (3–4,9), rojo (<3). Las calificaciones se incluyen en el backup.'},
-{id:'s4',titulo:'📓 Mi Libreta',texto:'Canvas táctil para dibujar y escribir. Herramientas: ✏️ Lápiz · 🖊 Bolígrafo · ⬚ Selección (dibuja un rectángulo, luego Duplicar o Borrar) · T Texto (toca y escribe con estilos B I U y tamaños) · 😊✨ Emojis y Stickers (4 categorías) · 🧹S/M/L Borrador en 3 tamaños · ↩ Deshacer. El botón 🎨📄 abre el menú de Fondos (rayas, cuadros, puntos, negro, kraft, color libre) y Plantillas de estudio (Cornell, Mapa mental, Línea del tiempo, Pentagrama, Cuadrícula, Puntitos). Zoom con dos dedos (móvil) o rueda del ratón. Navega entre páginas con ‹ ›. ➕ nueva página. El indicador ✓ Guardado confirma que tu dibujo está guardado. Exporta o comparte con 📤.'},
-{id:'s5',titulo:'📝 Nueva Tarea',texto:'Toca ➕ en la barra inferior. Rellena asignatura, título, tipo y fecha de entrega. Al guardar, la app te ofrece crear un recordatorio automático. Puedes adjuntar fotos y documentos. También puedes crear tareas desde el Horario tocando una clase.'},
-{id:'s6',titulo:'🔔 Recordatorios',texto:'Al crear una tarea con fecha de entrega, la app propone automáticamente un recordatorio. También puedes añadirlos manualmente desde ☰ Más → Alertas. Activa las notificaciones del navegador para recibir avisos aunque la app esté cerrada.'},
-{id:'s7',titulo:'📚 Mis Apuntes',texto:'Organiza fotos y documentos por asignatura en carpetas. La barra de almacenamiento muestra el % de espacio usado (límite 5 MB del navegador). Si llegas al 85%, aparece el botón 🗑 Liberar espacio que guía el proceso en 3 pasos: 1) descargar backup, 2) confirmar que lo tienes guardado, 3) elegir qué borrar. Sin hacer el backup primero no se puede avanzar al paso de borrado.'},
-{id:'s8',titulo:'⏱ Pomodoro',texto:'Temporizador de estudio con técnica Pomodoro. Configura tiempo de trabajo y descanso. 9 sonidos de alarma. Accesible desde el avatar o ☰ Más.'},
-{id:'s9',titulo:'🎨 Temas y apariencia',texto:'En Ajustes → Apariencia elige entre 16 temas de color, 5 fuentes y ajusta el tamaño del texto. Los cambios se aplican al instante. El tema se guarda en el backup para restaurarlo en otro dispositivo.'},
-{id:'s10',titulo:'💾 Copia de seguridad',texto:'En Ajustes → Copia de seguridad exporta TODOS tus datos como archivo JSON: tareas, calificaciones, apuntes, libreta (páginas del canvas), horario, rutinas, recordatorios y configuración. Para restaurar, importa ese archivo. La app mostrará un resumen de lo restaurado. Guarda el backup regularmente — si el navegador borra los datos locales (limpieza de caché, modo incógnito) los datos se pierden sin backup.'},
-{id:'s11',titulo:'☁️ Sincronización Drive',texto:'En Ajustes → Sincronización conecta tu Google Drive. Tapunto sube un archivo tapunto-datos.json a tu Drive que incluye todas las secciones, incluida la Libreta. Al descargar, se restauran todos los datos y la libreta. Requiere Premium.'},
-{id:'s12',titulo:'⭐ Premium',texto:'Activa Premium con el código TAPUNTO-XXXX-XXXX en Ajustes o al tocar una función bloqueada (⭐). Incluye: dictado de voz, calendarios .ics, documentos ilimitados, sincronización Google Sheets y Drive, backup automático y más.'},
-{id:'s13',titulo:'🔒 Privacidad y seguridad',texto:'Tapunto almacena todos tus datos exclusivamente en tu dispositivo (localStorage del navegador). No tenemos servidores propios ni acceso a tus datos. Tu PIN se guarda como hash SHA-256 (nunca en texto claro). La sincronización con Google es opcional y controlada por ti. Cumplimos RGPD, LOPDGDD y normativa internacional. Edad mínima: 14 años (o con consentimiento del tutor legal). Para ejercer tus derechos de privacidad: privacidad@tapunto.app'}
+{id:'s0',titulo:'🏠 Inicio',texto:'La pantalla principal muestra el horario del día, tus tareas urgentes, el calendario y accesos rápidos. Arriba a la derecha tienes: 🔍 Buscador global, 🔔 Notificaciones (toca para activar/desactivar) y los botones ☀️🔄🌙 de modo oscuro. Si llevas 2 o más días seguidos usando Tapunto, verás el badge 🔥 de streak. La barra inferior te lleva a todas las secciones.'},
+{id:'s1',titulo:'📒 Mi Agenda',texto:'Libreta organizada por asignaturas. La portada muestra contadores de tareas urgentes 🔴 (entrega ≤2 días) y pendientes — tócalos para ver el listado. Toca un separador para ver las tareas de esa asignatura. Usa 🗑 Eliminar en el header para gestionar separadores. Al crear una tarea puedes elegir si se repite: sin repetir / cada semana / cada 15 días / cada mes — se crearán automáticamente las siguientes 4 repeticiones.'},
+{id:'s2',titulo:'📅 Mi Calendario',texto:'Vista mensual y semanal de todos tus eventos y tareas con fecha de entrega. Toca un día para ver sus tareas. Puedes importar calendarios externos (.ics) de Google Calendar, Outlook o Moodle.'},
+{id:'s3',titulo:'📋 Mis Calificaciones',texto:'Registra tus notas organizadas por asignatura en formato de cuadrícula (3 por fila). Añade tipo (Examen, Trabajo, Prácticas, Proyecto, Oral), nota del 0 al 10 y observaciones. La casilla de nota aparece vacía hasta que introduces un valor. El botón ✕ rojo elimina el registro. Las calificaciones se incluyen en el backup y en la sincronización con Drive.'},
+{id:'s4',titulo:'📓 Mi Libreta',texto:'Canvas táctil para dibujar y escribir a mano. Herramientas: ✏️ Lápiz · 🖊 Bolígrafo · T Texto (B/I/U, tamaños) · 😊✨ Emojis y Stickers · ◻ Figuras geométricas (línea, rectángulo, círculo, triángulo, flecha, estrella, rombo) · 🧹 Borrador (S/M/L) · ↩ Deshacer. La herramienta ⬚ Selección permite tocar un elemento o dibujar un rectángulo para seleccionarlo, luego Mover arrastrando, Duplicar o Borrar. Los stickers y figuras tienen handles azules en las esquinas para redimensionar. Usa 🎨📄 para fondos y plantillas de estudio. Navega entre páginas con ‹ ›. Zoom con dos dedos.'},
+{id:'s5',titulo:'📝 Nueva Tarea',texto:'Toca ➕ en la barra inferior. Rellena: asignatura, título, tipo, fecha de entrega y, si quieres, activa la recurrencia (cada semana / 15 días / mes). Al guardar, la app propone un recordatorio automático. Puedes adjuntar fotos y documentos (requiere Premium para Drive).'},
+{id:'s6',titulo:'🔔 Recordatorios y Notificaciones',texto:'Al crear una tarea con fecha, la app propone un recordatorio automático. Ve a Ajustes → Notificaciones para activarlas: toca 🔔 Activar y acepta el permiso del navegador. Con las notificaciones activas recibirás avisos aunque la app esté cerrada. El icono del inicio y los botones de Ajustes están sincronizados.'},
+{id:'s7',titulo:'📚 Mis Apuntes',texto:'Organiza fotos y documentos por asignatura en carpetas. La barra de almacenamiento muestra el % usado (límite 5 MB del navegador). Si superas el 85%, aparece el flujo de 3 pasos para liberar espacio: 1) descargar backup, 2) confirmar, 3) elegir qué borrar.'},
+{id:'s8',titulo:'⏱ Pomodoro',texto:'Temporizador de estudio con técnica Pomodoro: periodos de trabajo concentrado alternados con descansos. Configura los tiempos y elige entre 9 sonidos de alarma. Accesible desde el avatar del inicio o ☰ Más.'},
+{id:'s9',titulo:'🎨 Temas y apariencia',texto:'En Ajustes → Personalización elige entre 16 temas de color + 4 temas de temporada (🎄 Navidad, 🎃 Halloween, ☀️ Verano, 🎒 Vuelta al cole), 5 fuentes y tamaño de texto. El modo oscuro ☀️🔄🌙 se controla desde la pantalla de inicio. Todo se guarda en el backup.'},
+{id:'s10',titulo:'🔍 Buscador global',texto:'Toca 🔍 en la esquina superior derecha del inicio. Busca simultáneamente en tareas, calificaciones y apuntes. Los resultados aparecen en tiempo real mientras escribes. Toca un resultado para ir directamente a ese elemento. Cierra con ✕ o pulsando Escape.'},
+{id:'s11',titulo:'🔥 Streak de estudio',texto:'El badge 🔥 aparece en el inicio cuando llevas 2 o más días consecutivos usando Tapunto. Se calcula automáticamente y se guarda en el dispositivo. Es una motivación para mantener el hábito de estudio — ¡no rompas la racha!'},
+{id:'s12',titulo:'💾 Copia de seguridad',texto:'En Ajustes → Copia de seguridad exporta TODOS tus datos: tareas, calificaciones, apuntes, libreta, horario, rutinas, recordatorios y configuración (tema, fuente, modo oscuro). Para restaurar, importa ese archivo. La app muestra un resumen de lo restaurado. ⚠ Exporta con frecuencia: si el navegador borra el localStorage (limpieza de caché, modo incógnito) perderás los datos sin un backup guardado.'},
+{id:'s13',titulo:'☁️ Sincronización Drive',texto:'En Ajustes → Sincronización conecta tu Google Drive. Tapunto sube un archivo tapunto-datos.json con todas tus secciones y la libreta. Al descargar, se restauran todos los datos y la configuración. Requiere Premium. No se usa Google Sheets — todo va directamente a tu Drive. Activa la verificación en dos pasos en tu cuenta Google para mayor seguridad.'},
+{id:'s14',titulo:'⭐ Premium',texto:'Activa Premium con tu código en Ajustes o al tocar una función bloqueada ⭐. Incluye: dictado de voz, calendarios .ics, documentos ilimitados, sincronización con Google Drive, backup automático, temas premium y más. El precio se publica en tapunto.app.'},
+{id:'s15',titulo:'🔒 Privacidad y seguridad',texto:'Tapunto almacena todos tus datos exclusivamente en tu dispositivo (localStorage). No tenemos servidores propios ni acceso a tus datos. Tu PIN se guarda como hash SHA-256, nunca en texto claro. La sincronización con Google es opcional y controlada por ti. Cumplimos RGPD, LOPDGDD, COPPA y DSA. Edad mínima: 14 años (o con consentimiento del tutor). Para derechos de privacidad: privacidad@tapunto.app'}
 ];
 secciones.forEach(function(sec){
 var blk=document.createElement('div');
@@ -7510,6 +7468,7 @@ var items=[
 {icon:'⏱',label:'Pomodoro',fn:function(){menu.remove();irSeccion('estudio');}},
 {icon:'🔄',label:'Rutinas',fn:function(){menu.remove();irSeccion('rutinas');}},
 {icon:'❓',label:'Ayuda',fn:function(){menu.remove();mostrarAyuda();}},
+{icon:'🎨',label:'Mi avatar',fn:function(){menu.remove();mostrarPersonalizarAvatar();}},
 {icon:'👤',label:'Mis datos',fn:function(){menu.remove();irSeccion('config');setTimeout(function(){var c=document.getElementById('cfg-block-firma');if(c){c.scrollIntoView({behavior:'smooth',block:'start'});var hdr=c.querySelector('.cfg-hdr');var body=c.querySelector('.cfg-body');if(hdr&&body&&body.style.display==='none')toggleCfg(hdr);}},450);}},
 {icon:'⚙️',label:'Configuración',fn:function(){menu.remove();irSeccion('config');}},
 {icon:'🚪',label:'Cerrar sesión',fn:function(){menu.remove();doLogout();},red:true}
@@ -7542,43 +7501,33 @@ var homeEl=document.getElementById('sec-home');
 if(homeEl) homeEl.classList.add('active');
 }
 /* ══ NOTIFICACIONES ══ */
+function actualizarEstadoNotifCfg(){
+  var el=document.getElementById('notif-estado-cfg');if(!el)return;
+  var on=localStorage.getItem('tp_notif')!=='0';
+  var perm='Notification' in window?Notification.permission:'no soportado';
+  el.textContent=on&&perm==='granted'?'✅ Activadas y con permiso'
+    :on?'⚠ Activadas — acepta el permiso del navegador':'🔕 Desactivadas';
+}
 function toggleNotificaciones(){
   var activas=localStorage.getItem('tp_notif')!=='0';
   var nuevas=!activas;
   localStorage.setItem('tp_notif',nuevas?'1':'0');
   actualizarBtnNotif(nuevas);
-  // Sincronizar con icono de config
-  actualizarEstadoNotifCfg(nuevas);
   showOk(nuevas?'Alertas activadas 🔔':'Alertas silenciadas 🔕');
   if(nuevas&&'Notification' in window&&Notification.permission==='default'){
-    Notification.requestPermission().then(function(p){
-      actualizarEstadoNotifCfg(p==='granted');
-    });
+    Notification.requestPermission();
   }
 }
-function actualizarEstadoNotifCfg(activas){
-  var el=document.getElementById('notif-estado-cfg');
-  if(!el)return;
-  var permiso='Notification' in window?Notification.permission:'no soportado';
-  el.textContent=activas&&permiso==='granted'
-    ? '✅ Notificaciones activadas y con permiso'
-    : activas&&permiso!=='granted'
-    ? '⚠ Activadas pero sin permiso del navegador — pulsa Activar'
-    : '🔕 Notificaciones desactivadas';
-}
 function actualizarBtnNotif(activas){
+  setTimeout(function(){try{actualizarEstadoNotifCfg();}catch(e){}},100);
   var icon=document.getElementById('home-notif-icon');
   var label=document.getElementById('home-notif-label');
   if(icon) icon.textContent=activas?'🔔':'🔕';
   if(label) label.textContent=activas?'Notif. ON':'Notif. OFF';
   var btnCfg=document.getElementById('btn-notif-cfg');
   if(btnCfg) btnCfg.textContent=activas?'🔔':'🔕';
-  // Actualizar estado en config
-  actualizarEstadoNotifCfg(activas);
 }
 function initNotificaciones(){
-  // Sincronizar estado config al cargar
-  setTimeout(function(){try{actualizarEstadoNotifCfg(localStorage.getItem('tp_notif')!=='0');}catch(e){}},500);
   var activas=localStorage.getItem('tp_notif')!=='0';
   actualizarBtnNotif(activas);
 }
@@ -7705,7 +7654,8 @@ if(fEl&&!fEl.value){
 }
 },50);}
 if(tab==='registros'){window._nbMostrarPortada=true;window._nbAsigActiva=null;renderStats();renderRecords();}
-if(tab==='home'){try{renderStreak();}catch(e){}try{renderResumen();renderHorarioHome();renderProximasTareas();}catch(e){}}
+if(tab==='home'){try{renderStreak();}catch(e){}
+try{renderCitaDiaria();}catch(e){}try{renderResumen();renderHorarioHome();renderProximasTareas();}catch(e){}}
 if(tab==='config'){renderThemes();loadPinConfig();loadSheetsToken();loadFirmaConfig();renderLists();}
 if(tab==='recordatorios'){renderReminders();renderAlertasInteligentes();}
 if(tab==='calendario') renderCalendario();
@@ -7894,14 +7844,30 @@ function _nbRenderPortada(el, asigs, _getColor, _darkColor){
   var now = new Date();
   var fechaStr = dias[now.getDay()]+', '+now.getDate()+' de '+meses[now.getMonth()]+' de '+now.getFullYear();
 
+  // Background portada dinámico
+  var _nb_bg_map={'clasica':'#fffef8','verde':'#e8f5e9','lavanda':'#ede7f6','cielo':'#e3f2fd','rosa':'#fce4ec','naranja':'#fff3e0','noche':'#1a1a2e','galaxia':'#0d0d2b','aurora':'#e8e0ff','verano':'#fce4ff','mint':'#e0faf0','kraft':'#d4a76a'};
+  var _nb_ln_map={'clasica':'#e8f0e4','verde':'#a5d6a7','lavanda':'#ce93d8','cielo':'#90caf9','rosa':'#f48fb1','naranja':'#ffcc80','noche':'#2a2a4a','galaxia':'#1a1a3a','aurora':'#b39ddb','verano':'#ce93d8','mint':'#80cbc4','kraft':'#b8956a'};
+  var _nb_bgid=(state&&state.nbPortadaBg)||'clasica';
+  var _nb_bgc=_nb_bg_map[_nb_bgid]||'#fffef8';
+  var _nb_lnc=_nb_ln_map[_nb_bgid]||'#e8f0e4';
+  var _nb_mgc=(_nb_bgid==='noche'||_nb_bgid==='galaxia')?'#444':'#FFB3B3';
+  var _nb_bgid=(state&&state.nbPortadaBg)||'clasica';
+  var _nb_bgc={'clasica':'#fffef8','verde':'#e8f5e9','lavanda':'#ede7f6','cielo':'#e3f2fd','rosa':'#fce4ec','naranja':'#fff3e0','noche':'#1a1a2e','galaxia':'#0d0d2b','aurora':'#e8e0ff','verano':'#fce4ff','mint':'#e0faf0','kraft':'#d4a76a'}[_nb_bgid]||'#fffef8';
+  var _nb_lnc={'clasica':'#e8f0e4','verde':'#a5d6a7','lavanda':'#ce93d8','cielo':'#90caf9','rosa':'#f48fb1','naranja':'#ffcc80','noche':'#2a2a4a','galaxia':'#1a1a3a','aurora':'#b39ddb','verano':'#ce93d8','mint':'#80cbc4','kraft':'#b8956a'}[_nb_bgid]||'#e8f0e4';
+  var _nb_mgc=(_nb_bgid==='noche'||_nb_bgid==='galaxia')?'#555':'#FFB3B3';
   var html = '<div class="nb-libreta-wrap">';
   // ── Página portada ──
   html += '<div class="nb-page-area" style="overflow-y:auto;">';
-  html += '<div style="min-height:100%;background:#fffef8;'
-    +'background-image:repeating-linear-gradient(transparent,transparent 27px,#e8f0e4 27px,#e8f0e4 28px);'
+  var _nbBgMap={'clasica':'#fffef8','verde':'#e8f5e9','lavanda':'#ede7f6','cielo':'#e3f2fd','rosa':'#fce4ec','naranja':'#fff3e0','noche':'#1a1a2e','galaxia':'#0d0d2b','aurora':'#e8e0ff','verano':'#fce4ff','mint':'#e0faf0','kraft':'#d4a76a'};
+  var _nbBgId=(typeof state!=='undefined'&&state.nbPortadaBg)||'clasica';
+  var _nbBgColor=_nbBgMap[_nbBgId]||'#fffef8';
+  var _nbLineColor=(_nbBgId==='noche'||_nbBgId==='galaxia')?'#2a2a4a':'#e8f0e4';
+  var _nbMarginColor=(_nbBgId==='noche'||_nbBgId==='galaxia')?'#444':'#FFB3B3';
+  html += '<div style="min-height:100%;background:'+_nbBgColor+';'
+    +'background-image:repeating-linear-gradient(transparent,transparent 27px,'+_nbLineColor+' 27px,'+_nbLineColor+' 28px);'
     +'background-position:0 8px;position:relative;padding:24px 16px 24px 32px;">';
   // Margen rojo
-  html += '<div style="position:absolute;left:22px;top:0;bottom:0;width:1.5px;background:#FFB3B3;pointer-events:none;"></div>';
+  html += '<div style="position:absolute;left:22px;top:0;bottom:0;width:1.5px;background:'+_nb_mgc+';pointer-events:none;"></div>';
 
   // ── Contenido portada ──
   html += '<div style="position:relative;z-index:1;">';
@@ -7949,7 +7915,8 @@ function _nbRenderPortada(el, asigs, _getColor, _darkColor){
         +'<div style="font-size:10px;color:var(--tl);margin-top:1px;">'+asigRecs.length+' tarea'+(asigRecs.length!==1?'s':'')+' · '+asigPend+' pendiente'+(asigPend!==1?'s':'')+'</div>'
       +'</div>'
       +(urgBadge||'')
-      +'<span style="color:var(--tl);font-size:16px;">›</span>'
+      +'<div class="asig-color-dot" data-asig="'+asig+'" onclick="event.stopPropagation();mostrarPickerColorSeparador(this.dataset.asig,function(){renderCarpetas();})" style="width:22px;height:22px;border-radius:50%;background:'+bg+';border:2px solid rgba(255,255,255,.5);cursor:pointer;flex-shrink:0;" title="Cambiar color"></div>'
+      +'<span onclick="nbAbrirAsig(\''+asig.replace(/\'/g,"\\\'")+'\')" style="color:var(--tl);font-size:16px;cursor:pointer;">›</span>'
       +'</div>';
   });
   html += '</div>';
@@ -7964,6 +7931,10 @@ function _nbRenderPortada(el, asigs, _getColor, _darkColor){
       +'style="background:'+solid+';" onclick="nbAbrirAsig(this.dataset.asig)">'+asig.slice(0,10)+'</button>';
   });
   html += '</div>';
+  // Botón nueva asignatura con selector de color
+  html += '<div style="padding:10px 14px;">'
+    +'<button onclick="nbNuevaAsigConColor()" style="width:100%;padding:10px;background:var(--bl);border:1.5px dashed var(--bd);border-radius:10px;font-size:13px;color:var(--tl);cursor:pointer;font-family:var(--font-main);">＋ Nueva asignatura</button>'
+    +'</div>';
   html += '</div>';
 
   el.innerHTML = html;
@@ -7988,7 +7959,11 @@ function renderCarpetas(){
   var sch = getSch&&getSch();
   var palette = typeof H_COLORS_EXT!=='undefined'?H_COLORS_EXT:H_COLORS;
   function _getColor(asig){
+    // 1. Color personalizado por el usuario
+    if(state.separadorColores&&state.separadorColores[asig]) return state.separadorColores[asig];
+    // 2. Color del horario
     if(sch&&sch.colores&&sch.colores[asig]!==undefined){var ci=sch.colores[asig];if(palette[ci])return palette[ci].bg;}
+    // 3. Hash del nombre
     var h=0;for(var i=0;i<(asig||'').length;i++)h=(h+asig.charCodeAt(i))%palette.length;return palette[h].bg;
   }
   function _darkColor(hex){
@@ -8024,10 +7999,14 @@ function renderCarpetas(){
   }).length;
 
   // ── Portada chula (página de la libreta) ──
-  var portadaHTML='<div style="min-height:100%;background:#fffef8;'
-    +'background-image:repeating-linear-gradient(transparent,transparent 27px,#e8f0e4 27px,#e8f0e4 28px);'
+  var _nb_bgid=(state&&state.nbPortadaBg)||'clasica';
+  var _nb_bgc={'clasica':'#fffef8','verde':'#e8f5e9','lavanda':'#ede7f6','cielo':'#e3f2fd','rosa':'#fce4ec','naranja':'#fff3e0','noche':'#1a1a2e','galaxia':'#0d0d2b','aurora':'#e8e0ff','verano':'#fce4ff','mint':'#e0faf0','kraft':'#d4a76a'}[_nb_bgid]||'#fffef8';
+  var _nb_lnc={'clasica':'#e8f0e4','verde':'#a5d6a7','lavanda':'#ce93d8','cielo':'#90caf9','rosa':'#f48fb1','naranja':'#ffcc80','noche':'#2a2a4a','galaxia':'#1a1a3a','aurora':'#b39ddb','verano':'#ce93d8','mint':'#80cbc4','kraft':'#b8956a'}[_nb_bgid]||'#e8f0e4';
+  var _nb_mgc=(_nb_bgid==='noche'||_nb_bgid==='galaxia')?'#555':'#FFB3B3';
+  var portadaHTML='<div style="min-height:100%;background:'+_nb_bgc+';'
+    +'background-image:repeating-linear-gradient(transparent,transparent 27px,'+_nb_lnc+' 27px,'+_nb_lnc+' 28px);'
     +'background-position:0 8px;position:relative;padding:32px 16px 32px 34px;">'
-    +'<div style="position:absolute;left:22px;top:0;bottom:0;width:1.5px;background:#FFB3B3;pointer-events:none;"></div>'
+    +'<div style="position:absolute;left:22px;top:0;bottom:0;width:1.5px;background:'+_nb_mgc+';pointer-events:none;"></div>'
     +'<div style="position:relative;z-index:1;text-align:center;">'
     +'<div style="font-size:64px;margin-bottom:8px;filter:drop-shadow(0 4px 8px rgba(0,0,0,.15));">📒</div>'
     +'<div style="font-size:28px;font-weight:900;color:var(--gd);font-family:var(--font-main);letter-spacing:-.5px;">Mi agenda</div>'
@@ -8036,7 +8015,6 @@ function renderCarpetas(){
     // Badge urgente
     +(urgentes>0?'<button id="nb-badge-urg" style="display:inline-flex;align-items:center;gap:6px;background:#FCEBEB;border:1px solid #F7C1C1;border-radius:10px;padding:6px 14px;margin-bottom:20px;cursor:pointer;font-family:var(--font-main);"><span style="font-size:14px;">🔴</span><span style="font-size:12px;font-weight:700;color:#A32D2D;">'+urgentes+' urgente'+(urgentes>1?'s':'')+'</span></button>':'')
     +'<button id="nb-badge-pend" style="display:block;width:100%;font-size:13px;color:var(--tl);font-family:var(--font-main);background:none;border:none;cursor:pointer;padding:4px 0;">'+pendientes+' tarea'+(pendientes!==1?'s':'')+' pendiente'+(pendientes!==1?'s':'')+(pendientes?' → ver listado':'')+'</button>'
-    +'<div style="margin-top:28px;font-size:11px;color:var(--tl);font-family:var(--font-main);">👉 Toca un separador para ver una asignatura</div>'
     +'</div>'
     +'</div>';
   setTimeout(function(){
@@ -8049,6 +8027,13 @@ function renderCarpetas(){
       db.innerHTML='<span style="font-size:18px;line-height:1;">🗑</span><span style="font-size:7px;font-family:var(--font-main);">Eliminar</span>';
       db.addEventListener('click',function(){nbMenuEliminar();});
       th.appendChild(db);
+      // Botón personalizar portada
+      var pb=document.createElement('button');pb.className='tap-header-btn';
+      pb.style.cssText='flex-direction:column;gap:1px;';
+      pb.title='Fondo portada';
+      pb.innerHTML='<span style="font-size:16px;line-height:1;">🎨</span><span style="font-size:7px;font-family:var(--font-main);">Fondo</span>';
+      pb.addEventListener('click',function(){mostrarPersonalizarPortada();});
+      th.appendChild(pb);
     }
   },0);
 
@@ -8067,8 +8052,7 @@ function renderCarpetas(){
     var solid=_darkColor(_getColor(asig));
     // Truncar a 2 palabras / 10 chars por línea
     var nombre=asig.length>12?asig.slice(0,10)+'…':asig;
-    tabsHTML+='<button class="nb-tab-btn" data-asig="'+asig.replace(/"/g,'&quot;')+'" '
-      +'style="background:'+solid+';" onclick="nbAbrirAsig(this.dataset.asig)">'+nombre+'</button>';
+    tabsHTML+='<div style="display:flex;align-items:center;gap:0;margin-bottom:2px;">'      +'<button class="nb-tab-btn" data-asig="'+asig.replace(/"/g,'&quot;')+'" '        +'style="background:'+solid+';flex:1;" onclick="nbAbrirAsig(this.dataset.asig)">'+nombre+'</button>'      +'<button onclick="nbPickColor(\''+asig.replace(/\'/g,"\\'")+'\'" style="width:18px;height:18px;border-radius:50%;background:'+_getColor(asig)+';border:2px solid rgba(255,255,255,.7);cursor:pointer;flex-shrink:0;margin-left:2px;" title="Color"></button>'    +'</div>';
   });
   if(hayMas){
     tabsHTML+='<button class="nb-tab-btn nb-tab-mas" onclick="nbTabPagina(1)" title="Más asignaturas">▼</button>';
@@ -8788,7 +8772,7 @@ function exportBackupJSON(){
       theme:state.theme||'sage',
       font:state.font||'Nunito',
       fontScale:state.fontScale||1,
-      sheetsUrl:state.sheetsUrl||''
+      
     }
   };
   var json=JSON.stringify(backup,null,2);
@@ -9370,7 +9354,9 @@ setTimeout(cerrarSplash, 800);
 setTimeout(checkBackupSemanal, 5000);
 requestAnimationFrame(()=>{
 try{initDarkMode();}catch(e){}
-try{solicitarPermisoNotif();}catch(e){}
+try{initNbPortadaBg();}catch(e){}
+try{actualizarAvatarHome();}catch(e){}
+try{renderCitaDiaria();}catch(e){}
 applyMode('trabajo');
 initForm();
 checkTodayReminders();
@@ -11071,7 +11057,7 @@ function hGuardarTarea(){
   if(!state.records)state.records=[];
   state.records.unshift(rec);
   if(!state.temas.includes(asig)){state.temas.push(asig);try{fillSelect('inp-tema',state.temas);}catch(e){}}
-  persist().then(function(){try{syncRecordToSheets(rec);}catch(e){}}).catch(function(){});
+  persist().then(function(){}).catch(function(){});
   hTaskFotoQuitar();
   hCerrarModal();renderHomeBadges();renderAlertas();
   var t=document.getElementById('toast-ok');if(t){t.style.display='flex';setTimeout(function(){t.style.display='none';},2200);}
@@ -13567,31 +13553,10 @@ function renderCalificaciones(){
     return;
   }
 
+  // ── Render cards ──
   lista.innerHTML = '';
-  // ── Render cards por asignatura (3 por fila) ──
   var uid = 0;
-  // Agrupar por asignatura
-  var grupos={},ordenGrupos=[];
   recs.forEach(function(r){
-    var a=r.tema||'Sin asignatura';
-    if(!grupos[a]){grupos[a]=[];ordenGrupos.push(a);}
-    grupos[a].push(r);
-  });
-  ordenGrupos.forEach(function(asig){
-    // Cabecera de asignatura
-    var asigHdr=document.createElement('div');
-    asigHdr.style.cssText='font-size:11px;font-weight:800;color:var(--tm);text-transform:uppercase;letter-spacing:.5px;margin:12px 0 6px;font-family:var(--font-main);padding-left:2px;';
-    asigHdr.textContent=asig;
-    lista.appendChild(asigHdr);
-    // Grid 3 columnas
-    var grid=document.createElement('div');
-    grid.style.cssText='display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:4px;';
-    lista.appendChild(grid);
-    grupos[asig].forEach(function(r){
-      var card=document.createElement('div');
-      card.style.cssText='background:var(--w);border:1px solid var(--bd);border-radius:10px;padding:8px;position:relative;';
-      // uid for obs
-      uid++;
     uid++;
     var nota     = r.calificacion || '';
     var notaNum  = parseFloat(nota);
@@ -13609,13 +13574,35 @@ function renderCalificaciones(){
     card.style.cssText='background:var(--w);border:1px solid var(--bd);border-radius:12px;padding:10px 12px;margin-bottom:7px;';
 
     card.innerHTML =
-      // Fila superior: tipo + fecha + X roja
-      '<div style="display:flex;align-items:center;gap:3px;margin-bottom:4px;">'        +(r.accion?'<span style="font-size:9px;font-weight:700;color:var(--gd);background:var(--bp);padding:1px 5px;border-radius:5px;border:1px solid var(--bd);">'+_e(r.accion)+'</span>':'')        +(fechaStr?'<span style="font-size:9px;color:var(--tl);">'+fechaStr+'</span>':'')        +'<button onclick="califEliminar(\''+r.id+'\',this)" style="margin-left:auto;background:none;border:none;font-size:14px;font-weight:900;cursor:pointer;color:#e74c3c;padding:0 2px;line-height:1;" title="Eliminar">✕</button>'      +'</div>'      // Título
-      +'<div style="font-size:11px;font-weight:700;color:var(--td);font-family:var(--font-main);margin-bottom:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;" title="'+_e(r.titulo||r.tema||'')+'">'        +(r.icono?r.icono+' ':'')+_e(r.titulo||r.tema||'Sin título')      +'</div>'      // Input nota
-      +'<div style="display:flex;align-items:center;gap:4px;margin-bottom:4px;">'        +'<input type="number" min="0" max="10" step="0.1" placeholder="0–10" value="'+(nota||'')+'" data-rid="'+r.id+'" '          +'style="flex:1;min-width:0;padding:4px 5px;border:2px solid var(--bd);border-radius:8px;font-size:14px;font-weight:700;color:'+notaColor+';background:'+notaBg+';font-family:var(--font-main);text-align:center;box-sizing:border-box;" '          +'oninput="califActualizarNota(this)" onchange="califGuardar(this)"/>'        +(aprobTxt?'<span style="font-size:11px;font-weight:700;color:'+aprobColor+';">'+aprobTxt+'</span>':'')      +'</div>'      // Observaciones colapsadas
-      +'<button onclick="califToggleObs(\''+obsId+'\')" style="background:var(--bp);border:1px solid var(--bd);border-radius:6px;padding:2px 6px;font-size:10px;font-family:var(--font-main);color:var(--tl);cursor:pointer;width:100%;">📝 Obs.</button>'      +'<div id="'+obsId+'" style="display:none;margin-top:4px;">'        +'<textarea data-rid="'+r.id+'" rows="2" placeholder="Observaciones..." '          +'style="width:100%;font-size:11px;border:1px solid var(--bd);border-radius:6px;padding:4px;font-family:var(--font-main);color:var(--td);background:var(--bp);resize:vertical;box-sizing:border-box;" '          +'onchange="califGuardarObs(this)">'+_e(r.observacionesNota||'')+'</textarea>'      +'</div>'
-    grid.appendChild(card);
-    });
+      // ── Fila superior: asignatura + tipo + fecha + botón eliminar ──
+      '<div style="display:flex;align-items:center;gap:5px;margin-bottom:6px;flex-wrap:wrap;">'
+        +'<span style="font-size:11px;font-weight:700;color:var(--gd);background:var(--bp);padding:1px 7px;border-radius:7px;border:1px solid var(--bd);">'+_e(r.tema||'—')+'</span>'
+        +(r.accion?'<span style="font-size:10px;color:var(--tl);">'+_e(r.accion)+'</span>':'')
+        +(fechaStr?'<span style="font-size:10px;color:var(--tl);">· '+fechaStr+'</span>':'')
+        +'<button onclick="califEliminar(\''+r.id+'\')" title="Eliminar" style="margin-left:auto;background:none;border:none;font-size:16px;cursor:pointer;color:var(--tl);padding:0 2px;line-height:1;" title="Eliminar registro">🗑</button>'
+      +'</div>'
+      // ── Título ──
+      +'<div style="font-size:13px;font-weight:700;color:var(--td);font-family:var(--font-main);margin-bottom:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'
+        +(r.icono?r.icono+' ':'')+_e(r.titulo||r.tema||'Sin título')
+      +'</div>'
+      // ── Nota inline + aprobado ──
+      +'<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">'
+        +'<span style="font-size:12px;font-weight:700;color:var(--tm);white-space:nowrap;">📊 Nota:</span>'
+        +'<input type="number" min="0" max="10" step="0.1" placeholder="0–10" value="'+_e(nota)+'" data-rid="'+r.id+'" '
+          +'style="width:72px;padding:5px 6px;border:1.5px solid var(--bd);border-radius:8px;font-size:15px;font-weight:700;color:'+notaColor+';background:'+notaBg+';font-family:var(--font-main);text-align:center;box-sizing:border-box;" '
+          +'oninput="califActualizarNota(this)" onchange="califGuardar(this)"/>'
+        +(aprobTxt?'<span style="font-size:13px;font-weight:700;color:'+aprobColor+';">'+aprobTxt+'</span>':'')
+        // Botón colapsar observaciones
+        +'<button onclick="califToggleObs(\''+obsId+'\')" style="margin-left:auto;background:var(--bp);border:1px solid var(--bd);border-radius:6px;padding:3px 8px;font-size:11px;font-family:var(--font-main);color:var(--tl);cursor:pointer;">📝 Obs.</button>'
+      +'</div>'
+      // ── Observaciones colapsadas ──
+      +'<div id="'+obsId+'" style="display:none;">'
+        +'<textarea data-rid="'+r.id+'" rows="2" placeholder="Temas a revisar, comentarios del profesor..." '
+          +'style="width:100%;padding:7px 9px;border:1px solid var(--bd);border-radius:8px;font-size:12px;font-family:var(--font-main);color:var(--td);background:var(--bp);resize:vertical;box-sizing:border-box;" '
+          +'onchange="califGuardarObs(this)">'+_e(r.observacionesNota||'')+'</textarea>'
+      +'</div>';
+
+    lista.appendChild(card);
   });
 }
 
@@ -13852,35 +13839,6 @@ function applyFont(fontId){
   if(!fontId) fontId = state.font || 'Nunito';
   document.documentElement.style.setProperty('--font-main', "'"+fontId+"', sans-serif");
   state.font = fontId;
-}
-
-// ── Modo oscuro ──
-function applyDarkMode(val){
-  // val: 'auto'|'on'|'off'
-  state.darkMode=val;
-  if(val==='on'){
-    document.body.setAttribute('data-dark','1');
-  }else if(val==='off'){
-    document.body.removeAttribute('data-dark');
-  }else{
-    // auto: seguir el sistema
-    document.body.removeAttribute('data-dark');
-    var mq=window.matchMedia('(prefers-color-scheme: dark)');
-    if(mq&&mq.matches) document.body.setAttribute('data-dark','1');
-  }
-}
-function initDarkMode(){
-  var dm=state.darkMode||'auto';
-  applyDarkMode(dm);
-  // Escuchar cambios del sistema
-  try{
-    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',function(e){
-      if((state.darkMode||'auto')==='auto'){
-        if(e.matches) document.body.setAttribute('data-dark','1');
-        else document.body.removeAttribute('data-dark');
-      }
-    });
-  }catch(ex){}
 }
 
 function renderFonts(){
@@ -15194,22 +15152,25 @@ function libMenuEmojiSticker(){
   var panel=document.createElement('div');
   panel.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:700;display:flex;align-items:flex-end;';
   var sheet=document.createElement('div');
-  sheet.style.cssText='background:var(--w);width:100%;border-radius:18px 18px 0 0;padding:16px 16px 32px;font-family:var(--font-main);max-height:75vh;overflow-y:auto;';
+  sheet.style.cssText='background:var(--w);width:100%;border-radius:18px 18px 0 0;padding:16px 16px 32px;font-family:var(--font-main);max-height:80vh;overflow-y:auto;';
   var h=document.createElement('div');h.style.cssText='font-size:14px;font-weight:800;color:var(--td);margin-bottom:12px;';h.textContent='😊 Emojis y Stickers';
   sheet.appendChild(h);
-  var allCats=[
-    {label:'😊 Emoticonos', items:['😊','😂','😎','🤔','😴','🥳','😤','🥺','💪','🙌','👍','❤️']},
-    {label:'📚 Estudio',    items:['⭐','💡','❓','✅','❌','📌','🔁','⚡','🎯','💯','📝','🧠']},
-    {label:'✨ Decoración', items:['🌸','🌈','✨','🔥','🌙','☀️','🎨','🦋','🌺','🍀','🎉','💫']},
-    {label:'→ Símbolos',   items:['→','←','↑','↓','↗','↙','⟹','⟸','⤴','⤵','⇒','⇔']},
+  var cats=[
+    {label:'😊 Emociones',    items:['😊','😂','🥺','😎','🤩','🥳','😤','😴','🤔','😍','🤯','🥰','😭','🤗','😅','👻','💀','🫶','🙌','👏']},
+    {label:'📚 Estudio',      items:['⭐','💡','❓','✅','❌','📌','🔁','⚡','🎯','💯','📝','🧠','🏆','🥇','🎓','📖','✏️','📐','🔬','🚀']},
+    {label:'🌸 Kawaii',       items:['🌸','🌈','🦋','🌺','🍀','🌙','☀️','🌸','💖','💫','✨','🌟','🎀','🧸','🍭','🌊','🦄','🌷','🎠','🍓']},
+    {label:'✨ Decoración',   items:['→','←','↑','↓','↗','⟹','⤴','♡','☆','◇','△','▷','〇','♪','♦','✦','❋','⊹','✿','❀']},
+    {label:'🎮 Gaming/Pop',   items:['🎮','🕹️','👾','🎲','⚔️','🛡️','💎','🔮','🗝️','🎭','🎪','🎨','🎬','🎤','🎧','📱','💻','🤖','👑','🏴‍☠️']},
+    {label:'🌍 Naturaleza',   items:['🌿','🍃','🌻','🌵','🍄','🦊','🐱','🐶','🦋','🐝','🌊','🏔️','🌋','🌅','⛅','🌙','🌠','🍂','🌾','🦋']},
+    {label:'🏆 Logros',       items:['🔥','💪','🎯','🥇','🏆','⚡','💥','✨','🌟','💫','🎊','🎉','🎈','🥳','🚀','💎','👑','🦁','🦾','🎖️']},
+    {label:'💬 Símbolos',     items:['❤️','🧡','💛','💚','💙','💜','🖤','🤍','💯','‼️','⁉️','❗','❓','🔴','🔵','🟢','🟡','🟠','⬛','⬜']},
   ];
-  allCats.forEach(function(cat){
-    var lbl=document.createElement('div');lbl.style.cssText='font-size:10px;font-weight:700;color:var(--tl);margin:8px 0 5px;text-transform:uppercase;letter-spacing:.5px;';lbl.textContent=cat.label;sheet.appendChild(lbl);
-    var row=document.createElement('div');row.style.cssText='display:flex;flex-wrap:wrap;gap:6px;';
+  cats.forEach(function(cat){
+    var lbl=document.createElement('div');lbl.style.cssText='font-size:10px;font-weight:700;color:var(--tl);margin:10px 0 6px;text-transform:uppercase;letter-spacing:.5px;';lbl.textContent=cat.label;sheet.appendChild(lbl);
+    var row=document.createElement('div');row.style.cssText='display:grid;grid-template-columns:repeat(auto-fill,minmax(40px,1fr));gap:5px;';
     cat.items.forEach(function(stk){
-      var isArrow=stk.length<=2&&stk.charCodeAt(0)<256;
       var btn=document.createElement('button');
-      btn.style.cssText='font-size:'+(isArrow?'16px':'24px')+';padding:6px 8px;background:var(--bl);border:1px solid var(--bd);border-radius:10px;cursor:pointer;min-width:42px;text-align:center;line-height:1;';
+      btn.style.cssText='font-size:22px;padding:5px;background:var(--bl);border:1px solid var(--bd);border-radius:9px;cursor:pointer;text-align:center;line-height:1.2;aspect-ratio:1;';
       btn.textContent=stk;
       btn.addEventListener('click',function(){
         panel.remove();
@@ -15218,7 +15179,7 @@ function libMenuEmojiSticker(){
         var cv=document.getElementById('lib-canvas');
         var cx=cv?((cv.width/2)-_lib.panX)/_lib.zoom:100;
         var cy=cv?((cv.height/2)-_lib.panY)/_lib.zoom:100;
-        pag.textos.push({texto:stk,x:cx-(isArrow?8:16),y:cy+(isArrow?6:16),color:_lib.color,size:isArrow?20:32,bold:false,italic:false,underline:false});
+        pag.textos.push({texto:stk,x:cx-16,y:cy+16,color:_lib.color,size:32,bold:false,italic:false,underline:false});
         _lib.historial.push({tipo:'texto',pagIdx:_lib.pagActual});
         libRedraw();libGuardar();
       });
@@ -15226,11 +15187,13 @@ function libMenuEmojiSticker(){
     });
     sheet.appendChild(row);
   });
-  var cc=document.createElement('button');cc.style.cssText='margin-top:14px;width:100%;padding:11px;background:var(--bd);border:none;border-radius:10px;font-size:13px;cursor:pointer;';cc.textContent='Cerrar';cc.addEventListener('click',function(){panel.remove();});sheet.appendChild(cc);
-  panel.appendChild(sheet);panel.addEventListener('click',function(e){if(e.target===panel)panel.remove();});document.body.appendChild(panel);
+  var cc=document.createElement('button');cc.style.cssText='margin-top:14px;width:100%;padding:11px;background:var(--bd);border:none;border-radius:10px;font-size:13px;cursor:pointer;font-family:var(--font-main);';cc.textContent='Cerrar';
+  cc.addEventListener('click',function(){panel.remove();});
+  sheet.appendChild(cc);
+  panel.appendChild(sheet);panel.addEventListener('click',function(e){if(e.target===panel)panel.remove();});
+  document.body.appendChild(panel);
 }
 
-// ── Menú unificado Fondo + Plantillas ──
 function libMenuFondoPlantilla(){
   var panel=document.createElement('div');
   panel.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:700;display:flex;align-items:flex-end;';
@@ -15365,7 +15328,35 @@ function libRecalcFigura(t){
   t.pts=pts;
 }
 
-// ── Buscador global ──
+function applyDarkMode(val){
+  state.darkMode=val;
+  if(val==='on') document.body.setAttribute('data-dark','1');
+  else if(val==='off') document.body.removeAttribute('data-dark');
+  else{
+    document.body.removeAttribute('data-dark');
+    if(window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)
+      document.body.setAttribute('data-dark','1');
+  }
+}
+function initDarkMode(){
+  applyDarkMode(state.darkMode||'auto');
+  try{window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',function(e){
+    if((state.darkMode||'auto')==='auto'){
+      if(e.matches) document.body.setAttribute('data-dark','1');
+      else document.body.removeAttribute('data-dark');
+    }
+  });}catch(ex){}
+}
+
+function actualizarEstadoNotifCfg(){
+  var el=document.getElementById('notif-estado-cfg');if(!el)return;
+  var on=localStorage.getItem('tp_notif')!=='0';
+  var perm='Notification' in window?Notification.permission:'no soportado';
+  el.textContent=on&&perm==='granted'?'✅ Activadas y con permiso'
+    :on?'⚠ Activadas — acepta el permiso del navegador'
+    :'🔕 Desactivadas';
+}
+
 function abrirBuscador(){
   var ov=document.getElementById('buscador-overlay');
   if(!ov)return;
@@ -15400,15 +15391,12 @@ function renderBuscador(q){
         id:a.id,color:'#8e44ad',tipo:'apunte'});
   });
   if(!items.length){
-    res.innerHTML='<div style="text-align:center;padding:40px 20px;color:var(--tl);font-family:var(--font-main);font-size:13px;">'
-      +(q?'Sin resultados para &laquo;'+q+'&raquo;':'Escribe para buscar...')+'</div>';
+    res.innerHTML='<div style="text-align:center;padding:40px 20px;color:var(--tl);font-size:13px;font-family:var(--font-main);">'+(q?'Sin resultados':'Escribe para buscar...')+'</div>';
     return;
   }
-  var html='';
+  var html='<div style="font-size:10px;color:var(--tl);padding:6px 0 10px;text-transform:uppercase;letter-spacing:.5px;font-family:var(--font-main);">'+items.length+' resultado'+(items.length!==1?'s':'')+'</div>';
   items.slice(0,40).forEach(function(it){
-    var safeId=it.id.replace(/'/g,'');
-    html+='<div onclick="cerrarBuscador()" data-id="'+safeId+'" '
-      +'style="display:flex;align-items:center;gap:10px;padding:10px;background:var(--w);border:1px solid var(--bd);border-left:4px solid '+it.color+';border-radius:0 10px 10px 0;margin-bottom:6px;cursor:pointer;">'
+    html+='<div data-bsid="'+it.id.replace(/"/g,'')+'" style="display:flex;align-items:center;gap:10px;padding:10px;background:var(--w);border:1px solid var(--bd);border-left:4px solid '+it.color+';border-radius:0 10px 10px 0;margin-bottom:6px;cursor:pointer;">'
       +'<span style="font-size:20px;flex-shrink:0;">'+it.icono+'</span>'
       +'<div style="flex:1;min-width:0;">'
       +'<div style="font-size:13px;font-weight:700;color:var(--td);font-family:var(--font-main);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'+it.titulo+'</div>'
@@ -15417,30 +15405,438 @@ function renderBuscador(q){
       +'<span style="font-size:9px;color:var(--tl);background:var(--bp);padding:2px 6px;border-radius:6px;flex-shrink:0;">'+it.tipo+'</span>'
       +'</div>';
   });
-  res.innerHTML='<div style="font-size:10px;color:var(--tl);font-family:var(--font-main);padding:6px 0 10px;text-transform:uppercase;letter-spacing:.5px;">'+items.length+' resultado'+(items.length!==1?'s':'')+'</div>'+html;
-  // Add click handlers
-  res.querySelectorAll('[data-id]').forEach(function(el){
+  res.innerHTML=html;
+  res.querySelectorAll('[data-bsid]').forEach(function(el){
     el.addEventListener('click',function(){
-      var id=this.getAttribute('data-id');
+      cerrarBuscador();
+      var id=this.getAttribute('data-bsid');
       try{viewRecord(id);}catch(ex){irSeccion('registros');}
     });
   });
 }
 document.addEventListener('keydown',function(e){if(e.key==='Escape')cerrarBuscador();});
+
+function calcStreak(){
+  var hoy=new Date().toISOString().slice(0,10);
+  var dias=JSON.parse(localStorage.getItem('tp_streak_dias')||'[]');
+  if(!dias.includes(hoy)){dias.push(hoy);localStorage.setItem('tp_streak_dias',JSON.stringify(dias));}
+  var streak=0,check=new Date(hoy);
+  while(true){var d=check.toISOString().slice(0,10);if(dias.includes(d)){streak++;check.setDate(check.getDate()-1);}else break;}
+  return streak;
+}
+function renderStreak(){
+  var el=document.getElementById('home-streak-badge');if(!el)return;
+  var s=calcStreak();
+  if(s>=2){el.style.display='flex';el.innerHTML='🔥 <b>'+s+'</b> día'+(s!==1?'s':'')+' seguido'+(s!==1?'s':'');}
+  else el.style.display='none';
+}
+
+function setRecurrencia(val,btn){
+  document.getElementById('inp-recurrencia').value=val;
+  ['chip-rec-no','chip-rec-sem','chip-rec-qui','chip-rec-mes'].forEach(function(id){
+    var b=document.getElementById(id);if(b)b.classList.remove('active');
+  });
+  if(btn)btn.classList.add('active');
+}
+function crearTareasRecurrentes(rec){
+  if(!rec.recurrencia||!rec.fechaEvento)return;
+  var dias=rec.recurrencia==='semanal'?7:rec.recurrencia==='quincenal'?15:30;
+  var base=new Date(rec.fechaEvento+'T00:00:00');
+  for(var i=1;i<=4;i++){
+    var d=new Date(base);d.setDate(d.getDate()+dias*i);
+    var nr=JSON.parse(JSON.stringify(rec));
+    nr.id=Date.now().toString(36)+'_r'+i;
+    nr.fechaEvento=d.toISOString().slice(0,10);
+    nr.created=new Date().toISOString();
+    state.records.unshift(nr);
+  }
+}
+
+// ══════════════════════════════════════════
+// MEJORA 1: Avatar personalizable
+// ══════════════════════════════════════════
+var AVATAR_COLORS=[
+  {bg:'#4a7c59',lbl:'Verde'},   {bg:'#6c3483',lbl:'Morado'},
+  {bg:'#1a5276',lbl:'Azul'},    {bg:'#922b21',lbl:'Rojo'},
+  {bg:'#784212',lbl:'Marrón'},  {bg:'#1e8449',lbl:'Esmeralda'},
+  {bg:'#1a252f',lbl:'Negro'},   {bg:'#f39c12',lbl:'Naranja'},
+  {bg:'#2e86c1',lbl:'Celeste'}, {bg:'#d35400',lbl:'Terracota'},
+  {bg:'#7d6608',lbl:'Dorado'},  {bg:'#616a6b',lbl:'Gris'},
+];
+var AVATAR_EMOJIS=['😊','🦊','🐱','🦋','⭐','🎯','🔥','💎','🌸','🎮','🎓','🦄','👑','🌙','🎨','🚀'];
+
+function mostrarPersonalizarAvatar(){
+  var panel=document.createElement('div');
+  panel.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:800;display:flex;align-items:flex-end;';
+  var sheet=document.createElement('div');
+  sheet.style.cssText='background:var(--w);width:100%;border-radius:18px 18px 0 0;padding:16px 16px 32px;font-family:var(--font-main);max-height:82vh;overflow-y:auto;';
+
+  var curColor=state.avatarColor||'var(--gd)';
+  var curEmoji=state.avatarEmoji||'';
+
+  // Preview
+  var prev=document.createElement('div');
+  prev.style.cssText='display:flex;justify-content:center;margin-bottom:14px;';
+  var previewCircle=document.createElement('div');
+  previewCircle.id='av-preview';
+  previewCircle.style.cssText='width:72px;height:72px;border-radius:50%;background:'+curColor+';display:flex;align-items:center;justify-content:center;font-size:32px;border:3px solid var(--bd);box-shadow:0 4px 12px rgba(0,0,0,.2);';
+  previewCircle.textContent=curEmoji||(state.currentUser||'?').slice(0,1).toUpperCase();
+  prev.appendChild(previewCircle);sheet.appendChild(prev);
+
+  // Color selector
+  var h1=document.createElement('div');h1.style.cssText='font-size:11px;font-weight:700;color:var(--tl);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;';h1.textContent='Color de fondo';sheet.appendChild(h1);
+  var colorGrid=document.createElement('div');colorGrid.style.cssText='display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin-bottom:14px;';
+  AVATAR_COLORS.forEach(function(c){
+    var b=document.createElement('button');
+    b.style.cssText='width:100%;aspect-ratio:1;border-radius:50%;background:'+c.bg+';border:3px solid '+(curColor===c.bg?'#fff':'transparent')+';cursor:pointer;box-shadow:0 2px 6px rgba(0,0,0,.2);';
+    b.title=c.lbl;
+    b.addEventListener('click',function(){
+      curColor=c.bg;
+      previewCircle.style.background=c.bg;
+      colorGrid.querySelectorAll('button').forEach(function(x){x.style.border='3px solid transparent';});
+      b.style.border='3px solid #fff';
+    });
+    colorGrid.appendChild(b);
+  });
+  // Custom color
+  var customColor=document.createElement('input');
+  customColor.type='color';customColor.value='#4a7c59';
+  customColor.style.cssText='width:100%;aspect-ratio:1;border-radius:50%;border:2px solid var(--bd);cursor:pointer;padding:0;';
+  customColor.title='Color personalizado';
+  customColor.addEventListener('change',function(){
+    curColor=this.value;previewCircle.style.background=this.value;
+    colorGrid.querySelectorAll('button').forEach(function(x){x.style.border='3px solid transparent';});
+  });
+  colorGrid.appendChild(customColor);
+  sheet.appendChild(colorGrid);
+
+  // Emoji selector
+  var h2=document.createElement('div');h2.style.cssText='font-size:11px;font-weight:700;color:var(--tl);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;';h2.textContent='Icono / Inicial';sheet.appendChild(h2);
+  var emojiRow=document.createElement('div');emojiRow.style.cssText='display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px;';
+  // Option: use initial
+  var bInit=document.createElement('button');
+  bInit.style.cssText='padding:6px 12px;border-radius:8px;border:1.5px solid var(--bd);background:var(--bl);font-size:12px;cursor:pointer;font-family:var(--font-main);font-weight:700;color:var(--td);';
+  bInit.textContent='Inicial';
+  bInit.addEventListener('click',function(){curEmoji='';previewCircle.textContent=(state.currentUser||'?').slice(0,1).toUpperCase();emojiRow.querySelectorAll('button').forEach(function(x){x.style.background='var(--bl)';});bInit.style.background='var(--gd)';bInit.style.color='#fff';});
+  emojiRow.appendChild(bInit);
+  AVATAR_EMOJIS.forEach(function(em){
+    var b=document.createElement('button');
+    b.style.cssText='font-size:22px;padding:5px 7px;border-radius:8px;border:1.5px solid var(--bd);background:'+(curEmoji===em?'var(--gd)':'var(--bl)')+';cursor:pointer;line-height:1;';
+    b.textContent=em;
+    b.addEventListener('click',function(){
+      curEmoji=em;previewCircle.textContent=em;
+      emojiRow.querySelectorAll('button').forEach(function(x){x.style.background='var(--bl)';x.style.color='var(--td)';});
+      b.style.background='var(--gd)';
+    });
+    emojiRow.appendChild(b);
+  });
+  sheet.appendChild(emojiRow);
+
+  // Save button
+  var saveBtn=document.createElement('button');
+  saveBtn.style.cssText='width:100%;padding:12px;background:var(--gd);color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;font-family:var(--font-main);margin-bottom:8px;';
+  saveBtn.textContent='✓ Guardar avatar';
+  saveBtn.addEventListener('click',function(){
+    state.avatarColor=curColor;state.avatarColor=curColor;
+    state.avatarEmoji=curEmoji;
+    persist().catch(function(){});
+    actualizarAvatarHome();
+    panel.remove();
+  });
+  sheet.appendChild(saveBtn);
+  var cc=document.createElement('button');cc.style.cssText='width:100%;padding:11px;background:var(--bd);border:none;border-radius:10px;font-size:13px;cursor:pointer;font-family:var(--font-main);';cc.textContent='Cancelar';
+  cc.addEventListener('click',function(){panel.remove();});sheet.appendChild(cc);
+  panel.appendChild(sheet);panel.addEventListener('click',function(e){if(e.target===panel)panel.remove();});
+  document.body.appendChild(panel);
+}
+
+function actualizarAvatarHome(){
+  var av=document.getElementById('home-avatar');if(!av)return;
+  var color=state.avatarColor||'rgba(255,255,255,0.2)';
+  var emoji=state.avatarEmoji||'';
+  av.style.background=color;
+  var photo=document.getElementById('home-avatar-photo');
+  var initDiv=document.getElementById('home-avatar-init');
+  if(emoji){
+    if(photo)photo.style.display='none';
+    if(!initDiv){initDiv=document.createElement('span');initDiv.id='home-avatar-init';initDiv.style.cssText='font-size:20px;line-height:1;';av.appendChild(initDiv);}
+    initDiv.textContent=emoji;
+  }else{
+    if(initDiv)initDiv.textContent=(state.currentUser||'?').slice(0,1).toUpperCase();
+  }
+}
+
+// ══════════════════════════════════════════
+// MEJORA 3: Portada agenda personalizable
+// ══════════════════════════════════════════
+var NB_PORTADAS=[
+  {id:'clasica',   lbl:'📄 Clásica',   bg:'linear-gradient(160deg,#fffef8 0%,#f4f8f2 100%)'},
+  {id:'verde',     lbl:'🌿 Verde',      bg:'linear-gradient(135deg,#e8f5e9,#c8e6c9)'},
+  {id:'lavanda',   lbl:'💜 Lavanda',    bg:'linear-gradient(135deg,#ede7f6,#d1c4e9)'},
+  {id:'cielo',     lbl:'💙 Cielo',      bg:'linear-gradient(135deg,#e3f2fd,#bbdefb)'},
+  {id:'rosa',      lbl:'🌸 Rosa',       bg:'linear-gradient(135deg,#fce4ec,#f8bbd0)'},
+  {id:'naranja',   lbl:'🧡 Naranja',    bg:'linear-gradient(135deg,#fff3e0,#ffe0b2)'},
+  {id:'noche',     lbl:'🌙 Noche',      bg:'linear-gradient(135deg,#1a1a2e,#16213e)'},
+  {id:'galaxia',   lbl:'🌌 Galaxia',    bg:'linear-gradient(135deg,#0d0d2b,#1a0533,#0d1b4b)'},
+  {id:'aurora',    lbl:'🌅 Aurora',     bg:'linear-gradient(135deg,#667eea,#764ba2)'},
+  {id:'verano',    lbl:'☀️ Verano',     bg:'linear-gradient(135deg,#f093fb,#f5576c)'},
+  {id:'mint',      lbl:'🌊 Mint',       bg:'linear-gradient(135deg,#84fab0,#8fd3f4)'},
+  {id:'kraft',     lbl:'📦 Kraft',      bg:'linear-gradient(160deg,#d4a76a,#c19a6b)'},
+];
+
+function mostrarPersonalizarPortada(){
+  // Add portada option to notebook header
+  var panel=document.createElement('div');
+  panel.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:800;display:flex;align-items:flex-end;';
+  var sheet=document.createElement('div');
+  sheet.style.cssText='background:var(--w);width:100%;border-radius:18px 18px 0 0;padding:16px 16px 32px;font-family:var(--font-main);max-height:75vh;overflow-y:auto;';
+  var h=document.createElement('div');h.style.cssText='font-size:14px;font-weight:800;color:var(--td);margin-bottom:12px;';h.textContent='🎨 Fondo de portada';
+  sheet.appendChild(h);
+  var grid=document.createElement('div');grid.style.cssText='display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px;';
+  var curId=state.nbPortadaBg||'clasica';
+  NB_PORTADAS.forEach(function(p){
+    var b=document.createElement('button');
+    b.style.cssText='border-radius:12px;border:2.5px solid '+(curId===p.id?'var(--gd)':'var(--bd)')+';cursor:pointer;padding:0;overflow:hidden;';
+    var preview=document.createElement('div');
+    preview.style.cssText='height:56px;background:'+p.bg+';';
+    var lbl=document.createElement('div');
+    lbl.style.cssText='padding:5px;font-size:10px;font-weight:700;color:var(--td);font-family:var(--font-main);text-align:center;background:var(--w);';
+    lbl.textContent=p.lbl;
+    b.appendChild(preview);b.appendChild(lbl);
+    b.addEventListener('click',function(){
+      state.nbPortadaBg=p.id;
+      document.documentElement.style.setProperty('--nb-portada-bg',p.bg);
+      persist().catch(function(){});
+      grid.querySelectorAll('button').forEach(function(x){x.style.border='2.5px solid var(--bd)';});
+      b.style.border='2.5px solid var(--gd)';
+      panel.remove();
+    });
+    grid.appendChild(b);
+  });
+  sheet.appendChild(grid);
+  var cc=document.createElement('button');cc.style.cssText='width:100%;padding:11px;background:var(--bd);border:none;border-radius:10px;font-size:13px;cursor:pointer;font-family:var(--font-main);';cc.textContent='Cerrar';
+  cc.addEventListener('click',function(){panel.remove();});sheet.appendChild(cc);
+  panel.appendChild(sheet);panel.addEventListener('click',function(e){if(e.target===panel)panel.remove();});
+  document.body.appendChild(panel);
+}
+
+function initNbPortadaBg(){
+  var id=state.nbPortadaBg||'clasica';
+  var p=NB_PORTADAS.find(function(x){return x.id===id;});
+  if(p) document.documentElement.style.setProperty('--nb-portada-bg',p.bg);
+}
+
+// ══════════════════════════════════════════
+// MEJORA 5: Color separador agenda (hereda horario)
+// ══════════════════════════════════════════
+function getColorSeparador(asig){
+  // 1. Color guardado explícitamente para esta asignatura
+  var saved=(state.separadorColores||{})[asig];
+  if(saved) return saved;
+  // 2. Heredar del horario
+  try{
+    var sch=getSch&&getSch();
+    if(sch&&sch.colores&&sch.colores[asig]!==undefined){
+      var palette=typeof H_COLORS_EXT!=='undefined'?H_COLORS_EXT:H_COLORS;
+      var ci=sch.colores[asig];
+      if(palette[ci]) return palette[ci].bg;
+    }
+  }catch(e){}
+  // 3. Hash del nombre
+  var COLORS=['#4a7c59','#6c3483','#1a5276','#922b21','#784212','#1e8449','#d35400','#2e86c1','#7d6608','#616a6b'];
+  var h=0;for(var i=0;i<(asig||'').length;i++)h=(h+(asig||'').charCodeAt(i))%COLORS.length;
+  return COLORS[h];
+}
+
+function mostrarPickerColorSeparador(asig,onSave){
+  var COLORS=['#4a7c59','#6c3483','#1a5276','#922b21','#784212','#1e8449','#d35400','#2e86c1','#f39c12','#e74c3c','#1abc9c','#616a6b'];
+  var panel=document.createElement('div');
+  panel.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:900;display:flex;align-items:center;justify-content:center;';
+  var box=document.createElement('div');
+  box.style.cssText='background:var(--w);border-radius:16px;padding:16px;width:260px;font-family:var(--font-main);';
+  var h=document.createElement('div');h.style.cssText='font-size:13px;font-weight:800;color:var(--td);margin-bottom:12px;';
+  h.textContent='Color para '+asig;box.appendChild(h);
+  var grid=document.createElement('div');grid.style.cssText='display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-bottom:12px;';
+  var cur=getColorSeparador(asig);
+  COLORS.forEach(function(c){
+    var b=document.createElement('button');
+    b.style.cssText='width:100%;aspect-ratio:1;border-radius:50%;background:'+c+';border:3px solid '+(cur===c?'#fff':'transparent')+';cursor:pointer;box-shadow:0 2px 6px rgba(0,0,0,.2);';
+    b.addEventListener('click',function(){
+      if(!state.separadorColores)state.separadorColores={};
+      state.separadorColores[asig]=c;
+      persist().catch(function(){});
+      panel.remove();if(onSave)onSave(c);
+    });
+    grid.appendChild(b);
+  });
+  var custom=document.createElement('input');custom.type='color';custom.value=cur;
+  custom.style.cssText='width:100%;aspect-ratio:1;border-radius:50%;border:2px solid var(--bd);cursor:pointer;padding:0;';
+  custom.addEventListener('change',function(){
+    if(!state.separadorColores)state.separadorColores={};
+    state.separadorColores[asig]=this.value;
+    persist().catch(function(){});
+    panel.remove();if(onSave)onSave(this.value);
+  });
+  grid.appendChild(custom);
+  box.appendChild(grid);
+  var cc=document.createElement('button');cc.style.cssText='width:100%;padding:9px;background:var(--bd);border:none;border-radius:8px;font-size:13px;cursor:pointer;';cc.textContent='Cancelar';
+  cc.addEventListener('click',function(){panel.remove();});box.appendChild(cc);
+  panel.appendChild(box);panel.addEventListener('click',function(e){if(e.target===panel)panel.remove();});
+  document.body.appendChild(panel);
+}
+
+// ══════════════════════════════════════════
+// MEJORA 7: Cita motivacional diaria
+// ══════════════════════════════════════════
+var CITAS_MOTIVACION=[
+  {txt:"El éxito es la suma de pequeños esfuerzos repetidos cada día.",aut:"R. Collier"},
+  {txt:"No dejes para mañana lo que puedes aprender hoy.",aut:"Benjamín Franklin"},
+  {txt:"El aprendizaje nunca agota la mente.",aut:"Leonardo da Vinci"},
+  {txt:"La educación es el arma más poderosa para cambiar el mundo.",aut:"Nelson Mandela"},
+  {txt:"Estudia no para saber más, sino para saber mejor.",aut:"Séneca"},
+  {txt:"El que estudia hoy tendrá el mundo de mañana.",aut:"Proverbio"},
+  {txt:"La única forma de hacer un gran trabajo es amar lo que haces.",aut:"Steve Jobs"},
+  {txt:"Cada día es una nueva oportunidad para aprender algo increíble.",aut:"Tapunto"},
+  {txt:"La dificultad de hoy es la fortaleza de mañana.",aut:"Proverbio"},
+  {txt:"No importa lo despacio que vayas, siempre y cuando no te detengas.",aut:"Confucio"},
+  {txt:"La perseverancia es el camino al éxito.",aut:"Charlie Chaplin"},
+  {txt:"Tu futuro se crea hoy, no mañana.",aut:"Proverbio"},
+  {txt:"Cree en ti mismo y en todo lo que eres.",aut:"Christian D. Larson"},
+  {txt:"El conocimiento es poder.",aut:"Francis Bacon"},
+  {txt:"Un libro, un lápiz, un niño y un maestro pueden cambiar el mundo.",aut:"Malala Yousafzai"},
+  {txt:"La creatividad es la inteligencia divirtiéndose.",aut:"Albert Einstein"},
+  {txt:"El mayor obstáculo para el descubrimiento no es la ignorancia, sino la ilusión del conocimiento.",aut:"Daniel Boorstin"},
+  {txt:"Aprende como si fueras a vivir para siempre.",aut:"Mahatma Gandhi"},
+  {txt:"El estudiante que duda no aprende, el que estudia con pasión lo aprende todo.",aut:"Tapunto"},
+  {txt:"Cada experto fue una vez un principiante.",aut:"Proverbio"},
+  {txt:"Lo que siembras hoy, lo cosecharás mañana.",aut:"Proverbio"},
+  {txt:"El éxito no es definitivo, el fracaso no es fatal: lo que cuenta es el valor de continuar.",aut:"Winston Churchill"},
+  {txt:"Rodéate de personas que enciendan tu curiosidad.",aut:"Tapunto"},
+  {txt:"El tiempo que disfrutas perdiendo no es tiempo perdido.",aut:"Bertrand Russell"},
+  {txt:"Aprende las reglas como un profesional para poder romperlas como un artista.",aut:"Pablo Picasso"},
+  {txt:"El cerebro no es un vaso que llenar, sino una llama que encender.",aut:"Plutarco"},
+  {txt:"No hay atajos para ningún lugar que merezca la pena ir.",aut:"Beverly Sills"},
+  {txt:"La curiosidad es el motor de la inventiva.",aut:"Ken Robinson"},
+  {txt:"Haz de cada día tu obra maestra.",aut:"John Wooden"},
+  {txt:"La mejor inversión que puedes hacer es en ti mismo.",aut:"Warren Buffett"},
+];
+
+function renderCitaDiaria(){
+  var el=document.getElementById('home-cita');if(!el)return;
+  var hoy=new Date();
+  var idx=(hoy.getFullYear()*366+hoy.getMonth()*31+hoy.getDate())%CITAS_MOTIVACION.length;
+  var cita=CITAS_MOTIVACION[idx];
+  el.innerHTML='<span style="font-size:11px;line-height:1.5;color:rgba(255,255,255,.75);font-style:italic;font-family:var(--font-main);">"'+cita.txt+'"</span>'
+    +'<span style="font-size:10px;color:rgba(255,255,255,.5);font-family:var(--font-main);margin-top:2px;display:block;">— '+cita.aut+'</span>';
+}
+
+// ── Color de separadores ──
+function nbPickColor(asig){
+  if(!asig)return;
+  // Color actual: usuario > horario > hash
+  var palette=typeof H_COLORS_EXT!=='undefined'?H_COLORS_EXT:H_COLORS;
+  var sch=getSch&&getSch();
+  var curColor=(state.separadorColores&&state.separadorColores[asig]);
+  if(!curColor&&sch&&sch.colores&&sch.colores[asig]!==undefined){
+    var ci=sch.colores[asig];if(palette[ci])curColor=palette[ci].bg;
+  }
+  if(!curColor){
+    var h=0;for(var j=0;j<(asig||'').length;j++)h=(h+asig.charCodeAt(j))%palette.length;
+    curColor=palette[h].bg;
+  }
+  var COLORS=['#4a7c59','#6c3483','#1a5276','#922b21','#784212','#1e8449','#d35400','#2e86c1',
+              '#f39c12','#e74c3c','#1abc9c','#616a6b','#8e44ad','#c0392b','#27ae60','#2980b9',
+              '#e91e63','#009688','#ff5722','#607d8b'];
+  var panel=document.createElement('div');
+  panel.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:900;display:flex;align-items:center;justify-content:center;';
+  var box=document.createElement('div');
+  box.style.cssText='background:var(--w);border-radius:16px;padding:16px;width:280px;font-family:var(--font-main);box-shadow:0 8px 32px rgba(0,0,0,.3);';
+  var hd=document.createElement('div');
+  hd.style.cssText='font-size:13px;font-weight:800;color:var(--td);margin-bottom:4px;';
+  hd.textContent='🎨 Color: '+asig;
+  var sub=document.createElement('div');
+  sub.style.cssText='font-size:10px;color:var(--tl);margin-bottom:12px;';
+  sub.textContent='Toca un color para asignarlo a este separador';
+  box.appendChild(hd);box.appendChild(sub);
+  var grid=document.createElement('div');
+  grid.style.cssText='display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:12px;';
+  COLORS.forEach(function(c){
+    var b=document.createElement('button');
+    b.style.cssText='aspect-ratio:1;border-radius:50%;background:'+c
+      +';border:3px solid '+(curColor===c?'var(--w)':'transparent')
+      +';cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.25);outline:'+(curColor===c?'2px solid '+c:'none')+';';
+    b.addEventListener('click',function(){
+      if(!state.separadorColores)state.separadorColores={};
+      state.separadorColores[asig]=c;
+      persist().catch(function(){});
+      panel.remove();
+      try{renderCarpetas();}catch(e){}
+    });
+    grid.appendChild(b);
+  });
+  // Selector libre
+  var customRow=document.createElement('div');
+  customRow.style.cssText='display:flex;align-items:center;gap:8px;margin-bottom:12px;';
+  var customLabel=document.createElement('span');
+  customLabel.style.cssText='font-size:11px;color:var(--tl);';
+  customLabel.textContent='Color personalizado:';
+  var custom=document.createElement('input');
+  custom.type='color';custom.value=curColor||'#4a7c59';
+  custom.style.cssText='width:36px;height:36px;border-radius:50%;border:2px solid var(--bd);cursor:pointer;padding:0;flex-shrink:0;';
+  custom.addEventListener('change',function(){
+    if(!state.separadorColores)state.separadorColores={};
+    state.separadorColores[asig]=this.value;
+    persist().catch(function(){});
+    panel.remove();
+    try{renderCarpetas();}catch(e){}
+  });
+  customRow.appendChild(customLabel);customRow.appendChild(custom);
+  box.appendChild(grid);box.appendChild(customRow);
+  // Botón restablecer (hereda del horario)
+  var reset=document.createElement('button');
+  reset.style.cssText='width:100%;padding:8px;background:var(--bl);border:1px solid var(--bd);border-radius:8px;font-size:11px;cursor:pointer;font-family:var(--font-main);color:var(--tl);margin-bottom:8px;';
+  reset.textContent='↺ Restablecer color del horario';
+  reset.addEventListener('click',function(){
+    if(state.separadorColores)delete state.separadorColores[asig];
+    persist().catch(function(){});
+    panel.remove();
+    try{renderCarpetas();}catch(e){}
+  });
+  box.appendChild(reset);
+  var cc=document.createElement('button');
+  cc.style.cssText='width:100%;padding:9px;background:var(--bd);border:none;border-radius:8px;font-size:13px;cursor:pointer;font-family:var(--font-main);';
+  cc.textContent='Cancelar';
+  cc.addEventListener('click',function(){panel.remove();});
+  box.appendChild(cc);
+  panel.appendChild(box);
+  panel.addEventListener('click',function(e){if(e.target===panel)panel.remove();});
+  document.body.appendChild(panel);
+}
+
+function nbNuevaAsigConColor(){
+  var n=prompt('Nombre de la nueva asignatura:');
+  if(!n||!n.trim())return;
+  n=n.trim();
+  if(state.temas.includes(n)){alert('Ya existe esa asignatura.');return;}
+  nbPickColor(n);  // Primero elige color
+  // Añadir después de cerrar el picker (el pick guarda y refresca)
+  if(!state.temas.includes(n)){
+    state.temas.push(n);
+    state.temas.sort(function(a,b){return a.localeCompare(b,'es',{sensitivity:'base'});});
+    persist().catch(function(){});
+  }
+}
 </script>
 
-
-<!-- Buscador global -->
 <div id="buscador-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:800;flex-direction:column;">
   <div style="background:var(--w);padding:12px 16px;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--bd);">
     <span style="font-size:18px;">🔍</span>
-    <input id="buscador-input" type="text" placeholder="Buscar tareas, apuntes, calificaciones..." autocomplete="off"
+    <input id="buscador-input" type="text" placeholder="Buscar tareas, apuntes..." autocomplete="off"
       style="flex:1;border:none;outline:none;font-size:15px;font-family:var(--font-main);color:var(--td);background:transparent;"
       oninput="renderBuscador(this.value)"/>
     <button onclick="cerrarBuscador()" style="background:none;border:none;font-size:20px;cursor:pointer;color:var(--tl);">✕</button>
   </div>
-  <div id="buscador-results" style="flex:1;overflow-y:auto;padding:8px 16px;background:var(--body-bg,var(--bp));"></div>
+  <div id="buscador-results" style="flex:1;overflow-y:auto;padding:8px 16px;background:var(--bp);"></div>
 </div>
-
 </body>
 </html>
