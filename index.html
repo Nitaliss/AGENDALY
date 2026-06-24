@@ -2163,6 +2163,9 @@ body{margin:0;padding:0;overflow-x:hidden;}
 #bnav-tareas.active{border-color:#1A7B8C;color:#1A7B8C;background:rgba(26,123,140,.07);}
 #bnav-agenda.active{border-color:#D4851A;color:#D4851A;background:rgba(212,133,26,.07);}
 #bnav-estudio.active{border-color:#8E44AD;color:#8E44AD;background:rgba(142,68,173,.07);}
+#bnav-todo.active{border-color:#16a34a;color:#16a34a;background:rgba(22,163,74,.07);}
+#bnav-albumes.active{border-color:#7c3aed;color:#7c3aed;background:rgba(124,58,237,.07);}
+#bnav-back{border-color:var(--bd);color:var(--tl);}
 .bnav-ico{font-size:17px;line-height:1;}
 .bnav-lbl{font-size:9px;font-weight:700;font-family:var(--font-main);letter-spacing:.3px;}
 
@@ -2453,6 +2456,7 @@ body.nb-mode #rec-list-header,
 body.nb-mode .filters,
 body.nb-mode #calendar-filter-view,
 body.nb-mode #nb-pill-orden { display:none !important; }
+
 .nb-page-area{
   flex:1;overflow-y:auto;
   background:#fffef8;
@@ -3198,7 +3202,8 @@ body.nb-mode #nb-pill-orden { display:none !important; }
     <!-- Fondo + Plantillas unificados -->
     <button id="lt-figura" class="lib-tool" onclick="libMenuFiguras()" title="Figuras geométricas" style="font-size:13px;padding:2px 6px;color:#222;">◻</button>
     <button class="lib-tool" onclick="libMenuFondoPlantilla()" title="Fondo y Plantillas" style="font-size:10px;padding:3px 6px;color:#222;">🎨📄</button>
-    <!-- Indicador guardado — al final, color negro -->
+    <!-- Sonido + Guardado -->
+    <button id="lib-sound-toggle" onclick="window._libToggleSound&&window._libToggleSound()" style="font-size:15px;background:none;border:none;cursor:pointer;padding:2px 4px;flex-shrink:0;" title="Sonido escritura">🔊</button>
     <div style="flex:1;min-width:4px;"></div>
     <div id="lib-saved-indicator" style="font-size:9px;color:#333;font-weight:700;font-family:var(--font-main);white-space:nowrap;padding:0 4px;flex-shrink:0;transition:opacity .5s;">✓ Guardado</div>
   </div>
@@ -7534,6 +7539,9 @@ function initNotificaciones(){
 /* ══ FIN NOTIFICACIONES ══ */
 
 function irHome(){
+  // Push historial
+  var _curTab2=document.querySelector('.section.active');
+  if(_curTab2){var _cid=(_curTab2.id||'').replace('sec-','');if(_cid&&_cid!=='home'){if(!window._navHistory)window._navHistory=[];window._navHistory.push(_cid);if(window._navHistory.length>20)window._navHistory.shift();}}
 var secs=['home','nuevo','registros','recordatorios','calendario','notas','config','albumes','estudio','calificaciones','rutinas','libreta'];
 secs.forEach(function(s){
 var el=document.getElementById('sec-'+s);
@@ -7623,6 +7631,16 @@ if(darkLabel) darkLabel.textContent=isDark?'Claro':'Oscuro';
 }
 
 function irSeccion(tab){
+// Guardar en historial antes de cambiar
+var _curTab=document.querySelector('.section.active');
+if(_curTab){
+  var _curId=(_curTab.id||'').replace('sec-','');
+  if(_curId&&_curId!==tab){
+    if(!window._navHistory) window._navHistory=[];
+    window._navHistory.push(_curId);
+    if(window._navHistory.length>20) window._navHistory.shift();
+  }
+}
 document.body.classList.remove('on-home');
 document.body.classList.remove('nb-mode');
 switchTab(tab,null);
@@ -7633,7 +7651,9 @@ document.querySelectorAll('.bnav-btn').forEach(function(b){b.classList.remove('a
 if(tab==='registros') document.getElementById('bnav-tareas').classList.add('active');
 else if(tab==='estudio') document.getElementById('bnav-estudio').classList.add('active');
 else if(tab==='calendario'){var _ba=document.getElementById('bnav-agenda');if(_ba)_ba.classList.add('active');}
-// bnav-mas eliminado de la nav
+else if(tab==='notas'){var _bt=document.getElementById('bnav-todo');if(_bt)_bt.classList.add('active');}
+else if(tab==='albumes'){var _bap=document.getElementById('bnav-albumes');if(_bap)_bap.classList.add('active');}
+else if(tab==='home'){var _bh=document.getElementById('bnav-home');if(_bh)_bh.classList.add('active');}
 }
 function switchTab(tab,btn){
 document.querySelectorAll('.section').forEach(function(s){s.classList.remove('active');s.style.display='none';});
@@ -8044,20 +8064,25 @@ function renderCarpetas(){
   var visibles = asigs.slice(_nbTabPag * MAX_TABS, (_nbTabPag + 1) * MAX_TABS);
   var hayMas = asigs.length > (_nbTabPag + 1) * MAX_TABS;
   var hayAntes = _nbTabPag > 0;
-  var tabsHTML='';
+  var tabsHTML='<button onclick="nbNuevaAsigConColor()" title="Nueva asignatura" style="width:100%;padding:5px 2px;background:#e8e8e8;border:none;border-bottom:1px solid #ccc;color:#333;font-size:18px;font-weight:700;cursor:pointer;text-align:center;line-height:1;flex-shrink:0;">＋</button>';
   if(hayAntes){
     tabsHTML+='<button class="nb-tab-btn nb-tab-mas" onclick="nbTabPagina(-1)" title="Anteriores">▲</button>';
   }
   visibles.forEach(function(asig){
     var solid=_darkColor(_getColor(asig));
-    // Truncar a 2 palabras / 10 chars por línea
+    var col=_getColor(asig);
     var nombre=asig.length>12?asig.slice(0,10)+'…':asig;
-    tabsHTML+='<div style="display:flex;align-items:center;gap:0;margin-bottom:2px;">'      +'<button class="nb-tab-btn" data-asig="'+asig.replace(/"/g,'&quot;')+'" '        +'style="background:'+solid+';flex:1;" onclick="nbAbrirAsig(this.dataset.asig)">'+nombre+'</button>'      +'<button onclick="nbPickColor(\''+asig.replace(/\'/g,"\\'")+'\'" style="width:18px;height:18px;border-radius:50%;background:'+_getColor(asig)+';border:2px solid rgba(255,255,255,.7);cursor:pointer;flex-shrink:0;margin-left:2px;" title="Color"></button>'    +'</div>';
+    var safeAsig=asig.replace(/"/g,'&quot;');
+    tabsHTML+='<div style="display:flex;align-items:center;gap:2px;margin-bottom:2px;">'
+      +'<button class="nb-tab-btn" data-asig="'+safeAsig+'" style="background:'+solid+';flex:1;" onclick="nbAbrirAsig(this.dataset.asig)">'+nombre+'</button>'
+      +'<button class="nb-col-dot" data-asig="'+safeAsig+'" onclick="nbPickColor(this.dataset.asig)" style="width:14px;height:14px;min-width:14px;border-radius:50%;background:'+col+';border:1.5px solid rgba(255,255,255,.7);cursor:pointer;margin-left:1px;flex-shrink:0;" title="Cambiar color"></button>'
+    +'</div>';
   });
   if(hayMas){
     tabsHTML+='<button class="nb-tab-btn nb-tab-mas" onclick="nbTabPagina(1)" title="Más asignaturas">▼</button>';
   }
 
+  // Botón añadir separador al final del tabs wrap
   el.innerHTML='<div class="nb-libreta-wrap">'
     +'<div class="nb-page-area" id="nb-page-area" style="overflow-y:auto;">'+portadaHTML+'</div>'
     +'<div class="nb-tabs-wrap" id="nb-tabs-wrap">'+tabsHTML+'</div>'
@@ -8105,6 +8130,7 @@ function nbAbrirAsig(asig){
   var sch=getSch&&getSch();
   var palette=typeof H_COLORS_EXT!=='undefined'?H_COLORS_EXT:H_COLORS;
   function _getColor(a){
+    if(state.separadorColores&&state.separadorColores[a]) return state.separadorColores[a];
     if(sch&&sch.colores&&sch.colores[a]!==undefined){var ci=sch.colores[a];if(palette[ci])return palette[ci].bg;}
     var h=0;for(var i=0;i<(a||'').length;i++)h=(h+a.charCodeAt(i))%palette.length;return palette[h].bg;
   }
@@ -8127,21 +8153,26 @@ function nbAbrirAsig(asig){
   var visibles2=asigs.slice(_pag2*MAX_TABS2,(_pag2+1)*MAX_TABS2);
   var hayMas2=asigs.length>(_pag2+1)*MAX_TABS2;
   var hayAntes2=_pag2>0;
-  var tabsHTML='';
+  var tabsHTML='<button onclick="nbNuevaAsigConColor()" title="Nueva asignatura" style="width:100%;padding:5px 2px;background:#e8e8e8;border:none;border-bottom:1px solid #ccc;color:#333;font-size:18px;font-weight:700;cursor:pointer;text-align:center;line-height:1;flex-shrink:0;">＋</button>';
   if(hayAntes2){
     tabsHTML+='<button class="nb-tab-btn nb-tab-mas" onclick="nbTabPagina(-1)" title="Anteriores">▲</button>';
   }
   visibles2.forEach(function(a){
     var solid=_darkColor(_getColor(a));
+    var col=_getColor(a);
     var active=a===asig;
     var nombre=a.length>12?a.slice(0,10)+'…':a;
-    tabsHTML+='<button class="nb-tab-btn'+(active?' nb-active':'')+'" data-asig="'+a.replace(/"/g,'&quot;')+'" '
-      +'style="background:'+solid+';" onclick="nbAbrirAsig(this.dataset.asig)">'+nombre+'</button>';
+    var safeA=a.replace(/"/g,'&quot;');
+    tabsHTML+='<div style="display:flex;align-items:center;gap:2px;margin-bottom:2px;">'
+      +'<button class="nb-tab-btn'+(active?' nb-active':'')+'" data-asig="'+safeA+'" '
+        +'style="background:'+solid+';flex:1;" onclick="nbAbrirAsig(this.dataset.asig)">'+nombre+'</button>'
+      +'<button class="nb-col-dot" data-asig="'+safeA+'" onclick="nbPickColor(this.dataset.asig)" '
+        +'style="width:14px;height:14px;min-width:14px;border-radius:50%;background:'+col+';border:1.5px solid rgba(255,255,255,.7);cursor:pointer;flex-shrink:0;" title="Color"></button>'
+    +'</div>';
   });
   if(hayMas2){
     tabsHTML+='<button class="nb-tab-btn nb-tab-mas" onclick="nbTabPagina(1)" title="Más asignaturas">▼</button>';
   }
-
   el.innerHTML='<div class="nb-libreta-wrap">'
     +'<div class="nb-page-area" id="nb-page-area" style="overflow-y:auto;">'
     +'<div class="nb-content-area" id="nb-content-area">'
@@ -12720,6 +12751,74 @@ renderAlbumes = function(){
 };
 
 
+
+// ── Color de separadores de Mi Agenda ──
+function nbPickColor(asig){
+  if(!asig)return;
+  var palette=typeof H_COLORS_EXT!=='undefined'?H_COLORS_EXT:H_COLORS;
+  var sch2=getSch&&getSch();
+  var curColor=(state.separadorColores&&state.separadorColores[asig])||'';
+  if(!curColor&&sch2&&sch2.colores&&sch2.colores[asig]!==undefined){
+    var ci=sch2.colores[asig];if(palette[ci])curColor=palette[ci].bg;
+  }
+  if(!curColor){
+    var hh=0;for(var jj=0;jj<(asig||'').length;jj++)hh=(hh+asig.charCodeAt(jj))%palette.length;
+    curColor=palette[hh].bg;
+  }
+  var PICK=['#4a7c59','#6c3483','#1a5276','#922b21','#784212','#1e8449','#d35400','#2e86c1',
+    '#f39c12','#e74c3c','#1abc9c','#616a6b','#8e44ad','#c0392b','#27ae60','#2980b9',
+    '#e91e63','#009688','#ff5722','#607d8b'];
+  var pnl=document.createElement('div');
+  pnl.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:9000;display:flex;align-items:center;justify-content:center;';
+  var box=document.createElement('div');
+  box.style.cssText='background:var(--w);border-radius:16px;padding:16px;width:280px;font-family:var(--font-main);box-shadow:0 8px 32px rgba(0,0,0,.3);';
+  var hd=document.createElement('div');hd.style.cssText='font-size:13px;font-weight:800;color:var(--td);margin-bottom:4px;';hd.textContent='Color: '+asig;
+  var sd=document.createElement('div');sd.style.cssText='font-size:10px;color:var(--tl);margin-bottom:12px;';sd.textContent='Elige el color para este separador';
+  box.appendChild(hd);box.appendChild(sd);
+  var grid=document.createElement('div');grid.style.cssText='display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:12px;';
+  PICK.forEach(function(c){
+    var btn=document.createElement('button');
+    btn.style.cssText='aspect-ratio:1;border-radius:50%;background:'+c+';border:3px solid '+(curColor===c?'var(--w)':'transparent')+';cursor:pointer;box-shadow:0 2px 6px rgba(0,0,0,.25);';
+    btn.addEventListener('click',function(){
+      if(!state.separadorColores)state.separadorColores={};
+      state.separadorColores[asig]=c;persist().catch(function(){});pnl.remove();if(window._nbAsigActiva)nbAbrirAsig(window._nbAsigActiva);else renderCarpetas();
+    });
+    grid.appendChild(btn);
+  });
+  var crow=document.createElement('div');crow.style.cssText='display:flex;align-items:center;gap:8px;margin-bottom:10px;';
+  var clbl=document.createElement('span');clbl.style.cssText='font-size:11px;color:var(--tl);';clbl.textContent='Personalizado:';
+  var cust=document.createElement('input');cust.type='color';cust.value=curColor||'#4a7c59';
+  cust.style.cssText='width:36px;height:36px;border-radius:50%;border:2px solid var(--bd);cursor:pointer;padding:0;';
+  cust.addEventListener('change',function(){
+    if(!state.separadorColores)state.separadorColores={};
+    state.separadorColores[asig]=this.value;persist().catch(function(){});pnl.remove();if(window._nbAsigActiva)nbAbrirAsig(window._nbAsigActiva);else renderCarpetas();
+  });
+  crow.appendChild(clbl);crow.appendChild(cust);box.appendChild(grid);box.appendChild(crow);
+  var rst=document.createElement('button');
+  rst.style.cssText='width:100%;padding:8px;background:var(--bl);border:1px solid var(--bd);border-radius:8px;font-size:11px;cursor:pointer;color:var(--tl);margin-bottom:8px;font-family:var(--font-main);';
+  rst.textContent='Restablecer color del horario';
+  rst.addEventListener('click',function(){
+    if(state.separadorColores)delete state.separadorColores[asig];
+    persist().catch(function(){});pnl.remove();renderCarpetas();
+  });
+  box.appendChild(rst);
+  var can=document.createElement('button');can.style.cssText='width:100%;padding:9px;background:var(--bd);border:none;border-radius:8px;font-size:13px;cursor:pointer;font-family:var(--font-main);';
+  can.textContent='Cancelar';can.addEventListener('click',function(){pnl.remove();});
+  box.appendChild(can);
+  pnl.appendChild(box);pnl.addEventListener('click',function(e){if(e.target===pnl)pnl.remove();});
+  document.body.appendChild(pnl);
+}
+
+function nbNuevaAsigConColor(){
+  var n=prompt('Nombre de la nueva asignatura:');
+  if(!n||!n.trim())return;n=n.trim();
+  if(state.temas.includes(n)){alert('Ya existe esa asignatura.');return;}
+  state.temas.push(n);
+  state.temas.sort(function(a,b){return a.localeCompare(b,'es',{sensitivity:'base'});});
+  persist().catch(function(){});
+  nbPickColor(n);
+}
+
 </script>
 
 <script>
@@ -12921,12 +13020,15 @@ function pomSetSound(type){
   <button class="bnav-btn" id="bnav-tareas" onclick="irSeccion('registros')">
     <span class="bnav-ico">&#128203;</span><span class="bnav-lbl">Mi agenda</span>
   </button>
-  <div style="width:54px;flex-shrink:0;" aria-hidden="true"></div>
+  <div style="width:58px;flex-shrink:0;" aria-hidden="true"></div>
   <button class="bnav-btn" id="bnav-todo" onclick="irSeccion('notas')">
     <span class="bnav-ico">&#9989;</span><span class="bnav-lbl">To Do</span>
   </button>
   <button class="bnav-btn" id="bnav-albumes" onclick="irSeccion('albumes')">
     <span class="bnav-ico">&#128218;</span><span class="bnav-lbl">Apuntes</span>
+  </button>
+  <button id="bnav-back" onclick="navVolverAtras()" title="Volver atrás" style="flex-shrink:0;width:32px;display:flex;flex-direction:column;align-items:center;justify-content:center;background:none;border:none;cursor:pointer;color:var(--tl);padding:0 4px;margin:4px 2px 4px 0;">
+    <span style="font-size:16px;line-height:1;">&#8592;</span>
   </button>
 </nav>
 
@@ -14333,8 +14435,16 @@ function libRedraw(){
   var cv=document.getElementById('lib-canvas');if(!cv)return;
   var ctx=cv.getContext('2d'),pag=_lib.paginas[_lib.pagActual];if(!pag)return;
   ctx.clearRect(0,0,cv.width,cv.height);
-  libFondo(ctx,cv.width,cv.height,pag.fondo||'rayas',pag.bgColor,pag.plantilla||null);
+  // Color de fondo base (siempre llena el viewport)
+  ctx.fillStyle=pag.bgColor||((!pag.fondo||pag.fondo==='rayas'||pag.fondo==='cuadros'||pag.fondo==='puntos')?'#fffef8':pag.fondo==='negro'?'#1a1a1a':pag.fondo==='kraft'?'#d4a574':'#fffef8');
+  ctx.fillRect(0,0,cv.width,cv.height);
+  // Fondo y plantilla DENTRO del transform (escalan con zoom)
   ctx.save();ctx.translate(_lib.panX,_lib.panY);ctx.scale(_lib.zoom,_lib.zoom);
+  var _pw=cv.width/_lib.zoom, _ph=cv.height/_lib.zoom;
+  libFondoEscalado(ctx,_pw,_ph,pag.fondo||'rayas',pag.bgColor);
+  if(pag.plantilla){
+    try{libDibujarPlantilla(ctx,_pw,_ph,pag.plantilla);}catch(e){}
+  }
   (pag.trazos||[]).forEach(function(t){libTrazo(ctx,t);});
   (pag.textos||[]).forEach(function(tx){
     var style=(tx.italic?'italic ':'')+(tx.bold?'bold ':'')+'normal';
@@ -14442,12 +14552,36 @@ function libFondo(ctx,w,h,tipo,bgColor,plantilla){
   ctx.fillStyle=bgColor||(tipo==='negro'?'#1a1a1a':tipo==='kraft'?'#d4a574':'#fffef8');
   ctx.fillRect(0,0,w,h);
   // Si hay plantilla, dibujarla y salir (no poner líneas encima)
-  if(plantilla){try{libDibujarPlantilla(ctx,w,h,plantilla);}catch(e){}return;}
+  // plantilla se dibuja en libRedraw dentro del ctx.save/scale (no aquí)
   var lc=tipo==='negro'?'rgba(255,255,255,.15)':'#e8f0e4';
   if(tipo==='rayas'){ctx.strokeStyle=lc;ctx.lineWidth=1;for(var y=28;y<h;y+=28){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(w,y);ctx.stroke();}ctx.strokeStyle='#FFB3B3';ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(32,0);ctx.lineTo(32,h);ctx.stroke();}
   else if(tipo==='cuadros'){ctx.strokeStyle=lc;ctx.lineWidth=.8;for(var x2=24;x2<w;x2+=24){ctx.beginPath();ctx.moveTo(x2,0);ctx.lineTo(x2,h);ctx.stroke();}for(var y2=24;y2<h;y2+=24){ctx.beginPath();ctx.moveTo(0,y2);ctx.lineTo(w,y2);ctx.stroke();}}
   else if(tipo==='puntos'){ctx.fillStyle=lc;for(var px=20;px<w;px+=24)for(var py=20;py<h;py+=24){ctx.beginPath();ctx.arc(px,py,1.5,0,Math.PI*2);ctx.fill();}}
 }
+function libFondoEscalado(ctx,w,h,tipo,bgColor){
+  // Dibuja solo las líneas/puntos (el fondo de color ya se hizo antes)
+  // Estas coordenadas están en espacio lógico → escalan con zoom
+  var lc=tipo==='negro'?'rgba(255,255,255,.15)':'#e8f0e4';
+  if(tipo==='rayas'){
+    ctx.strokeStyle=lc;ctx.lineWidth=0.8;
+    for(var y=28;y<h*1.5;y+=28){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(w,y);ctx.stroke();}
+    ctx.strokeStyle='rgba(255,179,179,0.8)';ctx.lineWidth=1;
+    ctx.beginPath();ctx.moveTo(32,0);ctx.lineTo(32,h);ctx.stroke();
+  } else if(tipo==='cuadros'){
+    ctx.strokeStyle=lc;ctx.lineWidth=0.6;
+    for(var x2=24;x2<w*1.5;x2+=24){ctx.beginPath();ctx.moveTo(x2,0);ctx.lineTo(x2,h);ctx.stroke();}
+    for(var y2=24;y2<h*1.5;y2+=24){ctx.beginPath();ctx.moveTo(0,y2);ctx.lineTo(w,y2);ctx.stroke();}
+  } else if(tipo==='puntos'){
+    ctx.fillStyle=lc;
+    for(var px=20;px<w*1.5;px+=24)for(var py=20;py<h*1.5;py+=24){
+      ctx.beginPath();ctx.arc(px,py,1.2,0,Math.PI*2);ctx.fill();
+    }
+  } else if(tipo==='kraft'){
+    ctx.strokeStyle='rgba(139,100,60,0.25)';ctx.lineWidth=0.8;
+    for(var yk=32;yk<h*1.5;yk+=32){ctx.beginPath();ctx.moveTo(0,yk);ctx.lineTo(w,yk);ctx.stroke();}
+  }
+}
+
 function libMostrarTexto(x,y){_lib.textoPendX=x;_lib.textoPendY=y;var wrap=document.getElementById('lib-text-input-wrap'),inp=document.getElementById('lib-text-input');if(!wrap||!inp)return;var cv=document.getElementById('lib-canvas'),r=cv.getBoundingClientRect();wrap.style.left=(r.left+(x*_lib.zoom+_lib.panX)*r.width/cv.width)+'px';wrap.style.top=(r.top+(y*_lib.zoom+_lib.panY)*r.height/cv.height-40)+'px';wrap.style.display='block';inp.value='';inp.style.color=_lib.color;setTimeout(function(){inp.focus();},80);}
 function libConfirmarTexto(){
   var inp=document.getElementById('lib-text-input');
@@ -14489,10 +14623,13 @@ function libSetSize(s,btn){_lib.grosor=s;document.querySelectorAll('.lib-size').
 function libCambiarFondo(){var p=document.getElementById('lib-fondo-panel');if(p)p.style.display='flex';}
 function libSetFondo(tipo,color){var pag=_lib.paginas[_lib.pagActual];if(!pag)return;pag.fondo=tipo;pag.bgColor=(tipo==='custom'&&color)?color:null;libRedraw();libGuardar();if(tipo!=='custom'){var p=document.getElementById('lib-fondo-panel');if(p)p.style.display='none';}}
 function libNuevaPagina(silent){var hoy=new Date().toISOString().slice(0,10);_lib.paginas.push({fecha:hoy,fondo:'rayas',bgColor:null,trazos:[],textos:[]});_lib.pagActual=_lib.paginas.length-1;_lib.historial=[];_lib.zoom=1;_lib.panX=0;_lib.panY=0;if(!silent){libRedraw();libGuardar();libActualizarNavPag();}}
-function libPagAnterior(){if(_lib.pagActual>0){_lib.pagActual--;_lib.zoom=1;_lib.panX=0;_lib.panY=0;_lib.historial=[];libRedraw();libActualizarNavPag();}}
-function libPagSiguiente(){if(_lib.pagActual<_lib.paginas.length-1){_lib.pagActual++;_lib.zoom=1;_lib.panX=0;_lib.panY=0;_lib.historial=[];libRedraw();libActualizarNavPag();}}
+function libPagAnterior(){
+  _libPushNav(_lib.pagActual);if(_lib.pagActual>0){_lib.pagActual--;_lib.zoom=1;_lib.panX=0;_lib.panY=0;_lib.historial=[];libRedraw();libActualizarNavPag();}}
+function libPagSiguiente(){
+  _libPushNav(_lib.pagActual);if(_lib.pagActual<_lib.paginas.length-1){_lib.pagActual++;_lib.zoom=1;_lib.panX=0;_lib.panY=0;_lib.historial=[];libRedraw();libActualizarNavPag();}}
 function libRenderPagina(){_lib.zoom=1;_lib.panX=0;_lib.panY=0;_lib.historial=[];libRedraw();}
-function libActualizarNavPag(){var lbl=document.getElementById('lib-pag-label');if(!lbl)return;var pag=_lib.paginas[_lib.pagActual];var f='';if(pag&&pag.fecha){try{var d=new Date(pag.fecha+'T00:00:00');f=' · '+d.getDate()+'/'+(d.getMonth()+1)+'/'+String(d.getFullYear()).slice(2);}catch(e){}}var z=_lib.zoom!==1?' · '+Math.round(_lib.zoom*100)+'%':'';lbl.textContent='Pág '+(_lib.pagActual+1)+' de '+_lib.paginas.length+f+z;}
+function libActualizarNavPag(){
+  try{_libActualizarBackBtn();}catch(e){}var lbl=document.getElementById('lib-pag-label');if(!lbl)return;var pag=_lib.paginas[_lib.pagActual];var f='';if(pag&&pag.fecha){try{var d=new Date(pag.fecha+'T00:00:00');f=' · '+d.getDate()+'/'+(d.getMonth()+1)+'/'+String(d.getFullYear()).slice(2);}catch(e){}}var z=_lib.zoom!==1?' · '+Math.round(_lib.zoom*100)+'%':'';lbl.textContent='Pág '+(_lib.pagActual+1)+' de '+_lib.paginas.length+f+z;}
 function libResetZoom(){_lib.zoom=1;_lib.panX=0;_lib.panY=0;libRedraw();libActualizarNavPag();}
 function libGuardar(){
   try{
@@ -15717,9 +15854,38 @@ var CITAS_MOTIVACION=[
   {txt:"El cerebro no es un vaso que llenar, sino una llama que encender.",aut:"Plutarco"},
   {txt:"No hay atajos para ningún lugar que merezca la pena ir.",aut:"Beverly Sills"},
   {txt:"La curiosidad es el motor de la inventiva.",aut:"Ken Robinson"},
-  {txt:"Haz de cada día tu obra maestra.",aut:"John Wooden"},
-  {txt:"La mejor inversión que puedes hacer es en ti mismo.",aut:"Warren Buffett"},
 ];
+
+// ── Historial de páginas visitadas en la libreta ──
+function libVolverAtras(){
+  if(window._libNavStack&&window._libNavStack.length>0){
+    // Hay historial — volver a la página exacta
+    var prev=window._libNavStack.pop();
+    _lib.pagActual=prev;
+  } else if(_lib.pagActual>0){
+    // Sin historial — simplemente página anterior
+    _lib.pagActual--;
+  } else {
+    return; // ya en la primera página
+  }
+  _lib.zoom=1;_lib.panX=0;_lib.panY=0;
+  libRedraw();
+  libActualizarNavPag();
+}
+
+function _libActualizarBackBtn(){
+  // El botón siempre es visible — solo lo usamos para actualizar estado si hace falta
+}
+
+// Registrar página antes de cambiar
+function _libPushNav(desdePag){
+  if(!window._libNavStack) window._libNavStack=[];
+  // No apilar si es la misma página
+  if(window._libNavStack.length&&window._libNavStack[window._libNavStack.length-1]===desdePag) return;
+  window._libNavStack.push(desdePag);
+  if(window._libNavStack.length>30) window._libNavStack.shift(); // cap
+  _libActualizarBackBtn();
+}
 
 function renderCitaDiaria(){
   var el=document.getElementById('home-cita');if(!el)return;
@@ -15729,106 +15895,63 @@ function renderCitaDiaria(){
   el.innerHTML='<span style="font-size:11px;line-height:1.5;color:rgba(255,255,255,.75);font-style:italic;font-family:var(--font-main);">"'+cita.txt+'"</span>'
     +'<span style="font-size:10px;color:rgba(255,255,255,.5);font-family:var(--font-main);margin-top:2px;display:block;">— '+cita.aut+'</span>';
 }
-
-// ── Color de separadores ──
-function nbPickColor(asig){
-  if(!asig)return;
-  // Color actual: usuario > horario > hash
-  var palette=typeof H_COLORS_EXT!=='undefined'?H_COLORS_EXT:H_COLORS;
-  var sch=getSch&&getSch();
-  var curColor=(state.separadorColores&&state.separadorColores[asig]);
-  if(!curColor&&sch&&sch.colores&&sch.colores[asig]!==undefined){
-    var ci=sch.colores[asig];if(palette[ci])curColor=palette[ci].bg;
-  }
-  if(!curColor){
-    var h=0;for(var j=0;j<(asig||'').length;j++)h=(h+asig.charCodeAt(j))%palette.length;
-    curColor=palette[h].bg;
-  }
-  var COLORS=['#4a7c59','#6c3483','#1a5276','#922b21','#784212','#1e8449','#d35400','#2e86c1',
-              '#f39c12','#e74c3c','#1abc9c','#616a6b','#8e44ad','#c0392b','#27ae60','#2980b9',
-              '#e91e63','#009688','#ff5722','#607d8b'];
-  var panel=document.createElement('div');
-  panel.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:900;display:flex;align-items:center;justify-content:center;';
-  var box=document.createElement('div');
-  box.style.cssText='background:var(--w);border-radius:16px;padding:16px;width:280px;font-family:var(--font-main);box-shadow:0 8px 32px rgba(0,0,0,.3);';
-  var hd=document.createElement('div');
-  hd.style.cssText='font-size:13px;font-weight:800;color:var(--td);margin-bottom:4px;';
-  hd.textContent='🎨 Color: '+asig;
-  var sub=document.createElement('div');
-  sub.style.cssText='font-size:10px;color:var(--tl);margin-bottom:12px;';
-  sub.textContent='Toca un color para asignarlo a este separador';
-  box.appendChild(hd);box.appendChild(sub);
-  var grid=document.createElement('div');
-  grid.style.cssText='display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:12px;';
-  COLORS.forEach(function(c){
-    var b=document.createElement('button');
-    b.style.cssText='aspect-ratio:1;border-radius:50%;background:'+c
-      +';border:3px solid '+(curColor===c?'var(--w)':'transparent')
-      +';cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.25);outline:'+(curColor===c?'2px solid '+c:'none')+';';
-    b.addEventListener('click',function(){
-      if(!state.separadorColores)state.separadorColores={};
-      state.separadorColores[asig]=c;
-      persist().catch(function(){});
-      panel.remove();
-      try{renderCarpetas();}catch(e){}
-    });
-    grid.appendChild(b);
-  });
-  // Selector libre
-  var customRow=document.createElement('div');
-  customRow.style.cssText='display:flex;align-items:center;gap:8px;margin-bottom:12px;';
-  var customLabel=document.createElement('span');
-  customLabel.style.cssText='font-size:11px;color:var(--tl);';
-  customLabel.textContent='Color personalizado:';
-  var custom=document.createElement('input');
-  custom.type='color';custom.value=curColor||'#4a7c59';
-  custom.style.cssText='width:36px;height:36px;border-radius:50%;border:2px solid var(--bd);cursor:pointer;padding:0;flex-shrink:0;';
-  custom.addEventListener('change',function(){
-    if(!state.separadorColores)state.separadorColores={};
-    state.separadorColores[asig]=this.value;
-    persist().catch(function(){});
-    panel.remove();
-    try{renderCarpetas();}catch(e){}
-  });
-  customRow.appendChild(customLabel);customRow.appendChild(custom);
-  box.appendChild(grid);box.appendChild(customRow);
-  // Botón restablecer (hereda del horario)
-  var reset=document.createElement('button');
-  reset.style.cssText='width:100%;padding:8px;background:var(--bl);border:1px solid var(--bd);border-radius:8px;font-size:11px;cursor:pointer;font-family:var(--font-main);color:var(--tl);margin-bottom:8px;';
-  reset.textContent='↺ Restablecer color del horario';
-  reset.addEventListener('click',function(){
-    if(state.separadorColores)delete state.separadorColores[asig];
-    persist().catch(function(){});
-    panel.remove();
-    try{renderCarpetas();}catch(e){}
-  });
-  box.appendChild(reset);
-  var cc=document.createElement('button');
-  cc.style.cssText='width:100%;padding:9px;background:var(--bd);border:none;border-radius:8px;font-size:13px;cursor:pointer;font-family:var(--font-main);';
-  cc.textContent='Cancelar';
-  cc.addEventListener('click',function(){panel.remove();});
-  box.appendChild(cc);
-  panel.appendChild(box);
-  panel.addEventListener('click',function(e){if(e.target===panel)panel.remove();});
-  document.body.appendChild(panel);
-}
-
-function nbNuevaAsigConColor(){
-  var n=prompt('Nombre de la nueva asignatura:');
-  if(!n||!n.trim())return;
-  n=n.trim();
-  if(state.temas.includes(n)){alert('Ya existe esa asignatura.');return;}
-  nbPickColor(n);  // Primero elige color
-  // Añadir después de cerrar el picker (el pick guarda y refresca)
-  if(!state.temas.includes(n)){
-    state.temas.push(n);
-    state.temas.sort(function(a,b){return a.localeCompare(b,'es',{sensitivity:'base'});});
-    persist().catch(function(){});
-  }
-}
 </script>
 
-<div id="buscador-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:800;flex-direction:column;">
+<div id="
+// ── Sonido de escritura en la libreta ──
+(function(){
+  var _sndCtx=null,_sndOn=true,_sndLast=0;
+  function _getSndCtx(){
+    if(!_sndCtx)try{_sndCtx=new(window.AudioContext||window.webkitAudioContext)();}catch(e){}
+    return _sndCtx;
+  }
+  function _playStroke(tipo){
+    if(!_sndOn)return;
+    var now=Date.now();
+    if(now-_sndLast<30)return; // throttle
+    _sndLast=now;
+    var ctx=_getSndCtx();if(!ctx)return;
+    try{
+      var buf=ctx.createBuffer(1,ctx.sampleRate*0.06,ctx.sampleRate);
+      var data=buf.getChannelData(0);
+      if(tipo==='lapiz'){
+        // Lápiz: ruido suave de alta frecuencia
+        for(var i=0;i<data.length;i++){
+          data[i]=(Math.random()*2-1)*Math.exp(-i/(data.length*0.3))*0.18;
+        }
+      } else if(tipo==='boli'){
+        // Bolígrafo: click suave + fricción
+        for(var i=0;i<data.length;i++){
+          data[i]=(Math.random()*2-1)*Math.exp(-i/(data.length*0.15))*0.12
+            +Math.sin(i*0.8)*Math.exp(-i/(data.length*0.1))*0.05;
+        }
+      } else {
+        // Borrador: ruido sordo
+        for(var i=0;i<data.length;i++){
+          data[i]=(Math.random()*2-1)*Math.exp(-i/(data.length*0.5))*0.08;
+        }
+      }
+      var src=ctx.createBufferSource();
+      src.buffer=buf;
+      var gain=ctx.createGain();
+      gain.gain.value=0.6;
+      src.connect(gain);gain.connect(ctx.destination);
+      src.start();
+    }catch(e){}
+  }
+  window._libPlaySound=_playStroke;
+  window._libSoundEnabled=function(){return _sndOn;};
+  window._libToggleSound=function(){
+    _sndOn=!_sndOn;
+    var pref=document.getElementById('lib-sound-toggle');
+    if(pref)pref.textContent=_sndOn?'🔊':'🔇';
+    try{localStorage.setItem('tp_lib_sound',_sndOn?'1':'0');}catch(e){}
+    return _sndOn;
+  };
+  // Cargar preferencia guardada
+  try{if(localStorage.getItem('tp_lib_sound')==='0')_sndOn=false;}catch(e){}
+})();
+buscador-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:800;flex-direction:column;">
   <div style="background:var(--w);padding:12px 16px;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--bd);">
     <span style="font-size:18px;">🔍</span>
     <input id="buscador-input" type="text" placeholder="Buscar tareas, apuntes..." autocomplete="off"
