@@ -2592,7 +2592,7 @@ body.nb-mode #nb-pill-orden { display:none !important; }
       <p>Lee el documento completo antes de continuar · Versión 5.1 · Junio 2026</p>
     </div>
     <div class="tc-body" id="tc-body" onscroll="checkTCScroll()">
-      <p style="font-size:11px;color:#888;margin-bottom:12px;">Versión 5.1 · Junio 2026 · ES/EN</p>
+      <p style="font-size:11px;color:#888;margin-bottom:12px;">Versión 5.2 · Junio 2026 · ES/EN</p>
 
       <h4>1. Titular / Owner</h4>
       <p>Tapunto es desarrollada y mantenida por <strong>Alicia Prats</strong> · Marca registrada OEPM M4377915 · Valencia, España · <a href="https://tapunto.app">tapunto.app</a> · <a href="mailto:agenda@tapunto.app">agenda@tapunto.app</a></p>
@@ -2699,13 +2699,13 @@ body.nb-mode #nb-pill-orden { display:none !important; }
       <p>Jurisdicción: <strong>Tribunales de Valencia, España</strong>. Consumidores UE: <a href="https://ec.europa.eu/consumers/odr" target="_blank">ec.europa.eu/consumers/odr</a>. En caso de conflicto entre versiones idiomáticas, prevalece el texto en español.</p>
       <p style="font-size:11px;color:#888;"><em>Governed by: GDPR, LOPDGDD, EU Directives 2011/83 and 2019/770, DSA (EU 2022/2065), LSSI-CE, LO 1/1996 (child protection), COPPA (US). Jurisdiction: Valencia, Spain. EU consumers: ec.europa.eu/consumers/odr. Spanish text prevails in case of conflict.</em></p>
 
-      <p style="margin-top:20px;padding:10px;background:#f5f5f5;border-radius:6px;font-size:11px;color:#888;">Has llegado al final · Versión 5.1 · Junio 2026 · You have reached the end. You may now accept.</p>
+      <p style="margin-top:20px;padding:10px;background:#f5f5f5;border-radius:6px;font-size:11px;color:#888;">Has llegado al final · Versión 5.2 · Junio 2026 · You have reached the end. You may now accept.</p>
     </div>
     <div class="tc-footer">
       <div class="tc-scroll-hint" id="tc-hint">↓ Desplázate hasta el final para aceptar</div>
       <div class="tc-check-row">
         <input type="checkbox" id="tc-check" disabled onchange="checkTCReady()"/>
-        <label for="tc-check">He leído y acepto los <a href="#" onclick="return false">Términos y Condiciones</a> de Tapunto v5.1. Confirmo que tengo 14 años o más (o cuento con consentimiento del tutor legal) y que he entendido las condiciones de uso, privacidad y exoneración de responsabilidad.</label>
+        <label for="tc-check">He leído y acepto los <a href="#" onclick="return false">Términos y Condiciones</a> de Tapunto v5.2. Confirmo que tengo 14 años o más (o cuento con consentimiento del tutor legal) y que he entendido las condiciones de uso, privacidad y exoneración de responsabilidad.</label>
       </div>
       <button class="btn-tc-ok" id="btn-tc-ok" onclick="acceptTC()">✓ Acepto y continúo</button>
     </div>
@@ -4036,7 +4036,7 @@ body.nb-mode #nb-pill-orden { display:none !important; }
             <span class="cfg-arrow">▶</span>
           </div>
           <div class="cfg-body">
-            <p style="font-size:14px;color:var(--td);font-weight:700;margin-bottom:4px;">Tapunto v32 · Junio 2026</p>
+            <p style="font-size:14px;color:var(--td);font-weight:700;margin-bottom:4px;">Tapunto v32.1 · Junio 2026</p>
             <p style="font-size:12px;color:var(--tl);margin-bottom:8px;">Agenda · Calificaciones · Libreta · Apuntes · Drive sync</p>
             <p style="font-size:11px;color:var(--tl);">© 2026 Alicia Prats · Valencia, España</p>
             <p style="font-size:11px;color:var(--tl);margin-top:2px;"><a href="https://tapunto.app" style="color:var(--gm)">tapunto.app</a> · <a href="mailto:agenda@tapunto.app" style="color:var(--gm)">agenda@tapunto.app</a></p>
@@ -7313,16 +7313,16 @@ hdr.appendChild(btnX);
 var body=document.createElement('div');
 body.style.cssText='overflow-y:auto;padding:16px 20px 32px;flex:1;';
 var secciones=[
-{id:'s0',titulo:'🏠 Inicio',texto:'La pantalla principal muestra el horario del día, tus tareas urgentes, el calendario y accesos rápidos. Arriba a la derecha tienes: 🔍 Buscador global, 🔔 Notificaciones (toca para activar/desactivar) y los botones ☀️🔄🌙 de modo oscuro. Si llevas 2 o más días seguidos usando Tapunto, verás el badge 🔥 de streak. La barra inferior te lleva a todas las secciones.'},
-{id:'s1',titulo:'📒 Mi Agenda',texto:'Libreta organizada por asignaturas. La portada muestra contadores de tareas urgentes 🔴 (entrega ≤2 días) y pendientes — tócalos para ver el listado. Toca un separador para ver las tareas de esa asignatura. Usa 🗑 Eliminar en el header para gestionar separadores. Al crear una tarea puedes elegir si se repite: sin repetir / cada semana / cada 15 días / cada mes — se crearán automáticamente las siguientes 4 repeticiones.'},
+{id:'s0',titulo:'🏠 Inicio',texto:'La pantalla principal muestra el horario del día, tus tareas urgentes y la cita motivacional del día. Arriba a la derecha: 🔍 Buscador global, 🔔 Notificaciones y los botones ☀️🔄🌙 de modo oscuro. Si llevas 2 o más días seguidos, verás el badge 🔥 de racha. La barra inferior tiene: 🏠 Inicio · 📋 Mi Agenda · ✅ To Do · 📚 Apuntes · ← Atrás. El botón ← vuelve siempre a la sección anterior.'},
+{id:'s1',titulo:'📒 Mi Agenda',texto:'Organizada por asignaturas con separadores laterales. Toca un separador para ver sus tareas. El círculo pequeño junto a cada separador abre el selector de color — elige entre 20 colores o personalizado; el botón ↺ recupera el color del horario. El botón ＋ en la parte superior del sidebar crea un nuevo separador no vinculado al horario. Usa 🎨 Fondo en el header para cambiar el fondo de la portada (12 opciones). Las tareas pueden repetirse: cada semana, 15 días o mes.'},
 {id:'s2',titulo:'📅 Mi Calendario',texto:'Vista mensual y semanal de todos tus eventos y tareas con fecha de entrega. Toca un día para ver sus tareas. Puedes importar calendarios externos (.ics) de Google Calendar, Outlook o Moodle.'},
 {id:'s3',titulo:'📋 Mis Calificaciones',texto:'Registra tus notas organizadas por asignatura en formato de cuadrícula (3 por fila). Añade tipo (Examen, Trabajo, Prácticas, Proyecto, Oral), nota del 0 al 10 y observaciones. La casilla de nota aparece vacía hasta que introduces un valor. El botón ✕ rojo elimina el registro. Las calificaciones se incluyen en el backup y en la sincronización con Drive.'},
-{id:'s4',titulo:'📓 Mi Libreta',texto:'Canvas táctil para dibujar y escribir a mano. Herramientas: ✏️ Lápiz · 🖊 Bolígrafo · T Texto (B/I/U, tamaños) · 😊✨ Emojis y Stickers · ◻ Figuras geométricas (línea, rectángulo, círculo, triángulo, flecha, estrella, rombo) · 🧹 Borrador (S/M/L) · ↩ Deshacer. La herramienta ⬚ Selección permite tocar un elemento o dibujar un rectángulo para seleccionarlo, luego Mover arrastrando, Duplicar o Borrar. Los stickers y figuras tienen handles azules en las esquinas para redimensionar. Usa 🎨📄 para fondos y plantillas de estudio. Navega entre páginas con ‹ ›. Zoom con dos dedos.'},
+{id:'s4',titulo:'📓 Mi Libreta',texto:'Canvas táctil para dibujar y escribir a mano. Herramientas: ✏️ Lápiz · 🖊 Bolígrafo · T Texto (B/I/U, tamaños) · 😊✨ Stickers (160 en 8 categorías) · ◻ Figuras geométricas · 🧹 Borrador (S/M/L) · ↩ Deshacer. La herramienta ⬚ Selección permite mover, duplicar o borrar elementos; los stickers tienen handles de esquina para redimensionar. Usa 🎨📄 para fondos y plantillas — ambos escalan con el zoom. Navega entre páginas con ‹ ›. El zoom con dos dedos escala también el fondo y la plantilla. El botón 🔊 activa el sonido de escritura (lápiz, bolígrafo, borrador); tócalo para desactivar 🔇.'},
 {id:'s5',titulo:'📝 Nueva Tarea',texto:'Toca ➕ en la barra inferior. Rellena: asignatura, título, tipo, fecha de entrega y, si quieres, activa la recurrencia (cada semana / 15 días / mes). Al guardar, la app propone un recordatorio automático. Puedes adjuntar fotos y documentos (requiere Premium para Drive).'},
 {id:'s6',titulo:'🔔 Recordatorios y Notificaciones',texto:'Al crear una tarea con fecha, la app propone un recordatorio automático. Ve a Ajustes → Notificaciones para activarlas: toca 🔔 Activar y acepta el permiso del navegador. Con las notificaciones activas recibirás avisos aunque la app esté cerrada. El icono del inicio y los botones de Ajustes están sincronizados.'},
 {id:'s7',titulo:'📚 Mis Apuntes',texto:'Organiza fotos y documentos por asignatura en carpetas. La barra de almacenamiento muestra el % usado (límite 5 MB del navegador). Si superas el 85%, aparece el flujo de 3 pasos para liberar espacio: 1) descargar backup, 2) confirmar, 3) elegir qué borrar.'},
 {id:'s8',titulo:'⏱ Pomodoro',texto:'Temporizador de estudio con técnica Pomodoro: periodos de trabajo concentrado alternados con descansos. Configura los tiempos y elige entre 9 sonidos de alarma. Accesible desde el avatar del inicio o ☰ Más.'},
-{id:'s9',titulo:'🎨 Temas y apariencia',texto:'En Ajustes → Personalización elige entre 16 temas de color + 4 temas de temporada (🎄 Navidad, 🎃 Halloween, ☀️ Verano, 🎒 Vuelta al cole), 5 fuentes y tamaño de texto. El modo oscuro ☀️🔄🌙 se controla desde la pantalla de inicio. Todo se guarda en el backup.'},
+{id:'s9',titulo:'🎨 Temas y apariencia',texto:'En Ajustes → Personalización elige entre 16 temas de color + 4 temas de temporada (🎄 Navidad, 🎃 Halloween, ☀️ Verano, 🎒 Vuelta al cole), 5 fuentes y tamaño de texto. El modo oscuro ☀️ Claro · 🔄 Auto · 🌙 Oscuro se controla desde la pantalla de inicio. El avatar (64px) se personaliza tocándolo: elige color de fondo, emoji o usa tu inicial. Todo se guarda en el backup.'},
 {id:'s10',titulo:'🔍 Buscador global',texto:'Toca 🔍 en la esquina superior derecha del inicio. Busca simultáneamente en tareas, calificaciones y apuntes. Los resultados aparecen en tiempo real mientras escribes. Toca un resultado para ir directamente a ese elemento. Cierra con ✕ o pulsando Escape.'},
 {id:'s11',titulo:'🔥 Streak de estudio',texto:'El badge 🔥 aparece en el inicio cuando llevas 2 o más días consecutivos usando Tapunto. Se calcula automáticamente y se guarda en el dispositivo. Es una motivación para mantener el hábito de estudio — ¡no rompas la racha!'},
 {id:'s12',titulo:'💾 Copia de seguridad',texto:'En Ajustes → Copia de seguridad exporta TODOS tus datos: tareas, calificaciones, apuntes, libreta, horario, rutinas, recordatorios y configuración (tema, fuente, modo oscuro). Para restaurar, importa ese archivo. La app muestra un resumen de lo restaurado. ⚠ Exporta con frecuencia: si el navegador borra el localStorage (limpieza de caché, modo incógnito) perderás los datos sin un backup guardado.'},
