@@ -1,54 +1,135 @@
-// Tapunto Service Worker v5.0
+// ══════════════════════════════════════════════════
+// Tapunto Service Worker v2.0
 // © 2026 Alicia Prats · tapunto.app
-const CACHE_NAME = 'tapunto-v5.0';
-const ASSETS = [
+// ══════════════════════════════════════════════════
+
+const CACHE_NAME = 'tapunto-v2';
+const CACHE_FONTS = 'tapunto-fonts-v1';
+
+// Ficheros que se cachean en la instalación (app shell)
+const STATIC_ASSETS = [
   '/',
   '/index.html',
   '/manifest.json',
-  '/icono-72.png',
-  '/icono-96.png',
-  '/icono-128.png',
-  '/icono-144.png',
-  '/icono-152.png',
-  '/icono-192.png',
-  '/icono-384.png',
-  '/icono-512.png',
+  '/icon-192.png',
+  '/icon-512.png',
 ];
-self.addEventListener('install', e => {
-  e.waitUntil(
+
+// Fuentes de Google que se cachean al primer uso
+const FONT_DOMAINS = [
+  'fonts.googleapis.com',
+  'fonts.gstatic.com',
+];
+
+// ── Instalación: cachear app shell ──
+self.addEventListener('install', event => {
+  event.waitUntil(
     caches.open(CACHE_NAME)
-      .then(c => c.addAll(ASSETS))
+      .then(cache => cache.addAll(STATIC_ASSETS))
       .then(() => self.skipWaiting())
   );
 });
-self.addEventListener('activate', e => {
-  e.waitUntil(
+
+// ── Activación: limpiar cachés viejas ──
+self.addEventListener('activate', event => {
+  event.waitUntil(
     caches.keys().then(keys =>
-      Promise.all(keys.filter(k => k !== CACHE_NAME).map(k => caches.delete(k)))
+      Promise.all(
+        keys
+          .filter(k => k !== CACHE_NAME && k !== CACHE_FONTS)
+          .map(k => caches.delete(k))
+      )
     ).then(() => self.clients.claim())
   );
 });
-self.addEventListener('fetch', e => {
-  if (e.request.url.includes('googleapis') ||
-      e.request.url.includes('generativelanguage') ||
-      e.request.url.includes('script.google') ||
-      e.request.url.includes('wa.me') ||
-      e.request.url.includes('calendar.google') ||
-      e.request.url.includes('mail.google') ||
-      e.request.url.includes('fonts.gstatic')) return;
-  e.respondWith(
-    fetch(e.request)
-      .then(res => {
-        if (!res || res.status !== 200 || res.type === 'opaque') return res;
-        const clone = res.clone();
-        caches.open(CACHE_NAME).then(c => c.put(e.request, clone));
-        return res;
-      })
-      .catch(() => caches.match(e.request)
-        .then(cached => cached || caches.match('/index.html'))
+
+// ── Fetch: estrategia según tipo de recurso ──
+self.addEventListener('fetch', event => {
+  const url = new URL(event.request.url);
+
+  // Fuentes: Cache First (duran mucho)
+  if (FONT_DOMAINS.some(d => url.hostname.includes(d))) {
+    event.respondWith(
+      caches.open(CACHE_FONTS).then(cache =>
+        cache.match(event.request).then(cached => {
+          if (cached) return cached;
+          return fetch(event.request).then(response => {
+            if (response && response.status === 200) {
+              cache.put(event.request, response.clone());
+            }
+            return response;
+          });
+        })
       )
+    );
+    return;
+  }
+
+  // API de Google Drive / OAuth: Network Only (no cachear nunca)
+  if (url.hostname.includes('googleapis.com') || 
+      url.hostname.includes('accounts.google.com')) {
+    event.respondWith(fetch(event.request).catch(() =>
+      new Response('{"error":"offline"}', { 
+        headers: { 'Content-Type': 'application/json' } 
+      })
+    ));
+    return;
+  }
+
+  // App shell (HTML, manifest, iconos): Network First con fallback a caché
+  if (url.origin === self.location.origin) {
+    event.respondWith(
+      fetch(event.request)
+        .then(response => {
+          if (response && response.status === 200) {
+            const clone = response.clone();
+            caches.open(CACHE_NAME).then(cache => 
+              cache.put(event.request, clone)
+            );
+          }
+          return response;
+        })
+        .catch(() => caches.match(event.request)
+          .then(cached => cached || caches.match('/index.html'))
+        )
+    );
+    return;
+  }
+
+  // Resto: network normal
+  event.respondWith(fetch(event.request).catch(() => 
+    caches.match(event.request)
+  ));
+});
+
+// ── Push notifications ──
+self.addEventListener('push', event => {
+  if (!event.data) return;
+  let data = {};
+  try { data = event.data.json(); } catch(e) { 
+    data = { title: 'Tapunto', body: event.data.text() }; 
+  }
+  event.waitUntil(
+    self.registration.showNotification(data.title || 'Tapunto', {
+      body: data.body || '',
+      icon: '/icon-192.png',
+      badge: '/icon-96.png',
+      tag: data.tag || 'tapunto-notif',
+      data: data.url || '/',
+      vibrate: [200, 100, 200],
+    })
   );
 });
-self.addEventListener('message', e => {
-  if (e.data && e.data.type === 'SKIP_WAITING') self.skipWaiting();
+
+self.addEventListener('notificationclick', event => {
+  event.notification.close();
+  event.waitUntil(
+    clients.matchAll({ type: 'window' }).then(list => {
+      for (const client of list) {
+        if (client.url.includes(self.location.origin) && 'focus' in client)
+          return client.focus();
+      }
+      return clients.openWindow(event.notification.data || '/');
+    })
+  );
 });
