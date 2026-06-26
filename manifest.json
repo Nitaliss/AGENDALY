@@ -1,7 +1,7 @@
 {
-  "name": "Tapunto — Tu agenda personal segura",
+  "name": "Tapunto — Tu agenda personal",
   "short_name": "Tapunto",
-  "description": "Tu agenda personal segura: registra, comunica y sincroniza tus datos en todos tus dispositivos.",
+  "description": "Agenda personal de productividad para estudiantes. Apunta, organiza y comunica.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
@@ -9,9 +9,10 @@
   "background_color": "#2D5016",
   "theme_color": "#2D5016",
   "lang": "es",
+  "categories": ["education", "productivity", "utilities"],
   "icons": [
-    { "src": "icon-72.png", "sizes": "72x72", "type": "image/png", "purpose": "any maskable" },
-    { "src": "icon-96.png", "sizes": "96x96", "type": "image/png", "purpose": "any maskable" },
+    { "src": "icon-72.png",  "sizes": "72x72",   "type": "image/png", "purpose": "any maskable" },
+    { "src": "icon-96.png",  "sizes": "96x96",   "type": "image/png", "purpose": "any maskable" },
     { "src": "icon-128.png", "sizes": "128x128", "type": "image/png", "purpose": "any maskable" },
     { "src": "icon-144.png", "sizes": "144x144", "type": "image/png", "purpose": "any maskable" },
     { "src": "icon-152.png", "sizes": "152x152", "type": "image/png", "purpose": "any maskable" },
@@ -19,8 +20,22 @@
     { "src": "icon-384.png", "sizes": "384x384", "type": "image/png", "purpose": "any maskable" },
     { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
   ],
-  "categories": ["productivity", "utilities"],
+  "shortcuts": [
+    {
+      "name": "Nueva tarea",
+      "short_name": "Nueva",
+      "description": "Crear una nueva tarea",
+      "url": "/?accion=nueva",
+      "icons": [{ "src": "icon-96.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "Mi Agenda",
+      "short_name": "Agenda",
+      "description": "Ver mis asignaturas",
+      "url": "/?tab=registros",
+      "icons": [{ "src": "icon-96.png", "sizes": "96x96" }]
+    }
+  ],
   "screenshots": [],
-  "related_applications": [],
   "prefer_related_applications": false
 }
