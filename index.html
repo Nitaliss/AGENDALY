@@ -2573,10 +2573,10 @@ body.nb-mode #nb-pill-orden { display:none !important; }
   <div class="tc-modal">
     <div class="tc-header">
       <h3>📋 Términos y Condiciones</h3>
-      <p>Lee el documento completo antes de continuar · Versión 5.2 · Junio 2026</p>
+      <p>Lee el documento completo antes de continuar · Versión 5.3 · Junio 2026</p>
     </div>
     <div class="tc-body" id="tc-body" onscroll="checkTCScroll()">
-      <p style="font-size:11px;color:#888;margin-bottom:12px;">Versión 5.2 · Junio 2026 · ES/EN</p>
+      <p style="font-size:11px;color:#888;margin-bottom:12px;">Versión 5.3 · Junio 2026 · ES/EN</p>
 
       <h4>1. Titular / Owner</h4>
       <p>Tapunto es desarrollada y mantenida por <strong>Alicia Prats</strong> · Marca registrada OEPM M4377915 · Valencia, España · <a href="https://tapunto.app">tapunto.app</a> · <a href="mailto:agenda@tapunto.app">agenda@tapunto.app</a></p>
@@ -2603,7 +2603,7 @@ body.nb-mode #nb-pill-orden { display:none !important; }
       <p style="font-size:11px;color:#888;"><em>Legal basis: GDPR Art. 6.1.b (contract performance) for core service; GDPR Art. 6.1.a (consent) for optional features (Google sync). Consent may be withdrawn at any time.</em></p>
 
       <h4>6. Planes y funciones / Plans and features</h4>
-      <p><strong>Plan Gratuito:</strong> hasta 20 registros · almacenamiento local · temas básicos · 1 dispositivo · Mi Libreta (páginas ilimitadas) · Mis Calificaciones.</p>
+      <p><strong>Plan Gratuito:</strong> hasta 20 registros · almacenamiento local · temas básicos · 1 dispositivo · Mi Libreta (páginas ilimitadas) · Mis Calificaciones · Pomodoro · ICS · cita motivacional · avatar · colores de separadores.</p>
       <p><strong>Plan Premium (licencia anual):</strong> registros ilimitados · 🎤 dictado de voz · 📷 fotos en Google Drive · 📊 sincronización Google Drive · 💾 backup automático · 📁 carpetas ilimitadas en Apuntes · 🌱 Mis Rutinas completo · 🎨 16 temas y personalización · 📄 exportar PDF · múltiples dispositivos.</p>
       <p>El precio se publica en <strong>tapunto.app</strong>. La licencia se activa con un código personal e intransferible. Tapunto se reserva el derecho de modificar precios con aviso de 30 días en tapunto.app.</p>
       <p style="font-size:11px;color:#888;"><em>Free Plan: up to 20 records, local storage, basic themes, 1 device, Mi Libreta, grades. Premium (annual): unlimited records, voice dictation, Drive photos, Drive sync, auto-backup, unlimited folders, routines, 16 themes, PDF export, multi-device.</em></p>
@@ -2677,7 +2677,10 @@ body.nb-mode #nb-pill-orden { display:none !important; }
       <p><strong>Sonido de escritura:</strong> Generado localmente con Web Audio API. No requiere conexión ni envía datos externos.</p>
       <p><strong>Modo oscuro y avatar:</strong> Preferencias guardadas localmente. El avatar no se comparte con ningún servicio externo.</p>
       <p><strong>Importación .ics:</strong> Los calendarios se importan y procesan íntegramente en el dispositivo sin enviar datos externos.</p>
-      <p style="font-size:11px;color:#888;"><em>Search is local-only. Subject colors inherit from schedule. Recurring tasks create independent copies. Writing sounds use Web Audio API locally. Dark mode and avatar are stored locally. ICS import is fully on-device.</em></p>
+      <p><strong>Cita motivacional:</strong> Se calcula localmente por fecha. No se accede a ningún servicio externo.</p>
+      <p><strong>Botón ← Atrás:</strong> El historial de navegación se guarda en memoria de sesión (no en localStorage). Se borra al cerrar la app.</p>
+      <p><strong>Compartir backup:</strong> El archivo .json se genera en el dispositivo. El usuario decide dónde guardarlo (Drive, email, etc.). Tapunto no accede al archivo una vez descargado.</p>
+      <p style="font-size:11px;color:#888;"><em>Search is local-only. Subject colors inherit from schedule. Recurring tasks create independent copies. Writing sounds use Web Audio API locally. Dark mode and avatar are stored locally. ICS import is fully on-device. Motivational quote is calculated locally. Navigation history is session-only memory.</em></p>
 
       <h4>21. Legislación y jurisdicción / Applicable law</h4>
       <p>Estos términos se rigen por: <strong>RGPD (UE) 2016/679</strong> · <strong>LOPDGDD</strong> · <strong>Directiva 2011/83/UE</strong> · <strong>Directiva 2019/770/UE</strong> · <strong>DSA Reglamento (UE) 2022/2065</strong> · <strong>LSSI-CE</strong> · <strong>LO 1/1996 de Protección Jurídica del Menor</strong> · <strong>COPPA</strong> (para usuarios en EE.UU.) · Legislación española aplicable.</p>
@@ -12700,13 +12703,21 @@ function icsOpenFilePicker(){
 /* ═══ HELP SECTION ═══ */
 (function(){
   var items=[
-    {q:'📋 Mis Tareas', a:'Organiza tus tareas, trabajos y entregas. Usa el buscador 🔍 y el filtro ⚙️ por tipo. Filtra por tipo o asignatura.'},
-    {q:'📅 Agenda', a:'Vista mensual. Toca un día para ver qué tienes. Importa desde Google Calendar con el botón ICS en Configuración.'},
-    {q:'🍅 Pomodoro', a:'Temporizador con 9 sonidos. Configura las horas y minutos de tu sesión con los controles, pulsa Iniciar y concéntrate. Al terminar suena la alarma. Alterna entre sesión de trabajo y descanso.'},
-    {q:'🏠 Inicio', a:'Muestra los próximos eventos en cuadrícula: nombre, fecha y días restantes en color (rojo ≤3 días, naranja ≤7). Toca cualquier tarjeta para ver el detalle.'},
-    {q:'📁 Mis Documentos', a:'Guarda fotos y documentos por carpetas/asignaturas. Accede desde ☰ Más.'},
-    {q:'⚙️ Configuración', a:'Ajusta el sonido Pomodoro, modo oscuro y copia de seguridad. Importa ICS de Google Calendar asignando tipo a cada evento.'},
-    {q:'🔔 Notificaciones', a:'Tapunto puede enviarte recordatorios. Solo pide permiso una vez y persiste entre sesiones.'},
+    {q:'🏠 Inicio', a:'La pantalla principal muestra tu cita motivacional del día, el horario de hoy y tus tareas urgentes. El avatar (arriba izquierda) se personaliza tocándolo: elige color, emoji o usa tu inicial. Los botones ☀️🔄🌙 controlan el modo de color. La barra inferior te lleva a todas las secciones; el botón ← vuelve a la sección anterior.'},
+    {q:'📒 Mi Agenda', a:'Organizada por asignaturas. Los separadores laterales heredan el color del horario. Toca el círculo de color junto a cada separador para cambiarlo (20 colores + personalizado + botón ↺ para volver al color del horario). El botón ＋ en la parte superior del sidebar crea un nuevo separador independiente del horario. Usa 🎨 Fondo en el header para cambiar el fondo de portada (12 opciones). Las tareas pueden repetirse: cada semana, 15 días o mes.'},
+    {q:'✅ To Do', a:'Lista de tareas rápidas sin asignatura. Añade, archiva o elimina tareas. Organízalas por prioridad. Accede desde la barra inferior.'},
+    {q:'📓 Mi Libreta', a:'Canvas táctil para dibujar y tomar apuntes a mano. Herramientas: ✏️ Lápiz · 🖊️ Bolígrafo · T Texto (negrita/cursiva/subrayado) · 😊 Stickers (160 en 8 categorías) · ◻ Figuras geométricas · 🧹 Borrador (S/M/L) · ↩ Deshacer. El botón 🔊 activa el sonido de escritura (lápiz, bolígrafo, borrador) generado localmente. Usa 🎨📄 para fondos y plantillas — ambos escalan con el zoom. Navega entre páginas con ‹ ›. Zoom con dos dedos.'},
+    {q:'📚 Apuntes', a:'Guarda fotos y documentos organizados por carpetas y asignaturas. Añade imágenes desde la cámara o galería. Comparte o exporta desde el menú de cada elemento.'},
+    {q:'📅 Calendario y ICS', a:'Vista mensual con tus tareas y eventos. Para importar desde Google Calendar: entra en Google Calendar → ⚙️ Configuración → Exportar → descarga el .ics → en Tapunto ve a Ajustes → Importar ICS → selecciona el archivo y asigna un tipo a cada evento.'},
+    {q:'🍅 Pomodoro', a:'Temporizador de concentración con 9 sonidos. Configura minutos de trabajo y descanso. Pulsa Iniciar y concéntrate. Al terminar suena la alarma. Las sesiones se registran automáticamente.'},
+    {q:'📊 Calificaciones', a:'Introduce tus notas por asignatura y calcula la media automáticamente. Puedes exportar el resumen como PDF.'},
+    {q:'🔒 Seguridad y PIN', a:'Activa el PIN desde Ajustes → Seguridad. Se guarda como hash SHA-256, nunca en texto claro. Si olvidas el PIN, puedes recuperar el acceso con tu email y clave de recuperación. Los datos están cifrados localmente.'},
+    {q:'☁️ Google Drive y backup', a:'El backup guarda todos tus datos (tareas, notas, libreta, configuración) en un archivo .json que puedes guardar en tu dispositivo o subir a Google Drive. Para restaurar: Ajustes → Restaurar backup → selecciona el archivo. Conecta Drive desde Ajustes → Google Drive para sincronización automática.'},
+    {q:'🎨 Personalización', a:'En Ajustes → Personalización elige entre 16 temas de color + 4 temas de temporada (🎄🎃☀️🎒), 5 fuentes y tamaño de texto. El avatar (64px) se personaliza desde la pantalla de inicio: color de fondo, emoji o inicial. El modo oscuro se controla con ☀️🔄🌙 en el inicio.'},
+    {q:'⚙️ Configuración', a:'Desde Ajustes puedes: cambiar PIN, activar notificaciones, ajustar el sonido del Pomodoro, cambiar el tamaño de fuente, hacer backup y restaurar datos, conectar Google Drive y gestionar tu suscripción Premium.'},
+    {q:'🔔 Notificaciones', a:'Tapunto puede enviarte recordatorios de tareas. Toca 🔔 en el inicio para activarlas. Solo pide permiso una vez. Las notificaciones se programan localmente en tu dispositivo.'},
+    {q:'← Navegar entre secciones', a:'La barra inferior tiene: 🏠 Inicio · 📒 Mi Agenda · ✅ To Do · 📚 Apuntes · ← Atrás. El botón ← vuelve siempre a la sección anterior, como el botón atrás del móvil. El historial se guarda durante la sesión.'},
+    {q:'⭐ Premium', a:'El plan Premium desbloquea: registros ilimitados · 🎤 dictado de voz · 📷 fotos en Google Drive · ☁️ sincronización Drive · 💾 backup automático · 📁 carpetas ilimitadas · 🌱 Rutinas completo · 🎨 todos los temas · 📄 exportar PDF · múltiples dispositivos. Adquiere tu código en tapunto.app.'},
   ];
   var acc=document.getElementById('help-accordion');
   if(!acc) return;
