@@ -1,1 +1,7 @@
-
+  "relation": ["delegate_permission/common.handle_all_urls"],
+  "target": {
+    "namespace": "android_app",
+    "package_name": "app.tapunto.twa",
+    "sha256_cert_fingerprints": ["B5:D8:E9:43:D7:72:F6:94:A9:94:6E:EF:4B:5A:57:AC:8F:BC:00:AA:62:69:F6:D9:F6:07:5A:17:7F:92:3E:6F"]
+  }
+}]
