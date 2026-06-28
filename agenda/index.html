@@ -2152,7 +2152,7 @@ body{margin:0;padding:0;overflow-x:hidden;}
 .bnav-btn:active{transform:scale(.92);}
 .bnav-ico{font-size:17px;line-height:1;}
 .bnav-lbl{font-size:9px;font-weight:700;font-family:var(--font-main);letter-spacing:.3px;}
-.bnav-fab{width:58px;height:58px;border-radius:50%;background:var(--gd);border:3px solid #fff;color:#fff;font-size:28px;font-weight:900;cursor:pointer;box-shadow:0 4px 14px rgba(45,80,22,.5);display:flex;align-items:center;justify-content:center;transition:transform .12s;flex-shrink:0;position:fixed;bottom:16px;left:50%;transform:translateX(-50%);z-index:510;}.bnav-fab:active{transform:translateX(-50%) scale(.92);box-shadow:0 2px 8px rgba(45,80,22,.3);}
+.bnav-fab{width:58px;height:58px;border-radius:50%;background:var(--gd);border:3px solid #fff;color:#fff;font-size:28px;font-weight:900;cursor:pointer;box-shadow:0 4px 14px rgba(45,80,22,.5);display:flex;align-items:center;justify-content:center;transition:transform .12s;flex-shrink:0;position:fixed;bottom:16px;left:calc(50% - 20px);transform:translateX(-50%);z-index:510;}.bnav-fab:active{transform:translateX(-50%) scale(.92);box-shadow:0 2px 8px rgba(45,80,22,.3);}
 
 .section{padding-bottom:68px !important;}
 
@@ -3537,7 +3537,7 @@ body.nb-mode #nb-pill-orden { display:none !important; }
 
   <!-- BOTONES FIJOS AL PIE -->
   <div style="position:sticky;bottom:0;background:var(--w,#fff);border-top:1px solid var(--bd);padding:12px 16px;display:flex;gap:10px;z-index:10;">
-    <button id="btn-cancelar-nuevo" onclick="cancelEdit?cancelEdit():irHome()" style="flex:1;padding:12px;background:var(--bp);border:1px solid var(--bd);border-radius:10px;font-family:var(--font-main);font-size:14px;font-weight:600;color:var(--tl);cursor:pointer;">
+    <button id="btn-cancelar-nuevo" onclick="navVolverAtras()" style="flex:1;padding:12px;background:var(--bp);border:1px solid var(--bd);border-radius:10px;font-family:var(--font-main);font-size:14px;font-weight:600;color:var(--tl);cursor:pointer;">
       ← Cancelar
     </button>
     <button id="save-btn" onclick="saveRecord()" style="flex:2;padding:12px;background:var(--gm);border:none;border-radius:10px;font-family:var(--font-main);font-size:14px;font-weight:700;color:#fff;cursor:pointer;">
@@ -3685,11 +3685,6 @@ body.nb-mode #nb-pill-orden { display:none !important; }
   <div class="tap-header">
     <button class="tap-header-btn" onclick="irHome()" style="flex-direction:column;gap:1px;"><span style="font-size:22px;line-height:1;color:#fff;font-weight:900;">&#8592;</span><span style="font-size:9px;color:#fff;font-weight:700;font-family:var(--font-main);letter-spacing:.3px;">Inicio</span></button>
     <span class="tap-header-title">TO DO</span>
-    <button class="tap-header-btn" onclick="exportNotasJSON()" title="Exportar">📥</button>
-    <label class="tap-header-btn" style="cursor:pointer;" title="Restaurar">📂<input type="file" accept=".json" style="display:none" onchange="importNotasJSON(event)"></label>
-    <button class="tap-header-btn" onclick="mostrarPDFNotas()" title="PDF ⭐">📄</button>
-  
-    
   </div>
 
   <div style="padding:12px 16px;">
@@ -12480,7 +12475,7 @@ function pomSetSound(type){
   <button class="bnav-btn" id="bnav-tareas" onclick="irSeccion('registros')">
     <span class="bnav-ico">&#128203;</span><span class="bnav-lbl">Mi agenda</span>
   </button>
-  <div style="width:54px;flex-shrink:0;" aria-hidden="true"></div>
+  <div style="width:58px;flex-shrink:0;" aria-hidden="true"></div>
   <button class="bnav-btn" id="bnav-todo" onclick="irSeccion('notas')">
     <span class="bnav-ico">&#9989;</span><span class="bnav-lbl">To Do</span>
   </button>
