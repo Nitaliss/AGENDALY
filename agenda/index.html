@@ -2912,7 +2912,12 @@ body.nb-mode #nb-pill-orden { display:none !important; }
     </div>
   </div>
 
-  <div id="home-cita" style="padding:8px 16px;min-height:44px;display:flex;flex-direction:column;justify-content:center;background:rgba(0,0,0,.08);border-bottom:1px solid rgba(255,255,255,.1);"></div>
+  <div id="storage-home-warn" onclick="irSeccion('config');setTimeout(function(){var b=document.querySelector('#cfg-block-storage .cfg-hdr');if(b)b.click();},400);" style="display:none;padding:8px 16px;background:#fff3cd;border-bottom:1px solid #ffc107;cursor:pointer;align-items:center;gap:8px;">
+    <span style="font-size:14px;">⚠️</span>
+    <span style="font-size:11px;color:#856404;flex:1;">Almacenamiento casi lleno. Toca para gestionar espacio.</span>
+    <span style="font-size:11px;color:#856404;font-weight:700;">Ver →</span>
+  </div>
+  <div id="home-cita"  style="padding:8px 16px;min-height:44px;display:flex;flex-direction:column;justify-content:center;background:rgba(0,0,0,.08);border-bottom:1px solid rgba(255,255,255,.1);"></div>
   <!-- SECCIÓN HORARIO HOY — siempre visible sin tabs -->
   <div id="home-horario-hoy" style="background:var(--bp);border-bottom:1px solid var(--bd);padding:6px 10px 8px;">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px;">
@@ -3761,6 +3766,30 @@ body.nb-mode #nb-pill-orden { display:none !important; }
           </div>
           <div id="cfg-premium-info" style="display:none;font-size:12px;color:var(--tl);">Licencia activa · Gracias por apoyar Tapunto 🐾</div>
           <div style="font-size:11px;color:var(--th);">👤 <strong id="cfg-email">—</strong></div>
+        </div>
+
+        <!-- ALMACENAMIENTO -->
+        <div class="cfg-block" id="cfg-block-storage">
+          <div class="cfg-hdr" onclick="toggleCfg(this)">
+            <span class="cfg-hdr-title">📊 Almacenamiento</span>
+            <span class="cfg-arrow">▶</span>
+          </div>
+          <div class="cfg-body" style="padding:14px 16px;">
+            <div id="storage-bar-wrap" style="margin-bottom:12px;">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+                <span style="font-size:12px;font-weight:700;color:var(--td);">Espacio usado</span>
+                <span id="storage-pct-label" style="font-size:12px;color:var(--tl);">Calculando...</span>
+              </div>
+              <div style="background:var(--bl);border-radius:20px;height:10px;overflow:hidden;">
+                <div id="storage-bar" style="height:100%;border-radius:20px;background:var(--gm);width:0%;transition:width .5s;"></div>
+              </div>
+              <div id="storage-warn" style="display:none;margin-top:8px;padding:8px 10px;background:#fff3cd;border-radius:8px;font-size:11px;color:#856404;">
+                ⚠️ Espacio casi lleno. Entra en cada sección y elimina lo que no necesites.
+              </div>
+            </div>
+            <div id="storage-breakdown" style="display:flex;flex-direction:column;gap:8px;"></div>
+            <button onclick="calcularAlmacenamiento()" style="width:100%;margin-top:12px;padding:9px;background:var(--bl);border:1px solid var(--bd);border-radius:8px;font-size:12px;cursor:pointer;font-family:var(--font-main);color:var(--tl);">🔄 Actualizar</button>
+          </div>
         </div>
 
         <!-- FIRMA EMAIL -->
@@ -7431,6 +7460,7 @@ function _nbRenderPortada(el, asigs, _getColor, _darkColor){
 }
 
 function renderCarpetas(){
+  window._nbAsigActiva=null;
   document.body.classList.add('nb-mode');
   var el = document.getElementById('rec-list');
   if(!el) return;
@@ -7449,7 +7479,11 @@ function renderCarpetas(){
   var sch = getSch&&getSch();
   var palette = typeof H_COLORS_EXT!=='undefined'?H_COLORS_EXT:H_COLORS;
   function _getColor(asig){
+    // 1. Color elegido por el usuario
+    if(state.separadorColores&&state.separadorColores[asig])return state.separadorColores[asig];
+    // 2. Color del horario
     if(sch&&sch.colores&&sch.colores[asig]!==undefined){var ci=sch.colores[asig];if(palette[ci])return palette[ci].bg;}
+    // 3. Hash del nombre
     var h=0;for(var i=0;i<(asig||'').length;i++)h=(h+asig.charCodeAt(i))%palette.length;return palette[h].bg;
   }
   function _darkColor(hex){
@@ -7458,8 +7492,10 @@ function renderCarpetas(){
   }
 
   var allRecs=(state.records||[]).filter(function(r){return !r.archivado;});
-  var asigs=[...new Set(allRecs.map(function(r){return r.tema||'Sin asignatura';}))]
-    .sort(function(a,b){return a.localeCompare(b);});
+  var asigSet=new Set(allRecs.map(function(r){return r.tema||'Sin asignatura';}));
+  // Incluir separadores creados manualmente (sin tareas aún)
+  (state.temas||[]).forEach(function(t){if(t)asigSet.add(t);});
+  var asigs=[...asigSet].sort(function(a,b){return a.localeCompare(b);});
 
   if(!asigs.length){
     el.innerHTML='<div style="text-align:center;padding:40px 20px;color:var(--tl);font-family:var(--font-main);">'
@@ -7520,7 +7556,7 @@ function renderCarpetas(){
   var visibles = asigs.slice(_nbTabPag * MAX_TABS, (_nbTabPag + 1) * MAX_TABS);
   var hayMas = asigs.length > (_nbTabPag + 1) * MAX_TABS;
   var hayAntes = _nbTabPag > 0;
-  var tabsHTML='';
+  var tabsHTML='<button onclick="nbNuevaAsigConColor()" title="Nueva asignatura" style="width:100%;padding:5px 2px;background:#e8e8e8;border:none;border-bottom:1px solid #ccc;color:#333;font-size:18px;font-weight:700;cursor:pointer;text-align:center;line-height:1;flex-shrink:0;">＋</button>';
   if(hayAntes){
     tabsHTML+='<button class="nb-tab-btn nb-tab-mas" onclick="nbTabPagina(-1)" title="Anteriores">▲</button>';
   }
@@ -7528,8 +7564,8 @@ function renderCarpetas(){
     var solid=_darkColor(_getColor(asig));
     // Truncar a 2 palabras / 10 chars por línea
     var nombre=asig.length>12?asig.slice(0,10)+'…':asig;
-    tabsHTML+='<button class="nb-tab-btn" data-asig="'+asig.replace(/"/g,'&quot;')+'" '
-      +'style="background:'+solid+';" onclick="nbAbrirAsig(this.dataset.asig)">'+nombre+'</button>';
+    var safeA=asig.replace(/"/g,'&quot;');
+    tabsHTML+='<div style="display:flex;align-items:center;gap:2px;margin-bottom:2px;">'      +'<button class="nb-tab-btn" data-asig="'+safeA+'" style="background:'+solid+';flex:1;" onclick="nbAbrirAsig(this.dataset.asig)">'+nombre+'</button>'      +'<button class="nb-col-dot" data-asig="'+safeA+'" onclick="event.stopPropagation();nbPickColor(this.dataset.asig)" '        +'style="width:14px;height:14px;min-width:14px;border-radius:50%;background:'+_getColor(asig)+';border:1.5px solid rgba(255,255,255,.7);cursor:pointer;flex-shrink:0;" title="Color"></button>'      +'</div>';
   });
   if(hayMas){
     tabsHTML+='<button class="nb-tab-btn nb-tab-mas" onclick="nbTabPagina(1)" title="Más asignaturas">▼</button>';
@@ -7543,6 +7579,7 @@ function renderCarpetas(){
 
 
 function nbAbrirAsig(asig){
+  window._nbAsigActiva=asig;
   window._nbAsigActiva = asig;
   document.body.classList.add('nb-mode');
 
@@ -7582,7 +7619,11 @@ function nbAbrirAsig(asig){
   var sch=getSch&&getSch();
   var palette=typeof H_COLORS_EXT!=='undefined'?H_COLORS_EXT:H_COLORS;
   function _getColor(a){
+    // 1. Color elegido por el usuario
+    if(state.separadorColores&&state.separadorColores[a])return state.separadorColores[a];
+    // 2. Color del horario
     if(sch&&sch.colores&&sch.colores[a]!==undefined){var ci=sch.colores[a];if(palette[ci])return palette[ci].bg;}
+    // 3. Hash del nombre
     var h=0;for(var i=0;i<(a||'').length;i++)h=(h+a.charCodeAt(i))%palette.length;return palette[h].bg;
   }
   function _darkColor(hex){
@@ -7591,8 +7632,11 @@ function nbAbrirAsig(asig){
   }
 
   var allRecs=(state.records||[]).filter(function(r){return !r.archivado;});
-  var asigs=[...new Set(allRecs.map(function(r){return r.tema||'Sin asignatura';}))]
-    .sort(function(a,b){return a.localeCompare(b);});
+  var asigSet2=new Set(allRecs.map(function(r){return r.tema||'Sin asignatura';}));
+  (state.temas||[]).forEach(function(t){if(t)asigSet2.add(t);});
+  // Asegurar que la asig activa siempre esté incluida
+  if(asig)asigSet2.add(asig);
+  var asigs=[...asigSet2].sort(function(a,b){return a.localeCompare(b);});
 
   // Siempre reconstruir la libreta completa
   var MAX_TABS2=6;
@@ -7604,7 +7648,7 @@ function nbAbrirAsig(asig){
   var visibles2=asigs.slice(_pag2*MAX_TABS2,(_pag2+1)*MAX_TABS2);
   var hayMas2=asigs.length>(_pag2+1)*MAX_TABS2;
   var hayAntes2=_pag2>0;
-  var tabsHTML='';
+  var tabsHTML='<button onclick="nbNuevaAsigConColor()" title="Nueva asignatura" style="width:100%;padding:5px 2px;background:#e8e8e8;border:none;border-bottom:1px solid #ccc;color:#333;font-size:18px;font-weight:700;cursor:pointer;text-align:center;line-height:1;flex-shrink:0;">＋</button>';
   if(hayAntes2){
     tabsHTML+='<button class="nb-tab-btn nb-tab-mas" onclick="nbTabPagina(-1)" title="Anteriores">▲</button>';
   }
@@ -7612,8 +7656,8 @@ function nbAbrirAsig(asig){
     var solid=_darkColor(_getColor(a));
     var active=a===asig;
     var nombre=a.length>12?a.slice(0,10)+'…':a;
-    tabsHTML+='<button class="nb-tab-btn'+(active?' nb-active':'')+'" data-asig="'+a.replace(/"/g,'&quot;')+'" '
-      +'style="background:'+solid+';" onclick="nbAbrirAsig(this.dataset.asig)">'+nombre+'</button>';
+    var safeA2=a.replace(/"/g,'&quot;');
+    tabsHTML+='<div style="display:flex;align-items:center;gap:2px;margin-bottom:2px;">'      +'<button class="nb-tab-btn'+(active?' nb-active':'')+'\" data-asig="'+safeA2+'" style="background:'+solid+';flex:1;" onclick="nbAbrirAsig(this.dataset.asig)">'+nombre+'</button>'      +'<button class="nb-col-dot" data-asig="'+safeA2+'" onclick="event.stopPropagation();nbPickColor(this.dataset.asig)" '        +'style="width:14px;height:14px;min-width:14px;border-radius:50%;background:'+_getColor(a)+';border:1.5px solid rgba(255,255,255,.7);cursor:pointer;flex-shrink:0;" title="Color"></button>'      +'</div>';
   });
   if(hayMas2){
     tabsHTML+='<button class="nb-tab-btn nb-tab-mas" onclick="nbTabPagina(1)" title="Más asignaturas">▼</button>';
@@ -8941,10 +8985,18 @@ showWarn('✓ Código copiado');
 });
 }
 function toggleCfg(hdr){
-const body=hdr.nextElementSibling;
-const arrow=hdr.querySelector('.cfg-arrow');
-const open=body.classList.toggle('open');
-if(arrow) arrow.classList.toggle('open',open);
+var body=hdr.nextElementSibling;
+var arrow=hdr.querySelector('.cfg-arrow');
+var isOpen=body.style.display==='block'||body.classList.contains('open');
+if(isOpen){
+  body.style.display='none';body.classList.remove('open');
+  if(arrow)arrow.classList.remove('open');
+}else{
+  body.style.display='block';body.classList.add('open');
+  if(arrow)arrow.classList.add('open');
+  // Si es el panel de almacenamiento, calcular
+  if(body.querySelector('#storage-bar-wrap'))setTimeout(calcularAlmacenamiento,100);
+}
 }
 const TIPS={
 'tip-sheets-url':{title:'🔗 URL del Web App',html:'<p>La URL que obtienes al publicar el Apps Script como Web App.</p><p>Formato: <code>https://script.google.com/macros/s/AKfycb.../exec</code></p><p>Si no funciona, crea una <strong>nueva implementación</strong> (no edites la existente).</p>'},
@@ -12198,46 +12250,145 @@ function navVolverAtras(){
 // ── Color separadores Mi Agenda ──
 function nbPickColor(asig){
   if(!asig)return;
+  // Cerrar cualquier picker abierto
+  var existing=document.getElementById('nb-color-picker');
+  if(existing){existing.remove();return;}
+
   var palette=typeof H_COLORS_EXT!=='undefined'?H_COLORS_EXT:H_COLORS;
   var sch2=getSch&&getSch();
   var curColor=(state.separadorColores&&state.separadorColores[asig])||'';
   if(!curColor&&sch2&&sch2.colores&&sch2.colores[asig]!==undefined){
     var ci=sch2.colores[asig];if(palette[ci])curColor=palette[ci].bg;
   }
-  if(!curColor){var hh=0;for(var jj=0;jj<(asig||'').length;jj++)hh=(hh+asig.charCodeAt(jj))%palette.length;curColor=palette[hh].bg;}
-  var PICK=['#4a7c59','#6c3483','#1a5276','#922b21','#784212','#1e8449','#d35400','#2e86c1','#f39c12','#e74c3c','#1abc9c','#616a6b','#8e44ad','#c0392b','#27ae60','#2980b9','#e91e63','#009688','#ff5722','#607d8b'];
-  var pnl=document.createElement('div');pnl.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:9000;display:flex;align-items:center;justify-content:center;';
-  var box=document.createElement('div');box.style.cssText='background:var(--w);border-radius:16px;padding:16px;width:280px;font-family:var(--font-main);box-shadow:0 8px 32px rgba(0,0,0,.3);';
-  var hd=document.createElement('div');hd.style.cssText='font-size:13px;font-weight:800;color:var(--td);margin-bottom:4px;';hd.textContent='Color: '+asig;
-  var sd=document.createElement('div');sd.style.cssText='font-size:10px;color:var(--tl);margin-bottom:12px;';sd.textContent='Elige el color para este separador';
-  box.appendChild(hd);box.appendChild(sd);
-  var grid=document.createElement('div');grid.style.cssText='display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:12px;';
+  if(!curColor){
+    var hh=0;
+    for(var jj=0;jj<(asig||'').length;jj++)hh=(hh+asig.charCodeAt(jj))%palette.length;
+    curColor=palette[hh].bg;
+  }
+
+  var PICK=['#4a7c59','#6c3483','#1a5276','#922b21','#784212','#1e8449',
+            '#d35400','#2e86c1','#f39c12','#e74c3c','#1abc9c','#616a6b',
+            '#8e44ad','#c0392b','#27ae60','#2980b9','#e91e63','#009688',
+            '#ff5722','#607d8b'];
+
+  // Crear overlay fuera de cualquier sección
+  var pnl=document.createElement('div');
+  pnl.id='nb-color-picker';
+  pnl.style.cssText='position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;';
+
+  var box=document.createElement('div');
+  box.style.cssText='background:var(--w,#fff);border-radius:16px;padding:16px;width:280px;max-width:90vw;font-family:var(--font-main,sans-serif);box-shadow:0 8px 32px rgba(0,0,0,.4);position:relative;z-index:100000;';
+
+  var hd=document.createElement('div');
+  hd.style.cssText='font-size:13px;font-weight:800;color:var(--td,#222);margin-bottom:4px;';
+  hd.textContent='Color: '+asig;
+  box.appendChild(hd);
+
+  var sd=document.createElement('div');
+  sd.style.cssText='font-size:10px;color:var(--tl,#888);margin-bottom:12px;';
+  sd.textContent='Toca un color y pulsa Guardar';
+  box.appendChild(sd);
+
+  // Variable para el color seleccionado
+  var selectedColor=curColor;
+
+  // Preview
+  var preview=document.createElement('div');
+  preview.style.cssText='width:100%;height:8px;border-radius:4px;background:'+selectedColor+';margin-bottom:12px;transition:background .2s;';
+  box.appendChild(preview);
+
+  // Grid de colores
+  var grid=document.createElement('div');
+  grid.style.cssText='display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:12px;';
+
+  function updateSelected(c){
+    selectedColor=c;
+    preview.style.background=c;
+    grid.querySelectorAll('button').forEach(function(b){
+      b.style.border=b.dataset.color===c?'3px solid var(--td,#222)':'3px solid transparent';
+    });
+    cust.value=c;
+  }
+
   PICK.forEach(function(c){
     var btn=document.createElement('button');
-    btn.style.cssText='aspect-ratio:1;border-radius:50%;background:'+c+';border:3px solid '+(curColor===c?'var(--w)':'transparent')+';cursor:pointer;box-shadow:0 2px 6px rgba(0,0,0,.25);';
-    btn.addEventListener('click',function(){
-      if(!state.separadorColores)state.separadorColores={};
-      state.separadorColores[asig]=c;persist().catch(function(){});pnl.remove();
-      if(window._nbAsigActiva)nbAbrirAsig(window._nbAsigActiva);else renderCarpetas();
+    btn.dataset.color=c;
+    btn.style.cssText='aspect-ratio:1;border-radius:50%;background:'+c
+      +';border:3px solid '+(curColor===c?'var(--td,#222)':'transparent')
+      +';cursor:pointer;box-shadow:0 2px 6px rgba(0,0,0,.25);';
+    btn.addEventListener('click',function(e){
+      e.preventDefault();e.stopPropagation();
+      updateSelected(c);
     });
     grid.appendChild(btn);
   });
-  var crow=document.createElement('div');crow.style.cssText='display:flex;align-items:center;gap:8px;margin-bottom:10px;';
-  var clbl=document.createElement('span');clbl.style.cssText='font-size:11px;color:var(--tl);';clbl.textContent='Personalizado:';
-  var cust=document.createElement('input');cust.type='color';cust.value=curColor||'#4a7c59';
-  cust.style.cssText='width:36px;height:36px;border-radius:50%;border:2px solid var(--bd);cursor:pointer;padding:0;';
-  cust.addEventListener('change',function(){
-    if(!state.separadorColores)state.separadorColores={};
-    state.separadorColores[asig]=this.value;persist().catch(function(){});pnl.remove();
-    if(window._nbAsigActiva)nbAbrirAsig(window._nbAsigActiva);else renderCarpetas();
+  box.appendChild(grid);
+
+  // Selector personalizado
+  var crow=document.createElement('div');
+  crow.style.cssText='display:flex;align-items:center;gap:8px;margin-bottom:12px;';
+  var clbl=document.createElement('span');
+  clbl.style.cssText='font-size:11px;color:var(--tl,#888);';
+  clbl.textContent='Personalizado:';
+  var cust=document.createElement('input');
+  cust.type='color';cust.value=curColor||'#4a7c59';
+  cust.style.cssText='width:36px;height:36px;border-radius:50%;border:2px solid var(--bd,#ddd);cursor:pointer;padding:0;';
+  cust.addEventListener('input',function(e){e.stopPropagation();updateSelected(this.value);});
+  cust.addEventListener('change',function(e){e.stopPropagation();updateSelected(this.value);});
+  crow.appendChild(clbl);crow.appendChild(cust);
+  box.appendChild(crow);
+
+  // Botón restablecer
+  var rst=document.createElement('button');
+  rst.style.cssText='width:100%;padding:8px;background:var(--bl,#f5f5f5);border:1px solid var(--bd,#ddd);border-radius:8px;font-size:11px;cursor:pointer;color:var(--tl,#888);margin-bottom:10px;font-family:var(--font-main,sans-serif);';
+  rst.textContent='↺ Restablecer color del horario';
+  rst.addEventListener('click',function(e){
+    e.preventDefault();e.stopPropagation();
+    if(state.separadorColores)delete state.separadorColores[asig];
+    persist().catch(function(){});
+    pnl.remove();
+    var _act=window._nbAsigActiva;
+    if(_act)nbAbrirAsig(_act);else renderCarpetas();
   });
-  crow.appendChild(clbl);crow.appendChild(cust);box.appendChild(grid);box.appendChild(crow);
-  var rst=document.createElement('button');rst.style.cssText='width:100%;padding:8px;background:var(--bl);border:1px solid var(--bd);border-radius:8px;font-size:11px;cursor:pointer;color:var(--tl);margin-bottom:8px;font-family:var(--font-main);';
-  rst.textContent='Restablecer color del horario';
-  rst.addEventListener('click',function(){if(state.separadorColores)delete state.separadorColores[asig];persist().catch(function(){});pnl.remove();if(window._nbAsigActiva)nbAbrirAsig(window._nbAsigActiva);else renderCarpetas();});
   box.appendChild(rst);
-  var can=document.createElement('button');can.style.cssText='width:100%;padding:9px;background:var(--bd);border:none;border-radius:8px;font-size:13px;cursor:pointer;font-family:var(--font-main);';can.textContent='Cancelar';can.addEventListener('click',function(){pnl.remove();});box.appendChild(can);
-  pnl.appendChild(box);pnl.addEventListener('click',function(e){if(e.target===pnl)pnl.remove();});document.body.appendChild(pnl);
+
+  // Botones Cancelar / Guardar
+  var btns=document.createElement('div');btns.style.cssText='display:flex;gap:8px;';
+
+  var can=document.createElement('button');
+  can.style.cssText='flex:1;padding:10px;background:var(--bl,#f5f5f5);border:1px solid var(--bd,#ddd);border-radius:10px;font-size:13px;cursor:pointer;font-family:var(--font-main,sans-serif);color:var(--tl,#888);';
+  can.textContent='Cancelar';
+  can.addEventListener('click',function(e){e.preventDefault();e.stopPropagation();pnl.remove();});
+
+  var sav=document.createElement('button');
+  sav.style.cssText='flex:1;padding:10px;background:var(--gm,#2D5016);border:none;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;font-family:var(--font-main,sans-serif);color:#fff;';
+  sav.textContent='✓ Guardar';
+  sav.addEventListener('click',function(e){
+    e.preventDefault();e.stopPropagation();
+    if(!state.separadorColores)state.separadorColores={};
+    state.separadorColores[asig]=selectedColor;
+    persist().catch(function(){});
+    pnl.remove();
+    var _act=window._nbAsigActiva;
+    if(_act)nbAbrirAsig(_act);else renderCarpetas();
+  });
+
+  btns.appendChild(can);btns.appendChild(sav);
+  box.appendChild(btns);
+
+  // stopPropagation en todo el box
+  box.addEventListener('click',function(e){e.stopPropagation();});
+  box.addEventListener('touchstart',function(e){e.stopPropagation();},{passive:true});
+
+  pnl.appendChild(box);
+
+  // Cerrar solo al tocar el fondo (fuera del box)
+  pnl.addEventListener('click',function(e){
+    if(e.target===pnl){e.preventDefault();pnl.remove();}
+  });
+
+  // Añadir al body directamente (fuera de cualquier sección)
+  document.body.appendChild(pnl);
 }
 
 function nbNuevaAsigConColor(){
@@ -12245,7 +12396,11 @@ function nbNuevaAsigConColor(){
   if(!n||!n.trim())return;n=n.trim();
   if(state.temas.includes(n)){alert('Ya existe esa asignatura.');return;}
   state.temas.push(n);state.temas.sort(function(a,b){return a.localeCompare(b,'es',{sensitivity:'base'});});
-  persist().catch(function(){});nbPickColor(n);
+  persist().catch(function(){});
+  // Abrir directamente la nueva asignatura tras elegir color
+  nbPickColor(n);
+  // Refrescar sidebar tras 500ms para que aparezca la nueva asignatura
+  setTimeout(function(){renderCarpetas();},500);
 }
 
 // ── Cita motivacional ──
@@ -12380,6 +12535,107 @@ function mostrarPersonalizarAvatar(){
   pnl.addEventListener('click',function(e){if(e.target===pnl)pnl.remove();});
   document.body.appendChild(pnl);
 }
+
+// ── Panel de almacenamiento ──
+function calcularAlmacenamiento(){
+  // ── Tamaño REAL de localStorage (cifrado) ──
+  var totalBytes=0;
+  var libBytes=0;
+  try{
+    for(var k in localStorage){
+      if(!localStorage.hasOwnProperty(k)) continue;
+      var b=(localStorage[k].length+k.length)*2;
+      totalBytes+=b;
+      if(k.indexOf('libreta')>=0||k.indexOf('tapunto_lib')>=0) libBytes+=b;
+    }
+  }catch(e){}
+
+  // ── Desglose por sección desde state (tamaño en memoria) ──
+  // NOTA: el total de localStorage es mayor porque los datos están cifrados (AES-GCM)
+  // El desglose muestra el tamaño relativo de cada sección, no el tamaño cifrado
+  var secciones=[
+    {key:'records',        label:'Tareas',         icon:'📋', sec:'registros'},
+    {key:'notas',          label:'To Do',           icon:'✅', sec:'notas'},
+    {key:'albumes',        label:'Apuntes (fotos)', icon:'📷', sec:'albumes'},
+    {key:'calificaciones', label:'Calificaciones',  icon:'📊', sec:'calificaciones'},
+    {key:'rutinas',        label:'Rutinas',          icon:'🌱', sec:'rutinas'},
+    {key:'temas',          label:'Separadores agenda',icon:'📒',sec:'registros'},
+  ];
+
+  var breakdown=document.getElementById('storage-breakdown');
+  if(breakdown&&state){
+    breakdown.innerHTML='';
+    // Nota explicativa sobre la diferencia
+    var nota=document.createElement('div');
+    nota.style.cssText='font-size:10px;color:var(--tl);margin-bottom:8px;padding:6px 8px;background:var(--bl);border-radius:6px;';
+    nota.textContent='ℹ️ El total incluye cifrado y metadatos del sistema. El desglose muestra el tamaño relativo de cada sección.';
+    breakdown.appendChild(nota);
+
+    // Calcular total en memoria para % relativos
+    var totalMem=0;
+    secciones.forEach(function(s){totalMem+=JSON.stringify(state[s.key]||[]).length;});
+    totalMem+=libBytes/2; // añadir libreta
+
+    secciones.forEach(function(sec){
+      var arr=state[sec.key];
+      var n=Array.isArray(arr)?arr.length:(arr?1:0);
+      var secBytes=JSON.stringify(arr||[]).length*2;
+      var kb=(secBytes/1024).toFixed(1);
+      var pct=totalBytes>0?Math.min(100,Math.round(secBytes/totalBytes*100)):0;
+      var barW=Math.max(1,pct);
+
+      var row=document.createElement('div');
+      row.style.cssText='padding:8px 10px;background:var(--bl);border-radius:8px;';
+      row.innerHTML=
+        '<div style="display:flex;align-items:center;gap:8px;margin-bottom:5px;">'+
+          '<span style="font-size:15px;">'+sec.icon+'</span>'+
+          '<div style="flex:1;font-size:12px;font-weight:700;color:var(--td);">'+sec.label+'</div>'+
+          '<span style="font-size:11px;color:var(--tl);">'+n+' items · '+kb+'KB</span>'+
+          '<button style="font-size:11px;padding:4px 8px;background:var(--gm);color:#fff;border:none;border-radius:6px;cursor:pointer;font-family:var(--font-main);">Ver →</button>'+
+        '</div>'+
+        '<div style="background:var(--bd);border-radius:4px;height:5px;">'+
+          '<div style="width:'+barW+'%;height:100%;border-radius:4px;background:var(--gm);"></div>'+
+        '</div>';
+      row.querySelector('button').onclick=(function(s){return function(){irSeccion(s);};})(sec.sec);
+      breakdown.appendChild(row);
+    });
+
+    // Libreta (desde localStorage directamente)
+    var libKb=(libBytes/1024).toFixed(1);
+    var libPct=totalBytes>0?Math.min(100,Math.round(libBytes/totalBytes*100)):0;
+    var libRow=document.createElement('div');
+    libRow.style.cssText='padding:8px 10px;background:var(--bl);border-radius:8px;';
+    libRow.innerHTML=
+      '<div style="display:flex;align-items:center;gap:8px;margin-bottom:5px;">'+
+        '<span style="font-size:15px;">📓</span>'+
+        '<div style="flex:1;font-size:12px;font-weight:700;color:var(--td);">Mi Libreta</div>'+
+        '<span style="font-size:11px;color:var(--tl);">'+libKb+'KB</span>'+
+        '<button style="font-size:11px;padding:4px 8px;background:var(--gm);color:#fff;border:none;border-radius:6px;cursor:pointer;font-family:var(--font-main);">Ver →</button>'+
+      '</div>'+
+      '<div style="background:var(--bd);border-radius:4px;height:5px;">'+
+        '<div style="width:'+libPct+'%;height:100%;border-radius:4px;background:var(--gm);"></div>'+
+      '</div>';
+    libRow.querySelector('button').onclick=function(){irSeccion('libreta');};
+    breakdown.appendChild(libRow);
+  }
+
+  // ── Barra total ──
+  var MAX=5*1024*1024;
+  var pct=Math.min(100,Math.round(totalBytes/MAX*100));
+  var bar=document.getElementById('storage-bar');
+  var lbl=document.getElementById('storage-pct-label');
+  var warn=document.getElementById('storage-warn');
+  if(bar){bar.style.width=pct+'%';bar.style.background=pct>85?'#e74c3c':pct>65?'#f39c12':'var(--gm)';}
+  if(lbl) lbl.textContent=(totalBytes/1024/1024).toFixed(2)+' MB de 5 MB ('+pct+'%)';
+  if(warn) warn.style.display=pct>85?'block':'none';
+}
+// Calcular al abrir el panel
+document.addEventListener('DOMContentLoaded',function(){
+  var hdr=document.querySelector('#cfg-block-storage .cfg-hdr');
+  if(hdr) hdr.addEventListener('click',function(){
+    setTimeout(calcularAlmacenamiento,200);
+  });
+});
 </script>
 
 <script>
@@ -12817,21 +13073,22 @@ function icsOpenFilePicker(){
 /* ═══ HELP SECTION ═══ */
 (function(){
   var items=[
-    {q:'🏠 Inicio', a:'La pantalla principal muestra tu cita motivacional del día, el horario de hoy y tus tareas urgentes. El avatar (arriba izquierda) se personaliza tocándolo: elige color, emoji o usa tu inicial. Los botones ☀️🔄🌙 controlan el modo de color. La barra inferior te lleva a todas las secciones; el botón ← vuelve a la sección anterior.'},
-    {q:'📒 Mi Agenda', a:'Organizada por asignaturas. Los separadores laterales heredan el color del horario. Toca el círculo de color junto a cada separador para cambiarlo (20 colores + personalizado + botón ↺ para volver al color del horario). El botón ＋ en la parte superior del sidebar crea un nuevo separador independiente del horario. Usa 🎨 Fondo en el header para cambiar el fondo de portada (12 opciones). Las tareas pueden repetirse: cada semana, 15 días o mes.'},
-    {q:'✅ To Do', a:'Lista de tareas rápidas sin asignatura. Añade, archiva o elimina tareas. Organízalas por prioridad. Accede desde la barra inferior.'},
-    {q:'📓 Mi Libreta', a:'Canvas táctil para dibujar y tomar apuntes a mano. Herramientas: ✏️ Lápiz · 🖊️ Bolígrafo · T Texto (negrita/cursiva/subrayado) · 😊 Stickers (160 en 8 categorías) · ◻ Figuras geométricas · 🧹 Borrador (S/M/L) · ↩ Deshacer. El botón 🔊 activa el sonido de escritura (lápiz, bolígrafo, borrador) generado localmente. Usa 🎨📄 para fondos y plantillas — ambos escalan con el zoom. Navega entre páginas con ‹ ›. Zoom con dos dedos.'},
-    {q:'📚 Apuntes', a:'Guarda fotos y documentos organizados por carpetas y asignaturas. Añade imágenes desde la cámara o galería. Comparte o exporta desde el menú de cada elemento.'},
-    {q:'📅 Calendario y ICS', a:'Vista mensual con tus tareas y eventos. Para importar desde Google Calendar: entra en Google Calendar → ⚙️ Configuración → Exportar → descarga el .ics → en Tapunto ve a Ajustes → Importar ICS → selecciona el archivo y asigna un tipo a cada evento.'},
-    {q:'🍅 Pomodoro', a:'Temporizador de concentración con 9 sonidos. Configura minutos de trabajo y descanso. Pulsa Iniciar y concéntrate. Al terminar suena la alarma. Las sesiones se registran automáticamente.'},
-    {q:'📊 Calificaciones', a:'Introduce tus notas por asignatura y calcula la media automáticamente. Puedes exportar el resumen como PDF.'},
-    {q:'🔒 Seguridad y PIN', a:'Activa el PIN desde Ajustes → Seguridad. Se guarda como hash SHA-256, nunca en texto claro. Si olvidas el PIN, puedes recuperar el acceso con tu email y clave de recuperación. Los datos están cifrados localmente.'},
-    {q:'☁️ Google Drive y backup', a:'El backup guarda todos tus datos (tareas, notas, libreta, configuración) en un archivo .json que puedes guardar en tu dispositivo o subir a Google Drive. Para restaurar: Ajustes → Restaurar backup → selecciona el archivo. Conecta Drive desde Ajustes → Google Drive para sincronización automática.'},
-    {q:'🎨 Personalización', a:'En Ajustes → Personalización elige entre 16 temas de color + 4 temas de temporada (🎄🎃☀️🎒), 5 fuentes y tamaño de texto. El avatar (64px) se personaliza desde la pantalla de inicio: color de fondo, emoji o inicial. El modo oscuro se controla con ☀️🔄🌙 en el inicio.'},
-    {q:'⚙️ Configuración', a:'Desde Ajustes puedes: cambiar PIN, activar notificaciones, ajustar el sonido del Pomodoro, cambiar el tamaño de fuente, hacer backup y restaurar datos, conectar Google Drive y gestionar tu suscripción Premium.'},
-    {q:'🔔 Notificaciones', a:'Tapunto puede enviarte recordatorios de tareas. Toca 🔔 en el inicio para activarlas. Solo pide permiso una vez. Las notificaciones se programan localmente en tu dispositivo.'},
-    {q:'← Navegar entre secciones', a:'La barra inferior tiene: 🏠 Inicio · 📒 Mi Agenda · ✅ To Do · 📚 Apuntes · ← Atrás. El botón ← vuelve siempre a la sección anterior, como el botón atrás del móvil. El historial se guarda durante la sesión.'},
-    {q:'⭐ Premium', a:'El plan Premium desbloquea: registros ilimitados · 🎤 dictado de voz · 📷 fotos en Google Drive · ☁️ sincronización Drive · 💾 backup automático · 📁 carpetas ilimitadas · 🌱 Rutinas completo · 🎨 todos los temas · 📄 exportar PDF · múltiples dispositivos. Adquiere tu código en tapunto.app.'},
+    {q:'\uD83C\uDFE0 Inicio', a:'Muestra la cita del d\u00EDa, el horario y tareas urgentes. Toca el avatar para personalizarlo (color, emoji o inicial). Los botones \u2600\uFE0F\uD83D\uDD04\uD83C\uDF19 controlan el modo de color. La barra inferior: \uD83C\uDFE0 Inicio \u00B7 \uD83D\uDCD2 Mi Agenda \u00B7 \u2705 To Do \u00B7 \uD83D\uDCDA Apuntes \u00B7 \u2190 Atr\u00E1s.'},
+    {q:'\uD83D\uDCD2 Mi Agenda', a:'Separadores laterales por asignatura. Pulsa \uFF0B arriba del sidebar para crear uno nuevo. El c\u00EDrculo junto a cada separador abre la paleta de colores. Usa \uD83C\uDFA8 Fondo en el header para cambiar el fondo de portada. Las tareas pueden repetirse: cada semana, 15 d\u00EDas o mes.'},
+    {q:'\u2705 To Do', a:'Tareas r\u00E1pidas. Escribe y pulsa A\u00F1adir. El cursor permanece para escribir otra sin salir. Usa \uD83C\uDF99\uFE0F para dictar. Archiva o elimina con los botones de cada tarea.'},
+    {q:'\uD83D\uDCD3 Mi Libreta', a:'Canvas t\u00E1ctil para dibujar y escribir. Herramientas: \u270F\uFE0F L\u00E1piz \u00B7 \uD83D\uDD8A\uFE0F Boli \u00B7 T Texto \u00B7 \uD83D\uDE0A Stickers (160) \u00B7 \u25FB Figuras \u00B7 \uD83E\uDDF9 Borrador \u00B7 \u21A9 Deshacer. Bot\u00F3n \uD83D\uDD0A sonido de escritura. Fondos y plantillas escalan con el zoom.'},
+    {q:'\uD83D\uDCDA Apuntes', a:'Fotos y documentos por asignaturas. A\u00F1ade desde c\u00E1mara o galer\u00EDa. Toca para ver, mant\u00E9n pulsado para opciones (compartir, eliminar).'},
+    {q:'\uD83D\uDCC5 Calendario e ICS', a:'Vista mensual. Para importar: Google Calendar \u2192 \u2699\uFE0F Configuraci\u00F3n \u2192 Exportar \u2192 descarga .ics \u2192 en Tapunto Ajustes \u2192 Importar ICS \u2192 asigna tipo a cada evento.'},
+    {q:'\uD83C\uDF45 Pomodoro', a:'Temporizador con 9 sonidos (generados localmente, sin derechos de autor). Configura tiempo de trabajo y descanso. Las sesiones se registran autom\u00E1ticamente.'},
+    {q:'\uD83D\uDCCA Calificaciones', a:'Introduce notas por asignatura y calcula la media. Exporta como PDF \u2B50.'},
+    {q:'\uD83D\uDD12 PIN y seguridad', a:'Act\u00EDvalo en Ajustes \u2192 Seguridad. Se guarda como hash SHA-256, nunca en texto claro. Los datos se cifran con AES-GCM en tu dispositivo.'},
+    {q:'\u2601\uFE0F Google Drive y backup', a:'El backup guarda todos tus datos en un .json. Gu\u00E1rdalo o s\u00FAbelo a Drive. Para restaurar: Ajustes \u2192 Restaurar backup. La sincronizaci\u00F3n Drive (Premium) guarda autom\u00E1ticamente en tu nube.'},
+    {q:'\uD83D\uDCCA Almacenamiento', a:'En Ajustes \u2192 Almacenamiento ves el espacio usado (m\u00E1ximo 5MB). Muestra el desglose por secci\u00F3n. Si superas el 85% aparece aviso en el inicio. Para liberar espacio, elimina manualmente desde cada secci\u00F3n.'},
+    {q:'\uD83C\uDFA8 Personalizaci\u00F3n', a:'En Ajustes \u2192 Personalizaci\u00F3n: 16 temas + 4 de temporada, 5 fuentes. El avatar se personaliza tocando el c\u00EDrculo del inicio: 12 colores, 16 emojis o tu inicial.'},
+    {q:'\u2699\uFE0F Configuraci\u00F3n', a:'PIN \u00B7 notificaciones \u00B7 sonido Pomodoro \u00B7 fuente \u00B7 backup \u00B7 Drive \u00B7 almacenamiento \u00B7 Premium.'},
+    {q:'\uD83D\uDD14 Notificaciones', a:'Toca \uD83D\uDD14 en el inicio para activarlas. Se programan localmente, sin servidores externos.'},
+    {q:'\u2190 Navegar', a:'El bot\u00F3n \u2190 en la barra inferior vuelve a la secci\u00F3n anterior. Al cancelar una nueva tarea tambi\u00E9n vuelve atr\u00E1s.'},
+    {q:'\u2B50 Premium', a:'Registros ilimitados \u00B7 dictado de voz \u00B7 fotos en Drive \u00B7 sincronizaci\u00F3n Drive \u00B7 backup autom\u00E1tico \u00B7 todos los temas \u00B7 exportar PDF \u00B7 m\u00FAltiples dispositivos. Obt\u00E9n tu c\u00F3digo en tapunto.app.'},
   ];
   var acc=document.getElementById('help-accordion');
   if(!acc) return;
@@ -12853,6 +13110,10 @@ function icsOpenFilePicker(){
     wrap.appendChild(btn); wrap.appendChild(body); acc.appendChild(wrap);
   });
 })();
+
+
+
+
 
 
 // ═══════════════════════════════════════════════════════
