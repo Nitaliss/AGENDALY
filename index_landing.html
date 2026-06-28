@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tapunto — Tu suite de apps personales</title>
+  <meta name="description" content="Tapunto es una suite de apps personales para estudiantes y jóvenes. Agenda, Diario, Viajes y más.">
+  <meta name="theme-color" content="#2D5016">
+  <link rel="icon" href="agenda/icon-192.png">
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;}
+    body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f4f7f2;color:#1a1a1a;min-height:100vh;}
+
+    /* HEADER */
+    header{background:#2D5016;padding:48px 24px 40px;text-align:center;}
+    .logo-wrap{display:flex;align-items:center;justify-content:center;gap:14px;margin-bottom:12px;}
+    .logo-img{width:52px;height:52px;border-radius:14px;}
+    .logo-name{font-size:32px;font-weight:900;color:white;letter-spacing:2px;}
+    header p{color:rgba(255,255,255,.75);font-size:15px;max-width:400px;margin:0 auto;}
+
+    /* APPS GRID */
+    main{max-width:900px;margin:0 auto;padding:40px 20px 80px;}
+    h2{font-size:13px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:20px;}
+
+    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px;margin-bottom:48px;}
+
+    .app-card{background:white;border-radius:20px;padding:28px 20px 24px;text-align:center;text-decoration:none;color:#1a1a1a;box-shadow:0 2px 8px rgba(0,0,0,.07);transition:transform .15s,box-shadow .15s;position:relative;overflow:hidden;}
+    .app-card:hover{transform:translateY(-3px);box-shadow:0 8px 24px rgba(0,0,0,.12);}
+    .app-card.soon{opacity:.65;cursor:default;}
+    .app-card.soon:hover{transform:none;box-shadow:0 2px 8px rgba(0,0,0,.07);}
+
+    .app-icon{width:64px;height:64px;border-radius:16px;margin:0 auto 14px;display:flex;align-items:center;justify-content:center;font-size:30px;}
+    .app-icon img{width:64px;height:64px;border-radius:16px;}
+    .app-name{font-size:17px;font-weight:800;margin-bottom:4px;}
+    .app-desc{font-size:12px;color:#6b7280;line-height:1.5;}
+
+    .badge{position:absolute;top:14px;right:14px;font-size:9px;font-weight:700;padding:3px 8px;border-radius:20px;text-transform:uppercase;letter-spacing:.5px;}
+    .badge-live{background:#dcfce7;color:#16a34a;}
+    .badge-soon{background:#f3f4f6;color:#9ca3af;}
+
+    /* ABOUT */
+    .about{background:white;border-radius:20px;padding:32px;box-shadow:0 2px 8px rgba(0,0,0,.07);margin-bottom:32px;}
+    .about h3{font-size:16px;font-weight:800;color:#2D5016;margin-bottom:10px;}
+    .about p{font-size:13px;color:#6b7280;line-height:1.7;}
+
+    /* FOOTER */
+    footer{background:#2D5016;color:rgba(255,255,255,.6);text-align:center;padding:24px;font-size:12px;}
+    footer a{color:rgba(255,255,255,.8);text-decoration:none;}
+    footer a:hover{color:white;}
+    footer .links{display:flex;gap:20px;justify-content:center;margin-bottom:8px;flex-wrap:wrap;}
+
+    @media(max-width:480px){
+      .logo-name{font-size:26px;}
+      .grid{grid-template-columns:repeat(2,1fr);}
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="logo-wrap">
+    <img src="agenda/icon-192.png" alt="Tapunto" class="logo-img">
+    <span class="logo-name">TAPUNTO</span>
+  </div>
+  <p>Tu suite de apps personales para organizarte, explorar y crecer</p>
+</header>
+
+<main>
+
+  <h2>Apps disponibles</h2>
+  <div class="grid">
+
+    <!-- AGENDA -->
+    <a href="agenda/" class="app-card">
+      <span class="badge badge-live">Disponible</span>
+      <div class="app-icon"><img src="agenda/icon-192.png" alt="Agenda"></div>
+      <div class="app-name">Agenda</div>
+      <div class="app-desc">Tu agenda estudiantil con libreta, tareas, horarios y más</div>
+    </a>
+
+    <!-- VIAJES -->
+    <div class="app-card soon">
+      <span class="badge badge-soon">Próximamente</span>
+      <div class="app-icon" style="background:#fef3c7;">✈️</div>
+      <div class="app-name">Viajes</div>
+      <div class="app-desc">Planifica y recuerda tus aventuras y escapadas</div>
+    </div>
+
+    <!-- DIARIO -->
+    <div class="app-card soon">
+      <span class="badge badge-soon">Próximamente</span>
+      <div class="app-icon" style="background:#ede9fe;">📔</div>
+      <div class="app-name">Diario</div>
+      <div class="app-desc">Tu diario personal privado, siempre contigo</div>
+    </div>
+
+    <!-- PLACEHOLDER -->
+    <div class="app-card soon">
+      <span class="badge badge-soon">Próximamente</span>
+      <div class="app-icon" style="background:#fce7f3;">✨</div>
+      <div class="app-name">Más apps</div>
+      <div class="app-desc">Nuevas herramientas en camino</div>
+    </div>
+
+  </div>
+
+  <div class="about">
+    <h3>🌿 ¿Qué es Tapunto?</h3>
+    <p>Tapunto es una suite de apps personales diseñadas para estudiantes y jóvenes. Todas las apps funcionan en tu dispositivo, sin registros obligatorios y con tu privacidad como prioridad. Tus datos son tuyos.</p>
+  </div>
+
+</main>
+
+<footer>
+  <div class="links">
+    <a href="agenda/">Agenda</a>
+    <a href="privacidad.html">Privacidad</a>
+    <a href="mailto:hola@tapunto.app">Contacto</a>
+  </div>
+  © 2026 Tapunto · tapunto.app
+</footer>
+
+</body>
+</html>
