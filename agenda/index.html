@@ -6987,6 +6987,7 @@ menu.appendChild(emailDiv);
 var items=[
 {icon:'⏱',label:'Pomodoro',fn:function(){menu.remove();irSeccion('estudio');}},
 {icon:'🔄',label:'Rutinas',fn:function(){menu.remove();irSeccion('rutinas');}},
+{icon:'🎨',label:'Mi avatar',fn:function(){menu.remove();mostrarPersonalizarAvatar();}},
 {icon:'❓',label:'Ayuda',fn:function(){menu.remove();mostrarAyuda();}},
 {icon:'👤',label:'Mis datos',fn:function(){menu.remove();irSeccion('config');setTimeout(function(){var c=document.getElementById('cfg-block-firma');if(c){c.scrollIntoView({behavior:'smooth',block:'start'});var hdr=c.querySelector('.cfg-hdr');var body=c.querySelector('.cfg-body');if(hdr&&body&&body.style.display==='none')toggleCfg(hdr);}},450);}},
 {icon:'⚙️',label:'Configuración',fn:function(){menu.remove();irSeccion('config');}},
@@ -12268,11 +12269,116 @@ function actualizarAvatarHome(){
   else{if(init){init.textContent=(state.currentUser||'?').slice(0,1).toUpperCase();init.style.fontSize='22px';}}
 }
 
-// ── Nav active states ──
-function _updateBnavActive(tab){
-  ['bnav-home','bnav-tareas','bnav-todo','bnav-albumes','bnav-estudio','bnav-agenda'].forEach(function(id){var el=document.getElementById(id);if(el)el.classList.remove('active');});
-  var map={'home':'bnav-home','registros':'bnav-tareas','notas':'bnav-todo','albumes':'bnav-albumes','estudio':'bnav-estudio','calendario':'bnav-agenda'};
-  var bid=map[tab];if(bid){var b=document.getElementById(bid);if(b)b.classList.add('active');}
+
+function mostrarPersonalizarAvatar(){
+  var COLORES=['#2D5016','#1a7b8c','#6c3483','#922b21','#d35400','#1e8449',
+               '#2980b9','#7f6000','#4d4d4d','#1a1a2e','#e91e63','#00897b'];
+  var EMOJIS=['😊','🎓','🌟','🦁','🐼','🦊','🌸','⚡','🎯','🏆',
+              '🎮','🎨','🌈','🦋','🐉','💎'];
+
+  var pnl=document.createElement('div');
+  pnl.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9500;display:flex;align-items:center;justify-content:center;padding:20px;';
+
+  var box=document.createElement('div');
+  box.style.cssText='background:var(--w);border-radius:20px;padding:20px;width:100%;max-width:320px;font-family:var(--font-main);box-shadow:0 8px 32px rgba(0,0,0,.25);';
+
+  // Preview del avatar
+  var preview=document.createElement('div');
+  preview.style.cssText='width:72px;height:72px;border-radius:50%;margin:0 auto 16px;display:flex;align-items:center;justify-content:center;font-size:32px;font-weight:700;color:#fff;border:3px solid rgba(255,255,255,.4);background:'+(state.avatarColor||'#2D5016')+';';
+  if(state.avatarEmoji) preview.textContent=state.avatarEmoji;
+  else preview.textContent=(state.currentUser||'?').slice(0,1).toUpperCase();
+  box.appendChild(preview);
+
+  // Título
+  var hd=document.createElement('div');
+  hd.style.cssText='font-size:14px;font-weight:800;color:var(--td);text-align:center;margin-bottom:4px;';
+  hd.textContent='Mi avatar';
+  box.appendChild(hd);
+
+  var sd=document.createElement('div');
+  sd.style.cssText='font-size:11px;color:var(--tl);text-align:center;margin-bottom:14px;';
+  sd.textContent='Elige color de fondo y emoji';
+  box.appendChild(sd);
+
+  // Colores
+  var clbl=document.createElement('div');
+  clbl.style.cssText='font-size:11px;font-weight:700;color:var(--tl);margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px;';
+  clbl.textContent='Color de fondo';
+  box.appendChild(clbl);
+
+  var cgrid=document.createElement('div');
+  cgrid.style.cssText='display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin-bottom:14px;';
+  COLORES.forEach(function(c){
+    var cb=document.createElement('button');
+    cb.style.cssText='aspect-ratio:1;border-radius:50%;background:'+c+';border:3px solid '+(state.avatarColor===c?'var(--gd)':'transparent')+';cursor:pointer;transition:transform .1s;';
+    cb.onclick=function(){
+      state.avatarColor=c;
+      preview.style.background=c;
+      cgrid.querySelectorAll('button').forEach(function(b){b.style.borderColor='transparent';});
+      cb.style.borderColor='var(--gd)';
+    };
+    cgrid.appendChild(cb);
+  });
+  box.appendChild(cgrid);
+
+  // Emojis
+  var elbl=document.createElement('div');
+  elbl.style.cssText='font-size:11px;font-weight:700;color:var(--tl);margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px;';
+  elbl.textContent='Emoji (opcional)';
+  box.appendChild(elbl);
+
+  var egrid=document.createElement('div');
+  egrid.style.cssText='display:grid;grid-template-columns:repeat(8,1fr);gap:4px;margin-bottom:6px;';
+
+  // Botón "sin emoji" (inicial)
+  var noEmoji=document.createElement('button');
+  noEmoji.style.cssText='aspect-ratio:1;border-radius:8px;background:var(--bl);border:2px solid '+(!state.avatarEmoji?'var(--gd)':'var(--bd)')+';cursor:pointer;font-size:10px;color:var(--tl);font-weight:700;';
+  noEmoji.textContent='A';
+  noEmoji.onclick=function(){
+    state.avatarEmoji='';
+    preview.textContent=(state.currentUser||'?').slice(0,1).toUpperCase();
+    egrid.querySelectorAll('button').forEach(function(b){b.style.borderColor='var(--bd)';});
+    noEmoji.style.borderColor='var(--gd)';
+  };
+  egrid.appendChild(noEmoji);
+
+  EMOJIS.forEach(function(e){
+    var eb=document.createElement('button');
+    eb.style.cssText='aspect-ratio:1;border-radius:8px;background:var(--bl);border:2px solid '+(state.avatarEmoji===e?'var(--gd)':'var(--bd)')+';cursor:pointer;font-size:16px;';
+    eb.textContent=e;
+    eb.onclick=function(){
+      state.avatarEmoji=e;
+      preview.textContent=e;
+      egrid.querySelectorAll('button').forEach(function(b){b.style.borderColor='var(--bd)';});
+      eb.style.borderColor='var(--gd)';
+    };
+    egrid.appendChild(eb);
+  });
+  box.appendChild(egrid);
+
+  // Botones Guardar/Cancelar
+  var btns=document.createElement('div');
+  btns.style.cssText='display:flex;gap:8px;margin-top:16px;';
+
+  var cancel=document.createElement('button');
+  cancel.style.cssText='flex:1;padding:10px;background:var(--bl);border:1px solid var(--bd);border-radius:10px;font-family:var(--font-main);font-size:13px;cursor:pointer;color:var(--tl);';
+  cancel.textContent='Cancelar';
+  cancel.onclick=function(){pnl.remove();};
+
+  var save=document.createElement('button');
+  save.style.cssText='flex:1;padding:10px;background:var(--gm);border:none;border-radius:10px;font-family:var(--font-main);font-size:13px;font-weight:700;cursor:pointer;color:#fff;';
+  save.textContent='Guardar';
+  save.onclick=function(){
+    persist().catch(function(){});
+    actualizarAvatarHome();
+    pnl.remove();
+  };
+
+  btns.appendChild(cancel);btns.appendChild(save);
+  box.appendChild(btns);
+  pnl.appendChild(box);
+  pnl.addEventListener('click',function(e){if(e.target===pnl)pnl.remove();});
+  document.body.appendChild(pnl);
 }
 </script>
 
