@@ -11,14 +11,12 @@
     *{margin:0;padding:0;box-sizing:border-box;}
     body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f4f7f2;color:#1a1a1a;min-height:100vh;}
 
-    /* HEADER */
     header{background:#2D5016;padding:48px 24px 40px;text-align:center;}
     .logo-wrap{display:flex;align-items:center;justify-content:center;gap:14px;margin-bottom:12px;}
     .logo-img{width:52px;height:52px;border-radius:14px;}
     .logo-name{font-size:32px;font-weight:900;color:white;letter-spacing:2px;}
     header p{color:rgba(255,255,255,.75);font-size:15px;max-width:400px;margin:0 auto;}
 
-    /* APPS GRID */
     main{max-width:900px;margin:0 auto;padding:40px 20px 80px;}
     h2{font-size:13px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:20px;}
 
@@ -29,6 +27,10 @@
     .app-card.soon{opacity:.65;cursor:default;}
     .app-card.soon:hover{transform:none;box-shadow:0 2px 8px rgba(0,0,0,.07);}
 
+    /* Tarjeta tapunto-voz — destacada */
+    .app-card.tapunto-voz{border:2px solid #1565C0;background:linear-gradient(135deg,#f0f7ff 0%,white 100%);}
+    .app-card.tapunto-voz:hover{box-shadow:0 8px 32px rgba(21,101,192,.2);}
+
     .app-icon{width:64px;height:64px;border-radius:16px;margin:0 auto 14px;display:flex;align-items:center;justify-content:center;font-size:30px;}
     .app-icon img{width:64px;height:64px;border-radius:16px;}
     .app-name{font-size:17px;font-weight:800;margin-bottom:4px;}
@@ -37,13 +39,14 @@
     .badge{position:absolute;top:14px;right:14px;font-size:9px;font-weight:700;padding:3px 8px;border-radius:20px;text-transform:uppercase;letter-spacing:.5px;}
     .badge-live{background:#dcfce7;color:#16a34a;}
     .badge-soon{background:#f3f4f6;color:#9ca3af;}
+    .badge-free{background:#dbeafe;color:#1d4ed8;}
 
-    /* ABOUT */
+    .btn-download{display:inline-block;margin-top:10px;background:#1565C0;color:white;font-size:11px;font-weight:700;padding:6px 14px;border-radius:20px;text-decoration:none;}
+
     .about{background:white;border-radius:20px;padding:32px;box-shadow:0 2px 8px rgba(0,0,0,.07);margin-bottom:32px;}
     .about h3{font-size:16px;font-weight:800;color:#2D5016;margin-bottom:10px;}
     .about p{font-size:13px;color:#6b7280;line-height:1.7;}
 
-    /* FOOTER */
     footer{background:#2D5016;color:rgba(255,255,255,.6);text-align:center;padding:24px;font-size:12px;}
     footer a{color:rgba(255,255,255,.8);text-decoration:none;}
     footer a:hover{color:white;}
@@ -76,6 +79,15 @@
       <div class="app-icon"><img src="agenda/icon-192.png" alt="Agenda"></div>
       <div class="app-name">Agenda</div>
       <div class="app-desc">Tu agenda estudiantil con libreta, tareas, horarios y más</div>
+    </a>
+
+    <!-- TAPUNTO-VOZ — nueva tarjeta destacada -->
+    <a href="tapunto-voz/" class="app-card tapunto-voz">
+      <span class="badge badge-free">Gratuita</span>
+      <div class="app-icon" style="background:#dbeafe;font-size:34px;">🎙</div>
+      <div class="app-name" style="color:#1565C0;">tapunto-voz</div>
+      <div class="app-desc">Control del ordenador por voz · Para personas con movilidad reducida · Windows</div>
+      <span class="btn-download">⬇ Descargar gratis</span>
     </a>
 
     <!-- VIAJES -->
@@ -114,8 +126,9 @@
 <footer>
   <div class="links">
     <a href="agenda/">Agenda</a>
+    <a href="tapunto-voz/">tapunto-voz</a>
     <a href="privacidad.html">Privacidad</a>
-    <a href="mailto:hola@tapunto.app">Contacto</a>
+    <a href="mailto:tapunto.soporte@gmail.com">Contacto</a>
   </div>
   © 2026 Tapunto · tapunto.app
 </footer>
