@@ -1,229 +1,105 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>tapunto-voz — Control del ordenador por voz</title>
-  <meta name="description" content="tapunto-voz: programa gratuito de código abierto de control del ordenador por voz, diseñado para personas con esclerosis lateral amiotrófica (ELA) y otras condiciones que limiten el uso de las manos." />
+  <meta name="description" content="tapunto-voz: programa gratuito de control del ordenador por voz para personas con movilidad reducida (ELA). Windows 10/11.">
+  <meta name="theme-color" content="#1565C0">
   <style>
-    :root {
-      --azul:        #1565C0;
-      --azul-osc:    #0D47A1;
-      --azul-claro:  #E3F0FF;
-      --verde:       #1E6B3A;
-      --verde-claro: #E8F5EE;
-      --naranja:     #E65100;
-      --gris:        #222;
-      --gris-claro:  #f5f5f5;
-      --blanco:      #fff;
-    }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      font-family: 'Segoe UI', Arial, sans-serif;
-      color: var(--gris);
-      background: var(--blanco);
-      line-height: 1.6;
-    }
-    a:focus, button:focus, [tabindex]:focus {
-      outline: 3px solid var(--naranja);
-      outline-offset: 2px;
-    }
-    a { color: var(--azul); }
+    *{margin:0;padding:0;box-sizing:border-box;}
+    body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f0f4ff;color:#1a1a1a;min-height:100vh;}
 
-    /* ── HEADER ── */
-    header {
-      background: var(--azul);
-      color: var(--blanco);
-      padding: 48px 24px 40px;
-      text-align: center;
-    }
-    header .tag {
-      display: inline-block;
-      background: rgba(255,255,255,0.2);
-      border-radius: 20px;
-      padding: 4px 14px;
-      font-size: 13px;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      margin-bottom: 16px;
-    }
-    header h1 {
-      font-size: clamp(2rem, 5vw, 3.2rem);
-      font-weight: 800;
-      letter-spacing: -1px;
-      margin-bottom: 12px;
-    }
-    header h1 span { color: #BBDEFB; }
-    header p {
-      font-size: 1.15rem;
-      max-width: 580px;
-      margin: 0 auto 28px;
-      opacity: 0.95;
-    }
-    .btn-download {
-      display: inline-block;
-      background: var(--naranja);
-      color: var(--blanco);
-      text-decoration: none;
-      padding: 16px 40px;
-      border-radius: 8px;
-      font-size: 1.1rem;
-      font-weight: 700;
-      transition: background .2s;
-    }
-    .btn-download:hover, .btn-download:focus { background: #BF360C; }
-    .btn-download .sub {
-      display: block;
-      font-size: 0.78rem;
-      font-weight: 400;
-      opacity: 0.95;
-      margin-top: 2px;
-    }
-    .req-bar {
-      margin-top: 20px;
-      font-size: 0.88rem;
-      opacity: 0.92;
-    }
-    .req-bar span { margin: 0 6px; }
+    /* HEADER */
+    header{background:linear-gradient(135deg,#0D47A1,#1565C0);padding:48px 24px 40px;text-align:center;color:white;}
+    .back{display:inline-block;color:rgba(255,255,255,.7);text-decoration:none;font-size:13px;margin-bottom:20px;}
+    .back:hover{color:white;}
+    header h1{font-size:clamp(2rem,5vw,3rem);font-weight:900;letter-spacing:-1px;margin-bottom:8px;}
+    header h1 span{color:#90CAF9;}
+    header .subtitle{font-size:15px;opacity:.85;max-width:500px;margin:0 auto 28px;}
+    .btn-download{display:inline-block;background:#E65100;color:white;text-decoration:none;padding:16px 40px;border-radius:10px;font-size:1.1rem;font-weight:700;transition:background .2s;}
+    .btn-download:hover{background:#BF360C;}
+    .btn-download .sub{display:block;font-size:.75rem;font-weight:400;opacity:.9;margin-top:2px;}
+    .req{margin-top:16px;font-size:.85rem;opacity:.75;}
+    .req span{margin:0 6px;}
 
-    /* ── AVISOS ── */
-    .aviso-legal {
-      background: #FFF8E1;
-      border-left: 5px solid #F9A825;
-      max-width: 820px;
-      margin: 32px auto;
-      padding: 20px 24px;
-      border-radius: 0 8px 8px 0;
-      font-size: 0.93rem;
-    }
-    .aviso-legal strong { color: var(--naranja); }
+    /* AVISO */
+    .aviso{background:#FFF8E1;border-left:5px solid #F9A825;max-width:780px;margin:28px auto;padding:16px 20px;border-radius:0 8px 8px 0;font-size:.9rem;}
+    .aviso strong{color:#E65100;}
 
-    /* ── MAIN ── */
-    main { max-width: 880px; margin: 0 auto; padding: 32px 24px; }
-    section { margin-bottom: 48px; }
-    h2 {
-      font-size: 1.5rem;
-      color: var(--azul);
-      margin-bottom: 16px;
-      padding-bottom: 8px;
-      border-bottom: 2px solid var(--azul-claro);
-    }
-    h3 {
-      font-size: 1.1rem;
-      color: var(--azul-osc);
-      margin: 18px 0 10px;
-    }
-    p { margin-bottom: 12px; }
-    ul, ol { padding-left: 24px; margin-bottom: 12px; }
-    li { margin-bottom: 6px; }
+    /* MAIN */
+    main{max-width:860px;margin:0 auto;padding:32px 20px 60px;}
 
-    /* ── PASOS ── */
-    .steps { counter-reset: step; list-style: none; padding: 0; }
-    .steps li {
-      counter-increment: step;
-      display: flex;
-      align-items: flex-start;
-      gap: 16px;
-      margin-bottom: 18px;
-      background: var(--gris-claro);
-      border-radius: 8px;
-      padding: 16px 20px;
-    }
-    .steps li::before {
-      content: counter(step);
-      background: var(--azul);
-      color: var(--blanco);
-      font-weight: 700;
-      font-size: 1.1rem;
-      width: 32px; height: 32px;
-      border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      flex-shrink: 0;
-    }
+    /* TABS */
+    .tabs{display:flex;gap:4px;background:white;border-radius:12px;padding:6px;box-shadow:0 2px 8px rgba(0,0,0,.08);margin-bottom:28px;}
+    .tab{flex:1;padding:10px;text-align:center;border-radius:8px;cursor:pointer;font-size:.9rem;font-weight:600;color:#6b7280;transition:all .2s;border:none;background:none;}
+    .tab.active{background:#1565C0;color:white;}
+    .tab:hover:not(.active){background:#f0f4ff;color:#1565C0;}
 
-    /* ── CARDS ── */
-    .cards {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 16px;
-    }
-    .card {
-      background: var(--azul-claro);
-      border-radius: 8px;
-      padding: 20px;
-      text-align: center;
-    }
-    .card .icon { font-size: 2rem; margin-bottom: 8px; }
-    .card strong { display: block; color: var(--azul-osc); margin-bottom: 4px; }
-    .card span { font-size: 0.88rem; color: #444; }
+    /* PANELS */
+    .panel{display:none;}
+    .panel.active{display:block;}
 
-    /* ── AVISO WINDOWS ── */
-    .windows-warning {
-      background: var(--verde-claro);
-      border-left: 5px solid var(--verde);
-      border-radius: 0 8px 8px 0;
-      padding: 16px 20px;
-      margin: 20px 0;
-      font-size: 0.93rem;
-    }
-    .windows-warning strong { color: var(--verde); }
+    /* DESCRIPCIÓN */
+    .features{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin:20px 0;}
+    .feat{background:white;border-radius:12px;padding:18px;box-shadow:0 2px 6px rgba(0,0,0,.06);}
+    .feat .icon{font-size:1.8rem;margin-bottom:8px;}
+    .feat strong{display:block;color:#1565C0;margin-bottom:4px;font-size:.95rem;}
+    .feat span{font-size:.85rem;color:#6b7280;line-height:1.5;}
 
-    /* ── AUTORES ── */
-    .autores {
-      background: var(--azul);
-      color: var(--blanco);
-      text-align: center;
-      padding: 32px 24px;
-      border-radius: 10px;
-    }
-    .autores p { font-size: 1.05rem; opacity: 0.95; margin: 0; }
-    .autores .names {
-      font-size: 1.15rem;
-      font-weight: 700;
-      margin-top: 10px;
-    }
+    .steps-list{counter-reset:step;list-style:none;margin:16px 0;}
+    .steps-list li{counter-increment:step;display:flex;align-items:flex-start;gap:14px;background:white;border-radius:10px;padding:14px 18px;margin-bottom:10px;box-shadow:0 1px 4px rgba(0,0,0,.06);}
+    .steps-list li::before{content:counter(step);background:#1565C0;color:white;font-weight:700;font-size:1rem;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
 
-    /* ── IDENTIFICACIÓN LSSI ── */
-    .identificacion {
-      background: var(--gris-claro);
-      border-radius: 8px;
-      padding: 18px 22px;
-      margin-top: 20px;
-      font-size: 0.92rem;
-    }
-    .identificacion h3 { margin-bottom: 8px; color: var(--azul-osc); }
-    .identificacion dl {
-      display: grid;
-      grid-template-columns: max-content 1fr;
-      gap: 6px 16px;
-    }
-    .identificacion dt { font-weight: 600; }
+    /* TUTORIAL */
+    .tutorial-box{background:white;border-radius:16px;padding:28px;box-shadow:0 2px 8px rgba(0,0,0,.08);}
+    .tut-header{display:flex;align-items:center;gap:16px;margin-bottom:20px;}
+    .tut-icon{font-size:2.4rem;}
+    .tut-title{font-size:1.3rem;font-weight:800;color:#1565C0;}
+    .tut-step-label{font-size:.85rem;color:#6b7280;margin-top:2px;}
+    .tut-text{font-size:.95rem;line-height:1.75;color:#333;white-space:pre-line;min-height:160px;}
+    .tut-dots{display:flex;gap:8px;justify-content:center;margin:20px 0 16px;}
+    .tut-dot{width:10px;height:10px;border-radius:50%;background:#ddd;cursor:pointer;transition:background .2s;}
+    .tut-dot.active{background:#1565C0;}
+    .tut-btns{display:flex;justify-content:space-between;}
+    .tut-btn{padding:10px 24px;border-radius:8px;border:none;font-size:.95rem;font-weight:600;cursor:pointer;transition:all .2s;}
+    .tut-btn.prev{background:#f0f4ff;color:#1565C0;}
+    .tut-btn.prev:hover{background:#dbeafe;}
+    .tut-btn.next{background:#1565C0;color:white;}
+    .tut-btn.next:hover{background:#0D47A1;}
+    .tut-btn:disabled{opacity:.35;cursor:default;}
 
-    /* ── FOOTER ── */
-    footer {
-      background: var(--gris-claro);
-      border-top: 1px solid #ddd;
-      text-align: center;
-      padding: 24px;
-      font-size: 0.88rem;
-      color: #555;
-    }
-    footer a { color: var(--azul); text-decoration: none; }
-    footer a:hover, footer a:focus { text-decoration: underline; }
+    /* TÉRMINOS */
+    .terms-box{background:white;border-radius:16px;padding:28px;box-shadow:0 2px 8px rgba(0,0,0,.08);font-size:.88rem;line-height:1.75;color:#444;}
+    .terms-box h3{color:#1565C0;font-size:1rem;margin:20px 0 6px;}
+    .terms-box h3:first-child{margin-top:0;}
+    .terms-box p{margin-bottom:10px;}
+    .terms-box ul{padding-left:20px;margin-bottom:10px;}
+    .terms-box li{margin-bottom:4px;}
+
+    /* AUTORES */
+    .autores{background:#1565C0;color:white;text-align:center;padding:28px 24px;border-radius:14px;margin-top:28px;}
+    .autores .names{font-size:1.05rem;font-weight:700;margin:8px 0;}
+    .autores .kofi{display:inline-block;margin-top:12px;background:rgba(255,255,255,.15);color:white;padding:8px 20px;border-radius:20px;text-decoration:none;font-size:.9rem;}
+    .autores .kofi:hover{background:rgba(255,255,255,.25);}
+
+    footer{background:#0D47A1;color:rgba(255,255,255,.6);text-align:center;padding:20px;font-size:.8rem;}
+    footer a{color:rgba(255,255,255,.8);text-decoration:none;}
+    footer .links{display:flex;gap:16px;justify-content:center;margin-bottom:6px;flex-wrap:wrap;}
   </style>
 </head>
 <body>
 
 <header>
-  <div class="tag">Accesibilidad · ELA · Movilidad reducida</div>
+  <a href="/" class="back">← Volver a tapunto.app</a>
   <h1>tapunto<span>-voz</span></h1>
-  <p>Control total del ordenador mediante la voz. Diseñado para personas con movilidad reducida.</p>
+  <p class="subtitle">Control del ordenador por voz para personas con movilidad reducida</p>
   <a class="btn-download"
      href="https://github.com/Kiksurfer/ControELAndo/releases/latest/download/tapunto-voz.exe">
-    Descargar tapunto-voz.exe
-    <span class="sub">Windows 10 / 11 · Gratuito · Código abierto</span>
+    ⬇ Descargar tapunto-voz.exe
+    <span class="sub">Windows 10/11 · Gratuito · Sin instalación</span>
   </a>
-  <p class="req-bar">
+  <p class="req">
     <span>🪟 Windows 10/11</span>·
     <span>🎙 Micrófono</span>·
     <span>🌐 Internet</span>·
@@ -231,164 +107,186 @@
   </p>
 </header>
 
-<div class="aviso-legal">
+<div class="aviso">
   <strong>⚠ Antes de descargar:</strong>
-  Este programa utiliza el micrófono de tu ordenador y envía el audio de voz
-  a los servidores de <strong>Google Speech Recognition</strong> para su transcripción.
-  Al descargar y usar tapunto-voz aceptas las
-  <a href="/legal.html">Condiciones de uso y Política de privacidad</a>.
-  El programa se ofrece sin garantía de funcionamiento.
-  NO es un producto sanitario y NO sustituye atención médica ni terapia ocupacional.
+  Este programa envía el audio de voz a <strong>Google Speech Recognition</strong> para su transcripción.
+  Al descargarlo aceptas las condiciones de uso (ver pestaña «Términos» más abajo).
+  No es un producto sanitario. No sustituye atención médica.
 </div>
 
 <main>
 
-  <!-- INSTALACIÓN -->
-  <section id="instalar">
-    <h2>Cómo instalar</h2>
-    <ol class="steps">
-      <li>
-        <div>
-          <strong>Descarga el archivo</strong><br>
-          Haz clic en el botón de descarga. El archivo
-          <code>tapunto-voz.exe</code> pesa aproximadamente 120 MB
-          e incluye todo lo necesario — no hay que instalar Python.
-        </div>
-      </li>
-      <li>
-        <div>
-          <strong>Ejecuta con doble clic</strong><br>
-          No requiere instalación. Haz doble clic en el archivo descargado
-          para arrancar el programa.
-        </div>
-      </li>
-      <li>
-        <div>
-          <strong>Si Windows muestra una advertencia</strong><br>
-          Haz clic en <em>"Más información"</em> y luego en
-          <em>"Ejecutar de todas formas"</em>. Es normal en programas
-          sin firma digital de pago.
-        </div>
-      </li>
-      <li>
-        <div>
-          <strong>Mantén el micrófono y el internet activos</strong><br>
-          El reconocimiento de voz requiere conexión a internet (Google Speech).
-          Durante los primeros 3 segundos el programa calibra el ruido ambiente —
-          mantén silencio.
-        </div>
-      </li>
+  <!-- TABS -->
+  <div class="tabs">
+    <button class="tab active" onclick="showTab('descripcion')">📋 Descripción</button>
+    <button class="tab" onclick="showTab('tutorial')">📖 Tutorial</button>
+    <button class="tab" onclick="showTab('terminos')">📄 Términos</button>
+  </div>
+
+  <!-- PANEL DESCRIPCIÓN -->
+  <div class="panel active" id="panel-descripcion">
+    <div class="features">
+      <div class="feat"><div class="icon">🎙</div><strong>Control por voz</strong><span>Mueve el ratón, haz clic y navega sin tocar el ordenador</span></div>
+      <div class="feat"><div class="icon">📐</div><strong>Rejilla de coordenadas</strong><span>Cuadrícula de 14×15 celdas sobre la pantalla. Di la coordenada y el cursor va ahí</span></div>
+      <div class="feat"><div class="icon">📝</div><strong>Dictado de texto</strong><span>Escribe texto y signos de puntuación con la voz</span></div>
+      <div class="feat"><div class="icon">🗣</div><strong>Tu propia voz</strong><span>Graba cómo tú pronuncias cada comando. El programa aprende tu voz</span></div>
+      <div class="feat"><div class="icon">🎚</div><strong>Perfil de micrófono</strong><span>Tres perfiles: voz suave, normal o entorno ruidoso</span></div>
+      <div class="feat"><div class="icon">🔍</div><strong>Zoom de celda</strong><span>Subdivide celdas para selección precisa de elementos pequeños</span></div>
+    </div>
+
+    <h3 style="margin:24px 0 12px;color:#1565C0;font-size:1rem;font-weight:800;">Cómo instalar</h3>
+    <ol class="steps-list">
+      <li><div><strong>Descarga el archivo</strong><br><span style="font-size:.85rem;color:#6b7280;">Haz clic en el botón naranja de arriba. El archivo pesa ~120 MB e incluye todo lo necesario.</span></div></li>
+      <li><div><strong>Ejecuta con doble clic</strong><br><span style="font-size:.85rem;color:#6b7280;">No requiere instalación. Doble clic y arranca.</span></div></li>
+      <li><div><strong>Si Windows muestra advertencia</strong><br><span style="font-size:.85rem;color:#6b7280;">Haz clic en "Más información" → "Ejecutar de todas formas". Es normal en programas sin firma digital de pago.</span></div></li>
+      <li><div><strong>Di "rejilla" para empezar</strong><br><span style="font-size:.85rem;color:#6b7280;">Aparecerá la cuadrícula sobre la pantalla. Di "ayuda" para ver todos los comandos.</span></div></li>
     </ol>
 
-    <div class="windows-warning">
-      <strong>✅ Primer uso recomendado:</strong>
-      Di <strong>"rejilla"</strong> para activar la cuadrícula,
-      luego <strong>"A 5"</strong> para mover el cursor a esa celda,
-      y <strong>"clic A 5"</strong> para hacer clic.
-      Di <strong>"ayuda"</strong> para ver todos los comandos disponibles.
-    </div>
-  </section>
-
-  <!-- CARACTERÍSTICAS -->
-  <section id="caracteristicas">
-    <h2>¿Qué puede hacer?</h2>
-    <div class="cards">
-      <div class="card">
-        <div class="icon" aria-hidden="true">🎙</div>
-        <strong>Control por voz</strong>
-        <span>Mueve el ratón, haz clic y navega sin tocar el ordenador</span>
-      </div>
-      <div class="card">
-        <div class="icon" aria-hidden="true">📝</div>
-        <strong>Dictado de texto</strong>
-        <span>Escribe texto, signos y símbolos con la voz</span>
-      </div>
-      <div class="card">
-        <div class="icon" aria-hidden="true">🔍</div>
-        <strong>Zoom de celda</strong>
-        <span>Subdivide celdas para selección precisa de elementos pequeños</span>
-      </div>
-      <div class="card">
-        <div class="icon" aria-hidden="true">🗣</div>
-        <strong>Tu propia voz</strong>
-        <span>Graba cómo tú pronuncias cada comando. El programa aprende tu voz</span>
-      </div>
-      <div class="card">
-        <div class="icon" aria-hidden="true">🎚</div>
-        <strong>Sensibilidad ajustable</strong>
-        <span>Tres perfiles de micrófono: voz suave, normal o entorno ruidoso</span>
-      </div>
-      <div class="card">
-        <div class="icon" aria-hidden="true">📋</div>
-        <strong>Historial y ayuda</strong>
-        <span>Últimos 12 comandos y guía rápida accesibles por voz</span>
-      </div>
-    </div>
-  </section>
-
-  <!-- REQUISITOS -->
-  <section id="requisitos">
-    <h2>Requisitos</h2>
-    <ul>
-      <li><strong>Sistema operativo:</strong> Windows 10 o Windows 11 (64 bits)</li>
-      <li><strong>Micrófono:</strong> integrado o externo (recomendado externo con cancelación de ruido)</li>
-      <li><strong>Conexión a internet:</strong> necesaria para el reconocimiento de voz (Google Speech Recognition)</li>
-      <li><strong>Python:</strong> no es necesario instalarlo — el ejecutable lo incluye todo</li>
-    </ul>
-  </section>
-
-  <!-- AUTORES -->
-  <section id="autores">
     <div class="autores">
-      <p>Proyecto desarrollado con dedicación por</p>
-      <p class="names">
-        Enrique García Prats &nbsp;·&nbsp;
-        Jorge García Prats &nbsp;·&nbsp;
-        Alicia Prats Martínez
-      </p>
-      <p style="margin-top:12px; font-size:0.9rem; opacity:0.85;">
-        tapunto-voz es un proyecto de accesibilidad gratuito y de código abierto.<br>
-        Si te ha sido útil, puedes apoyar su desarrollo con un donativo voluntario.
-      </p>
-      <a href="https://ko-fi.com/VUESTRO_KOFI"
-         style="display:inline-block; margin-top:14px; background:rgba(255,255,255,0.2);
-                color:#fff; padding:10px 24px; border-radius:6px; text-decoration:none;
-                font-size:0.95rem;">
-        ☕ Apoyar el proyecto (donativo voluntario)
-      </a>
+      <p style="opacity:.85;font-size:.9rem;">Proyecto desarrollado con dedicación por</p>
+      <p class="names">Enrique García Prats · Jorge García Prats · Alicia Prats Martínez</p>
+      <p style="font-size:.85rem;opacity:.8;margin-top:8px;">Gratuito y de código abierto · Valencia, España</p>
+      <a class="kofi" href="https://ko-fi.com/tapunto">☕ Apoyar el proyecto (donativo voluntario)</a>
     </div>
-  </section>
+  </div>
 
-  <!-- IDENTIFICACIÓN LSSI -->
-  <section id="identificacion">
-    <h2>Identificación del prestador</h2>
-    <p>
-      A efectos del artículo 10 de la Ley 34/2002 de servicios de la sociedad
-      de la información, se hacen constar los siguientes datos:
-    </p>
-    <div class="identificacion">
-      <h3>Titular del Servicio</h3>
-      <dl>
-        <dt>Nombre:</dt><dd>Enrique García Prats, Jorge García Prats, Alicia Prats Martínez</dd>
-        <dt>Correo de contacto:</dt><dd><a href="mailto:contacto@tapunto.app">contacto@tapunto.app</a></dd>
-        <dt>Privacidad:</dt><dd><a href="mailto:privacidad@tapunto.app">privacidad@tapunto.app</a></dd>
-      </dl>
+  <!-- PANEL TUTORIAL -->
+  <div class="panel" id="panel-tutorial">
+    <div class="tutorial-box">
+      <div class="tut-header">
+        <div class="tut-icon" id="tut-icon">🎙</div>
+        <div>
+          <div class="tut-title" id="tut-title">¡Bienvenido a tapunto-voz!</div>
+          <div class="tut-step-label" id="tut-label">Paso 1 de 6</div>
+        </div>
+      </div>
+      <div class="tut-text" id="tut-text"></div>
+      <div class="tut-dots" id="tut-dots"></div>
+      <div class="tut-btns">
+        <button class="tut-btn prev" id="btn-prev" onclick="tutPrev()" disabled>◀ Anterior</button>
+        <button class="tut-btn next" id="btn-next" onclick="tutNext()">Siguiente ▶</button>
+      </div>
     </div>
-  </section>
+  </div>
+
+  <!-- PANEL TÉRMINOS -->
+  <div class="panel" id="panel-terminos">
+    <div class="terms-box">
+      <h3>1. Identificación</h3>
+      <p>tapunto-voz es un programa gratuito desarrollado por <strong>Enrique García Prats, Jorge García Prats y Alicia Prats Martínez</strong>. Domicilio: Valencia, España. Contacto: tapunto.soporte@gmail.com</p>
+
+      <h3>2. Reconocimiento de voz y dependencia de Google</h3>
+      <p>El programa utiliza <strong>Google Speech Recognition (Google LLC)</strong> para convertir el audio en texto. El audio se envía a servidores de Google mediante HTTPS cifrado.</p>
+      <p>El funcionamiento <strong>depende de que Google mantenga activo este servicio</strong>. Si Google lo interrumpe, tapunto-voz puede dejar de funcionar sin que los desarrolladores puedan evitarlo.</p>
+
+      <h3>3. Privacidad y datos locales</h3>
+      <p>El programa guarda un archivo <code>config.json</code> con tus preferencias en la carpeta del ejecutable. Este archivo no sale de tu ordenador. Más info: <a href="https://policies.google.com/privacy" target="_blank">política de privacidad de Google</a>.</p>
+
+      <h3>4. Exoneración de responsabilidad — daños al equipo</h3>
+      <p>El programa se ofrece <strong>tal cual, sin garantía</strong>. Los desarrolladores no se responsabilizan de:</p>
+      <ul>
+        <li>Daños, pérdida de datos o mal funcionamiento del ordenador</li>
+        <li>Acciones ejecutadas por error mediante comandos de voz</li>
+        <li>Pérdidas económicas o de productividad derivadas de su uso</li>
+        <li>Interrupciones del servicio causadas por Google o por problemas de internet</li>
+      </ul>
+
+      <h3>5. Menores de edad</h3>
+      <p>El uso por menores de <strong>14 años requiere consentimiento expreso</strong> de padres o tutores. Los menores entre 14 y 18 años pueden usarlo con conocimiento de su tutor legal.</p>
+
+      <h3>6. No es un producto sanitario</h3>
+      <p>tapunto-voz <strong>NO es un producto sanitario</strong> ni un dispositivo médico (Reglamento UE 2017/745). No sustituye la atención médica, terapia ocupacional ni ningún tratamiento prescrito por un profesional sanitario.</p>
+
+      <h3>7. Propiedad intelectual</h3>
+      <p>El nombre <strong>TAPUNTO está registrado como marca</strong> en la OEPM. El código se distribuye bajo licencia de código abierto (ver archivo LICENSE en GitHub).</p>
+
+      <h3>8. Legislación aplicable</h3>
+      <p>Estas condiciones se rigen por la legislación española (RGPD, LOPDGDD, LSSI, Ley de Propiedad Intelectual). Para resolución de conflictos: juzgados y tribunales de Valencia, España.</p>
+
+      <p style="margin-top:20px;padding-top:16px;border-top:1px solid #eee;color:#888;font-size:.82rem;">
+        Versión 1.2 · Mayo 2025 · <a href="mailto:tapunto.soporte@gmail.com">tapunto.soporte@gmail.com</a>
+      </p>
+    </div>
+  </div>
 
 </main>
 
 <footer>
-  <p>
-    tapunto-voz ·
-    <a href="/legal.html">Condiciones de uso y Privacidad</a> ·
-    <a href="https://github.com/Kiksurfer/ControELAndo" target="_blank" rel="noopener">Código fuente (GitHub)</a> ·
-    <a href="mailto:contacto@tapunto.app">Contacto</a>
-  </p>
-  <p style="margin-top:8px;">
-    © 2025 Enrique García Prats, Jorge García Prats, Alicia Prats Martínez
-  </p>
+  <div class="links">
+    <a href="/">← tapunto.app</a>
+    <a href="https://github.com/Kiksurfer/ControELAndo" target="_blank">Código fuente</a>
+    <a href="mailto:tapunto.soporte@gmail.com">Contacto</a>
+  </div>
+  © 2025 Enrique García Prats, Jorge García Prats, Alicia Prats Martínez
 </footer>
+
+<script>
+// ── TABS ──────────────────────────────────────────────────────
+function showTab(name) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('panel-' + name).classList.add('active');
+  event.target.classList.add('active');
+  if (name === 'tutorial') renderTut();
+}
+
+// ── TUTORIAL ──────────────────────────────────────────────────
+const STEPS = [
+  { icon:'🎙', title:'¡Bienvenido a tapunto-voz!',
+    text:'tapunto-voz te permite controlar el ordenador completamente con la voz.\n\nHabla con claridad y en español. El programa escucha constantemente y ejecuta los comandos que reconoce.\n\nEste tutorial te guiará por los conceptos básicos en 6 pasos.' },
+  { icon:'📐', title:'La rejilla',
+    text:'Di «rejilla» para mostrar una cuadrícula sobre toda la pantalla.\n\nCada celda tiene una coordenada: letra (A–N) + número (1–15).\n\nPor ejemplo, la celda del centro podría ser «G 8».\n\nDi «ocultar rejilla» para quitarla o pulsa F8.' },
+  { icon:'🖱', title:'Mover el cursor y hacer clic',
+    text:'Para mover el cursor a una celda, di su coordenada:\n\n     «A 5»   →  mueve el cursor\n     «clic A 5»   →  clic izquierdo\n     «doble A 5»   →  doble clic\n     «clic derecho A 5»   →  clic derecho\n\nNota: la columna I no existe (Google la confunde con la Y). Usa J en su lugar.' },
+  { icon:'🔍', title:'Zoom — selección precisa',
+    text:'Si dos elementos están en la misma celda, usa el zoom:\n\n     «zoom A 5»  →  amplía la celda A5 en 4 subceldas\n\nLuego di el símbolo de la subcelda:\n     ◆ «diamante»  →  arriba izquierda\n     ● «círculo»   →  arriba derecha\n     ▲ «triángulo» →  abajo izquierda\n     ★ «estrella»  →  abajo derecha' },
+  { icon:'📝', title:'Modo dictado — escribir con la voz',
+    text:'Para escribir texto en cualquier aplicación:\n\n     «texto»   →  activa el modo dictado\n\nHabla y el programa escribe. Para puntuación di:\n     «punto»  «coma»  «interrogación»  «exclamación»\n     «dos puntos»  «nueva línea»  «párrafo»\n\n     «fin texto»  →  desactiva el dictado' },
+  { icon:'🗣', title:'Personaliza tu voz',
+    text:'El programa puede aprender cómo TÚ pronuncias cada comando.\n\nPulsa «Grabar Voz» en la barra inferior, graba tu pronunciación y vincúlala a la acción.\n\nComandos útiles:\n     «ayuda»     →  ver todos los comandos\n     «historial» →  últimos 12 comandos\n     «dormir» / «despierta»  →  pausar y reactivar\n     «socorro»   →  parada de emergencia' },
+];
+
+let step = 0;
+
+function renderTut() {
+  const s = STEPS[step];
+  document.getElementById('tut-icon').textContent = s.icon;
+  document.getElementById('tut-title').textContent = s.title;
+  document.getElementById('tut-label').textContent = `Paso ${step+1} de ${STEPS.length}`;
+  document.getElementById('tut-text').textContent = s.text;
+
+  // Dots
+  const dotsEl = document.getElementById('tut-dots');
+  dotsEl.innerHTML = '';
+  STEPS.forEach((_, i) => {
+    const d = document.createElement('div');
+    d.className = 'tut-dot' + (i === step ? ' active' : '');
+    d.onclick = () => { step = i; renderTut(); };
+    dotsEl.appendChild(d);
+  });
+
+  document.getElementById('btn-prev').disabled = step === 0;
+  const btnNext = document.getElementById('btn-next');
+  btnNext.textContent = step === STEPS.length-1 ? '¡Empezar! ✓' : 'Siguiente ▶';
+  btnNext.style.background = step === STEPS.length-1 ? '#1E6B3A' : '#1565C0';
+}
+
+function tutPrev() { if (step > 0) { step--; renderTut(); } }
+function tutNext() {
+  if (step < STEPS.length-1) { step++; renderTut(); }
+  else { showTabDirect('descripcion'); }
+}
+
+function showTabDirect(name) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('panel-' + name).classList.add('active');
+  document.querySelector('.tab').classList.add('active');
+}
+
+// Inicializar tutorial
+renderTut();
+</script>
 
 </body>
 </html>
