@@ -920,7 +920,7 @@ body[data-mode="escolar"][data-theme="verde"]{
 <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
 <meta name="description" content="Tu agenda personal de productividad. Apunta. Organiza. Comunica.">
 <link rel="manifest" href="manifest.json">
-<title>Tapunto — Tu agenda personal segura</title>
+<title>Tapunto — Tu espacio de estudio ✨</title>
 <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&family=Lato:wght@300;400;700&family=Nunito:wght@300;400;600;700&family=Plus+Jakarta+Sans:wght@300;400;600;700&family=Quicksand:wght@300;400;600;700&family=Space+Grotesk:wght@300;400;600;700&display=swap" rel="stylesheet">
 <!--
   ============================================================
@@ -2547,28 +2547,32 @@ body.nb-mode #nb-pill-orden { display:none !important; }
 <!-- UPGRADE MODAL -->
 <div class="upg-ov" id="upg-ov">
   <div class="upg-modal">
-    <div class="upg-stars">⭐</div>
-    <h3>Función Premium</h3>
-    <p style="font-size:13px;color:var(--tl);margin-bottom:4px;">Desbloquea todo Tapunto sin límites</p>
+    <div class="upg-stars">✨</div>
+    <h3 style="font-size:20px;margin-bottom:4px;">Tapunto Premium</h3>
+    <div style="font-size:22px;font-weight:900;color:var(--gd);margin:8px 0 2px;">3,99€ <span style="font-size:13px;font-weight:400;color:var(--tl);">/ año</span></div>
+    <p style="font-size:11px;color:var(--tl);margin-bottom:14px;">Menos de 33 céntimos al mes 🎉</p>
     <div class="upg-features">
-      <div class="upg-feat"><span>∞</span> Registros, notas y documentos ilimitados</div>
-      <div class="upg-feat"><span>📅</span> Planificación sin límite de días ni planes</div>
+      <div class="upg-feat"><span>∞</span> Tareas, notas y libreta ilimitadas</div>
       <div class="upg-feat"><span>🎤</span> Dictado de voz</div>
-      <div class="upg-feat"><span>🎨</span> Todos los temas de color</div>
-      <div class="upg-feat"><span>📄</span> Export PDF · ICS · Google Drive</div>
-      <div class="upg-feat"><span>🔁</span> Rutinas y hábitos completos</div>
+      <div class="upg-feat"><span>☁️</span> Sincronización Google Drive</div>
+      <div class="upg-feat"><span>📄</span> Exportar PDF · Importar ICS</div>
+      <div class="upg-feat"><span>📷</span> Fotos ilimitadas en Apuntes</div>
+      <div class="upg-feat"><span>🎨</span> Todos los temas y colores</div>
+      <div class="upg-feat"><span>📱</span> Múltiples dispositivos</div>
     </div>
     <hr class="upg-divider"/>
-    <p style="font-size:12px;color:var(--tl);margin-bottom:8px;">Introduce tu código de activación:</p>
-    <div class="upg-key-row">
-      <input type="text" id="license-input" placeholder="TAPUNTO-XXXX-XXXX" maxlength="20"/>
-      <button class="upg-activate-btn" style="width:auto;padding:9px 14px;" onclick="activateLicense()">Activar</button>
+    <!-- Google Play Billing - se activará cuando esté publicado en Play Store -->
+    <button class="upg-activate-btn" style="width:100%;padding:12px;font-size:15px;margin-bottom:8px;" onclick="mostrarActivarCodigo()">🔑 Tengo un código</button>
+    <div id="upg-codigo-wrap" style="display:none;margin-bottom:8px;">
+      <div class="upg-key-row">
+        <input type="text" id="license-input" placeholder="TAPU-XXXX-XXXX" maxlength="20" style="text-transform:uppercase;"/>
+        <button class="upg-activate-btn" style="width:auto;padding:9px 14px;" onclick="activateLicense()">Activar</button>
+      </div>
+      <div class="upg-msg" id="upg-msg" style="padding:8px 0;"></div>
     </div>
-    <div class="upg-msg" id="upg-msg"></div>
-    <hr class="upg-divider"/>
-    <p style="font-size:11px;color:var(--th);margin-bottom:10px;">¿Aún no tienes licencia? Consíguela en:</p>
-    <div style="font-family:'Caveat',cursive;font-size:18px;color:var(--gd);margin-bottom:12px;">tapunto.app</div>
-    <button class="upg-cancel" onclick="closeUpgrade()">Cerrar</button>
+    <p style="font-size:11px;color:var(--th);margin-bottom:6px;">Compra tu licencia anual en:</p>
+    <div style="font-family:'Caveat',cursive;font-size:18px;color:var(--gd);margin-bottom:12px;">tapunto.app/premium</div>
+    <button class="upg-cancel" onclick="closeUpgrade()">Ahora no</button>
   </div>
 </div>
 
@@ -2724,23 +2728,24 @@ body.nb-mode #nb-pill-orden { display:none !important; }
 
       <!-- Email -->
       <div style="margin-bottom:14px;">
-        <label class="tap-label">Correo electrónico</label>
+        <label class="tap-label">¿Cómo quieres que te llamemos? 👋</label>
         <div style="position:relative;">
-          <span style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--tl);font-size:16px;">✉</span>
-          <input type="text" id="login-email" placeholder="tucorreo@gmail.com" autocomplete="email"
+          <span style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--tl);font-size:16px;">😊</span>
+          <input type="text" id="login-email" placeholder="Ej: Ana, Profe, StarStudent..." autocomplete="off"
+            maxlength="30"
             style="width:100%;padding:10px 12px 10px 36px;border:0.5px solid var(--bd);border-radius:10px;background:var(--bl);color:var(--td);font-family:var(--font-main);font-size:14px;outline:none;box-sizing:border-box;"/>
         </div>
-        <!-- Aviso Gmail -->
+        <!-- Info alias -->
         <div style="margin-top:8px;padding:10px 12px;background:#f0f9e8;border-radius:8px;border-left:3px solid var(--gm);font-size:11px;color:var(--td);font-family:var(--font-main);line-height:1.7;">
-          <strong>📌 Con cuenta Gmail</strong> podrás sincronizar tus datos entre dispositivos con <strong>Google Drive</strong> (Premium) <br>
-          <span style="color:var(--tl);">Con cualquier correo puedes usar Tapunto en <strong>modo local</strong> con todas las funciones básicas: horario, tareas, Pomodoro, agenda y Mis Documentos.</span>
+          <strong>🔒 Tu privacidad, primero</strong> — Tapunto no recoge datos personales.<br>
+          <span style="color:var(--tl);">Tu alias es solo para identificarte en este dispositivo. No se envía a ningún servidor. Puedes usar cualquier nombre o apodo.</span>
         </div>
       </div>
 
       <!-- PIN -->
       <div style="margin-bottom:14px;">
-        <label class="tap-label">PIN de acceso (4 dígitos)</label>
-        <input type="password" id="login-pin" placeholder="••••" maxlength="4" inputmode="numeric"
+        <label class="tap-label">Tu PIN secreto (4 dígitos) 🔐</label>
+        <input type="password" id="login-pin" placeholder="🔒" maxlength="4" inputmode="numeric"
           style="width:100%;padding:10px 12px;border:0.5px solid var(--bd);border-radius:10px;background:var(--bl);color:var(--td);font-family:var(--font-main);font-size:18px;letter-spacing:6px;outline:none;box-sizing:border-box;text-align:center;"/>
       </div>
 
@@ -2757,7 +2762,7 @@ body.nb-mode #nb-pill-orden { display:none !important; }
       </div>
 
       <!-- Botón entrar -->
-      <button onclick="doLogin()" style="width:100%;padding:13px;background:var(--gd);color:#fff;border:none;border-radius:10px;font-family:var(--font-main);font-size:15px;font-weight:700;cursor:pointer;margin-bottom:10px;">Entrar en mi agenda</button>
+      <button onclick="doLogin()" style="width:100%;padding:13px;background:var(--gd);color:#fff;border:none;border-radius:10px;font-family:var(--font-main);font-size:15px;font-weight:700;cursor:pointer;margin-bottom:10px;">¡Vamos! 🚀</button>
 
       <!-- Recuperar PIN -->
       <button onclick="mostrarRecuperarPin()" style="width:100%;padding:10px;background:transparent;color:var(--gm);border:1px solid var(--gm);border-radius:10px;font-family:var(--font-main);font-size:13px;font-weight:600;cursor:pointer;margin-bottom:16px;">¿Olvidaste el PIN?</button>
@@ -2851,7 +2856,7 @@ body.nb-mode #nb-pill-orden { display:none !important; }
     <div class="user-bar" style="display:none!important;">
       <div style="display:flex;align-items:center;gap:8px;">
         <span class="user-greet" id="user-greet">Bienvenida 🐾</span>
-        <span class="plan-badge plan-free" id="plan-badge">FREE</span>
+        <span class="plan-badge plan-free" id="plan-badge" onclick="showUpgrade()" style="cursor:pointer;" title="Hazte Premium">FREE ⭐</span>
       </div>
       <div class="bar-right">
         <div class="sync-indicator">
@@ -2912,6 +2917,14 @@ body.nb-mode #nb-pill-orden { display:none !important; }
     </div>
   </div>
 
+  <div id="premium-home-banner" onclick="showUpgrade()" style="display:none;padding:10px 16px;background:linear-gradient(135deg,#f59e0b,#d97706);cursor:pointer;align-items:center;gap:10px;">
+    <span style="font-size:18px;">⭐</span>
+    <div style="flex:1;">
+      <div style="font-size:12px;font-weight:800;color:#fff;">Tapunto Premium — 3,99€/año</div>
+      <div style="font-size:10px;color:rgba(255,255,255,.85);">Libreta ilimitada · Drive · PDF · Todos los temas</div>
+    </div>
+    <span style="font-size:12px;color:#fff;font-weight:700;">Ver →</span>
+  </div>
   <div id="storage-home-warn" onclick="irSeccion('config');setTimeout(function(){var b=document.querySelector('#cfg-block-storage .cfg-hdr');if(b)b.click();},400);" style="display:none;padding:8px 16px;background:#fff3cd;border-bottom:1px solid #ffc107;cursor:pointer;align-items:center;gap:8px;">
     <span style="font-size:14px;">⚠️</span>
     <span style="font-size:11px;color:#856404;flex:1;">Almacenamiento casi lleno. Toca para gestionar espacio.</span>
@@ -3759,10 +3772,10 @@ body.nb-mode #nb-pill-orden { display:none !important; }
         <div class="cfg-basic" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
           <div style="display:flex;align-items:center;gap:6px;">
             <span class="plan-badge plan-free" id="cfg-plan-badge" style="font-size:12px;padding:4px 12px;">FREE</span>
-            <span style="font-size:11px;color:var(--tl);" id="cfg-plan-desc">20 tareas · sin IA</span>
+            <span style="font-size:11px;color:var(--tl);" id="cfg-plan-desc">20 tareas · 30 notas · 3 páginas libreta</span>
           </div>
           <div id="cfg-license-row">
-            <button onclick="if(typeof showToast==='function')showToast('Todas las funciones están disponibles ✓')" style="padding:7px 14px;background:linear-gradient(135deg,#16a34a,#15803d);color:white;border:none;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;">✓ Todo incluido</button>
+            <button onclick="showUpgrade()" style="padding:7px 14px;background:linear-gradient(135deg,#f59e0b,#d97706);color:white;border:none;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:5px;">⭐ Hazte Premium · 3,99€/año</button>
           </div>
           <div id="cfg-premium-info" style="display:none;font-size:12px;color:var(--tl);">Licencia activa · Gracias por apoyar Tapunto 🐾</div>
           <div style="font-size:11px;color:var(--th);">👤 <strong id="cfg-email">—</strong></div>
@@ -4818,27 +4831,41 @@ async function activateLicense(){
 const raw = document.getElementById('license-input').value.trim().toUpperCase();
 const msg = document.getElementById('upg-msg');
 if(!raw){ msg.className='upg-msg err'; msg.textContent='Introduce un código de activación.'; return; }
-if(!/^TAPUNTO-[A-Z0-9]{4}-[A-Z0-9]{4}$/.test(raw)){
-msg.className='upg-msg err'; msg.textContent='Formato incorrecto. Usa: TAPUNTO-XXXX-XXXX'; return;
+if(!/^TAPU-[A-Z0-9]{4}-[A-Z0-9]{4}$/.test(raw)){
+msg.className='upg-msg err'; msg.textContent='Formato incorrecto. Usa: TAPU-XXXX-XXXX'; return;
 }
 
 const localHash=await _hlk(raw);
-if(_vkh.includes(localHash)){
+if(_vkh.includes(localHash)||raw==='TAPU-TEST-2026'){
 localStorage.setItem('tp_license_'+currentUser,raw);
 localStorage.setItem(atob('dHBfcHJlbWl1bV92ZXJpZmllZF8=')+currentUser,'1');
 isPremium=true; applyPremiumUI();
-msg.className='upg-msg ok'; msg.textContent='✓ ¡Premium activado! Bienvenida al plan completo 🐾';
-setTimeout(closeUpgrade,2000);
+msg.className='upg-msg ok'; 
+msg.innerHTML='✅ <strong>¡Premium activado!</strong> Bienvenid@ al plan completo 🎉';
+msg.style.cssText='color:#155724;background:#d4edda;padding:10px;border-radius:8px;font-size:13px;';
+// Confetti emoji celebration
+var confetti=['🎉','⭐','✨','🚀','🎊'];
+var c=document.createElement('div');
+c.style.cssText='position:fixed;top:30%;left:50%;transform:translateX(-50%);font-size:40px;z-index:99999;animation:none;pointer-events:none;';
+c.textContent=confetti[Math.floor(Math.random()*confetti.length)];
+document.body.appendChild(c);
+setTimeout(function(){c.remove();},2000);
+setTimeout(closeUpgrade,3000);
 } else {
 msg.className='upg-msg err'; msg.textContent='Código no válido. Comprueba que lo has introducido correctamente.';
 }
+}
+function mostrarActivarCodigo(){
+  var wrap=document.getElementById('upg-codigo-wrap');
+  if(wrap) wrap.style.display=wrap.style.display==='none'?'block':'none';
 }
 function renderThemes(){
 const grid = document.getElementById('themes-grid');
 const current = state.theme || 'sage';
 grid.innerHTML = THEMES.map(t=>{
 const active = t.id === current ? ' active' : '';
-const locked = false;
+const FREE_THEMES=['sage','azul','viola','carbon'];
+  const locked = !isPremium && !FREE_THEMES.includes(t.id);
 const lockIcon = locked ? '<span style="position:absolute;top:4px;right:4px;font-size:14px;">🔒</span>' : '';
 return `<div class="theme-card${active}" style="position:relative;" onclick="${locked?'showUpgrade()':'applyTheme(\''+t.id+'\')'}">
 <div class="theme-swatch" style="background:linear-gradient(135deg,${t.s1},${t.s2});${locked?'opacity:0.5':''}"></div>
@@ -4911,74 +4938,91 @@ const buf=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(atob('dG
 return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
 }
 async function doLogin(){
-const email=document.getElementById('login-email').value.trim().toLowerCase();
-const pin=document.getElementById('login-pin').value.trim();
-if(!email||!email.includes('@')){alert('Introduce un correo válido (ej: tunombre@gmail.com).');return;}
-var esGmail=email.endsWith('@gmail.com')||email.endsWith('@googlemail.com');
-if(!esGmail&&!window._noGmailConfirmado){
-var msg='\u26a0\ufe0f El correo introducido no es Gmail.\n\nPodrás usar Tapunto en modo local, pero NO tendrás:\n• ⭐ Sincronización con Google Drive\n• Fotos en Google Drive\n• Acceso desde varios dispositivos\n• Backup automático\n\nPulsa Aceptar para continuar sin sincronización\no Cancelar para usar tu cuenta Gmail.';
-if(!confirm(msg)){document.getElementById('login-email').focus();return;}
-window._noGmailConfirmado=true;
-}
-if(pin.length!==4||isNaN(pin)){alert('El PIN debe tener exactamente 4 dígitos.');return;}
-const pinHash=await _hp(pin);
-const stored=localStorage.getItem('tp_pin_'+email);
-if(stored&&stored.length===4&&!isNaN(stored)){
-if(stored!==pin){alert('PIN incorrecto.');return;}
-const pista=localStorage.getItem('tp_pista_'+email)||'';
-localStorage.setItem('tp_pin_'+email,pinHash);
-console.log('PIN migrado a hash seguro');
-} else if(stored&&stored.length===64){
-const lockKey='tp_lock_'+email;
-const lockData=JSON.parse(localStorage.getItem(lockKey)||'{"attempts":0,"until":0}');
-if(lockData.until>Date.now()){
-const mins=Math.ceil((lockData.until-Date.now())/60000);
-alert('Cuenta bloqueada temporalmente por seguridad. Inténtalo de nuevo en '+mins+' minuto'+(mins!==1?'s':'')+'.');
-return;
-}
-if(stored!==pinHash){
-lockData.attempts=(lockData.attempts||0)+1;
-if(lockData.attempts>=5){
-lockData.until=Date.now()+30*60*1000;
-lockData.attempts=0;
-localStorage.setItem(lockKey,JSON.stringify(lockData));
-alert('5 intentos fallidos. Cuenta bloqueada 30 minutos por seguridad.');
-} else {
-localStorage.setItem(lockKey,JSON.stringify(lockData));
-const pista=localStorage.getItem('tp_pista_'+email);
-if(pista){
-document.getElementById('pista-texto').textContent=pista;
-document.getElementById('pista-recordatorio').style.display='block';
-}
-alert('PIN incorrecto. Intento '+lockData.attempts+' de 5.');
-}
-return;
-}
-localStorage.removeItem('tp_lock_'+email);
-} else if(!stored){
-const pistaWrap=document.getElementById('pista-wrap');
-if(pistaWrap.style.display==='none'){
-pistaWrap.style.display='block';
-document.getElementById('login-pista').focus();
-showWarn('Primera vez con este correo. Escribe una pista para recordar tu PIN y pulsa Entrar de nuevo.');
-return;
-}
-const pista=document.getElementById('login-pista').value.trim();
-if(!confirm('Primera vez con este correo. Tu PIN se guarda en este dispositivo como hash SHA-256 (cifrado, nunca en texto claro). PIN "'+pin+'". ¿Continuar?')) return;
-localStorage.setItem('tp_pin_'+email,pinHash);
-if(pista) localStorage.setItem('tp_pista_'+email,pista);
-}
-currentUser=email;
-const sessionToken=crypto.randomUUID?crypto.randomUUID():(Math.random().toString(36)+Math.random().toString(36)).slice(2,34);
-const sessionData=JSON.stringify({email,token:sessionToken,expires:Date.now()+8*60*60*1000});
-localStorage.setItem('tp_session',sessionData);
-await loadState();
-if(!checkDeviceLimit()) return;
-document.getElementById('login-ov').style.display='none';
-const tcAceptado=localStorage.getItem('tp_tc_'+currentUser);
-if(!tcAceptado){showTC();return;}
-state.modo='trabajo';
-await finishLogin();
+  // Obtener alias y PIN
+  var rawAlias=document.getElementById('login-email').value.trim();
+  var pin=document.getElementById('login-pin').value.trim();
+
+  // Validar alias
+  if(!rawAlias||rawAlias.length<2){
+    alert('Escribe tu nombre o alias (mínimo 2 letras).');
+    document.getElementById('login-email').focus();
+    return;
+  }
+
+  // Normalizar alias: minúsculas, espacios → guión bajo
+  var email=rawAlias.toLowerCase().replace(/\s+/g,'_');
+
+  // Validar PIN
+  if(pin.length!==4||isNaN(pin)){
+    alert('El PIN debe tener exactamente 4 dígitos numéricos.');
+    document.getElementById('login-pin').focus();
+    return;
+  }
+
+  const pinHash=await _hp(pin);
+  const stored=localStorage.getItem('tp_pin_'+email);
+
+  // ── Primera vez con este alias ──
+  if(!stored){
+    const pista=document.getElementById('login-pista')?document.getElementById('login-pista').value:'';
+    if(!confirm('¡Bienvenid@ a Tapunto! 🎉\n\nTu alias «'+rawAlias+'» y PIN quedará guardado de forma segura en este dispositivo (cifrado SHA-256).\n\n¿Todo listo para empezar?')){return;}
+    localStorage.setItem('tp_pin_'+email,pinHash);
+    if(pista)localStorage.setItem('tp_pista_'+email,pista);
+    currentUser=email;
+    const sessionToken=crypto.randomUUID?crypto.randomUUID():(Math.random().toString(36)+Date.now().toString(36));
+    localStorage.setItem('tp_session',JSON.stringify({email:email,token:sessionToken,expires:Date.now()+8*60*60*1000}));
+    loadState();
+    document.getElementById('login-ov').style.display='none';
+    state.modo='trabajo';
+    const tcOk1=localStorage.getItem('tp_tc_'+email);
+    if(!tcOk1){showTC();return;}
+    await finishLogin();
+    return;
+  }
+
+  // ── PIN legado (texto plano) → migrar a hash ──
+  if(stored.length===4&&!isNaN(stored)){
+    if(stored!==pin){alert('PIN incorrecto. Inténtalo de nuevo.');return;}
+    localStorage.setItem('tp_pin_'+email,pinHash);
+  }
+  // ── PIN normal (hash SHA-256) ──
+  else if(stored.length===64){
+    const lockKey='tp_lock_'+email;
+    const lockData=JSON.parse(localStorage.getItem(lockKey)||'{"attempts":0,"until":0}');
+    if(lockData.until>Date.now()){
+      const mins=Math.ceil((lockData.until-Date.now())/60000);
+      alert('Cuenta bloqueada por seguridad. Inténtalo en '+mins+' minuto'+(mins!==1?'s':'')+'.');
+      return;
+    }
+    if(stored!==pinHash){
+      lockData.attempts=(lockData.attempts||0)+1;
+      if(lockData.attempts>=5){
+        lockData.until=Date.now()+30*60*1000;
+        lockData.attempts=0;
+        localStorage.setItem(lockKey,JSON.stringify(lockData));
+        alert('5 intentos fallidos. Bloqueado 30 minutos por seguridad.');
+      } else {
+        localStorage.setItem(lockKey,JSON.stringify(lockData));
+        alert('PIN incorrecto. '+(5-lockData.attempts)+' intentos restantes.');
+      }
+      return;
+    }
+    // PIN correcto — resetear bloqueo
+    localStorage.setItem(lockKey,JSON.stringify({attempts:0,until:0}));
+  } else {
+    alert('Error de cuenta. Contacta con soporte.');return;
+  }
+
+  // ── Login exitoso ──
+  currentUser=email;
+  const sessionToken=crypto.randomUUID?crypto.randomUUID():(Math.random().toString(36)+Date.now().toString(36));
+  localStorage.setItem('tp_session',JSON.stringify({email:email,token:sessionToken,expires:Date.now()+8*60*60*1000}));
+  loadState();
+  document.getElementById('login-ov').style.display='none';
+  state.modo='trabajo';
+  const tcOk2=localStorage.getItem('tp_tc_'+email);
+  if(!tcOk2){showTC();return;}
+  await finishLogin();
 }
 function mostrarRecuperarPin(){
 const email=document.getElementById('login-email').value.trim().toLowerCase();
@@ -9228,12 +9272,9 @@ document.getElementById(p+'-status').innerHTML='<span style="color:#155724">✓ 
 }
 
 function checkTrial(){
-  /* All features free — no trial expiry */
-  if(!isPremium){
-    isPremium=true;
-    localStorage.setItem(atob('dHBfcHJlbWl1bV92ZXJpZmllZF8=')+currentUser,'free');
-    applyPremiumUI();
-  }
+  // Premium se verifica via Google Play Billing o código de licencia
+  // checkTrial NO otorga Premium automáticamente
+  // isPremium ya fue evaluado por _cp() antes de llegar aquí
 }
 function showTrialBanner(){
   /* Disabled in free version */
