@@ -145,37 +145,7 @@ body[data-theme="lila"]{
   --cover1:#2e1065;--cover2:#4c1d95;--cover3:#7c3aed;--cover4:#ddd6fe;
   --ring1:#7c3aed;--nbspine:var(--gd);--nbspine2:var(--gm);--nbspine3:var(--gl);
   --body-bg:#ede9fe;}
-body[data-theme="cottagecore"]{
-  --bg:#f5f0e8;--w:#fffef9;--bl:#f0ece0;--bd:#d4c9a8;
-  --td:#3d2b1f;--tl:#7a6048;--th:#8fbc8f;
-  --gm:#6b8f5e;--gd:#4a6e41;--ga:#8fbc8f;--gn:#cd5c5c;--bp:#f0ece0;
-  --tm:#3d2b1f;
-}
-[data-theme="darkacademia"]{
-  --bg:#1a0f0a;--w:#2c1810;--bl:#3d2314;--bd:#5c3d1e;
-  --td:#e8d5b7;--tl:#c4a882;--th:#8b6914;
-  --gm:#8b6914;--gd:#a07820;--ga:#6b9e4a;--gn:#e74c3c;--bp:#3d2314;
-  --tm:#f0e0c0;
-}
-[data-theme="y2k"]{
-  --bg:#0a0015;--w:#1a0028;--bl:#250035;--bd:#7c3aed;
-  --td:#f0e6ff;--tl:#c084fc;--th:#a855f7;
-  --gm:#ec4899;--gd:#db2777;--ga:#22c55e;--gn:#ef4444;--bp:#250035;
-  --tm:#f0e6ff;
-}
-[data-theme="pastel"]{
-  --bg:#fff0f5;--w:#ffffff;--bl:#fff5f8;--bd:#fecdd3;
-  --td:#5b1f52;--tl:#9d5c8c;--th:#c084fc;
-  --gm:#f472b6;--gd:#ec4899;--ga:#86efac;--gn:#f87171;--bp:#fce7f3;
-  --tm:#5b1f52;
-}
-[data-theme="midnight"]{
-  --bg:#020817;--w:#0f172a;--bl:#1e293b;--bd:#334155;
-  --td:#e2e8f0;--tl:#94a3b8;--th:#0ea5e9;
-  --gm:#0ea5e9;--gd:#0284c7;--ga:#22c55e;--gn:#ef4444;--bp:#1e293b;
-  --tm:#e2e8f0;
-}
-[data-theme="minimal"]{
+body[data-theme="minimal"]{
   --gd:#111827;--gm:#374151;--gl:#6b7280;--ga:#9ca3af;
   --bd:#e5e7eb;--bm:#f3f4f6;--bl:#f9fafb;--bp:#ffffff;--w:#ffffff;
   --bc:#374151;--bcl:#6b7280;--bcp:#e5e7eb;
@@ -2954,28 +2924,12 @@ body.nb-mode #nb-pill-orden { display:none !important; }
     </div>
     <span style="font-size:12px;color:#fff;font-weight:700;">Ver →</span>
   </div>
-  <button onclick="mostrarEstadisticas()" style="display:flex;align-items:center;gap:10px;width:100%;padding:10px 16px;background:none;border:none;border-bottom:1px solid var(--bd);cursor:pointer;font-family:var(--font-main);">
-    <span style="font-size:20px;">📊</span>
-    <div style="flex:1;text-align:left;">
-      <div style="font-size:12px;font-weight:800;color:var(--td);">Mi semana de estudio</div>
-      <div id="home-stats-preview" style="font-size:11px;color:var(--tl);">Toca para ver estadísticas</div>
-    </div>
-    <span style="font-size:14px;color:var(--tl);">›</span>
-  </button>
   <div id="storage-home-warn" onclick="irSeccion('config');setTimeout(function(){var b=document.querySelector('#cfg-block-storage .cfg-hdr');if(b)b.click();},400);" style="display:none;padding:8px 16px;background:#fff3cd;border-bottom:1px solid #ffc107;cursor:pointer;align-items:center;gap:8px;">
     <span style="font-size:14px;">⚠️</span>
     <span style="font-size:11px;color:#856404;flex:1;">Almacenamiento casi lleno. Toca para gestionar espacio.</span>
     <span style="font-size:11px;color:#856404;font-weight:700;">Ver →</span>
   </div>
-  <div id="home-cita" style="padding:12px 16px;min-height:48px;display:flex;flex-direction:column;justify-content:center;background:#f0f0f0;border-bottom:1px solid #ddd;">
-  <div style="display:flex;align-items:center;gap:10px;">
-    <span style="font-size:18px;flex-shrink:0;">✨</span>
-    <div>
-      <div style="font-family:Caveat,cursive;font-size:15px;line-height:1.4;color:#111;font-weight:600;">"El éxito es la suma de pequeños esfuerzos repetidos cada día."</div>
-      <div style="font-family:var(--font-main);font-size:10px;color:#555;margin-top:2px;">— R. Collier</div>
-    </div>
-  </div>
-</div>
+  <div id="home-cita"  style="padding:8px 16px;min-height:44px;display:flex;flex-direction:column;justify-content:center;background:rgba(0,0,0,.08);border-bottom:1px solid rgba(255,255,255,.1);"></div>
   <!-- SECCIÓN HORARIO HOY — siempre visible sin tabs -->
   <div id="home-horario-hoy" style="background:var(--bp);border-bottom:1px solid var(--bd);padding:6px 10px 8px;">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px;">
@@ -2990,20 +2944,7 @@ body.nb-mode #nb-pill-orden { display:none !important; }
         <button onclick="horarioPDF()" id="btn-pdf-horario" style="background:var(--bl);border:1px solid var(--bd);border-radius:6px;padding:3px 8px;font-size:11px;color:var(--tl);cursor:pointer;font-family:var(--font-main);">PDF</button>
       </div>
     </div>
-    <div id="home-horario-wrap" style="overflow-x:auto;border-radius:8px;border:1px solid var(--bd);background:var(--w);min-height:80px;">
-<table class="h-table"><thead><tr>
-<th class="h-th-hora">Hora</th>
-<th>Lunes</th><th>Martes</th><th>Miércoles</th><th>Jueves</th><th>Viernes</th>
-</tr></thead><tbody>
-<tr><td class="h-td-hora">8:00</td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td class="h-td-hora">9:00</td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td class="h-td-hora">10:00</td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td class="h-td-hora">11:00</td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td class="h-td-hora">12:00</td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td class="h-td-hora">13:00</td><td></td><td></td><td></td><td></td><td></td></tr>
-<tr><td class="h-td-hora">14:00</td><td></td><td></td><td></td><td></td><td></td></tr>
-</tbody></table>
-</div>
+    <div id="home-horario-wrap" style="overflow-x:auto;border-radius:8px;border:1px solid var(--bd);background:var(--w);"></div>
     <div id="home-h-add-slot" style="display:none;text-align:center;margin-top:4px;">
       <button onclick="hAgregarSlot()" style="background:var(--gd);color:#fff;border:none;border-radius:6px;padding:4px 12px;font-size:12px;cursor:pointer;font-family:var(--font-main);">+ Franja horaria</button>
       <button onclick="hOrdenarSlots()" style="background:var(--bl);color:var(--tm);border:1px solid var(--bd);border-radius:6px;padding:4px 10px;font-size:12px;cursor:pointer;font-family:var(--font-main);margin-left:4px;">Ordenar</button>
@@ -3016,24 +2957,22 @@ body.nb-mode #nb-pill-orden { display:none !important; }
 
     <!-- FILA ACCESOS RÁPIDOS -->
     <div style="display:flex;gap:8px;margin-bottom:8px;">
-      <button onclick="irSeccion('calendario')" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 6px;background:var(--w);border:1.5px solid var(--bd);border-radius:12px;cursor:pointer;font-family:var(--font-main);">
-        <span style="font-size:26px;line-height:1;">📅</span>
-        <div style="font-size:12px;font-weight:700;color:var(--td);">Mi Calendario</div>
-        <div style="font-size:10px;color:var(--tl);">Mensual · Semanal</div>
+      <button onclick="irSeccion('calendario')" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 4px;background:var(--w);border:1.5px solid var(--bd);border-radius:12px;cursor:pointer;font-family:var(--font-main);">
+        <span style="font-size:24px;line-height:1;">📅</span>
+        <div style="font-size:11px;font-weight:700;color:var(--td);">Calendario</div>
       </button>
-      <button onclick="irSeccion('calificaciones')" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 6px;background:var(--w);border:1.5px solid var(--bd);border-radius:12px;cursor:pointer;font-family:var(--font-main);">
-        <span style="font-size:26px;line-height:1;">📋</span>
-        <div style="font-size:12px;font-weight:700;color:var(--td);">Mis Calificaciones</div>
-        <div style="font-size:10px;color:var(--tl);" id="home-calif-resumen">Notas y exámenes</div>
+      <button onclick="irSeccion('calificaciones')" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 4px;background:var(--w);border:1.5px solid var(--bd);border-radius:12px;cursor:pointer;font-family:var(--font-main);">
+        <span style="font-size:24px;line-height:1;">📋</span>
+        <div style="font-size:11px;font-weight:700;color:var(--td);">Notas</div>
+        <div style="font-size:9px;color:var(--tl);" id="home-calif-resumen"></div>
+      </button>
+      <button onclick="irSeccion('libreta')" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 4px;background:var(--w);border:1.5px solid var(--bd);border-radius:12px;cursor:pointer;font-family:var(--font-main);">
+        <span style="font-size:24px;line-height:1;">📓</span>
+        <div style="font-size:11px;font-weight:700;color:var(--td);">Libreta</div>
       </button>
     </div>
     
-    <!-- Mi Libreta -->
-    <button onclick="irSeccion('libreta')" style="width:100%;margin-bottom:8px;display:flex;align-items:center;gap:10px;padding:11px 14px;background:var(--w);border:1.5px solid var(--bd);border-radius:12px;cursor:pointer;text-align:left;font-family:var(--font-main);">
-      <span style="font-size:26px;line-height:1;flex-shrink:0;">📓</span>
-      <div style="flex:1;min-width:0;"><div style="font-size:13px;font-weight:700;color:var(--td);">Mi Libreta</div><div style="font-size:11px;color:var(--tl);">Dibujar · Escribir · Guardar por día</div></div>
-      <span style="font-size:18px;color:var(--tl);">›</span>
-    </button>
+    
     <!-- Pomodoro hoy (compacto) -->
     <div id="home-pom-strip" style="display:none;background:var(--w);border:1px solid var(--bd);border-radius:8px;padding:6px 10px;margin-bottom:8px;cursor:pointer;" onclick="irSeccion('estudio')">
       <div style="font-size:10px;font-weight:700;color:var(--tm);font-family:var(--font-main);">🕐 Pomodoro hoy</div>
@@ -3205,67 +3144,121 @@ body.nb-mode #nb-pill-orden { display:none !important; }
       <button class="tap-header-btn" onclick="libMenuCompartir()" style="flex-direction:column;gap:1px;"><span style="font-size:16px;line-height:1;">📤</span><span style="font-size:7px;font-family:var(--font-main);">Compartir</span></button>
     </div>
   </div>
-  <div id="lib-toolbar" style="display:flex;align-items:center;gap:4px;padding:5px 8px;background:var(--w);border-bottom:1px solid var(--bd);overflow-x:auto;flex-shrink:0;">
-    <!-- Herramientas de dibujo -->
-    <button class="lib-tool active" id="lt-lapiz" onclick="libSetTool('lapiz',this)" title="Lápiz">✏️</button>
-    <button class="lib-tool" id="lt-boli" onclick="libSetTool('boli',this)" title="Bolígrafo">🖊</button>
-    <button class="lib-tool" id="lt-sel" onclick="libSetTool('seleccion',this)" title="Seleccionar" style="font-size:12px;font-weight:900;color:#222;">⬚</button>
-    <button class="lib-tool" id="lt-text" onclick="libSetTool('texto',this)" title="Texto" style="font-weight:900;font-size:14px;color:#222;">T</button>
-    <!-- Controles de estilo texto (solo visibles en modo texto) -->
-    <div id="lib-text-styles" style="display:none;align-items:center;gap:3px;flex-shrink:0;">
-      <button id="lt-bold" onclick="libToggleEstilo('bold')" style="font-weight:900;font-size:12px;padding:2px 5px;border:1px solid var(--bd);border-radius:5px;background:transparent;cursor:pointer;color:#222;" title="Negrita">B</button>
-      <button id="lt-italic" onclick="libToggleEstilo('italic')" style="font-style:italic;font-size:12px;padding:2px 5px;border:1px solid var(--bd);border-radius:5px;background:transparent;cursor:pointer;color:#222;" title="Cursiva">I</button>
-      <button id="lt-under" onclick="libToggleEstilo('underline')" style="text-decoration:underline;font-size:12px;padding:2px 5px;border:1px solid var(--bd);border-radius:5px;background:transparent;cursor:pointer;color:#222;" title="Subrayado">U</button>
-      <select id="lt-size" onchange="libSetTamTexto(this.value)" style="font-size:10px;border:1px solid var(--bd);border-radius:5px;padding:2px;background:var(--w);color:#222;cursor:pointer;">
-        <option value="12">12</option>
-        <option value="16" selected>16</option>
-        <option value="20">20</option>
-        <option value="28">28</option>
-        <option value="36">36</option>
-      </select>
-    </div>
-    <div style="width:1px;height:20px;background:var(--bd);margin:0 1px;flex-shrink:0;"></div>
-    <!-- Emojis + Stickers unificados -->
-    <button class="lib-tool" id="lt-sticker" onclick="libMenuEmojiSticker()" title="Emojis y Stickers" style="font-size:13px;padding:2px 5px;">😊✨</button>
-    <div style="width:1px;height:20px;background:var(--bd);margin:0 1px;flex-shrink:0;"></div>
-    <!-- Gomas -->
-    <button class="lib-tool" id="lt-borrador" onclick="libSetTool('borrador',this)" title="Borrador S" style="font-size:11px;padding:2px 4px;color:#222;">🧹S</button>
-    <button class="lib-tool" id="lt-borrador-m" onclick="libSetTool('borrador-m',this)" title="Borrador M" style="font-size:12px;padding:2px 4px;color:#222;">🧹M</button>
-    <button class="lib-tool" id="lt-borrador-l" onclick="libSetTool('borrador-l',this)" title="Borrador L" style="font-size:13px;padding:2px 4px;color:#222;">🧹L</button>
-    <button class="lib-tool" onclick="libUndo()" title="Deshacer" style="color:#222;">↩</button>
-    <div style="width:1px;height:20px;background:var(--bd);margin:0 1px;flex-shrink:0;"></div>
-    <!-- Colores -->
-    <div style="display:flex;gap:3px;align-items:center;">
-      <div class="lib-color active" style="background:#1a1a1a;" onclick="libSetColor('#1a1a1a',this)"></div>
-      <div class="lib-color" style="background:#e74c3c;" onclick="libSetColor('#e74c3c',this)"></div>
-      <div class="lib-color" style="background:#2980b9;" onclick="libSetColor('#2980b9',this)"></div>
-      <div class="lib-color" style="background:#27ae60;" onclick="libSetColor('#27ae60',this)"></div>
-      <div class="lib-color" style="background:#f39c12;" onclick="libSetColor('#f39c12',this)"></div>
-      <div class="lib-color" style="background:#8e44ad;" onclick="libSetColor('#8e44ad',this)"></div>
-      <input type="color" id="lib-color-custom" value="#1a1a1a" onchange="libSetColor(this.value,null)" style="width:22px;height:22px;border:none;border-radius:50%;padding:0;cursor:pointer;">
-    </div>
-    <div style="width:1px;height:20px;background:var(--bd);margin:0 2px;flex-shrink:0;"></div>
-    <!-- Grosores -->
-    <button class="lib-size active" data-size="2" onclick="libSetSize(2,this)" style="width:26px;height:20px;display:flex;align-items:center;justify-content:center;"><div style="width:16px;height:2px;background:#222;border-radius:2px;"></div></button>
-    <button class="lib-size" data-size="5" onclick="libSetSize(5,this)" style="width:26px;height:20px;display:flex;align-items:center;justify-content:center;"><div style="width:16px;height:5px;background:#222;border-radius:2px;"></div></button>
-    <button class="lib-size" data-size="10" onclick="libSetSize(10,this)" style="width:26px;height:20px;display:flex;align-items:center;justify-content:center;"><div style="width:16px;height:9px;background:#222;border-radius:3px;"></div></button>
-    <div style="width:1px;height:20px;background:var(--bd);margin:0 2px;flex-shrink:0;"></div>
-    <!-- Fondo + Plantillas unificados -->
-    <button id="lt-figura" class="lib-tool" onclick="libMenuFiguras()" title="Figuras geométricas" style="font-size:13px;padding:2px 6px;color:#222;">◻</button>
-    <button class="lib-tool" onclick="libMenuFondoPlantilla()" title="Fondo y Plantillas" style="font-size:10px;padding:3px 6px;color:#222;">🎨📄</button>
-    <!-- Indicador guardado — al final, color negro -->
-    <div style="flex:1;min-width:4px;"></div>
-    <div id="lib-saved-indicator" style="font-size:9px;color:#333;font-weight:700;font-family:var(--font-main);white-space:nowrap;padding:0 4px;flex-shrink:0;transition:opacity .5s;">✓ Guardado</div>
-  </div>
-
+  <div id="lib-toolbar" style="display:none;"></div>
   <div id="lib-nav-pag" style="display:flex;align-items:center;justify-content:space-between;padding:4px 10px;background:var(--bp);border-bottom:1px solid var(--bd);font-size:11px;font-family:var(--font-main);color:var(--tl);flex-shrink:0;">
     <button onclick="libPagAnterior()" style="background:none;border:none;font-size:18px;cursor:pointer;color:var(--tl);padding:2px 8px;">‹</button>
     <span id="lib-pag-label" style="cursor:pointer;" onclick="libResetZoom()">Página 1</span>
     <button onclick="libPagSiguiente()" style="background:none;border:none;font-size:18px;cursor:pointer;color:var(--tl);padding:2px 8px;">›</button>
   </div>
+  <div style="flex:1;display:flex;min-height:0;position:relative;">
+  <!-- Float bar -->
+<!-- ════ BARRA FLOTANTE LATERAL ════ -->
+  <div id="lib-float-bar" style="position:relative;z-index:100;display:flex;flex-direction:column;gap:6px;align-items:center;padding:8px 4px;background:rgba(255,255,255,.85);backdrop-filter:blur(4px);flex-shrink:0;overflow-y:auto;justify-content:center;">
+
+    <!-- Herramienta -->
+    <div style="position:relative;">
+      <button id="lt-lapiz" onclick="libFloatToggle('herramienta')" class="lib-float-btn active-tool"
+        style="width:44px;height:44px;border-radius:14px;border:none;background:rgba(255,255,255,.92);backdrop-filter:blur(8px);box-shadow:0 2px 12px rgba(0,0,0,.15);cursor:pointer;font-size:20px;display:flex;align-items:center;justify-content:center;">✏️</button>
+      <div id="lib-sub-herramienta" style="display:none;position:absolute;left:52px;top:0;background:rgba(255,255,255,.97);backdrop-filter:blur(12px);border-radius:16px;box-shadow:0 4px 24px rgba(0,0,0,.18);padding:8px;flex-direction:column;gap:6px;min-width:52px;align-items:center;">
+        <button onclick="libSetToolFloat('lapiz')" id="ftool-lapiz" class="lib-float-sub active" title="Lápiz">✏️</button>
+        <button onclick="libSetToolFloat('boli')" id="ftool-boli" class="lib-float-sub" title="Bolígrafo">🖊️</button>
+        <button onclick="libSetToolFloat('texto')" id="ftool-texto" class="lib-float-sub" title="Texto" style="font-weight:900;">T</button>
+        <button onclick="libSetToolFloat('seleccion')" id="ftool-sel" class="lib-float-sub" title="Seleccionar">⬚</button>
+        <button onclick="libMenuFiguras();libFloatClose()" class="lib-float-sub" title="Figuras">◻</button>
+        <button onclick="libMenuEmojiSticker();libFloatClose()" class="lib-float-sub" title="Stickers">😊</button>
+        <div id="lib-text-styles" style="display:none;flex-direction:column;gap:4px;align-items:center;border-top:1px solid #eee;padding-top:6px;margin-top:2px;">
+          <button id="lt-bold" onclick="libToggleEstilo('bold')" class="lib-float-sub" style="font-weight:900;">B</button>
+          <button id="lt-italic" onclick="libToggleEstilo('italic')" class="lib-float-sub" style="font-style:italic;">I</button>
+          <button id="lt-under" onclick="libToggleEstilo('underline')" class="lib-float-sub" style="text-decoration:underline;">U</button>
+          <select id="lt-size" onchange="libSetTamTexto(this.value)" style="width:44px;font-size:10px;border:1px solid #ddd;border-radius:8px;padding:3px;">
+            <option value="12">12</option><option value="16" selected>16</option>
+            <option value="20">20</option><option value="28">28</option><option value="36">36</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Color -->
+    <div style="position:relative;">
+      <button onclick="libFloatToggle('color')" id="lib-float-color-btn" class="lib-float-btn"
+        style="width:44px;height:44px;border-radius:14px;background:#1a1a1a;border:3px solid rgba(255,255,255,.9);box-shadow:0 2px 12px rgba(0,0,0,.2);cursor:pointer;"></button>
+      <div id="lib-sub-color" style="display:none;position:absolute;left:52px;top:0;background:rgba(255,255,255,.97);backdrop-filter:blur(12px);border-radius:16px;box-shadow:0 4px 24px rgba(0,0,0,.18);padding:10px;min-width:170px;flex-direction:column;">
+        <div style="font-size:10px;font-weight:700;color:#666;margin-bottom:8px;">COLOR</div>
+        <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-bottom:8px;">
+          <div class="lib-color-dot active" style="background:#1a1a1a;" onclick="libSetColorFloat('#1a1a1a',this)"></div>
+          <div class="lib-color-dot" style="background:#fff;border:2px solid #ccc;" onclick="libSetColorFloat('#ffffff',this)"></div>
+          <div class="lib-color-dot" style="background:#e74c3c;" onclick="libSetColorFloat('#e74c3c',this)"></div>
+          <div class="lib-color-dot" style="background:#ff8c69;" onclick="libSetColorFloat('#ff8c69',this)"></div>
+          <div class="lib-color-dot" style="background:#f39c12;" onclick="libSetColorFloat('#f39c12',this)"></div>
+          <div class="lib-color-dot" style="background:#f1c40f;" onclick="libSetColorFloat('#f1c40f',this)"></div>
+          <div class="lib-color-dot" style="background:#2ecc71;" onclick="libSetColorFloat('#2ecc71',this)"></div>
+          <div class="lib-color-dot" style="background:#27ae60;" onclick="libSetColorFloat('#27ae60',this)"></div>
+          <div class="lib-color-dot" style="background:#2980b9;" onclick="libSetColorFloat('#2980b9',this)"></div>
+          <div class="lib-color-dot" style="background:#9b59b6;" onclick="libSetColorFloat('#9b59b6',this)"></div>
+          <div class="lib-color-dot" style="background:#e91e8c;" onclick="libSetColorFloat('#e91e8c',this)"></div>
+          <div class="lib-color-dot" style="background:#fd79a8;" onclick="libSetColorFloat('#fd79a8',this)"></div>
+          <div class="lib-color-dot" style="background:#a29bfe;" onclick="libSetColorFloat('#a29bfe',this)"></div>
+          <div class="lib-color-dot" style="background:#00cec9;" onclick="libSetColorFloat('#00cec9',this)"></div>
+          <div class="lib-color-dot" style="background:#636e72;" onclick="libSetColorFloat('#636e72',this)"></div>
+        </div>
+        <div style="display:flex;align-items:center;gap:6px;border-top:1px solid #eee;padding-top:8px;">
+          <span style="font-size:10px;color:#888;">Personalizado:</span>
+          <input type="color" id="lib-color-custom" value="#1a1a1a" onchange="libSetColorFloat(this.value,null)" style="width:28px;height:28px;border:none;border-radius:50%;padding:0;cursor:pointer;">
+        </div>
+      </div>
+    </div>
+
+    <!-- Grosor -->
+    <div style="position:relative;">
+      <button onclick="libFloatToggle('grosor')" class="lib-float-btn"
+        style="width:44px;height:44px;border-radius:14px;border:none;background:rgba(255,255,255,.92);backdrop-filter:blur(8px);box-shadow:0 2px 12px rgba(0,0,0,.15);cursor:pointer;display:flex;align-items:center;justify-content:center;">
+        <div id="lib-grosor-preview" style="width:24px;height:3px;background:#1a1a1a;border-radius:3px;"></div>
+      </button>
+      <div id="lib-sub-grosor" style="display:none;position:absolute;left:52px;top:0;background:rgba(255,255,255,.97);backdrop-filter:blur(12px);border-radius:16px;box-shadow:0 4px 24px rgba(0,0,0,.18);padding:10px;min-width:150px;flex-direction:column;">
+        <div style="font-size:10px;font-weight:700;color:#666;margin-bottom:8px;">GROSOR</div>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <button onclick="libSetSizeFloat(2,this)" class="lib-size-row active-size" data-size="2"><div style="width:60px;height:2px;background:currentColor;border-radius:2px;"></div><span>Fino</span></button>
+          <button onclick="libSetSizeFloat(4,this)" class="lib-size-row" data-size="4"><div style="width:60px;height:4px;background:#222;border-radius:2px;"></div><span>Normal</span></button>
+          <button onclick="libSetSizeFloat(7,this)" class="lib-size-row" data-size="7"><div style="width:60px;height:7px;background:#222;border-radius:3px;"></div><span>Grueso</span></button>
+          <button onclick="libSetSizeFloat(14,this)" class="lib-size-row" data-size="14"><div style="width:60px;height:14px;background:#222;border-radius:4px;"></div><span>Extra</span></button>
+          <div style="border-top:1px solid #eee;padding-top:8px;">
+            <input type="range" id="lib-size-slider" min="1" max="40" value="3" oninput="libSetSizeFloat(parseInt(this.value),null)" style="width:100%;accent-color:var(--gm);">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Goma -->
+    <div style="position:relative;">
+      <button onclick="libFloatToggle('goma')" class="lib-float-btn"
+        style="width:44px;height:44px;border-radius:14px;border:none;background:rgba(255,255,255,.92);backdrop-filter:blur(8px);box-shadow:0 2px 12px rgba(0,0,0,.15);cursor:pointer;font-size:20px;display:flex;align-items:center;justify-content:center;">🩹</button>
+      <div id="lib-sub-goma" style="display:none;position:absolute;left:52px;top:0;background:rgba(255,255,255,.97);backdrop-filter:blur(12px);border-radius:16px;box-shadow:0 4px 24px rgba(0,0,0,.18);padding:10px;min-width:140px;flex-direction:column;">
+        <div style="font-size:10px;font-weight:700;color:#666;margin-bottom:8px;">GOMA</div>
+        <div style="display:flex;flex-direction:column;gap:6px;">
+          <button onclick="libSetToolFloat('borrador');libFloatClose()" id="lt-borrador" class="lib-eraser-btn"><div style="width:16px;height:16px;background:#ddd;border-radius:4px;border:1px solid #bbb;flex-shrink:0;"></div><span>Pequeña</span></button>
+          <button onclick="libSetToolFloat('borrador-m');libFloatClose()" id="lt-borrador-m" class="lib-eraser-btn"><div style="width:22px;height:22px;background:#ddd;border-radius:5px;border:1px solid #bbb;flex-shrink:0;"></div><span>Mediana</span></button>
+          <button onclick="libSetToolFloat('borrador-l');libFloatClose()" id="lt-borrador-l" class="lib-eraser-btn"><div style="width:30px;height:30px;background:#ddd;border-radius:6px;border:1px solid #bbb;flex-shrink:0;"></div><span>Grande</span></button>
+        </div>
+      </div>
+    </div>
+
+    <div style="width:30px;height:1px;background:rgba(0,0,0,.1);margin:2px 0;"></div>
+
+    <!-- Deshacer -->
+    <button onclick="libUndo()" class="lib-float-btn" title="Deshacer"
+      style="width:44px;height:44px;border-radius:14px;border:none;background:rgba(255,255,255,.92);backdrop-filter:blur(8px);box-shadow:0 2px 12px rgba(0,0,0,.15);cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;">↩️</button>
+
+    <!-- Fondo -->
+    <button onclick="libMenuFondoPlantilla()" class="lib-float-btn" title="Fondo y plantilla"
+      style="width:44px;height:44px;border-radius:14px;border:none;background:rgba(255,255,255,.92);backdrop-filter:blur(8px);box-shadow:0 2px 12px rgba(0,0,0,.15);cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;">🎨</button>
+
+    <!-- Guardado -->
+    <div id="lib-saved-indicator" style="font-size:8px;color:#555;font-weight:700;text-align:center;line-height:1.2;font-family:var(--font-main);transition:opacity .5s;">✓<br>OK</div>
+  </div>
   <div id="lib-canvas-wrap" style="flex:1;overflow:hidden;position:relative;touch-action:none;min-height:0;">
     <canvas id="lib-canvas" style="display:block;touch-action:none;cursor:crosshair;width:100%;height:100%;"></canvas>
   </div>
+  </div><!-- end flex wrapper -->
   <div id="lib-text-input-wrap" style="display:none;position:fixed;z-index:600;">
     <textarea id="lib-text-input" rows="2" placeholder="Escribe aquí..." style="background:rgba(255,255,255,.95);border:2px dashed var(--ga);border-radius:6px;padding:4px 8px;font-size:16px;font-family:var(--font-main);color:#222;resize:none;min-width:140px;outline:none;"></textarea>
     <div style="display:flex;gap:4px;margin-top:3px;">
@@ -4696,10 +4689,6 @@ const THEMES = [
 {id:'bosque',     name:'Bosque 🌲',     s1:'#1c3a1c', s2:'#6a9e6a'},
 {id:'lila',       name:'Cielo 💜',      s1:'#4c1d95', s2:'#a78bfa'},
 {id:'minimal',    name:'Minimal ◻',    s1:'#111827', s2:'#9ca3af'},
-{id:'darkacademia', name:'Dark Academia 📚', s1:'#2c1810', s2:'#8b6914'},
-{id:'y2k',          name:'Y2K ✨',           s1:'#ff6ec7', s2:'#a855f7'},
-{id:'pastel',       name:'Pastel Dreams 🍑', s1:'#fda4af', s2:'#c4b5fd'},
-{id:'midnight',     name:'Midnight 🌙',      s1:'#1e293b', s2:'#0ea5e9'},
 ];
 const _vkh = [
 '901a01c31ccb0be6d9e7c30efff9e68f',
@@ -4781,82 +4770,6 @@ console.warn('No se pudo re-cifrar la clave maestra:',e);
 window.addEventListener('online',function(){document.getElementById('offline-banner').style.display='none';if(state.sheetsUrl)syncFromSheets(false);});
 window.addEventListener('offline',function(){document.getElementById('offline-banner').style.display='block';});
 if(!navigator.onLine) setTimeout(function(){document.getElementById('offline-banner').style.display='block';},500);
-
-// ════════════════════════════════════════════════════
-// INDEXEDDB — Almacenamiento de archivos binarios
-// Archivos grandes (fotos, PDFs) van a IDB (50MB+)
-// Datos de texto van a localStorage (cifrado AES-GCM)
-// ════════════════════════════════════════════════════
-var _idb=null;
-
-function _openIDB(){
-  return new Promise(function(resolve,reject){
-    if(_idb){resolve(_idb);return;}
-    if(!window.indexedDB){reject(new Error('IDB no disponible'));return;}
-    var req=indexedDB.open('tapunto_files_'+currentUser,1);
-    req.onupgradeneeded=function(e){
-      var db=e.target.result;
-      if(!db.objectStoreNames.contains('files')){
-        db.createObjectStore('files',{keyPath:'id'});
-      }
-    };
-    req.onsuccess=function(e){_idb=e.target.result;resolve(_idb);};
-    req.onerror=function(){reject(req.error);};
-  });
-}
-
-function idbSaveFile(id,data,nombre,tipo){
-  return _openIDB().then(function(db){
-    return new Promise(function(resolve,reject){
-      var tx=db.transaction('files','readwrite');
-      tx.objectStore('files').put({id:id,data:data,nombre:nombre,tipo:tipo,ts:Date.now()});
-      tx.oncomplete=function(){resolve();};
-      tx.onerror=function(){reject(tx.error);};
-    });
-  });
-}
-
-function idbGetFile(id){
-  return _openIDB().then(function(db){
-    return new Promise(function(resolve,reject){
-      var tx=db.transaction('files','readonly');
-      var req=tx.objectStore('files').get(id);
-      req.onsuccess=function(){resolve(req.result||null);};
-      req.onerror=function(){reject(req.error);};
-    });
-  });
-}
-
-function idbDeleteFile(id){
-  return _openIDB().then(function(db){
-    return new Promise(function(resolve){
-      var tx=db.transaction('files','readwrite');
-      tx.objectStore('files').delete(id);
-      tx.oncomplete=function(){resolve();};
-    });
-  }).catch(function(){});
-}
-
-function idbListFiles(){
-  return _openIDB().then(function(db){
-    return new Promise(function(resolve){
-      var tx=db.transaction('files','readonly');
-      var req=tx.objectStore('files').getAll();
-      req.onsuccess=function(){resolve(req.result||[]);};
-      req.onerror=function(){resolve([]);};
-    });
-  }).catch(function(){return[];});
-}
-
-// Calcular espacio usado en IDB
-function idbGetSize(){
-  return idbListFiles().then(function(files){
-    return files.reduce(function(acc,f){
-      return acc+(f.data?Math.round(f.data.length*0.75):0);
-    },0);
-  });
-}
-
 async function persist(){
 if(!currentUser) return;
 const plain=JSON.stringify(state);
@@ -5180,7 +5093,7 @@ async function doLogin(){
     currentUser=email;
     const sessionToken=crypto.randomUUID?crypto.randomUUID():(Math.random().toString(36)+Date.now().toString(36));
     localStorage.setItem('tp_session',JSON.stringify({email:email,token:sessionToken,expires:Date.now()+8*60*60*1000}));
-    await loadState();
+    loadState();
     document.getElementById('login-ov').style.display='none';
     state.modo='trabajo';
     const tcOk1=localStorage.getItem('tp_tc_'+email);
@@ -5226,7 +5139,7 @@ async function doLogin(){
   currentUser=email;
   const sessionToken=crypto.randomUUID?crypto.randomUUID():(Math.random().toString(36)+Date.now().toString(36));
   localStorage.setItem('tp_session',JSON.stringify({email:email,token:sessionToken,expires:Date.now()+8*60*60*1000}));
-  await loadState();
+  loadState();
   document.getElementById('login-ov').style.display='none';
   state.modo='trabajo';
   const tcOk2=localStorage.getItem('tp_tc_'+email);
@@ -5283,20 +5196,6 @@ document.getElementById('login-ov').style.display='none';
 const tcAceptado=localStorage.getItem('tp_tc_'+currentUser);
 if(!tcAceptado){showTC();return;}
 await finishLogin();
-// Render de seguridad con delay progresivo - independiente del splash
-setTimeout(function(){
-  try{renderHorarioHome();}catch(e){}
-  try{renderCitaDiaria();}catch(e){}
-  try{actualizarAvatarHome();}catch(e){}
-},100);
-setTimeout(function(){
-  try{renderHorarioHome();}catch(e){}
-  try{renderCitaDiaria();}catch(e){}
-},600);
-setTimeout(function(){
-  try{renderHorarioHome();}catch(e){}
-  try{renderCitaDiaria();}catch(e){}
-},1400);
 }catch(e){
 localStorage.removeItem('tp_session');
 }
@@ -5650,13 +5549,7 @@ function onNuevoDocSelected(inp){
       if(esImagen){
         // Miniatura real
         var thumb=document.createElement('img');
-        // Si está en IDB, cargar async
-        if(docItem.idbId){
-          idbGetFile(docItem.idbId).then(function(f){if(f&&thumb)thumb.src=f.data;}).catch(function(){});
-          thumb.src='data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'; // placeholder
-        } else {
-          thumb.src=docItem.data||'';
-        }
+        thumb.src=docItem.data;
         thumb.style.cssText='width:44px;height:44px;object-fit:cover;border-radius:6px;flex-shrink:0;cursor:pointer;';
         thumb.onclick=function(){
           // Ver en grande al tocar
@@ -7496,23 +7389,11 @@ var sb=document.getElementById('save-cancel-btns');if(sb)sb.style.display='none'
 renderHomeBadges();
 renderAlertas();
 // Render horario después de que el DOM confirme el display:block
-// Renderizar home en secuencia garantizada
-function _renderHome(){
+requestAnimationFrame(function(){
   try{renderHorarioHome();}catch(e){}
   try{renderResumen&&renderResumen();}catch(e){}
   try{renderProximasTareas&&renderProximasTareas();}catch(e){}
-  try{actualizarAvatarHome();}catch(e){}
-  try{renderCitaDiaria();}catch(e){}
-  try{
-    var _st=calcularEstadisticas();
-    var _pr=document.getElementById('home-stats-preview');
-    if(_pr) _pr.textContent='🔥 '+_st.racha+' días · ✅ '+_st.completadas+' tareas · 🍅 '+_st.sesiones+' pomodoros';
-  }catch(e){}
-}
-// Primera pasada inmediata
-requestAnimationFrame(_renderHome);
-// Segunda pasada de seguridad — por si el decrypt AES tardó más
-setTimeout(_renderHome, 400);
+});
 }
 function renderHomeBadges(){
 var h=new Date().getHours();
@@ -9281,37 +9162,72 @@ checkTrial();
 checkLicenseExpiry();
 updatePortadaNombre();
 irHome();
-// Inicializar formulario y FAB sin resetear home
-requestAnimationFrame(function(){
-  try{applyMode('trabajo');}catch(e){}
-  try{initForm();}catch(e){}
-  try{checkTodayReminders();}catch(e){}
-  try{initFAB();}catch(e){}
-});
 if(false){
-  syncFromSheets(false).catch(()=>{});
-  setTimeout(function(){syncConfigToSheets();},3000);
+syncFromSheets(false).catch(()=>{});
+setTimeout(function(){syncConfigToSheets();},3000);
 }
 mostrarSplash();
 setTimeout(cerrarSplash, 800);
 setTimeout(checkBackupSemanal, 5000);
-// MutationObserver para re-renderizar al volver a home desde otras secciones
+requestAnimationFrame(()=>{
+applyMode('trabajo');
+initForm();
+checkTodayReminders();
+initFAB();
+irHome();
+});
+
+// ResizeObserver: fires when wrap gets actual width (most reliable approach)
 (function(){
+  function _tryRender(){
+    var w=document.getElementById('home-horario-wrap');
+    if(!w) return;
+    if(w.offsetWidth>0){renderHorarioHome();renderAlertas();return;}
+    setTimeout(_tryRender,80);
+  }
+  if(typeof ResizeObserver!=='undefined'){
+    var w=document.getElementById('home-horario-wrap');
+    if(w){
+      var _ro=new ResizeObserver(function(entries){
+        if(entries[0].contentRect.width>0){
+          _ro.disconnect();
+          renderHorarioHome();
+          renderAlertas();
+        }
+      });
+      _ro.observe(w);
+    }
+  } else {
+    setTimeout(_tryRender,200);
+  }
+  // Additional: fire on window load (most reliable fallback)
+  window.addEventListener('load',function(){
+    setTimeout(function(){renderHorarioHome();renderAlertas();},100);
+  });
+  window.addEventListener('resize',function(){
+    var sh=document.getElementById('sec-home');
+    if(sh&&sh.classList.contains('active'))renderHorarioHome();
+  },{passive:true});
+  // MutationObserver fallback for tab switches
   var _sh=document.getElementById('sec-home');
   if(_sh&&typeof MutationObserver!=='undefined'){
     new MutationObserver(function(ms){
       ms.forEach(function(m){
         if(m.attributeName==='class'&&_sh.classList.contains('active')){
-          setTimeout(function(){
-            try{renderHorarioHome();}catch(e){}
-            try{renderCitaDiaria();}catch(e){}
-            try{actualizarAvatarHome();}catch(e){}
-          },50);
+          setTimeout(function(){renderHorarioHome();renderAlertas();},50);
         }
       });
     }).observe(_sh,{attributes:true,attributeFilter:['class']});
   }
 })();
+// Ensure schedule renders - triple timeout for any login timing
+// Single safety net: re-render on window load in case of slow connections
+window.addEventListener('load',function(){
+  var sec=document.getElementById('sec-home');
+  if(sec&&sec.classList.contains('active')){
+    try{renderHorarioHome();}catch(e){}
+  }
+},{once:true});
 }
 function getEscolarData(){
 return {
@@ -9339,32 +9255,10 @@ window.addEventListener('DOMContentLoaded',()=>{
   var hdrVerde=sh?sh.querySelector('div[style*="background:var(--gd)"]'):null;
   if(hdrVerde){hdrVerde.style.width='100%';hdrVerde.style.boxSizing='border-box';}
 })();
-// ── Startup: esperar DOM listo y datos descifrados antes de renderizar ──
-async function _startup(){
-  initNotificaciones();
-  try{renderCitaDiaria();}catch(e){}
-  await checkSession();
-  // State cargado - renderizar todo
-  try{renderHorarioHome();}catch(e){}
-  try{renderCitaDiaria();}catch(e){}
-  try{actualizarAvatarHome();}catch(e){}
-  // Pasadas de seguridad tras el splash (800ms + 520ms fade = 1320ms total)
-  setTimeout(function(){try{renderHorarioHome();}catch(e){}},400);
-  setTimeout(function(){try{renderHorarioHome();}catch(e){}},1400);
-}
-
-// Listeners de login - no necesitan esperar a window.onload
-document.addEventListener('DOMContentLoaded',function(){
-  var pinInp=document.getElementById('login-pin');
-  var emailInp=document.getElementById('login-email');
-  if(pinInp) pinInp.addEventListener('keydown',function(e){if(e.key==='Enter')doLogin();});
-  if(emailInp) emailInp.addEventListener('input',function(){window._noGmailConfirmado=false;});
-});
-
-// Startup principal: esperar a que todo esté pintado
-window.addEventListener('load', function(){
-  _startup().catch(function(e){console.warn('Startup error:',e);});
-});
+initNotificaciones();
+checkSession();
+document.getElementById('login-pin').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
+document.getElementById('login-email').addEventListener('input',function(){window._noGmailConfirmado=false;});
 document.addEventListener('keydown',function(e){if(e.key==='Enter'&&!e.shiftKey&&document.activeElement&&document.activeElement.id==='nota-input'){e.preventDefault();guardarNota();}});
 document.getElementById('confirm-ov').addEventListener('click',e=>{if(e.target===document.getElementById('confirm-ov'))closeConfirm();});
 });
@@ -10646,20 +10540,12 @@ splash.classList.add('fade-out');
 setTimeout(function(){
 splash.style.display='none';
 splash.classList.remove('fade-out');
-// Renderizar todo el home cuando el splash desaparece
-try{renderHorarioHome();}catch(e){}
-setTimeout(function(){try{renderHorarioHome();}catch(e){}},100);
+// En este punto el splash ya no existe y sec-home es completamente visible
+renderHorarioHome();
 renderAlertas();
-try{renderCitaDiaria();}catch(e){}
-try{actualizarAvatarHome();}catch(e){}
 try{renderSemanaStrip&&renderSemanaStrip();}catch(_){}
-try{renderResumen&&renderResumen();}catch(e){}
-try{
-  var _st=calcularEstadisticas();
-  var _pr=document.getElementById('home-stats-preview');
-  if(_pr) _pr.textContent='🔥 '+_st.racha+' días · ✅ '+_st.completadas+' tareas · 🍅 '+_st.sesiones+' pomodoros';
-}catch(e){}
-setTimeout(function(){ try{renderProximasTareas&&renderProximasTareas();}catch(e){}}, 50);
+renderResumen&&renderResumen();
+setTimeout(function(){ renderProximasTareas&&renderProximasTareas(); }, 50);
 setTimeout(function(){ try{renderSemanaStrip();}catch(e){}}, 80);
 setTimeout(function(){ try{renderCalificaciones&&renderCalificaciones();}catch(e){} }, 100);
 },520);
@@ -10977,7 +10863,7 @@ function hTaskFotoQuitar(){
 }
 function hGuardarTarea(){
   var texto=(document.getElementById('h-task-ta').value||'').trim();
-  if(!texto){var ta=document.getElementById('h-task-ta');if(ta){ta.focus();ta.style.borderColor='#c0392b';}return;}
+  // Descripción opcional - no bloquear si está vacía
   var asig=_hCelda.asig;
   var fevEl=document.getElementById('h-task-fecha-evento');
   var fev=fevEl?fevEl.value.trim():'';
@@ -12242,24 +12128,19 @@ function docComprimir(file, cb){
     reader.onload=function(e){
       var img=new Image();
       img.onload=function(){
-        // Comprimir: máximo 600px, calidad 0.50 → ~30-60KB por foto
-        var MAX=600;
+        // Comprimir: máximo 900px, calidad 0.65 → ~50-150KB por foto
+        var MAX=900;
         var scale=Math.min(1,MAX/Math.max(img.width,img.height));
         var w=Math.round(img.width*scale);
         var h=Math.round(img.height*scale);
         var canvas=document.createElement('canvas');
         canvas.width=w; canvas.height=h;
         canvas.getContext('2d').drawImage(img,0,0,w,h);
-        var compressed=canvas.toDataURL('image/jpeg',0.50);
+        var compressed=canvas.toDataURL('image/jpeg',0.65);
         var origKB=Math.round(file.size/1024);
         var newKB=Math.round(compressed.length*0.75/1024);
-        var fileId='idb_'+Date.now()+'_'+Math.random().toString(36).slice(2,8);
-        idbSaveFile(fileId,compressed,file.name,'image').then(function(){
-          cb({idbId:fileId,nombre:file.name,tipo:'image',kb:newKB});
-        }).catch(function(){
-          // Fallback: guardar en state si IDB falla
-          cb({data:compressed,nombre:file.name,tipo:'image',kb:newKB});
-        });
+        console.log('Compressed: '+origKB+'KB → '+newKB+'KB');
+        cb({data:compressed,nombre:file.name,tipo:'image',origKB:origKB,newKB:newKB});
       };
       img.src=e.target.result;
     };
@@ -12268,12 +12149,7 @@ function docComprimir(file, cb){
     // PDF or other doc
     var reader2=new FileReader();
     reader2.onload=function(e){
-      var fileId='idb_'+Date.now()+'_'+Math.random().toString(36).slice(2,8);
-      idbSaveFile(fileId,e.target.result,file.name,file.type).then(function(){
-        cb({idbId:fileId,nombre:file.name,tipo:file.type.indexOf('pdf')>=0?'pdf':'doc'});
-      }).catch(function(){
-        cb({data:e.target.result,nombre:file.name,tipo:file.type.indexOf('pdf')>=0?'pdf':'doc'});
-      });
+      cb({data:e.target.result,nombre:file.name,tipo:file.type.indexOf('pdf')>=0?'pdf':'doc'});
     };
     reader2.readAsDataURL(file);
   }
@@ -12858,14 +12734,7 @@ function renderCitaDiaria(){
   var el=document.getElementById('home-cita');if(!el)return;
   var d=new Date();var c=CITAS_DIA[(d.getFullYear()*366+d.getMonth()*31+d.getDate())%CITAS_DIA.length];
   var p=c.split(' — ');
-  el.innerHTML=
-    '<div style="display:flex;align-items:center;gap:10px;">'
-      +'<span style="font-size:18px;flex-shrink:0;">✨</span>'
-      +'<div>'
-        +'<div style="font-family:Caveat,cursive;font-size:15px;line-height:1.4;color:#111;font-weight:600;">\"'+p[0]+'\"</div>'
-        +(p[1]?'<div style="font-family:var(--font-main);font-size:10px;color:#555;margin-top:2px;letter-spacing:.3px;">— '+p[1]+'</div>':'')
-      +'</div>'
-    +'</div>';
+  el.innerHTML='<span style="font-size:11px;line-height:1.5;color:rgba(255,255,255,.85);font-style:italic;">"'+p[0]+'"</span>'+(p[1]?'<span style="font-size:10px;color:rgba(255,255,255,.55);display:block;margin-top:2px;">— '+p[1]+'</span>':'');
 }
 
 // ── Avatar ──
@@ -13092,72 +12961,6 @@ document.addEventListener('DOMContentLoaded',function(){
     setTimeout(calcularAlmacenamiento,200);
   });
 });
-
-// ── Estadísticas de estudio ──
-function calcularRacha(){
-  var dias=new Set();
-  (state.records||[]).forEach(function(r){if(r.fecha)dias.add(r.fecha.slice(0,10));});
-  (state.pomodoroSesiones||[]).forEach(function(s){if(s.fecha)dias.add(s.fecha.slice(0,10));});
-  var hoy=new Date();hoy.setHours(0,0,0,0);
-  var racha=0;
-  for(var i=0;i<365;i++){
-    var d=new Date(hoy);d.setDate(hoy.getDate()-i);
-    if(dias.has(d.toISOString().slice(0,10)))racha++;
-    else if(i>0)break;
-  }
-  return racha;
-}
-
-function calcularEstadisticas(){
-  var hoy=new Date();hoy.setHours(0,0,0,0);
-  var lunes=new Date(hoy);lunes.setDate(hoy.getDate()-((hoy.getDay()||7)-1));
-  var completadas=(state.records||[]).filter(function(r){
-    return r.archivado&&new Date(r.fecha||'')>=lunes;
-  }).length;
-  var pendientes=(state.records||[]).filter(function(r){return !r.archivado;}).length;
-  var sesiones=(state.pomodoroSesiones||[]).filter(function(s){
-    return new Date(s.fecha||'')>=lunes;
-  }).length;
-  var racha=calcularRacha();
-  var record=state.recordRacha||0;
-  if(racha>record){state.recordRacha=racha;persist().catch(function(){});}
-  return{completadas:completadas,pendientes:pendientes,sesiones:sesiones,
-         minutos:sesiones*25,racha:racha,record:Math.max(racha,record)};
-}
-
-function mostrarEstadisticas(){
-  var st=calcularEstadisticas();
-  var horas=Math.floor(st.minutos/60),mins=st.minutos%60;
-  var tStr=horas>0?horas+'h '+mins+'min':mins+'min';
-  var pnl=document.createElement('div');
-  pnl.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9500;display:flex;align-items:flex-end;justify-content:center;';
-  var box=document.createElement('div');
-  box.style.cssText='background:var(--w);border-radius:24px 24px 0 0;padding:24px 20px 40px;width:100%;max-width:480px;font-family:var(--font-main);';
-  var bar=document.createElement('div');bar.style.cssText='width:40px;height:4px;background:var(--bd);border-radius:2px;margin:0 auto 20px;';
-  box.appendChild(bar);
-  var ttl=document.createElement('div');ttl.style.cssText='font-size:18px;font-weight:900;color:var(--td);margin-bottom:4px;';ttl.textContent='📊 Mi semana de estudio';box.appendChild(ttl);
-  var sub=document.createElement('div');sub.style.cssText='font-size:12px;color:var(--tl);margin-bottom:20px;';sub.textContent='Esta semana';box.appendChild(sub);
-  // Racha
-  var rc=document.createElement('div');
-  rc.style.cssText='background:linear-gradient(135deg,var(--gm),var(--gd));border-radius:16px;padding:16px;margin-bottom:16px;display:flex;align-items:center;gap:16px;';
-  rc.innerHTML='<div style="font-size:40px;">🔥</div><div><div style="font-size:28px;font-weight:900;color:#fff;line-height:1;">'+st.racha+' días</div><div style="font-size:12px;color:rgba(255,255,255,.8);">Racha actual</div><div style="font-size:11px;color:rgba(255,255,255,.6);">Récord: '+st.record+' días 🏆</div></div>';
-  box.appendChild(rc);
-  // Grid
-  var grid=document.createElement('div');grid.style.cssText='display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;';
-  [['⏱️',tStr,'Pomodoro'],['🍅',st.sesiones+' ses.','Sesiones'],['✅',st.completadas,'Completadas'],['📋',st.pendientes,'Pendientes']].forEach(function(it){
-    var c=document.createElement('div');c.style.cssText='background:var(--bl);border-radius:12px;padding:12px;border:1px solid var(--bd);';
-    c.innerHTML='<div style="font-size:20px;margin-bottom:4px;">'+it[0]+'</div><div style="font-size:18px;font-weight:900;color:var(--td);">'+it[1]+'</div><div style="font-size:11px;color:var(--tl);">'+it[2]+'</div>';
-    grid.appendChild(c);
-  });
-  box.appendChild(grid);
-  // Botón cerrar
-  var btn=document.createElement('button');
-  btn.textContent='Cerrar';btn.style.cssText='width:100%;padding:12px;background:var(--gm);border:none;border-radius:12px;color:#fff;font-size:14px;font-weight:700;cursor:pointer;font-family:var(--font-main);';
-  btn.addEventListener('click',function(){pnl.remove();});
-  box.appendChild(btn);
-  pnl.appendChild(box);pnl.addEventListener('click',function(e){if(e.target===pnl)pnl.remove();});
-  document.body.appendChild(pnl);
-}
 </script>
 
 <script>
@@ -13618,24 +13421,27 @@ function icsOpenFilePicker(){
 /* ═══ HELP SECTION ═══ */
 (function(){
   var items=[
-    {q:'\uD83C\uDFE0 Inicio', a:'Muestra la cita del d\u00EDa, el horario y tareas urgentes. Toca el avatar para personalizarlo (color, emoji o inicial). Los botones \u2600\uFE0F\uD83D\uDD04\uD83C\uDF19 controlan el modo de color. La barra inferior: \uD83C\uDFE0 Inicio \u00B7 \uD83D\uDCD2 Mi Agenda \u00B7 \u2705 To Do \u00B7 \uD83D\uDCDA Apuntes \u00B7 \u2190 Atr\u00E1s.'},
-    {q:'\uD83D\uDCD2 Mi Agenda', a:'Separadores laterales por asignatura. Pulsa \uFF0B arriba del sidebar para crear uno nuevo. El c\u00EDrculo junto a cada separador abre la paleta de colores. Usa \uD83C\uDFA8 Fondo en el header para cambiar el fondo de portada. Las tareas pueden repetirse: cada semana, 15 d\u00EDas o mes.'},
-    {q:'\u2705 To Do', a:'Tareas r\u00E1pidas. Escribe y pulsa A\u00F1adir. El cursor permanece para escribir otra sin salir. Usa \uD83C\uDF99\uFE0F para dictar. Archiva o elimina con los botones de cada tarea.'},
-    {q:'\uD83D\uDCD3 Mi Libreta', a:'Canvas t\u00E1ctil para dibujar y escribir. Herramientas: \u270F\uFE0F L\u00E1piz \u00B7 \uD83D\uDD8A\uFE0F Boli \u00B7 T Texto \u00B7 \uD83D\uDE0A Stickers (160) \u00B7 \u25FB Figuras \u00B7 \uD83E\uDDF9 Borrador \u00B7 \u21A9 Deshacer. Bot\u00F3n \uD83D\uDD0A sonido de escritura. Fondos y plantillas escalan con el zoom.'},
-    {q:'\uD83D\uDCDA Apuntes', a:'Fotos y documentos por asignaturas. A\u00F1ade desde c\u00E1mara o galer\u00EDa. Toca para ver, mant\u00E9n pulsado para opciones (compartir, eliminar).'},
-    {q:'\uD83D\uDCC5 Calendario e ICS', a:'Vista mensual. Para importar: Google Calendar \u2192 \u2699\uFE0F Configuraci\u00F3n \u2192 Exportar \u2192 descarga .ics \u2192 en Tapunto Ajustes \u2192 Importar ICS \u2192 asigna tipo a cada evento.'},
-    {q:'\uD83C\uDF45 Pomodoro', a:'Temporizador con 9 sonidos (generados localmente, sin derechos de autor). Configura tiempo de trabajo y descanso. Las sesiones se registran autom\u00E1ticamente.'},
-    {q:'\uD83D\uDCCA Calificaciones', a:'Introduce notas por asignatura y calcula la media. Exporta como PDF \u2B50.'},
-    {q:'\uD83D\uDD12 PIN y seguridad', a:'Act\u00EDvalo en Ajustes \u2192 Seguridad. Se guarda como hash SHA-256, nunca en texto claro. Los datos se cifran con AES-GCM en tu dispositivo.'},
-    {q:'\u2601\uFE0F Google Drive y backup', a:'El backup guarda todos tus datos en un .json. Gu\u00E1rdalo o s\u00FAbelo a Drive. Para restaurar: Ajustes \u2192 Restaurar backup. La sincronizaci\u00F3n Drive (Premium) guarda autom\u00E1ticamente en tu nube.'},
-    {q:'\uD83D\uDCCA Almacenamiento', a:'En Ajustes \u2192 Almacenamiento ves el espacio usado (m\u00E1ximo 5MB). Muestra el desglose por secci\u00F3n. Si superas el 85% aparece aviso en el inicio. Para liberar espacio, elimina manualmente desde cada secci\u00F3n.'},
-    {q:'\uD83C\uDFA8 Personalizaci\u00F3n', a:'En Ajustes \u2192 Personalizaci\u00F3n: 16 temas + 4 de temporada, 5 fuentes. El avatar se personaliza tocando el c\u00EDrculo del inicio: 12 colores, 16 emojis o tu inicial.'},
-    {q:'\u2699\uFE0F Configuraci\u00F3n', a:'PIN \u00B7 notificaciones \u00B7 sonido Pomodoro \u00B7 fuente \u00B7 backup \u00B7 Drive \u00B7 almacenamiento \u00B7 Premium.'},
-    {q:'\uD83D\uDD14 Notificaciones', a:'Toca \uD83D\uDD14 en el inicio para activarlas. Se programan localmente, sin servidores externos.'},
-    {q:'\u2190 Navegar', a:'El bot\u00F3n \u2190 en la barra inferior vuelve a la secci\u00F3n anterior. Al cancelar una nueva tarea tambi\u00E9n vuelve atr\u00E1s.'},
-    {q:'\u2B50 Premium', a:'Registros ilimitados \u00B7 dictado de voz \u00B7 fotos en Drive \u00B7 sincronizaci\u00F3n Drive \u00B7 backup autom\u00E1tico \u00B7 todos los temas \u00B7 exportar PDF \u00B7 m\u00FAltiples dispositivos. Obt\u00E9n tu c\u00F3digo en tapunto.app.'},
-  ,
-    {q:'\u2139\uFE0F Acerca de', a:'Tapunto es desarrollada por Alicia Prats y Enrique Garc\u00EDa \u00A9 2026 \u00B7 Valencia, Espa\u00F1a \u00B7 tapunto.app. Contacto: tapunto.soporte@gmail.com'}];
+    {q:'🏠 Inicio', a:'La pantalla principal muestra: ✨ la cita motivacional del día · 📅 tu horario de hoy · 📋 tareas próximas · 📊 estadísticas de estudio. Toca el avatar (esquina superior derecha) para personalizar tu perfil. Los 3 botones rápidos: Calendario · Notas · Libreta. Toca "📊 Mi semana de estudio" para ver tus estadísticas.'},
+    {q:'📒 Mi Agenda', a:'Tu agenda principal. En la barra lateral izquierda verás tus asignaturas. Toca ＋ (arriba del sidebar) para añadir una nueva asignatura. Toca el círculo de color junto a cada pestaña para cambiar su color. Cada tarea tiene: asignatura · tipo · fecha de entrega · icono personalizado · adjuntos.'},
+    {q:'➕ Crear tarea desde +', a:'Toca el botón verde ＋ del centro inferior. Rellena: asignatura · tipo · título · descripción (opcional) · fecha · icono (toca el cuadrado de emoji) · adjuntos (fotos, docs). La descripción es opcional. Toca 💾 Guardar para confirmar.'},
+    {q:'📅 Crear tarea desde horario', a:'Toca cualquier asignatura del horario del home. Se abre un panel rápido con: tipo de tarea · fecha de entrega · icono (toca 📋 para elegir) · descripción opcional · foto o documento adjunto. La descripción no es obligatoria. Toca Guardar.'},
+    {q:'📎 Adjuntos en tareas', a:'En cualquier tarea puedes adjuntar: 📷 Cámara (foto directa) · 🖼️ Galería (varias fotos) · 📄 Documentos (PDF, Word, etc.). Las fotos se comprimen automáticamente para ahorrar espacio. Los archivos se guardan en tu dispositivo. Puedes adjuntar varios a la vez.'},
+    {q:'✅ To Do', a:'Lista de notas y recordatorios rápidos. Toca ＋ o dicta con el 🎤 para añadir una nota. Pulsa larga sobre una nota para archivarla o eliminarla. En Free: máximo 30 notas activas. En Premium: ilimitadas.'},
+    {q:'📓 Libreta de dibujo', a:'Tu espacio de dibujo libre. La barra lateral izquierda tiene: ✏️ Herramienta (lápiz, boli, texto, selección, figuras, stickers) · 🟢 Color (15 colores + personalizado) · ━ Grosor (fino, normal, grueso, extra + slider) · 🩹 Goma (3 tamaños) · ↩️ Deshacer · 🎨 Fondo y plantillas. Toca 💾 Guardar para guardar. Al salir te pregunta si quieres guardar.'},
+    {q:'🎨 Colores y temas', a:'Ve a ⚙️ Ajustes → Personalización → Temas. Los 4 temas gratuitos son: Sage 🌿 · Mar 🌊 · Lavanda 💜 · Minimal ◻. Los temas Premium (🔒) incluyen: Dark Academia 📚 · Y2K ✨ · Pastel Dreams 🍑 · Midnight 🌙 · Cottagecore 🌸 · Kawaii 🩷 · Cyberpunk 🔥 y más.'},
+    {q:'📊 Estadísticas de estudio', a:'Toca "📊 Mi semana de estudio" en el home. Verás: 🔥 Racha actual de días · ⏱️ Tiempo de Pomodoro · 🍅 Sesiones Pomodoro · ✅ Tareas completadas esta semana · 📋 Tareas pendientes · Tu récord personal de racha.'},
+    {q:'🍅 Pomodoro', a:'Técnica de estudio: 25 minutos concentrado + 5 minutos descanso. Ve a cualquier tarea → toca ▶ Iniciar Pomodoro. El temporizador cuenta hacia atrás y suena al terminar. Tus sesiones se cuentan en las estadísticas semanales.'},
+    {q:'📅 Calendario', a:'Vista mensual y semanal de todas tus tareas, exámenes y eventos. Los puntos de color indican el tipo de tarea. Toca un día para ver el detalle. Toca un evento para editarlo.'},
+    {q:'📋 Calificaciones', a:'Aquí aparecen los exámenes y trabajos sin nota. Toca uno para añadir la calificación: escribe la nota o usa los botones rápidos (4-10). Cuando guardas la nota, el evento desaparece de la lista. El home muestra cuántos tienes sin calificar.'},
+    {q:'🗓️ Horario de clases', a:'En el home verás tu horario de hoy. Para editar: toca ✏️ Editar en la esquina superior. Toca cualquier celda para añadir/editar una asignatura. Puedes tener hasta 2 horarios diferentes (ej: semana A y B). Exporta a PDF con el botón PDF.'},
+    {q:'📤 Importar calendario ICS', a:'Puedes importar calendarios de Google Calendar, iCloud o cualquier app que exporte .ics. Ve a ⚙️ Ajustes → Datos → Importar ICS. Se mostrarán los eventos futuros para que elijas cuáles importar. Requiere Premium.'},
+    {q:'☁️ Copia de seguridad', a:'Ve a ⚙️ Ajustes → Datos y backup → Exportar. Se descarga un archivo JSON con todos tus datos. Guárdalo en Drive o en tu móvil. Para restaurar: importar el mismo archivo. Haz backup regularmente, especialmente antes de limpiar el almacenamiento.'},
+    {q:'📦 Almacenamiento', a:'Ve a ⚙️ Ajustes → Almacenamiento para ver el espacio usado. Plan Free: limitado por el navegador (≈5MB texto + archivos en IndexedDB). Cuando se llene el espacio, borra fotos o apuntes antiguos. Las fotos se comprimen automáticamente a ~40KB.'},
+    {q:'🎤 Dictado de voz', a:'En el campo de notas o descripción, toca el icono 🎤. Habla con claridad y Tapunto transcribirá tu voz. Toca el botón ⏹ para parar. En iPhone/iPad: Apple no permite esta función en Safari. Usa el 🎤 del teclado de tu iPhone directamente. Requiere Premium en algunas funciones.'},
+    {q:'⭐ Premium', a:'Tapunto Premium desbloquea: tareas, notas y libreta ilimitadas · dictado de voz · Google Drive · exportar PDF · fotos ilimitadas en Apuntes · todos los temas de color · múltiples dispositivos. Precio: 3,99€/año (menos de 33 céntimos al mes). Actívalo en ⚙️ Ajustes o toca el banner dorado del home.'},
+    {q:'🔐 Seguridad y privacidad', a:'Tus datos se guardan SOLO en tu dispositivo. Tapunto no tiene servidores propios ni accede a tu información. El PIN se cifra con SHA-256. Los datos se cifran con AES-GCM. Nadie más puede ver tus apuntes o tareas. La sesión dura 8 horas por seguridad.'},
+    {q:'ℹ️ Acerca de', a:'Tapunto v38 © 2026 Alicia Prats & Enrique García · Valencia, España · tapunto.app. Licencia propietaria. Todos los derechos reservados. Contacto: tapunto.soporte@gmail.com'},
+  ];
   var acc=document.getElementById('help-accordion');
   if(!acc) return;
   acc.innerHTML='';
@@ -13748,7 +13554,7 @@ function renderProximasTareas(){
     .slice(0,4);
 
   if(!conFecha.length && !sinFecha.length){
-    wrap.innerHTML='<div style="text-align:center;padding:20px 10px;color:var(--tl);font-family:var(--font-main);font-size:13px;">Sin tareas próximas ✌️<br><span style="font-size:11px;">Toca + para añadir</span></div>';
+    wrap.innerHTML='';
     return;
   }
 
@@ -14988,6 +14794,76 @@ function libConfirmarTexto(){
 function libCancelarTexto(){document.getElementById('lib-text-input-wrap').style.display='none';}
 function libInsertarEmoji(){var cv=document.getElementById('lib-canvas');var ems=['😊','😂','❤️','🔥','⭐','✅','❌','📌','📝','🎯','💡','🚀','📚','✏️','🎉','💯','🤔','👍'];var panel=document.createElement('div');panel.style.cssText='position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:var(--w);border:1px solid var(--bd);border-radius:12px;padding:10px;display:flex;flex-wrap:wrap;gap:6px;z-index:600;max-width:280px;box-shadow:0 4px 20px rgba(0,0,0,.2);';ems.forEach(function(em){var btn=document.createElement('button');btn.textContent=em;btn.style.cssText='font-size:24px;background:none;border:none;cursor:pointer;padding:2px;';btn.addEventListener('click',function(){panel.remove();var pag=_lib.paginas[_lib.pagActual];if(!pag)return;if(!pag.textos)pag.textos=[];pag.textos.push({texto:em,x:(cv.width/2-_lib.panX)/_lib.zoom,y:(cv.height/2-_lib.panY)/_lib.zoom,color:'#222',size:32});libRedraw();libGuardar();});panel.appendChild(btn);});var cl=document.createElement('button');cl.textContent='✕';cl.style.cssText='width:100%;margin-top:4px;padding:4px;background:var(--bd);border:none;border-radius:6px;font-size:11px;cursor:pointer;';cl.addEventListener('click',function(){panel.remove();});panel.appendChild(cl);document.body.appendChild(panel);}
 function libUndo(){var u=_lib.historial.pop();if(!u)return;var pag=_lib.paginas[u.pagIdx];if(!pag)return;if(u.tipo==='trazo'&&pag.trazos.length)pag.trazos.pop();if(u.tipo==='texto'&&pag.textos&&pag.textos.length)pag.textos.pop();if(u.tipo==='borrador'){pag.trazos=u.trazos;pag.textos=u.textos;}libRedraw();libGuardar();}
+
+// ════ Barra flotante libreta ════
+var _libFloatOpen=null;
+
+function libFloatToggle(panel){
+  var sub=document.getElementById('lib-sub-'+panel);
+  if(!sub) return;
+  if(_libFloatOpen===panel){
+    sub.style.display='none';_libFloatOpen=null;return;
+  }
+  ['herramienta','color','grosor','goma'].forEach(function(p){
+    var s=document.getElementById('lib-sub-'+p);
+    if(s) s.style.display='none';
+  });
+  sub.style.display='flex';
+  sub.style.flexDirection='column';
+  _libFloatOpen=panel;
+}
+
+function libFloatClose(){
+  ['herramienta','color','grosor','goma'].forEach(function(p){
+    var s=document.getElementById('lib-sub-'+p);
+    if(s) s.style.display='none';
+  });
+  _libFloatOpen=null;
+}
+
+function libSetToolFloat(tool){
+  var map={lapiz:'lt-lapiz',boli:'lt-boli',texto:'lt-text',seleccion:'lt-sel',
+           borrador:'lt-borrador','borrador-m':'lt-borrador-m','borrador-l':'lt-borrador-l'};
+  libSetTool(tool,document.getElementById(map[tool])||{});
+  var icons={lapiz:'✏️',boli:'🖊️',texto:'𝐓',seleccion:'⬚',borrador:'🩹','borrador-m':'🩹','borrador-l':'🩹'};
+  var mainBtn=document.getElementById('lt-lapiz');
+  if(mainBtn) mainBtn.textContent=icons[tool]||'✏️';
+  var ts=document.getElementById('lib-text-styles');
+  if(ts) ts.style.display=tool==='texto'?'flex':'none';
+  document.querySelectorAll('.lib-float-sub').forEach(function(b){b.classList.remove('active');});
+  var ab=document.getElementById('ftool-'+tool);
+  if(ab) ab.classList.add('active');
+}
+
+function libSetColorFloat(color,dot){
+  libSetColor(color,null);
+  var btn=document.getElementById('lib-float-color-btn');
+  if(btn){
+    btn.style.background=color;
+    btn.style.border=color==='#ffffff'?'3px solid #ccc':'3px solid rgba(255,255,255,.9)';
+  }
+  document.querySelectorAll('.lib-color-dot').forEach(function(d){d.classList.remove('active');});
+  if(dot) dot.classList.add('active');
+  libFloatClose();
+}
+
+function libSetSizeFloat(size,btn){
+  libSetSize(size,null);
+  var prev=document.getElementById('lib-grosor-preview');
+  if(prev) prev.style.height=Math.min(size,20)+'px';
+  var sl=document.getElementById('lib-size-slider');
+  if(sl) sl.value=size;
+  if(btn){
+    document.querySelectorAll('.lib-size-row').forEach(function(b){b.classList.remove('active-size');});
+    btn.classList.add('active-size');
+  }
+}
+
+document.addEventListener('click',function(e){
+  if(_libFloatOpen&&!e.target.closest('#lib-float-bar')){
+    libFloatClose();
+  }
+});
 function libSetTool(t,btn){
   // Tamaños de goma
   if(t==='borrador'){_lib.radioGoma=6;}
@@ -15873,4 +15749,5 @@ if('serviceWorker' in navigator && location.hostname==='tapunto.app'){
 }
 </script>
 </body>
-</html>
+</html
+  >
