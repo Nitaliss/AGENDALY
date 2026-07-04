@@ -154,10 +154,41 @@ body[data-theme="minimal"]{
   --cover1:#111827;--cover2:#374151;--cover3:#6b7280;--cover4:#e5e7eb;
   --ring1:#374151;--nbspine:var(--gd);--nbspine2:var(--gm);--nbspine3:var(--gl);
   --body-bg:#f3f4f6;}
+[data-theme="cottagecore"]{
+  --bg:#f0ead8;--w:#fffef7;--bl:#e8e0cc;--bd:#a8936a;
+  --td:#2c1a0e;--tl:#6b4c2a;--th:#5a7a4a;--tm:#2c1a0e;
+  --gm:#5a7a4a;--gd:#3d5c2e;--gl:#7a9e6a;--ga:#7a9e6a;--gn:#c0392b;--bp:#e8e0cc;
+  --body-bg:#f0ead8;
+}
+[data-theme="darkacademia"]{
+  --bg:#1a0f0a;--w:#2c1810;--bl:#3d2314;--bd:#6b4c2a;
+  --td:#e8d5b7;--tl:#c4a882;--th:#d4a847;--tm:#f0e0c0;
+  --gm:#8b6914;--gd:#a07820;--gl:#c49a28;--ga:#6b9e4a;--gn:#e74c3c;--bp:#3d2314;
+  --body-bg:#1a0f0a;
+}
+[data-theme="y2k"]{
+  --bg:#0a0015;--w:#1a0028;--bl:#25003a;--bd:#8b5cf6;
+  --td:#f0e6ff;--tl:#c084fc;--th:#a855f7;--tm:#f0e6ff;
+  --gm:#ec4899;--gd:#db2777;--gl:#f472b6;--ga:#22c55e;--gn:#ef4444;--bp:#25003a;
+  --body-bg:#0a0015;
+}
+[data-theme="pastel"]{
+  --bg:#fff0f5;--w:#ffffff;--bl:#fde8f3;--bd:#e879a8;
+  --td:#4a1040;--tl:#8b4a7a;--th:#c084fc;--tm:#4a1040;
+  --gm:#e879a8;--gd:#d63384;--gl:#f472b6;--ga:#6cc873;--gn:#e74c3c;--bp:#fce7f3;
+  --body-bg:#fff0f5;
+}
+[data-theme="midnight"]{
+  --bg:#020817;--w:#0f172a;--bl:#1e293b;--bd:#475569;
+  --td:#e2e8f0;--tl:#94a3b8;--th:#0ea5e9;--tm:#e2e8f0;
+  --gm:#0ea5e9;--gd:#0284c7;--gl:#38bdf8;--ga:#22c55e;--gn:#ef4444;--bp:#1e293b;
+  --body-bg:#020817;
+}
+
 
 *{box-sizing:border-box;margin:0;padding:0;}
 :root{--font-main:'Nunito',sans-serif;--font-scale:1;}
-body{font-family:var(--font-main);font-size:calc(14px * var(--font-scale,1));background:var(--body-bg);min-height:100vh;
+body{font-family:var(--font-main);font-size:calc(14px * var(--font-scale,1));--fs:calc(1rem * var(--font-scale,1));background:var(--body-bg);min-height:100vh;
   display:flex;justify-content:center;align-items:flex-start;padding:20px 12px 40px;
   transition:background .3s;}
 
@@ -2929,7 +2960,13 @@ body.nb-mode #nb-pill-orden { display:none !important; }
     <span style="font-size:11px;color:#856404;flex:1;">Almacenamiento casi lleno. Toca para gestionar espacio.</span>
     <span style="font-size:11px;color:#856404;font-weight:700;">Ver →</span>
   </div>
-  <div id="home-cita"  style="padding:8px 16px;min-height:44px;display:flex;flex-direction:column;justify-content:center;background:rgba(0,0,0,.08);border-bottom:1px solid rgba(255,255,255,.1);"></div>
+  <div id="home-cita" style="padding:10px 16px;min-height:44px;display:flex;align-items:center;background:#1a1a2e;border-bottom:1px solid rgba(255,255,255,.1);">
+  <span style="font-size:18px;flex-shrink:0;opacity:.7;">✨</span>
+  <div style="margin-left:10px;">
+    <div style="font-family:Caveat,cursive;font-size:15px;line-height:1.4;color:#fff;font-weight:600;">"El éxito es la suma de pequeños esfuerzos repetidos cada día."</div>
+    <div style="font-size:10px;color:rgba(255,255,255,.6);margin-top:1px;font-family:var(--font-main);">— R. Collier</div>
+  </div>
+</div>
   <!-- SECCIÓN HORARIO HOY — siempre visible sin tabs -->
   <div id="home-horario-hoy" style="background:var(--bp);border-bottom:1px solid var(--bd);padding:6px 10px 8px;">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px;">
@@ -2956,19 +2993,23 @@ body.nb-mode #nb-pill-orden { display:none !important; }
   <div style="padding:6px 12px 100px;">
 
     <!-- FILA ACCESOS RÁPIDOS -->
-    <div style="display:flex;gap:8px;margin-bottom:8px;">
-      <button onclick="irSeccion('calendario')" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 4px;background:var(--w);border:1.5px solid var(--bd);border-radius:12px;cursor:pointer;font-family:var(--font-main);">
-        <span style="font-size:24px;line-height:1;">📅</span>
-        <div style="font-size:11px;font-weight:700;color:var(--td);">Calendario</div>
+    <div style="display:flex;gap:6px;margin-bottom:8px;">
+      <button onclick="irSeccion('calendario')" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:10px 2px;background:var(--w);border:1.5px solid var(--bd);border-radius:12px;cursor:pointer;font-family:var(--font-main);">
+        <span style="font-size:22px;line-height:1;">📅</span>
+        <div style="font-size:10px;font-weight:700;color:var(--td);">Calendario</div>
       </button>
-      <button onclick="irSeccion('calificaciones')" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 4px;background:var(--w);border:1.5px solid var(--bd);border-radius:12px;cursor:pointer;font-family:var(--font-main);">
-        <span style="font-size:24px;line-height:1;">📋</span>
-        <div style="font-size:11px;font-weight:700;color:var(--td);">Calificaciones</div>
-        <div style="font-size:9px;color:var(--tl);" id="home-calif-resumen"></div>
+      <button onclick="irSeccion('calificaciones')" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:10px 2px;background:var(--w);border:1.5px solid var(--bd);border-radius:12px;cursor:pointer;font-family:var(--font-main);">
+        <span style="font-size:22px;line-height:1;">📋</span>
+        <div style="font-size:10px;font-weight:700;color:var(--td);">Calificaciones</div>
+        <div style="font-size:8px;color:var(--tl);" id="home-calif-resumen"></div>
       </button>
-      <button onclick="irSeccion('libreta')" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 4px;background:var(--w);border:1.5px solid var(--bd);border-radius:12px;cursor:pointer;font-family:var(--font-main);">
-        <span style="font-size:24px;line-height:1;">📓</span>
-        <div style="font-size:11px;font-weight:700;color:var(--td);">Libreta</div>
+      <button onclick="irSeccion('libreta')" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:10px 2px;background:var(--w);border:1.5px solid var(--bd);border-radius:12px;cursor:pointer;font-family:var(--font-main);">
+        <span style="font-size:22px;line-height:1;">📓</span>
+        <div style="font-size:10px;font-weight:700;color:var(--td);">Libreta</div>
+      </button>
+      <button onclick="irSeccion('estudio')" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:10px 2px;background:var(--w);border:1.5px solid var(--bd);border-radius:12px;cursor:pointer;font-family:var(--font-main);">
+        <span style="font-size:22px;line-height:1;">🍅</span>
+        <div style="font-size:10px;font-weight:700;color:var(--td);">Pomodoro</div>
       </button>
     </div>
     
@@ -2979,9 +3020,6 @@ body.nb-mode #nb-pill-orden { display:none !important; }
       <div id="home-pom-today" style="font-size:12px;font-weight:700;color:var(--td);font-family:var(--font-main);line-height:1.4;margin-top:2px;"></div>
     </div>
     <!-- Panel de alertas -->
-    <div id="home-alertas-panel" style="border-radius:8px;border:1px solid var(--bd);background:var(--w);margin-bottom:8px;"></div>
-    <!-- Tareas próximas con urgencia -->
-    <div id="home-proximas-tareas"></div>
     <!-- Campos ocultos para compatibilidad -->
     <div id="home-tab-resumen-panel" style="display:none;"></div>
     <div id="home-tab-horario-panel" style="display:none;"></div>
@@ -3002,12 +3040,17 @@ body.nb-mode #nb-pill-orden { display:none !important; }
       <label style="font-size:10px;font-weight:700;color:var(--tm);font-family:var(--font-main);letter-spacing:.5px;text-transform:uppercase;display:block;margin-bottom:5px;">&#128197; Fecha examen/entrega</label>
       <input type="date" id="h-task-fecha-evento" style="width:100%;padding:7px 10px;border:1.5px solid var(--gm);border-radius:8px;font-size:14px;font-family:var(--font-main);background:var(--w);color:var(--td);box-sizing:border-box;" />
     </div>
-    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;">
-      <button class="h-tipo-chip sel" onclick="hSelTipo(this,'Examen')">&#128221; Examen</button>
-      <button class="h-tipo-chip" onclick="hSelTipo(this,'Deberes')">&#128218; Deberes</button>
-      <button class="h-tipo-chip" onclick="hSelTipo(this,'Trabajo')">&#128203; Trabajo</button>
-      <button class="h-tipo-chip" onclick="hSelTipo(this,'Proyecto')">&#128300; Proyecto</button>
-      <button class="h-tipo-chip" onclick="hSelTipo(this,'Otro')">&#128172; Otro</button>
+    <!-- Icono + chips tipo -->
+    <div style="display:flex;align-items:flex-start;gap:8px;margin-bottom:10px;">
+      <button id="h-task-icono-btn" onclick="mostrarSelectorIconoHTask()" title="Elegir icono"
+        style="width:46px;height:46px;flex-shrink:0;border-radius:10px;border:1.5px solid var(--bd);background:var(--bp);font-size:22px;cursor:pointer;display:flex;align-items:center;justify-content:center;">📋</button>
+      <div style="display:flex;gap:5px;flex-wrap:wrap;flex:1;">
+        <button class="h-tipo-chip sel" onclick="hSelTipo(this,'Examen')">&#128221; Examen</button>
+        <button class="h-tipo-chip" onclick="hSelTipo(this,'Deberes')">&#128218; Deberes</button>
+        <button class="h-tipo-chip" onclick="hSelTipo(this,'Trabajo')">&#128203; Trabajo</button>
+        <button class="h-tipo-chip" onclick="hSelTipo(this,'Proyecto')">&#128300; Proyecto</button>
+        <button class="h-tipo-chip" onclick="hSelTipo(this,'Otro')">&#128172; Otro</button>
+      </div>
     </div>
     <!-- Foto + Docs adjuntos -->
     <div style="margin-bottom:8px;">
@@ -3159,7 +3202,7 @@ body.nb-mode #nb-pill-orden { display:none !important; }
     <div style="position:relative;">
       <button id="lt-lapiz" onclick="libFloatToggle('herramienta')" class="lib-float-btn active-tool"
         style="width:44px;height:44px;border-radius:14px;border:none;background:rgba(255,255,255,.92);backdrop-filter:blur(8px);box-shadow:0 2px 12px rgba(0,0,0,.15);cursor:pointer;font-size:20px;display:flex;align-items:center;justify-content:center;">✏️</button>
-      <div id="lib-sub-herramienta" style="display:none;position:absolute;left:52px;top:0;background:rgba(255,255,255,.97);backdrop-filter:blur(12px);border-radius:16px;box-shadow:0 4px 24px rgba(0,0,0,.18);padding:8px;flex-direction:column;gap:6px;min-width:52px;align-items:center;">
+      <div id="lib-sub-herramienta" style="display:none;position:fixed;left:60px;top:auto;background:rgba(255,255,255,.97);backdrop-filter:blur(12px);border-radius:16px;box-shadow:0 4px 24px rgba(0,0,0,.18);padding:8px;flex-direction:column;gap:6px;min-width:52px;align-items:center;max-height:80vh;overflow-y:auto;z-index:9999;">
         <button onclick="libSetToolFloat('lapiz')" id="ftool-lapiz" class="lib-float-sub active" title="Lápiz">✏️</button>
         <button onclick="libSetToolFloat('boli')" id="ftool-boli" class="lib-float-sub" title="Bolígrafo">🖊️</button>
         <button onclick="libSetToolFloat('texto')" id="ftool-texto" class="lib-float-sub" title="Texto" style="font-weight:900;">T</button>
@@ -3182,7 +3225,7 @@ body.nb-mode #nb-pill-orden { display:none !important; }
     <div style="position:relative;">
       <button onclick="libFloatToggle('color')" id="lib-float-color-btn" class="lib-float-btn"
         style="width:44px;height:44px;border-radius:14px;background:#1a1a1a;border:3px solid rgba(255,255,255,.9);box-shadow:0 2px 12px rgba(0,0,0,.2);cursor:pointer;"></button>
-      <div id="lib-sub-color" style="display:none;position:absolute;left:52px;top:0;background:rgba(255,255,255,.97);backdrop-filter:blur(12px);border-radius:16px;box-shadow:0 4px 24px rgba(0,0,0,.18);padding:10px;min-width:170px;flex-direction:column;">
+      <div id="lib-sub-color" style="display:none;position:fixed;left:60px;top:auto;background:rgba(255,255,255,.97);backdrop-filter:blur(12px);border-radius:16px;box-shadow:0 4px 24px rgba(0,0,0,.18);padding:10px;min-width:170px;flex-direction:column;">
         <div style="font-size:10px;font-weight:700;color:#666;margin-bottom:8px;">COLOR</div>
         <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-bottom:8px;">
           <div class="lib-color-dot active" style="background:#1a1a1a;" onclick="libSetColorFloat('#1a1a1a',this)"></div>
@@ -3214,7 +3257,7 @@ body.nb-mode #nb-pill-orden { display:none !important; }
         style="width:44px;height:44px;border-radius:14px;border:none;background:rgba(255,255,255,.92);backdrop-filter:blur(8px);box-shadow:0 2px 12px rgba(0,0,0,.15);cursor:pointer;display:flex;align-items:center;justify-content:center;">
         <div id="lib-grosor-preview" style="width:24px;height:3px;background:#1a1a1a;border-radius:3px;"></div>
       </button>
-      <div id="lib-sub-grosor" style="display:none;position:absolute;left:52px;top:0;background:rgba(255,255,255,.97);backdrop-filter:blur(12px);border-radius:16px;box-shadow:0 4px 24px rgba(0,0,0,.18);padding:10px;min-width:150px;flex-direction:column;">
+      <div id="lib-sub-grosor" style="display:none;position:fixed;left:60px;top:auto;background:rgba(255,255,255,.97);backdrop-filter:blur(12px);border-radius:16px;box-shadow:0 4px 24px rgba(0,0,0,.18);padding:10px;min-width:150px;flex-direction:column;">
         <div style="font-size:10px;font-weight:700;color:#666;margin-bottom:8px;">GROSOR</div>
         <div style="display:flex;flex-direction:column;gap:8px;">
           <button onclick="libSetSizeFloat(2,this)" class="lib-size-row active-size" data-size="2"><div style="width:60px;height:2px;background:currentColor;border-radius:2px;"></div><span>Fino</span></button>
@@ -3232,7 +3275,7 @@ body.nb-mode #nb-pill-orden { display:none !important; }
     <div style="position:relative;">
       <button onclick="libFloatToggle('goma')" class="lib-float-btn"
         style="width:44px;height:44px;border-radius:14px;border:none;background:rgba(255,255,255,.92);backdrop-filter:blur(8px);box-shadow:0 2px 12px rgba(0,0,0,.15);cursor:pointer;font-size:20px;display:flex;align-items:center;justify-content:center;">🩹</button>
-      <div id="lib-sub-goma" style="display:none;position:absolute;left:52px;top:0;background:rgba(255,255,255,.97);backdrop-filter:blur(12px);border-radius:16px;box-shadow:0 4px 24px rgba(0,0,0,.18);padding:10px;min-width:140px;flex-direction:column;">
+      <div id="lib-sub-goma" style="display:none;position:fixed;left:60px;top:auto;background:rgba(255,255,255,.97);backdrop-filter:blur(12px);border-radius:16px;box-shadow:0 4px 24px rgba(0,0,0,.18);padding:10px;min-width:140px;flex-direction:column;">
         <div style="font-size:10px;font-weight:700;color:#666;margin-bottom:8px;">GOMA</div>
         <div style="display:flex;flex-direction:column;gap:6px;">
           <button onclick="libSetToolFloat('borrador');libFloatClose()" id="lt-borrador" class="lib-eraser-btn"><div style="width:16px;height:16px;background:#ddd;border-radius:4px;border:1px solid #bbb;flex-shrink:0;"></div><span>Pequeña</span></button>
@@ -5353,7 +5396,13 @@ function renderCatGrid(catIdx){
     var b2=document.createElement('button');
     if(e==='⬜'){b2.textContent='∅';b2.title='Sin icono';b2.style.cssText='font-size:18px;padding:8px;background:var(--bp);border:1px solid var(--bd);border-radius:8px;cursor:pointer;color:var(--tl);';}
     else{b2.textContent=e;b2.style.cssText='font-size:22px;padding:6px;background:var(--bp);border:1px solid var(--bd);border-radius:8px;cursor:pointer;';}
-    b2.onclick=function(ev){ev.stopPropagation();elegirIcono(e==='⬜'?'':e);};
+    b2.onclick=function(ev){
+      ev.stopPropagation();
+      var ico=e==='⬜'?'':e;
+      var fn=window._icoTargetFn||_icoTargetFn;
+      if(typeof fn==='function'){fn(ico);window._icoTargetFn=null;}
+      else{elegirIcono(ico);}
+    };
     grid2.appendChild(b2);
   });
   contentDiv.appendChild(grid2);
@@ -5378,7 +5427,12 @@ inpLibre.style.cssText='flex:1;padding:8px 10px;border:1px solid var(--bd);borde
 var btnOk=document.createElement('button');
 btnOk.textContent='OK';
 btnOk.style.cssText='padding:8px 14px;background:var(--gm);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:var(--font-main);';
-btnOk.onclick=function(ev){ev.stopPropagation();if(inpLibre.value.trim())elegirIcono(inpLibre.value.trim());};
+btnOk.onclick=function(ev){ev.stopPropagation();
+      if(inpLibre.value.trim()){
+        var em=inpLibre.value.trim();
+        if(typeof _icoTargetFn==='function'){_icoTargetFn(em);}
+        else{elegirIcono(em);}
+      }};
 libreRow.appendChild(inpLibre);libreRow.appendChild(btnOk);
 panel.appendChild(title);panel.appendChild(tabsDiv);panel.appendChild(contentDiv);panel.appendChild(libreRow);
 ov.appendChild(panel);
@@ -5765,6 +5819,8 @@ try{
 // ── Crear carpeta en Apuntes si hay adjuntos ──
 try{
   var docs=window._nuevoDocs||[];
+  // Debug: log docs count
+  console.log('Tapunto: guardando tarea con',docs.length,'adjuntos');
   if(docs.length>0){
     var asigAlb=rec.tema||'General';
     var fechaAlb=new Date().toISOString().slice(0,10);
@@ -5798,8 +5854,16 @@ try{
       });
     });
     window._nuevoDocs=[];
-    persist().catch(function(){});
-    showToast('📂 Carpeta "'+asigAlb+'" creada en Apuntes con '+docs.length+' adjunto'+(docs.length!==1?'s':''));
+    // Guardar state con el nuevo álbum
+    persist().then(function(){
+      showToast('📂 Carpeta "'+asigAlb+'" creada en Apuntes con '+docs.length+' adjunto'+(docs.length!==1?'s':''));
+      // Refresh apuntes if visible
+      if(document.getElementById('sec-albumes')&&document.getElementById('sec-albumes').classList.contains('active')){
+        try{renderAlbumes();}catch(e){}
+      }
+    }).catch(function(){
+      showToast('📂 Carpeta creada (guarda backup para no perderla)');
+    });
   }
 }catch(_ae){ console.warn('Error creando álbum:',_ae); }
 
@@ -10817,6 +10881,9 @@ function hCeldaTap(asig,dia,slot){
   _hTipo='Examen';
   document.querySelectorAll('.h-tipo-chip').forEach(function(c){c.classList.remove('sel');});
   var fc=document.querySelector('.h-tipo-chip');if(fc)fc.classList.add('sel');
+  window._hTaskIcono='';window._icoTargetFn=null;
+  var iBtn=document.getElementById('h-task-icono-btn');
+  if(iBtn) iBtn.textContent='📋';
   var modal=document.getElementById('h-task-modal');if(modal)modal.style.display='flex';
 }
 function hCerrarModal(){var m=document.getElementById('h-task-modal');if(m)m.style.display='none';hPararMic();}
@@ -10860,6 +10927,24 @@ function hTaskFotoQuitar(){
   _hTaskFotoData=null;
   var prev=document.getElementById('h-task-foto-preview');if(prev)prev.style.display='none';
   var inp=document.getElementById('h-task-foto-inp');if(inp)inp.value='';
+}
+
+// ── Selector icono para tarea desde horario ──
+var _icoTargetFn=null;
+
+function mostrarSelectorIconoHTask(){
+  // Usar window para garantizar scope global
+  window._icoTargetFn=function(emoji){
+    if(!emoji||!emoji.trim()) return;
+    _guardarIconoReciente(emoji);
+    var btn=document.getElementById('h-task-icono-btn');
+    if(btn) btn.textContent=emoji.trim();
+    window._hTaskIcono=emoji.trim();
+    var ov=document.getElementById('emoji-picker-ov');
+    if(ov) ov.remove();
+    window._icoTargetFn=null;
+  };
+  mostrarSelectorIcono();
 }
 function hGuardarTarea(){
   var texto=(document.getElementById('h-task-ta').value||'').trim();
@@ -12734,7 +12819,14 @@ function renderCitaDiaria(){
   var el=document.getElementById('home-cita');if(!el)return;
   var d=new Date();var c=CITAS_DIA[(d.getFullYear()*366+d.getMonth()*31+d.getDate())%CITAS_DIA.length];
   var p=c.split(' — ');
-  el.innerHTML='<span style="font-size:11px;line-height:1.5;color:rgba(255,255,255,.85);font-style:italic;">"'+p[0]+'"</span>'+(p[1]?'<span style="font-size:10px;color:rgba(255,255,255,.55);display:block;margin-top:2px;">— '+p[1]+'</span>':'');
+  // Fondo siempre oscuro, texto siempre blanco — independiente del tema
+  el.style.background='#1a1a2e';
+  el.innerHTML=
+    '<span style="font-size:18px;flex-shrink:0;opacity:.7;">✨</span>'
+    +'<div style="margin-left:10px;">'
+      +'<div style="font-family:Caveat,cursive;font-size:15px;line-height:1.4;color:#fff;font-weight:600;">\"'+p[0]+'\"</div>'
+      +(p[1]?'<div style="font-size:10px;color:rgba(255,255,255,.6);margin-top:1px;letter-spacing:.3px;font-family:var(--font-main);">— '+p[1]+'</div>':'')
+    +'</div>';
 }
 
 // ── Avatar ──
@@ -13166,8 +13258,8 @@ function pomSetSound(type){
   <button class="bnav-btn" id="bnav-todo" onclick="irSeccion('notas')">
     <span class="bnav-ico">&#9989;</span><span class="bnav-lbl">To Do</span>
   </button>
-  <button class="bnav-btn" id="bnav-albumes" onclick="irSeccion('albumes')">
-    <span class="bnav-ico">&#128218;</span><span class="bnav-lbl">Apuntes</span>
+  <button class="bnav-btn" id="bnav-rutinas" onclick="irSeccion('rutinas')">
+    <span class="bnav-ico">🔄</span><span class="bnav-lbl">Rutinas</span>
   </button>
   <button id="bnav-back" onclick="navVolverAtras()" title="Volver" style="flex-shrink:0;width:32px;display:flex;flex-direction:column;align-items:center;justify-content:center;background:none;border:none;cursor:pointer;color:var(--tl);padding:0 4px;margin:4px 2px 4px 0;">
     <span style="font-size:16px;line-height:1;">&#8592;</span>
@@ -13776,7 +13868,7 @@ function renderCalificaciones(){
   if(!lista) return;
   function _e(s){return s?String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'):'';}
 
-  // ── Poblar selector de asignaturas ──
+  // Poblar selector de asignaturas
   var selAsig=document.getElementById('cf-asig');
   if(selAsig){
     var asigs=[...new Set((state.records||[]).filter(function(r){return r.tema;}).map(function(r){return r.tema;}))].sort();
@@ -13786,130 +13878,135 @@ function renderCalificaciones(){
     if(prevVal) selAsig.value=prevVal;
   }
 
-  var filtroTipo=window._califFiltroTipo||'todas';
   var filtroAsig=(document.getElementById('cf-asig')||{}).value||'';
   var filtroOrden=(document.getElementById('cf-orden')||{}).value||'fecha-desc';
 
-  // ── Filtrar: solo eventos SIN nota ──
+  // Filtrar: todos los eventos evaluables (con o sin nota)
   var recs=(state.records||[]).filter(function(r){
     if(r.archivado) return false;
-    // Sin fecha de evento no aplica
     if(!r.fechaEvento||!r.fechaEvento.trim()) return false;
-    // Solo tipos evaluables
     var tipo=(r.accion||'').toLowerCase();
-    var esTipo=tipo.includes('examen')||tipo.includes('trabajo')||tipo.includes('práctica')||tipo.includes('practica')||tipo.includes('oral')||tipo.includes('proyecto');
+    var esTipo=tipo.includes('examen')||tipo.includes('trabajo')||tipo.includes('práctica')
+      ||tipo.includes('practica')||tipo.includes('oral')||tipo.includes('proyecto');
     if(!esTipo) return false;
-    // Filtro tipo
-    if(filtroTipo!=='todas'&&!(r.accion||'').toLowerCase().includes(filtroTipo.toLowerCase())) return false;
-    // Filtro asignatura
     if(filtroAsig&&(r.tema||'')!==filtroAsig) return false;
-    // SIN calificación (o vacía)
-    var nota=r.calificacion;
-    if(nota!==undefined&&nota!==null&&nota!==''&&!isNaN(parseFloat(nota))) return false;
     return true;
   });
 
-  // Ordenar
   recs=recs.slice().sort(function(a,b){
     if(filtroOrden==='fecha-asc') return (a.fechaEvento||'').localeCompare(b.fechaEvento||'');
     if(filtroOrden==='asig') return (a.tema||'').localeCompare(b.tema||'');
     return (b.fechaEvento||b.fecha||'').localeCompare(a.fechaEvento||a.fecha||'');
   });
 
+  // Separar sin nota y con nota
+  var sinNota=recs.filter(function(r){
+    var n=r.calificacion; return n===undefined||n===null||n===''||isNaN(parseFloat(n));
+  });
+  var conNota=recs.filter(function(r){
+    var n=r.calificacion; return n!==undefined&&n!==null&&n!==''&&!isNaN(parseFloat(n));
+  });
+
   if(!recs.length){
     lista.innerHTML='<div style="text-align:center;padding:40px 20px;color:var(--tl);font-family:var(--font-main);">'
-      +'<div style="font-size:36px;margin-bottom:10px;">🎉</div>'
-      +'<div style="font-size:14px;font-weight:700;color:var(--td);margin-bottom:6px;">¡Todo calificado!</div>'
-      +'<div style="font-size:12px;line-height:1.6;">No hay eventos pendientes de nota.<br>Cuando añadas exámenes o trabajos aparecerán aquí.</div>'
+      +'<div style="font-size:36px;margin-bottom:10px;">📋</div>'
+      +'<div style="font-size:14px;font-weight:700;color:var(--td);">Sin eventos evaluables</div>'
+      +'<div style="font-size:12px;margin-top:6px;">Añade tareas de tipo Examen, Trabajo o Prácticas con fecha</div>'
       +'</div>';
     return;
   }
 
-  // ── Header con contador ──
   lista.innerHTML='';
-  var header=document.createElement('div');
-  header.style.cssText='padding:10px 0 8px;font-size:12px;color:var(--tl);font-family:var(--font-main);';
-  header.innerHTML='<span style="font-weight:700;color:var(--td);">'+recs.length+' evento'+(recs.length!==1?'s':'')+' sin calificar</span> — Toca uno para añadir la nota';
-  lista.appendChild(header);
 
-  // ── Render cards ──
-  recs.forEach(function(r){
-    var fechaStr='';
-    if(r.fechaEvento){
-      try{
-        var d=new Date(r.fechaEvento+'T00:00:00');
-        fechaStr=d.getDate()+'/'+(d.getMonth()+1)+'/'+String(d.getFullYear()).slice(2);
-      }catch(e){}
-    }
+  // ── Sección: Sin calificar ──
+  if(sinNota.length){
+    var h1=document.createElement('div');
+    h1.style.cssText='font-size:11px;font-weight:800;color:var(--tl);text-transform:uppercase;letter-spacing:.8px;padding:8px 0 6px;font-family:var(--font-main);';
+    h1.textContent='⏳ Pendientes de nota ('+sinNota.length+')';
+    lista.appendChild(h1);
+    sinNota.forEach(function(r){_renderCalifCard(r,lista,false);});
+  }
 
-    var card=document.createElement('div');
-    card.style.cssText='background:var(--w);border:1.5px solid var(--bd);border-radius:12px;padding:12px 14px;margin-bottom:8px;cursor:pointer;transition:border-color .15s;';
-    card.setAttribute('data-id',r.id);
-
-    card.innerHTML=
-      '<div style="display:flex;align-items:center;gap:6px;margin-bottom:5px;flex-wrap:wrap;">'
-        +'<span style="font-size:11px;font-weight:700;color:var(--gd);background:var(--bp);padding:1px 7px;border-radius:7px;border:1px solid var(--bd);">'+_e(r.tema||'—')+'</span>'
-        +(r.accion?'<span style="font-size:10px;color:var(--tl);">'+_e(r.accion)+'</span>':'')
-        +(fechaStr?'<span style="font-size:10px;color:var(--tl);">· '+fechaStr+'</span>':'')
-        +'<span style="margin-left:auto;font-size:11px;color:var(--tl);">Sin nota ›</span>'
-      +'</div>'
-      +'<div style="font-size:13px;font-weight:700;color:var(--td);font-family:var(--font-main);">'
-        +(r.icono?r.icono+' ':'')+_e(r.titulo||r.asunto||'Sin título')
-      +'</div>';
-
-    // Panel de nota (oculto por defecto)
-    var panel=document.createElement('div');
-    panel.id='nota-panel-'+r.id;
-    panel.style.cssText='display:none;margin-top:10px;padding-top:10px;border-top:1px solid var(--bd);';
-    panel.innerHTML=
-      '<div style="font-size:11px;color:var(--tl);margin-bottom:6px;font-family:var(--font-main);">Introduce la calificación:</div>'
-      +'<div style="display:flex;gap:8px;align-items:center;">'
-        +'<input type="number" min="0" max="10" step="0.1" placeholder="Ej: 7.5" id="inp-nota-'+r.id+'" style="flex:1;padding:10px;border:1.5px solid var(--gm);border-radius:8px;font-size:18px;font-weight:700;text-align:center;font-family:var(--font-main);background:var(--bl);color:var(--td);outline:none;" />'
-        +'<button onclick="califGuardarNota(this)" data-rid="'+r.id+'" style="padding:10px 18px;background:var(--gm);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:var(--font-main);">Guardar</button>'
-      +'</div>'
-      +'<div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap;">'
-        +[4,5,6,7,8,9,10].map(function(n){
-          return '<button data-inp="inp-nota-'+r.id+'" onclick="var el=document.getElementById(this.dataset.inp);if(el)el.value='+n+'" '
-            +'style="padding:5px 10px;background:var(--bp);border:1px solid var(--bd);border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;font-family:var(--font-main);color:var(--td);">'+n+'</button>';
-        }).join('')
-      +'</div>';
-
-    card.appendChild(panel);
-
-    // Toggle panel al tocar la card
-    card.addEventListener('click',function(e){
-      if(e.target.tagName==='BUTTON'||e.target.tagName==='INPUT') return;
-      var p=document.getElementById('nota-panel-'+r.id);
-      var abierto=p.style.display==='block';
-      // Cerrar todos los paneles
-      document.querySelectorAll('[id^="nota-panel-"]').forEach(function(x){x.style.display='none';});
-      document.querySelectorAll('#calif-lista .card-active').forEach(function(x){x.classList.remove('card-active');x.style.borderColor='var(--bd)';});
-      if(!abierto){
-        p.style.display='block';
-        card.style.borderColor='var(--gm)';
-        setTimeout(function(){var inp=document.getElementById('inp-nota-'+r.id);if(inp)inp.focus();},100);
-      }
-    });
-
-    lista.appendChild(card);
-  });
+  // ── Sección: Con nota ──
+  if(conNota.length){
+    var h2=document.createElement('div');
+    h2.style.cssText='font-size:11px;font-weight:800;color:var(--gm);text-transform:uppercase;letter-spacing:.8px;padding:12px 0 6px;font-family:var(--font-main);';
+    h2.textContent='✅ Calificadas ('+conNota.length+')';
+    lista.appendChild(h2);
+    conNota.forEach(function(r){_renderCalifCard(r,lista,true);});
+  }
 
   // Actualizar resumen home
   try{
     var hcr=document.getElementById('home-calif-resumen');
     if(hcr){
-      var sinNota=(state.records||[]).filter(function(r){
-        if(r.archivado||!r.fechaEvento) return false;
-        var tipo=(r.accion||'').toLowerCase();
-        var esTipo=tipo.includes('examen')||tipo.includes('trabajo')||tipo.includes('práctica')||tipo.includes('practica');
-        if(!esTipo) return false;
-        var n=r.calificacion;
-        return n===undefined||n===null||n===''||isNaN(parseFloat(n));
-      }).length;
-      hcr.textContent=sinNota>0?sinNota+' sin calificar':'¡Todo calificado! 🎉';
-      hcr.style.color=sinNota>0?'var(--td)':'var(--gm)';
+      hcr.textContent=sinNota.length>0?sinNota.length+' sin calificar':'¡Todo calificado! 🎉';
+      hcr.style.color=sinNota.length>0?'var(--td)':'var(--gm)';
     }
   }catch(e){}
+}
+
+function _renderCalifCard(r,lista,tienNota){
+  function _e(s){return s?String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'):'';}
+  var fechaStr='';
+  if(r.fechaEvento){
+    try{var d=new Date(r.fechaEvento+'T00:00:00');
+      fechaStr=d.getDate()+'/'+(d.getMonth()+1)+'/'+String(d.getFullYear()).slice(2);}catch(e){}
+  }
+  var nota=tienNota?parseFloat(r.calificacion):null;
+  var notaColor=nota===null?'var(--tl)':nota>=5?'var(--gm)':'#e74c3c';
+  var notaLabel=tienNota?String(r.calificacion):'—';
+
+  var card=document.createElement('div');
+  card.style.cssText='background:var(--w);border:1.5px solid '+(tienNota?'var(--gm)':'var(--bd)')+';border-radius:12px;padding:12px 14px;margin-bottom:8px;cursor:pointer;transition:border-color .15s;';
+
+  card.innerHTML=
+    '<div style="display:flex;align-items:center;gap:8px;">'
+      +'<div style="flex:1;min-width:0;">'
+        +'<div style="display:flex;align-items:center;gap:5px;margin-bottom:4px;flex-wrap:wrap;">'
+          +'<span style="font-size:11px;font-weight:700;color:var(--gd);background:var(--bp);padding:1px 7px;border-radius:7px;border:1px solid var(--bd);">'+_e(r.tema||'—')+'</span>'
+          +(r.accion?'<span style="font-size:10px;color:var(--tl);">'+_e(r.accion)+'</span>':'')
+          +(fechaStr?'<span style="font-size:10px;color:var(--tl);">· '+fechaStr+'</span>':'')
+        +'</div>'
+        +'<div style="font-size:13px;font-weight:700;color:var(--td);">'+(r.icono?r.icono+' ':'')+_e(r.titulo||r.asunto||'Sin título')+'</div>'
+      +'</div>'
+      +'<div style="font-size:22px;font-weight:900;color:'+notaColor+';min-width:36px;text-align:center;flex-shrink:0;">'+notaLabel+'</div>'
+    +'</div>';
+
+  // Panel de nota (para añadir o editar)
+  var panel=document.createElement('div');
+  panel.id='nota-panel-'+r.id;
+  panel.style.cssText='display:none;margin-top:10px;padding-top:10px;border-top:1px solid var(--bd);';
+  panel.innerHTML=
+    '<div style="font-size:11px;color:var(--tl);margin-bottom:6px;font-family:var(--font-main);">'+(tienNota?'Editar calificación:':'Introduce la calificación:')+'</div>'
+    +'<div style="display:flex;gap:8px;align-items:center;">'
+      +'<input type="number" min="0" max="10" step="0.01" placeholder="0-10" value="'+(tienNota?nota:'')+'" id="inp-nota-'+r.id+'" '
+        +'style="flex:1;padding:10px;border:1.5px solid var(--gm);border-radius:8px;font-size:18px;font-weight:700;text-align:center;font-family:var(--font-main);background:var(--bl);color:var(--td);outline:none;" />'
+      +'<button data-rid="'+r.id+'" onclick="califGuardarNota(this)" '
+        +'style="padding:10px 18px;background:var(--gm);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:var(--font-main);">Guardar</button>'
+    +'</div>'
+    +'<div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap;">'
+      +[4,5,6,7,8,9,10].map(function(n){
+        return '<button data-inp="inp-nota-'+r.id+'" onclick="var el=document.getElementById(this.dataset.inp);if(el)el.value='+n+'" '
+          +'style="padding:5px 10px;background:var(--bp);border:1px solid var(--bd);border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;color:var(--td);">'+n+'</button>';
+      }).join('')
+    +'</div>';
+
+  card.appendChild(panel);
+
+  card.addEventListener('click',function(e){
+    if(e.target.tagName==='BUTTON'||e.target.tagName==='INPUT') return;
+    var p=document.getElementById('nota-panel-'+r.id);
+    var abierto=p.style.display==='block';
+    document.querySelectorAll('[id^="nota-panel-"]').forEach(function(x){x.style.display='none';});
+    document.querySelectorAll('#calif-lista .card-border-gm').forEach(function(x){x.style.borderColor='var(--bd)';});
+    if(!abierto){
+      p.style.display='block';
+      card.style.borderColor='var(--gm)';
+      setTimeout(function(){var inp=document.getElementById('inp-nota-'+r.id);if(inp)inp.focus();},100);
+    }
+  });
+  lista.appendChild(card);
 }
 
 function califGuardarNota(btn){
@@ -13925,7 +14022,7 @@ function califGuardarNota(btn){
   }
   var rec=(state.records||[]).find(function(r){return r.id===id||r.id===parseInt(id);});
   if(!rec){alert('Registro no encontrado');return;}
-  rec.calificacion=num.toFixed(1);
+  rec.calificacion=num.toFixed(2);
   persist().catch(function(){});
   showToast('✅ Nota guardada: '+num.toFixed(1));
   renderCalificaciones();
@@ -14310,6 +14407,10 @@ function nbExportarPDF(asig){
 function applyFontScale(val){
   var v=parseFloat(val)||1;
   document.documentElement.style.setProperty('--font-scale', v);
+  // Aplicar escala a elementos clave directamente
+  document.querySelectorAll('.tap-header-title,.sec-title,.record-titulo,.nota-texto,.h-task-sheet h3').forEach(function(el){
+    el.style.fontSize='';  // reset para que tome la variable
+  });
   var lbl=document.getElementById('font-scale-label');
   if(lbl) lbl.textContent=Math.round(v*100)+'%';
 }
@@ -14799,25 +14900,68 @@ function libUndo(){var u=_lib.historial.pop();if(!u)return;var pag=_lib.paginas[
 var _libFloatOpen=null;
 
 function libFloatToggle(panel){
-  var sub=document.getElementById('lib-sub-'+panel);
-  if(!sub) return;
+  // Cerrar si ya está abierto
   if(_libFloatOpen===panel){
-    sub.style.display='none';_libFloatOpen=null;return;
+    libFloatClose();return;
   }
-  ['herramienta','color','grosor','goma'].forEach(function(p){
-    var s=document.getElementById('lib-sub-'+p);
-    if(s) s.style.display='none';
-  });
-  sub.style.display='flex';
-  sub.style.flexDirection='column';
+  libFloatClose();
   _libFloatOpen=panel;
+
+  // Crear cajón lateral overlay
+  var drawer=document.createElement('div');
+  drawer.id='lib-drawer-overlay';
+  drawer.style.cssText='position:fixed;inset:0;z-index:9998;display:flex;';
+
+  // Fondo semitransparente para cerrar al tocar fuera
+  var bg=document.createElement('div');
+  bg.style.cssText='flex:1;background:rgba(0,0,0,.3);';
+  bg.addEventListener('click',function(){libFloatClose();});
+
+  // El cajón en sí
+  var sub=document.getElementById('lib-sub-'+panel);
+  if(!sub){drawer.remove();_libFloatOpen=null;return;}
+
+  // Clonar el contenido del submenu en el cajón
+  var cajón=document.createElement('div');
+  cajón.style.cssText='width:220px;background:#fff;height:100%;overflow-y:auto;padding:16px 12px;box-shadow:4px 0 20px rgba(0,0,0,.2);display:flex;flex-direction:column;gap:8px;';
+
+  // Título del cajón
+  var titles={'herramienta':'🛠️ Herramienta','color':'🎨 Color','grosor':'━ Grosor','goma':'🩹 Goma'};
+  var titleEl=document.createElement('div');
+  titleEl.style.cssText='font-size:14px;font-weight:800;color:#222;margin-bottom:8px;font-family:var(--font-main);padding-bottom:8px;border-bottom:1px solid #eee;';
+  titleEl.textContent=titles[panel]||panel;
+  cajón.appendChild(titleEl);
+
+  // Copiar hijos del submenu oculto al cajón
+  Array.from(sub.children).forEach(function(child){
+    cajón.appendChild(child.cloneNode(true));
+  });
+
+  // Añadir eventos a los botones clonados
+  cajón.querySelectorAll('button[onclick]').forEach(function(btn){
+    var oc=btn.getAttribute('onclick');
+    btn.removeAttribute('onclick');
+    btn.addEventListener('click',function(){
+      eval(oc); // ejecutar el onclick original
+    });
+  });
+  cajón.querySelectorAll('input[oninput]').forEach(function(inp){
+    var oi=inp.getAttribute('oninput');
+    inp.addEventListener('input',function(){eval(oi);});
+  });
+  cajón.querySelectorAll('input[onchange]').forEach(function(inp){
+    var oc2=inp.getAttribute('onchange');
+    inp.addEventListener('change',function(){eval(oc2);});
+  });
+
+  drawer.appendChild(cajón);
+  drawer.appendChild(bg);
+  document.body.appendChild(drawer);
 }
 
 function libFloatClose(){
-  ['herramienta','color','grosor','goma'].forEach(function(p){
-    var s=document.getElementById('lib-sub-'+p);
-    if(s) s.style.display='none';
-  });
+  var ov=document.getElementById('lib-drawer-overlay');
+  if(ov) ov.remove();
   _libFloatOpen=null;
 }
 
