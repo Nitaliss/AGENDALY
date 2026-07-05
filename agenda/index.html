@@ -154,41 +154,10 @@ body[data-theme="minimal"]{
   --cover1:#111827;--cover2:#374151;--cover3:#6b7280;--cover4:#e5e7eb;
   --ring1:#374151;--nbspine:var(--gd);--nbspine2:var(--gm);--nbspine3:var(--gl);
   --body-bg:#f3f4f6;}
-[data-theme="cottagecore"]{
-  --bg:#f0ead8;--w:#fffef7;--bl:#e8e0cc;--bd:#a8936a;
-  --td:#2c1a0e;--tl:#6b4c2a;--th:#5a7a4a;--tm:#2c1a0e;
-  --gm:#5a7a4a;--gd:#3d5c2e;--gl:#7a9e6a;--ga:#7a9e6a;--gn:#c0392b;--bp:#e8e0cc;
-  --body-bg:#f0ead8;
-}
-[data-theme="darkacademia"]{
-  --bg:#1a0f0a;--w:#2c1810;--bl:#3d2314;--bd:#6b4c2a;
-  --td:#e8d5b7;--tl:#c4a882;--th:#d4a847;--tm:#f0e0c0;
-  --gm:#8b6914;--gd:#a07820;--gl:#c49a28;--ga:#6b9e4a;--gn:#e74c3c;--bp:#3d2314;
-  --body-bg:#1a0f0a;
-}
-[data-theme="y2k"]{
-  --bg:#0a0015;--w:#1a0028;--bl:#25003a;--bd:#8b5cf6;
-  --td:#f0e6ff;--tl:#c084fc;--th:#a855f7;--tm:#f0e6ff;
-  --gm:#ec4899;--gd:#db2777;--gl:#f472b6;--ga:#22c55e;--gn:#ef4444;--bp:#25003a;
-  --body-bg:#0a0015;
-}
-[data-theme="pastel"]{
-  --bg:#fff0f5;--w:#ffffff;--bl:#fde8f3;--bd:#e879a8;
-  --td:#4a1040;--tl:#8b4a7a;--th:#c084fc;--tm:#4a1040;
-  --gm:#e879a8;--gd:#d63384;--gl:#f472b6;--ga:#6cc873;--gn:#e74c3c;--bp:#fce7f3;
-  --body-bg:#fff0f5;
-}
-[data-theme="midnight"]{
-  --bg:#020817;--w:#0f172a;--bl:#1e293b;--bd:#475569;
-  --td:#e2e8f0;--tl:#94a3b8;--th:#0ea5e9;--tm:#e2e8f0;
-  --gm:#0ea5e9;--gd:#0284c7;--gl:#38bdf8;--ga:#22c55e;--gn:#ef4444;--bp:#1e293b;
-  --body-bg:#020817;
-}
-
 
 *{box-sizing:border-box;margin:0;padding:0;}
 :root{--font-main:'Nunito',sans-serif;--font-scale:1;}
-body{font-family:var(--font-main);font-size:calc(14px * var(--font-scale,1));--fs:calc(1rem * var(--font-scale,1));background:var(--body-bg);min-height:100vh;
+body{font-family:var(--font-main);font-size:calc(14px * var(--font-scale,1));background:var(--body-bg);min-height:100vh;
   display:flex;justify-content:center;align-items:flex-start;padding:20px 12px 40px;
   transition:background .3s;}
 
@@ -2177,12 +2146,12 @@ body{margin:0;padding:0;overflow-x:hidden;}
 }
 
 /* ── BOTTOM NAV ── */
-.bottom-nav{position:fixed;bottom:0;left:0;right:0;height:58px;background:var(--w);border-top:1.5px solid var(--bd);display:flex;z-index:500;box-shadow:0 -2px 12px rgba(0,0,0,.08);}
-.bnav-btn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;background:var(--bl);border:1.5px solid var(--bd);cursor:pointer;padding:3px 1px;transition:all .12s;color:var(--tl);border-radius:10px;margin:4px 3px;min-width:0;}
-.bnav-btn.active{color:var(--gd);}
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;height:62px;background:#111;border-top:none;display:flex;z-index:500;box-shadow:0 -4px 20px rgba(0,0,0,.3);}
+.bnav-btn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;background:rgba(255,255,255,.12);border:1.5px solid rgba(255,255,255,.25);cursor:pointer;padding:5px 3px;transition:all .15s;color:#111;border-radius:14px;margin:5px 3px;min-width:0;}
+.bnav-btn.active{color:#111;border-radius:14px;box-shadow:0 2px 10px rgba(0,0,0,.25);}
 .bnav-btn:active{transform:scale(.92);}
-.bnav-ico{font-size:17px;line-height:1;}
-.bnav-lbl{font-size:9px;font-weight:700;font-family:var(--font-main);letter-spacing:.3px;}
+.bnav-ico{font-size:24px;line-height:1;}
+.bnav-lbl{font-size:10px;font-weight:800;font-family:var(--font-main);letter-spacing:.3px;color:#111;}
 .bnav-fab{width:58px;height:58px;border-radius:50%;background:var(--gd);border:3px solid #fff;color:#fff;font-size:28px;font-weight:900;cursor:pointer;box-shadow:0 4px 14px rgba(45,80,22,.5);display:flex;align-items:center;justify-content:center;transition:transform .12s;flex-shrink:0;position:fixed;bottom:16px;left:calc(50% - 20px);transform:translateX(-50%);z-index:510;}.bnav-fab:active{transform:translateX(-50%) scale(.92);box-shadow:0 2px 8px rgba(45,80,22,.3);}
 
 .section{padding-bottom:68px !important;}
@@ -2960,7 +2929,7 @@ body.nb-mode #nb-pill-orden { display:none !important; }
     <span style="font-size:11px;color:#856404;flex:1;">Almacenamiento casi lleno. Toca para gestionar espacio.</span>
     <span style="font-size:11px;color:#856404;font-weight:700;">Ver →</span>
   </div>
-  <div id="home-cita" style="padding:10px 16px;min-height:44px;display:flex;align-items:center;background:#1a1a2e;border-bottom:1px solid rgba(255,255,255,.1);">
+  <div id="home-cita" style="padding:10px 16px;min-height:48px;display:flex;align-items:center;background:#1a1a2e;border-bottom:1px solid rgba(255,255,255,.1);">
   <span style="font-size:18px;flex-shrink:0;opacity:.7;">✨</span>
   <div style="margin-left:10px;">
     <div style="font-family:Caveat,cursive;font-size:15px;line-height:1.4;color:#fff;font-weight:600;">"El éxito es la suma de pequeños esfuerzos repetidos cada día."</div>
@@ -2993,33 +2962,36 @@ body.nb-mode #nb-pill-orden { display:none !important; }
   <div style="padding:6px 12px 100px;">
 
     <!-- FILA ACCESOS RÁPIDOS -->
-    <div style="display:flex;gap:6px;margin-bottom:8px;">
-      <button onclick="irSeccion('calendario')" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:10px 2px;background:var(--w);border:1.5px solid var(--bd);border-radius:12px;cursor:pointer;font-family:var(--font-main);">
-        <span style="font-size:22px;line-height:1;">📅</span>
-        <div style="font-size:10px;font-weight:700;color:var(--td);">Calendario</div>
+    <div style="display:flex;gap:6px;margin-bottom:12px;">
+      <button onclick="irSeccion('calendario')" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:10px 2px 8px;background:var(--w);border:1.5px solid var(--bd);border-radius:14px;cursor:pointer;font-family:var(--font-main);opacity:.85;">
+        <span style="font-size:20px;line-height:1;">📅</span>
+        <div style="font-size:9px;font-weight:700;color:var(--td);">Calendario</div>
       </button>
-      <button onclick="irSeccion('calificaciones')" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:10px 2px;background:var(--w);border:1.5px solid var(--bd);border-radius:12px;cursor:pointer;font-family:var(--font-main);">
-        <span style="font-size:22px;line-height:1;">📋</span>
-        <div style="font-size:10px;font-weight:700;color:var(--td);">Calificaciones</div>
+      <button onclick="irSeccion('calificaciones')" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:10px 2px 8px;background:var(--w);border:1.5px solid var(--bd);border-radius:14px;cursor:pointer;font-family:var(--font-main);opacity:.85;">
+        <span style="font-size:20px;line-height:1;">📋</span>
+        <div style="font-size:9px;font-weight:700;color:var(--td);">Calificaciones</div>
         <div style="font-size:8px;color:var(--tl);" id="home-calif-resumen"></div>
       </button>
-      <button onclick="irSeccion('libreta')" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:10px 2px;background:var(--w);border:1.5px solid var(--bd);border-radius:12px;cursor:pointer;font-family:var(--font-main);">
-        <span style="font-size:22px;line-height:1;">📓</span>
-        <div style="font-size:10px;font-weight:700;color:var(--td);">Libreta</div>
+      <button onclick="irSeccion('libreta')" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:10px 2px 8px;background:var(--w);border:1.5px solid var(--bd);border-radius:14px;cursor:pointer;font-family:var(--font-main);opacity:.85;">
+        <span style="font-size:20px;line-height:1;">📓</span>
+        <div style="font-size:9px;font-weight:700;color:var(--td);">Libreta</div>
       </button>
-      <button onclick="irSeccion('estudio')" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:10px 2px;background:var(--w);border:1.5px solid var(--bd);border-radius:12px;cursor:pointer;font-family:var(--font-main);">
-        <span style="font-size:22px;line-height:1;">🍅</span>
-        <div style="font-size:10px;font-weight:700;color:var(--td);">Pomodoro</div>
+      <button onclick="irSeccion('estudio')" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:10px 2px 8px;background:var(--w);border:1.5px solid var(--bd);border-radius:14px;cursor:pointer;font-family:var(--font-main);opacity:.85;">
+        <span style="font-size:20px;line-height:1;">🍅</span>
+        <div style="font-size:9px;font-weight:700;color:var(--td);">Pomodoro</div>
       </button>
     </div>
     
-    
+
     <!-- Pomodoro hoy (compacto) -->
     <div id="home-pom-strip" style="display:none;background:var(--w);border:1px solid var(--bd);border-radius:8px;padding:6px 10px;margin-bottom:8px;cursor:pointer;" onclick="irSeccion('estudio')">
       <div style="font-size:10px;font-weight:700;color:var(--tm);font-family:var(--font-main);">🕐 Pomodoro hoy</div>
       <div id="home-pom-today" style="font-size:12px;font-weight:700;color:var(--td);font-family:var(--font-main);line-height:1.4;margin-top:2px;"></div>
     </div>
     <!-- Panel de alertas -->
+    <div id="home-alertas-panel" style="border-radius:8px;border:1px solid var(--bd);background:var(--w);margin-bottom:8px;"></div>
+    <!-- Tareas próximas con urgencia -->
+    <div id="home-proximas-tareas"></div>
     <!-- Campos ocultos para compatibilidad -->
     <div id="home-tab-resumen-panel" style="display:none;"></div>
     <div id="home-tab-horario-panel" style="display:none;"></div>
@@ -3048,8 +3020,8 @@ body.nb-mode #nb-pill-orden { display:none !important; }
         <button class="h-tipo-chip sel" onclick="hSelTipo(this,'Examen')">&#128221; Examen</button>
         <button class="h-tipo-chip" onclick="hSelTipo(this,'Deberes')">&#128218; Deberes</button>
         <button class="h-tipo-chip" onclick="hSelTipo(this,'Trabajo')">&#128203; Trabajo</button>
-        <button class="h-tipo-chip" onclick="hSelTipo(this,'Proyecto')">&#128300; Proyecto</button>
-        <button class="h-tipo-chip" onclick="hSelTipo(this,'Otro')">&#128172; Otro</button>
+      <button class="h-tipo-chip" onclick="hSelTipo(this,'Proyecto')">&#128300; Proyecto</button>
+      <button class="h-tipo-chip" onclick="hSelTipo(this,'Otro')">&#128172; Otro</button>
       </div>
     </div>
     <!-- Foto + Docs adjuntos -->
@@ -3188,15 +3160,10 @@ body.nb-mode #nb-pill-orden { display:none !important; }
     </div>
   </div>
   <div id="lib-toolbar" style="display:none;"></div>
-  <div id="lib-nav-pag" style="display:flex;align-items:center;justify-content:space-between;padding:4px 10px;background:var(--bp);border-bottom:1px solid var(--bd);font-size:11px;font-family:var(--font-main);color:var(--tl);flex-shrink:0;">
-    <button onclick="libPagAnterior()" style="background:none;border:none;font-size:18px;cursor:pointer;color:var(--tl);padding:2px 8px;">‹</button>
-    <span id="lib-pag-label" style="cursor:pointer;" onclick="libResetZoom()">Página 1</span>
-    <button onclick="libPagSiguiente()" style="background:none;border:none;font-size:18px;cursor:pointer;color:var(--tl);padding:2px 8px;">›</button>
-  </div>
+
+  <!-- ════ BARRA FLOTANTE LATERAL ════ -->
   <div style="flex:1;display:flex;min-height:0;position:relative;">
-  <!-- Float bar -->
-<!-- ════ BARRA FLOTANTE LATERAL ════ -->
-  <div id="lib-float-bar" style="position:relative;z-index:100;display:flex;flex-direction:column;gap:6px;align-items:center;padding:8px 4px;background:rgba(255,255,255,.85);backdrop-filter:blur(4px);flex-shrink:0;overflow-y:auto;justify-content:center;">
+  <div id="lib-float-bar" style="position:relative;z-index:100;display:flex;flex-direction:column;gap:6px;align-items:center;padding:8px 4px;background:rgba(255,255,255,.92);backdrop-filter:blur(4px);flex-shrink:0;overflow-y:auto;justify-content:center;border-right:1px solid var(--bd);">
 
     <!-- Herramienta -->
     <div style="position:relative;">
@@ -3225,7 +3192,7 @@ body.nb-mode #nb-pill-orden { display:none !important; }
     <div style="position:relative;">
       <button onclick="libFloatToggle('color')" id="lib-float-color-btn" class="lib-float-btn"
         style="width:44px;height:44px;border-radius:14px;background:#1a1a1a;border:3px solid rgba(255,255,255,.9);box-shadow:0 2px 12px rgba(0,0,0,.2);cursor:pointer;"></button>
-      <div id="lib-sub-color" style="display:none;position:fixed;left:60px;top:auto;background:rgba(255,255,255,.97);backdrop-filter:blur(12px);border-radius:16px;box-shadow:0 4px 24px rgba(0,0,0,.18);padding:10px;min-width:170px;flex-direction:column;">
+      <div id="lib-sub-color" style="display:none;position:fixed;left:60px;top:auto;background:rgba(255,255,255,.97);backdrop-filter:blur(12px);border-radius:16px;box-shadow:0 4px 24px rgba(0,0,0,.18);padding:10px;min-width:170px;flex-direction:column;z-index:9999;">
         <div style="font-size:10px;font-weight:700;color:#666;margin-bottom:8px;">COLOR</div>
         <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-bottom:8px;">
           <div class="lib-color-dot active" style="background:#1a1a1a;" onclick="libSetColorFloat('#1a1a1a',this)"></div>
@@ -3257,10 +3224,10 @@ body.nb-mode #nb-pill-orden { display:none !important; }
         style="width:44px;height:44px;border-radius:14px;border:none;background:rgba(255,255,255,.92);backdrop-filter:blur(8px);box-shadow:0 2px 12px rgba(0,0,0,.15);cursor:pointer;display:flex;align-items:center;justify-content:center;">
         <div id="lib-grosor-preview" style="width:24px;height:3px;background:#1a1a1a;border-radius:3px;"></div>
       </button>
-      <div id="lib-sub-grosor" style="display:none;position:fixed;left:60px;top:auto;background:rgba(255,255,255,.97);backdrop-filter:blur(12px);border-radius:16px;box-shadow:0 4px 24px rgba(0,0,0,.18);padding:10px;min-width:150px;flex-direction:column;">
+      <div id="lib-sub-grosor" style="display:none;position:fixed;left:60px;top:auto;background:rgba(255,255,255,.97);backdrop-filter:blur(12px);border-radius:16px;box-shadow:0 4px 24px rgba(0,0,0,.18);padding:10px;min-width:150px;flex-direction:column;z-index:9999;">
         <div style="font-size:10px;font-weight:700;color:#666;margin-bottom:8px;">GROSOR</div>
         <div style="display:flex;flex-direction:column;gap:8px;">
-          <button onclick="libSetSizeFloat(2,this)" class="lib-size-row active-size" data-size="2"><div style="width:60px;height:2px;background:currentColor;border-radius:2px;"></div><span>Fino</span></button>
+          <button onclick="libSetSizeFloat(2,this)" class="lib-size-row active-size" data-size="2"><div style="width:60px;height:2px;background:#222;border-radius:2px;"></div><span>Fino</span></button>
           <button onclick="libSetSizeFloat(4,this)" class="lib-size-row" data-size="4"><div style="width:60px;height:4px;background:#222;border-radius:2px;"></div><span>Normal</span></button>
           <button onclick="libSetSizeFloat(7,this)" class="lib-size-row" data-size="7"><div style="width:60px;height:7px;background:#222;border-radius:3px;"></div><span>Grueso</span></button>
           <button onclick="libSetSizeFloat(14,this)" class="lib-size-row" data-size="14"><div style="width:60px;height:14px;background:#222;border-radius:4px;"></div><span>Extra</span></button>
@@ -3275,7 +3242,7 @@ body.nb-mode #nb-pill-orden { display:none !important; }
     <div style="position:relative;">
       <button onclick="libFloatToggle('goma')" class="lib-float-btn"
         style="width:44px;height:44px;border-radius:14px;border:none;background:rgba(255,255,255,.92);backdrop-filter:blur(8px);box-shadow:0 2px 12px rgba(0,0,0,.15);cursor:pointer;font-size:20px;display:flex;align-items:center;justify-content:center;">🩹</button>
-      <div id="lib-sub-goma" style="display:none;position:fixed;left:60px;top:auto;background:rgba(255,255,255,.97);backdrop-filter:blur(12px);border-radius:16px;box-shadow:0 4px 24px rgba(0,0,0,.18);padding:10px;min-width:140px;flex-direction:column;">
+      <div id="lib-sub-goma" style="display:none;position:fixed;left:60px;top:auto;background:rgba(255,255,255,.97);backdrop-filter:blur(12px);border-radius:16px;box-shadow:0 4px 24px rgba(0,0,0,.18);padding:10px;min-width:140px;flex-direction:column;z-index:9999;">
         <div style="font-size:10px;font-weight:700;color:#666;margin-bottom:8px;">GOMA</div>
         <div style="display:flex;flex-direction:column;gap:6px;">
           <button onclick="libSetToolFloat('borrador');libFloatClose()" id="lt-borrador" class="lib-eraser-btn"><div style="width:16px;height:16px;background:#ddd;border-radius:4px;border:1px solid #bbb;flex-shrink:0;"></div><span>Pequeña</span></button>
@@ -3301,7 +3268,7 @@ body.nb-mode #nb-pill-orden { display:none !important; }
   <div id="lib-canvas-wrap" style="flex:1;overflow:hidden;position:relative;touch-action:none;min-height:0;">
     <canvas id="lib-canvas" style="display:block;touch-action:none;cursor:crosshair;width:100%;height:100%;"></canvas>
   </div>
-  </div><!-- end flex wrapper -->
+  </div><!-- /flex-wrapper -->
   <div id="lib-text-input-wrap" style="display:none;position:fixed;z-index:600;">
     <textarea id="lib-text-input" rows="2" placeholder="Escribe aquí..." style="background:rgba(255,255,255,.95);border:2px dashed var(--ga);border-radius:6px;padding:4px 8px;font-size:16px;font-family:var(--font-main);color:#222;resize:none;min-width:140px;outline:none;"></textarea>
     <div style="display:flex;gap:4px;margin-top:3px;">
@@ -3667,6 +3634,10 @@ body.nb-mode #nb-pill-orden { display:none !important; }
   <div class="tap-header">
     <button class="tap-header-btn" id="btn-back-registros" onclick="(btnBackRegistrosClick||tapuntoNavBack)()" style="flex-direction:column;gap:1px;"><span style="font-size:22px;line-height:1;color:#fff;font-weight:900;">&#8592;</span><span style="font-size:9px;color:#fff;font-weight:700;font-family:var(--font-main);letter-spacing:.3px;">Mi agenda</span></button>
     <span class="tap-header-title" id="rec-header-title">Mi agenda</span>
+    <button class="tap-header-btn" onclick="irSeccion('albumes')" title="Mis Apuntes" style="flex-direction:column;gap:1px;">
+      <span style="font-size:18px;line-height:1;">🗂️</span>
+      <span style="font-size:6px;font-family:var(--font-main);">Apuntes</span>
+    </button>
     <button class="tap-header-btn" onclick="irSeccion('calificaciones')" title="Calificaciones" style="font-size:11px;font-weight:700;color:#fff;flex-direction:column;gap:1px;">
       <span style="font-size:18px;line-height:1;">📋</span>
       <span style="font-size:6px;font-family:var(--font-main);letter-spacing:-.2px;">Calificaciones</span>
@@ -5399,7 +5370,7 @@ function renderCatGrid(catIdx){
     b2.onclick=function(ev){
       ev.stopPropagation();
       var ico=e==='⬜'?'':e;
-      var fn=window._icoTargetFn||_icoTargetFn;
+      var fn=window._icoTargetFn;
       if(typeof fn==='function'){fn(ico);window._icoTargetFn=null;}
       else{elegirIcono(ico);}
     };
@@ -5427,12 +5398,7 @@ inpLibre.style.cssText='flex:1;padding:8px 10px;border:1px solid var(--bd);borde
 var btnOk=document.createElement('button');
 btnOk.textContent='OK';
 btnOk.style.cssText='padding:8px 14px;background:var(--gm);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:var(--font-main);';
-btnOk.onclick=function(ev){ev.stopPropagation();
-      if(inpLibre.value.trim()){
-        var em=inpLibre.value.trim();
-        if(typeof _icoTargetFn==='function'){_icoTargetFn(em);}
-        else{elegirIcono(em);}
-      }};
+btnOk.onclick=function(ev){ev.stopPropagation();if(inpLibre.value.trim())elegirIcono(inpLibre.value.trim());};
 libreRow.appendChild(inpLibre);libreRow.appendChild(btnOk);
 panel.appendChild(title);panel.appendChild(tabsDiv);panel.appendChild(contentDiv);panel.appendChild(libreRow);
 ov.appendChild(panel);
@@ -5819,8 +5785,6 @@ try{
 // ── Crear carpeta en Apuntes si hay adjuntos ──
 try{
   var docs=window._nuevoDocs||[];
-  // Debug: log docs count
-  console.log('Tapunto: guardando tarea con',docs.length,'adjuntos');
   if(docs.length>0){
     var asigAlb=rec.tema||'General';
     var fechaAlb=new Date().toISOString().slice(0,10);
@@ -5854,16 +5818,8 @@ try{
       });
     });
     window._nuevoDocs=[];
-    // Guardar state con el nuevo álbum
-    persist().then(function(){
-      showToast('📂 Carpeta "'+asigAlb+'" creada en Apuntes con '+docs.length+' adjunto'+(docs.length!==1?'s':''));
-      // Refresh apuntes if visible
-      if(document.getElementById('sec-albumes')&&document.getElementById('sec-albumes').classList.contains('active')){
-        try{renderAlbumes();}catch(e){}
-      }
-    }).catch(function(){
-      showToast('📂 Carpeta creada (guarda backup para no perderla)');
-    });
+    persist().catch(function(){});
+    showToast('📂 Carpeta "'+asigAlb+'" creada en Apuntes con '+docs.length+' adjunto'+(docs.length!==1?'s':''));
   }
 }catch(_ae){ console.warn('Error creando álbum:',_ae); }
 
@@ -7370,8 +7326,6 @@ emailDiv.style.cssText='padding:12px 14px;border-bottom:0.5px solid var(--bd);';
 emailDiv.innerHTML='<div style="font-size:12px;font-weight:700;color:var(--td);font-family:var(--font-main);">'+(currentUser||'—')+'</div>'+(isPremium?'<div style="font-size:11px;color:#EF9F27;font-weight:600;">⭐ Premium activo</div>':'<div style="font-size:11px;color:var(--tl);">Plan Free</div>');
 menu.appendChild(emailDiv);
 var items=[
-{icon:'⏱',label:'Pomodoro',fn:function(){menu.remove();irSeccion('estudio');}},
-{icon:'🔄',label:'Rutinas',fn:function(){menu.remove();irSeccion('rutinas');}},
 {icon:'🎨',label:'Mi avatar',fn:function(){menu.remove();mostrarPersonalizarAvatar();}},
 {icon:'❓',label:'Ayuda',fn:function(){menu.remove();mostrarAyuda();}},
 {icon:'👤',label:'Mis datos',fn:function(){menu.remove();irSeccion('config');setTimeout(function(){var c=document.getElementById('cfg-block-firma');if(c){c.scrollIntoView({behavior:'smooth',block:'start'});var hdr=c.querySelector('.cfg-hdr');var body=c.querySelector('.cfg-body');if(hdr&&body&&body.style.display==='none')toggleCfg(hdr);}},450);}},
@@ -10929,14 +10883,11 @@ function hTaskFotoQuitar(){
   var inp=document.getElementById('h-task-foto-inp');if(inp)inp.value='';
 }
 
-// ── Selector icono para tarea desde horario ──
-var _icoTargetFn=null;
-
+// ── Selector de icono para tarea desde horario ──
 function mostrarSelectorIconoHTask(){
-  // Usar window para garantizar scope global
   window._icoTargetFn=function(emoji){
     if(!emoji||!emoji.trim()) return;
-    _guardarIconoReciente(emoji);
+    _guardarIconoReciente(emoji.trim());
     var btn=document.getElementById('h-task-icono-btn');
     if(btn) btn.textContent=emoji.trim();
     window._hTaskIcono=emoji.trim();
@@ -10946,16 +10897,24 @@ function mostrarSelectorIconoHTask(){
   };
   mostrarSelectorIcono();
 }
+
+function _guardarIconoReciente(emoji){
+  if(!emoji) return;
+  var lista=JSON.parse(localStorage.getItem('tp_iconos_recientes')||'[]');
+  lista=lista.filter(function(e){return e!==emoji;});
+  lista.unshift(emoji);
+  localStorage.setItem('tp_iconos_recientes',JSON.stringify(lista.slice(0,5)));
+}
 function hGuardarTarea(){
   var texto=(document.getElementById('h-task-ta').value||'').trim();
-  // Descripción opcional - no bloquear si está vacía
+  if(!texto){var ta=document.getElementById('h-task-ta');if(ta){ta.focus();ta.style.borderColor='#c0392b';}return;}
   var asig=_hCelda.asig;
   var fevEl=document.getElementById('h-task-fecha-evento');
   var fev=fevEl?fevEl.value.trim():'';
   var hTitulo=(document.getElementById('h-task-titulo-inp')&&document.getElementById('h-task-titulo-inp').value||'').trim();
   var rec={id:'hor'+Date.now(),fecha:new Date().toISOString().slice(0,10),contacto:'',
     tema:asig,titulo:hTitulo,accion:_hTipo,comunicado:'',estado:'pendiente',notas:texto,
-    icono:'',recordatorio:'',created:new Date().toISOString(),imagenUrl:_hTaskFotoData||'',fechaEvento:fev};
+    icono:window._hTaskIcono&&window._hTaskIcono!=='📋'?window._hTaskIcono:'',recordatorio:'',created:new Date().toISOString(),imagenUrl:_hTaskFotoData||'',fechaEvento:fev};
   if(!state.records)state.records=[];
   state.records.unshift(rec);
   if(!state.temas.includes(asig)){state.temas.push(asig);try{fillSelect('inp-tema',state.temas);}catch(e){}}
@@ -12819,13 +12778,12 @@ function renderCitaDiaria(){
   var el=document.getElementById('home-cita');if(!el)return;
   var d=new Date();var c=CITAS_DIA[(d.getFullYear()*366+d.getMonth()*31+d.getDate())%CITAS_DIA.length];
   var p=c.split(' — ');
-  // Fondo siempre oscuro, texto siempre blanco — independiente del tema
   el.style.background='#1a1a2e';
   el.innerHTML=
     '<span style="font-size:18px;flex-shrink:0;opacity:.7;">✨</span>'
     +'<div style="margin-left:10px;">'
       +'<div style="font-family:Caveat,cursive;font-size:15px;line-height:1.4;color:#fff;font-weight:600;">\"'+p[0]+'\"</div>'
-      +(p[1]?'<div style="font-size:10px;color:rgba(255,255,255,.6);margin-top:1px;letter-spacing:.3px;font-family:var(--font-main);">— '+p[1]+'</div>':'')
+      +(p[1]?'<div style="font-size:10px;color:rgba(255,255,255,.6);margin-top:1px;font-family:var(--font-main);">— '+p[1]+'</div>':'')
     +'</div>';
 }
 
@@ -13222,10 +13180,7 @@ function pomSetSound(type){
       <span style="font-size:26px;">&#9201;</span>
       <span>Pomodoro</span>
     </button>
-    <button class="mas-btn" onclick="cerrarMas();irSeccion('rutinas')">
-      <span style="font-size:26px;">&#128260;</span>
-      <span>Rutinas</span>
-    </button>
+
     <button class="mas-btn" onclick="cerrarMas();irSeccion('calendario')">
       <span style="font-size:26px;">&#128197;</span>
       <span>Agenda</span>
@@ -13248,21 +13203,21 @@ function pomSetSound(type){
 
 <!-- ── BOTTOM NAVIGATION ── -->
 <nav class="bottom-nav" id="bottom-nav">
-  <button class="bnav-btn active" id="bnav-home" onclick="irHome()">
-    <span class="bnav-ico">&#127968;</span><span class="bnav-lbl">Inicio</span>
+  <button class="bnav-btn active" id="bnav-home" onclick="irHome()" style="background:linear-gradient(145deg,#ffd60a,#ff9f0a);">
+    <span class="bnav-ico">🏠</span><span class="bnav-lbl">Inicio</span>
   </button>
-  <button class="bnav-btn" id="bnav-tareas" onclick="irSeccion('registros')">
-    <span class="bnav-ico">&#128203;</span><span class="bnav-lbl">Mi agenda</span>
+  <button class="bnav-btn" id="bnav-tareas" onclick="irSeccion('registros')" style="background:linear-gradient(145deg,#ff3b30,#c0392b);">
+    <span class="bnav-ico">🗒️</span><span class="bnav-lbl">Mi agenda</span>
   </button>
   <div style="width:58px;flex-shrink:0;" aria-hidden="true"></div>
-  <button class="bnav-btn" id="bnav-todo" onclick="irSeccion('notas')">
-    <span class="bnav-ico">&#9989;</span><span class="bnav-lbl">To Do</span>
+  <button class="bnav-btn" id="bnav-todo" onclick="irSeccion('notas')" style="background:linear-gradient(145deg,#30d158,#1a9e40);">
+    <span class="bnav-ico">✅</span><span class="bnav-lbl">To Do</span>
   </button>
-  <button class="bnav-btn" id="bnav-rutinas" onclick="irSeccion('rutinas')">
+  <button class="bnav-btn" id="bnav-rutinas" onclick="irSeccion('rutinas')" style="background:linear-gradient(145deg,#0a84ff,#0055d4);">
     <span class="bnav-ico">🔄</span><span class="bnav-lbl">Rutinas</span>
   </button>
-  <button id="bnav-back" onclick="navVolverAtras()" title="Volver" style="flex-shrink:0;width:32px;display:flex;flex-direction:column;align-items:center;justify-content:center;background:none;border:none;cursor:pointer;color:var(--tl);padding:0 4px;margin:4px 2px 4px 0;">
-    <span style="font-size:16px;line-height:1;">&#8592;</span>
+  <button id="bnav-back" onclick="navVolverAtras()" title="Volver" style="flex-shrink:0;width:40px;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(255,255,255,.18);border:1.5px solid rgba(255,255,255,.35);border-radius:14px;cursor:pointer;padding:5px 2px;margin:5px 3px 5px 0;">
+    <span style="font-size:22px;font-weight:900;line-height:1;color:#111;">⬅</span>
   </button>
 </nav>
 
@@ -13513,27 +13468,24 @@ function icsOpenFilePicker(){
 /* ═══ HELP SECTION ═══ */
 (function(){
   var items=[
-    {q:'🏠 Inicio', a:'La pantalla principal muestra: ✨ la cita motivacional del día · 📅 tu horario de hoy · 📋 tareas próximas · 📊 estadísticas de estudio. Toca el avatar (esquina superior derecha) para personalizar tu perfil. Los 3 botones rápidos: Calendario · Notas · Libreta. Toca "📊 Mi semana de estudio" para ver tus estadísticas.'},
-    {q:'📒 Mi Agenda', a:'Tu agenda principal. En la barra lateral izquierda verás tus asignaturas. Toca ＋ (arriba del sidebar) para añadir una nueva asignatura. Toca el círculo de color junto a cada pestaña para cambiar su color. Cada tarea tiene: asignatura · tipo · fecha de entrega · icono personalizado · adjuntos.'},
-    {q:'➕ Crear tarea desde +', a:'Toca el botón verde ＋ del centro inferior. Rellena: asignatura · tipo · título · descripción (opcional) · fecha · icono (toca el cuadrado de emoji) · adjuntos (fotos, docs). La descripción es opcional. Toca 💾 Guardar para confirmar.'},
-    {q:'📅 Crear tarea desde horario', a:'Toca cualquier asignatura del horario del home. Se abre un panel rápido con: tipo de tarea · fecha de entrega · icono (toca 📋 para elegir) · descripción opcional · foto o documento adjunto. La descripción no es obligatoria. Toca Guardar.'},
-    {q:'📎 Adjuntos en tareas', a:'En cualquier tarea puedes adjuntar: 📷 Cámara (foto directa) · 🖼️ Galería (varias fotos) · 📄 Documentos (PDF, Word, etc.). Las fotos se comprimen automáticamente para ahorrar espacio. Los archivos se guardan en tu dispositivo. Puedes adjuntar varios a la vez.'},
-    {q:'✅ To Do', a:'Lista de notas y recordatorios rápidos. Toca ＋ o dicta con el 🎤 para añadir una nota. Pulsa larga sobre una nota para archivarla o eliminarla. En Free: máximo 30 notas activas. En Premium: ilimitadas.'},
-    {q:'📓 Libreta de dibujo', a:'Tu espacio de dibujo libre. La barra lateral izquierda tiene: ✏️ Herramienta (lápiz, boli, texto, selección, figuras, stickers) · 🟢 Color (15 colores + personalizado) · ━ Grosor (fino, normal, grueso, extra + slider) · 🩹 Goma (3 tamaños) · ↩️ Deshacer · 🎨 Fondo y plantillas. Toca 💾 Guardar para guardar. Al salir te pregunta si quieres guardar.'},
-    {q:'🎨 Colores y temas', a:'Ve a ⚙️ Ajustes → Personalización → Temas. Los 4 temas gratuitos son: Sage 🌿 · Mar 🌊 · Lavanda 💜 · Minimal ◻. Los temas Premium (🔒) incluyen: Dark Academia 📚 · Y2K ✨ · Pastel Dreams 🍑 · Midnight 🌙 · Cottagecore 🌸 · Kawaii 🩷 · Cyberpunk 🔥 y más.'},
-    {q:'📊 Estadísticas de estudio', a:'Toca "📊 Mi semana de estudio" en el home. Verás: 🔥 Racha actual de días · ⏱️ Tiempo de Pomodoro · 🍅 Sesiones Pomodoro · ✅ Tareas completadas esta semana · 📋 Tareas pendientes · Tu récord personal de racha.'},
-    {q:'🍅 Pomodoro', a:'Técnica de estudio: 25 minutos concentrado + 5 minutos descanso. Ve a cualquier tarea → toca ▶ Iniciar Pomodoro. El temporizador cuenta hacia atrás y suena al terminar. Tus sesiones se cuentan en las estadísticas semanales.'},
-    {q:'📅 Calendario', a:'Vista mensual y semanal de todas tus tareas, exámenes y eventos. Los puntos de color indican el tipo de tarea. Toca un día para ver el detalle. Toca un evento para editarlo.'},
-    {q:'📋 Calificaciones', a:'Aquí aparecen los exámenes y trabajos sin nota. Toca uno para añadir la calificación: escribe la nota o usa los botones rápidos (4-10). Cuando guardas la nota, el evento desaparece de la lista. El home muestra cuántos tienes sin calificar.'},
-    {q:'🗓️ Horario de clases', a:'En el home verás tu horario de hoy. Para editar: toca ✏️ Editar en la esquina superior. Toca cualquier celda para añadir/editar una asignatura. Puedes tener hasta 2 horarios diferentes (ej: semana A y B). Exporta a PDF con el botón PDF.'},
-    {q:'📤 Importar calendario ICS', a:'Puedes importar calendarios de Google Calendar, iCloud o cualquier app que exporte .ics. Ve a ⚙️ Ajustes → Datos → Importar ICS. Se mostrarán los eventos futuros para que elijas cuáles importar. Requiere Premium.'},
-    {q:'☁️ Copia de seguridad', a:'Ve a ⚙️ Ajustes → Datos y backup → Exportar. Se descarga un archivo JSON con todos tus datos. Guárdalo en Drive o en tu móvil. Para restaurar: importar el mismo archivo. Haz backup regularmente, especialmente antes de limpiar el almacenamiento.'},
-    {q:'📦 Almacenamiento', a:'Ve a ⚙️ Ajustes → Almacenamiento para ver el espacio usado. Plan Free: limitado por el navegador (≈5MB texto + archivos en IndexedDB). Cuando se llene el espacio, borra fotos o apuntes antiguos. Las fotos se comprimen automáticamente a ~40KB.'},
-    {q:'🎤 Dictado de voz', a:'En el campo de notas o descripción, toca el icono 🎤. Habla con claridad y Tapunto transcribirá tu voz. Toca el botón ⏹ para parar. En iPhone/iPad: Apple no permite esta función en Safari. Usa el 🎤 del teclado de tu iPhone directamente. Requiere Premium en algunas funciones.'},
-    {q:'⭐ Premium', a:'Tapunto Premium desbloquea: tareas, notas y libreta ilimitadas · dictado de voz · Google Drive · exportar PDF · fotos ilimitadas en Apuntes · todos los temas de color · múltiples dispositivos. Precio: 3,99€/año (menos de 33 céntimos al mes). Actívalo en ⚙️ Ajustes o toca el banner dorado del home.'},
-    {q:'🔐 Seguridad y privacidad', a:'Tus datos se guardan SOLO en tu dispositivo. Tapunto no tiene servidores propios ni accede a tu información. El PIN se cifra con SHA-256. Los datos se cifran con AES-GCM. Nadie más puede ver tus apuntes o tareas. La sesión dura 8 horas por seguridad.'},
-    {q:'ℹ️ Acerca de', a:'Tapunto v38 © 2026 Alicia Prats & Enrique García · Valencia, España · tapunto.app. Licencia propietaria. Todos los derechos reservados. Contacto: tapunto.soporte@gmail.com'},
-  ];
+    {q:'\uD83C\uDFE0 Inicio', a:'Muestra la cita del d\u00EDa, el horario y tareas urgentes. Toca el avatar para personalizarlo (color, emoji o inicial). Los botones \u2600\uFE0F\uD83D\uDD04\uD83C\uDF19 controlan el modo de color. La barra inferior: \uD83C\uDFE0 Inicio \u00B7 \uD83D\uDCD2 Mi Agenda \u00B7 \u2705 To Do \u00B7 \uD83D\uDCDA Apuntes \u00B7 \u2190 Atr\u00E1s.'},
+    {q:'\uD83D\uDCD2 Mi Agenda', a:'Separadores laterales por asignatura. Pulsa \uFF0B arriba del sidebar para crear uno nuevo. El c\u00EDrculo junto a cada separador abre la paleta de colores. Usa \uD83C\uDFA8 Fondo en el header para cambiar el fondo de portada. Las tareas pueden repetirse: cada semana, 15 d\u00EDas o mes.'},
+    {q:'\u2705 To Do', a:'Tareas r\u00E1pidas. Escribe y pulsa A\u00F1adir. El cursor permanece para escribir otra sin salir. Usa \uD83C\uDF99\uFE0F para dictar. Archiva o elimina con los botones de cada tarea.'},
+    {q:'\uD83D\uDCD3 Mi Libreta', a:'Canvas t\u00E1ctil para dibujar y escribir. Herramientas: \u270F\uFE0F L\u00E1piz \u00B7 \uD83D\uDD8A\uFE0F Boli \u00B7 T Texto \u00B7 \uD83D\uDE0A Stickers (160) \u00B7 \u25FB Figuras \u00B7 \uD83E\uDDF9 Borrador \u00B7 \u21A9 Deshacer. Bot\u00F3n \uD83D\uDD0A sonido de escritura. Fondos y plantillas escalan con el zoom.'},
+    {q:'\uD83D\uDCDA Apuntes', a:'Fotos y documentos por asignaturas. A\u00F1ade desde c\u00E1mara o galer\u00EDa. Toca para ver, mant\u00E9n pulsado para opciones (compartir, eliminar).'},
+    {q:'\uD83D\uDCC5 Calendario e ICS', a:'Vista mensual. Para importar: Google Calendar \u2192 \u2699\uFE0F Configuraci\u00F3n \u2192 Exportar \u2192 descarga .ics \u2192 en Tapunto Ajustes \u2192 Importar ICS \u2192 asigna tipo a cada evento.'},
+    {q:'\uD83C\uDF45 Pomodoro', a:'Temporizador con 9 sonidos (generados localmente, sin derechos de autor). Configura tiempo de trabajo y descanso. Las sesiones se registran autom\u00E1ticamente.'},
+    {q:'\uD83D\uDCCA Calificaciones', a:'Introduce notas por asignatura y calcula la media. Exporta como PDF \u2B50.'},
+    {q:'\uD83D\uDD12 PIN y seguridad', a:'Act\u00EDvalo en Ajustes \u2192 Seguridad. Se guarda como hash SHA-256, nunca en texto claro. Los datos se cifran con AES-GCM en tu dispositivo.'},
+    {q:'\u2601\uFE0F Google Drive y backup', a:'El backup guarda todos tus datos en un .json. Gu\u00E1rdalo o s\u00FAbelo a Drive. Para restaurar: Ajustes \u2192 Restaurar backup. La sincronizaci\u00F3n Drive (Premium) guarda autom\u00E1ticamente en tu nube.'},
+    {q:'\uD83D\uDCCA Almacenamiento', a:'En Ajustes \u2192 Almacenamiento ves el espacio usado (m\u00E1ximo 5MB). Muestra el desglose por secci\u00F3n. Si superas el 85% aparece aviso en el inicio. Para liberar espacio, elimina manualmente desde cada secci\u00F3n.'},
+    {q:'\uD83C\uDFA8 Personalizaci\u00F3n', a:'En Ajustes \u2192 Personalizaci\u00F3n: 16 temas + 4 de temporada, 5 fuentes. El avatar se personaliza tocando el c\u00EDrculo del inicio: 12 colores, 16 emojis o tu inicial.'},
+    {q:'\u2699\uFE0F Configuraci\u00F3n', a:'PIN \u00B7 notificaciones \u00B7 sonido Pomodoro \u00B7 fuente \u00B7 backup \u00B7 Drive \u00B7 almacenamiento \u00B7 Premium.'},
+    {q:'\uD83D\uDD14 Notificaciones', a:'Toca \uD83D\uDD14 en el inicio para activarlas. Se programan localmente, sin servidores externos.'},
+    {q:'\u2190 Navegar', a:'El bot\u00F3n \u2190 en la barra inferior vuelve a la secci\u00F3n anterior. Al cancelar una nueva tarea tambi\u00E9n vuelve atr\u00E1s.'},
+    {q:'\u2B50 Premium', a:'Registros ilimitados \u00B7 dictado de voz \u00B7 fotos en Drive \u00B7 sincronizaci\u00F3n Drive \u00B7 backup autom\u00E1tico \u00B7 todos los temas \u00B7 exportar PDF \u00B7 m\u00FAltiples dispositivos. Obt\u00E9n tu c\u00F3digo en tapunto.app.'},
+  ,
+    {q:'\u2139\uFE0F Acerca de', a:'Tapunto es desarrollada por Alicia Prats y Enrique Garc\u00EDa \u00A9 2026 \u00B7 Valencia, Espa\u00F1a \u00B7 tapunto.app. Contacto: tapunto.soporte@gmail.com'}];
   var acc=document.getElementById('help-accordion');
   if(!acc) return;
   acc.innerHTML='';
@@ -13646,7 +13598,7 @@ function renderProximasTareas(){
     .slice(0,4);
 
   if(!conFecha.length && !sinFecha.length){
-    wrap.innerHTML='';
+    wrap.innerHTML='<div style="text-align:center;padding:20px 10px;color:var(--tl);font-family:var(--font-main);font-size:13px;">Sin tareas próximas ✌️<br><span style="font-size:11px;">Toca + para añadir</span></div>';
     return;
   }
 
@@ -13868,7 +13820,7 @@ function renderCalificaciones(){
   if(!lista) return;
   function _e(s){return s?String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'):'';}
 
-  // Poblar selector de asignaturas
+  // ── Poblar selector de asignaturas ──
   var selAsig=document.getElementById('cf-asig');
   if(selAsig){
     var asigs=[...new Set((state.records||[]).filter(function(r){return r.tema;}).map(function(r){return r.tema;}))].sort();
@@ -13878,135 +13830,130 @@ function renderCalificaciones(){
     if(prevVal) selAsig.value=prevVal;
   }
 
+  var filtroTipo=window._califFiltroTipo||'todas';
   var filtroAsig=(document.getElementById('cf-asig')||{}).value||'';
   var filtroOrden=(document.getElementById('cf-orden')||{}).value||'fecha-desc';
 
-  // Filtrar: todos los eventos evaluables (con o sin nota)
+  // ── Filtrar: solo eventos SIN nota ──
   var recs=(state.records||[]).filter(function(r){
     if(r.archivado) return false;
+    // Sin fecha de evento no aplica
     if(!r.fechaEvento||!r.fechaEvento.trim()) return false;
+    // Solo tipos evaluables
     var tipo=(r.accion||'').toLowerCase();
-    var esTipo=tipo.includes('examen')||tipo.includes('trabajo')||tipo.includes('práctica')
-      ||tipo.includes('practica')||tipo.includes('oral')||tipo.includes('proyecto');
+    var esTipo=tipo.includes('examen')||tipo.includes('trabajo')||tipo.includes('práctica')||tipo.includes('practica')||tipo.includes('oral')||tipo.includes('proyecto');
     if(!esTipo) return false;
+    // Filtro tipo
+    if(filtroTipo!=='todas'&&!(r.accion||'').toLowerCase().includes(filtroTipo.toLowerCase())) return false;
+    // Filtro asignatura
     if(filtroAsig&&(r.tema||'')!==filtroAsig) return false;
+    // SIN calificación (o vacía)
+    var nota=r.calificacion;
+    if(nota!==undefined&&nota!==null&&nota!==''&&!isNaN(parseFloat(nota))) return false;
     return true;
   });
 
+  // Ordenar
   recs=recs.slice().sort(function(a,b){
     if(filtroOrden==='fecha-asc') return (a.fechaEvento||'').localeCompare(b.fechaEvento||'');
     if(filtroOrden==='asig') return (a.tema||'').localeCompare(b.tema||'');
     return (b.fechaEvento||b.fecha||'').localeCompare(a.fechaEvento||a.fecha||'');
   });
 
-  // Separar sin nota y con nota
-  var sinNota=recs.filter(function(r){
-    var n=r.calificacion; return n===undefined||n===null||n===''||isNaN(parseFloat(n));
-  });
-  var conNota=recs.filter(function(r){
-    var n=r.calificacion; return n!==undefined&&n!==null&&n!==''&&!isNaN(parseFloat(n));
-  });
-
   if(!recs.length){
     lista.innerHTML='<div style="text-align:center;padding:40px 20px;color:var(--tl);font-family:var(--font-main);">'
-      +'<div style="font-size:36px;margin-bottom:10px;">📋</div>'
-      +'<div style="font-size:14px;font-weight:700;color:var(--td);">Sin eventos evaluables</div>'
-      +'<div style="font-size:12px;margin-top:6px;">Añade tareas de tipo Examen, Trabajo o Prácticas con fecha</div>'
+      +'<div style="font-size:36px;margin-bottom:10px;">🎉</div>'
+      +'<div style="font-size:14px;font-weight:700;color:var(--td);margin-bottom:6px;">¡Todo calificado!</div>'
+      +'<div style="font-size:12px;line-height:1.6;">No hay eventos pendientes de nota.<br>Cuando añadas exámenes o trabajos aparecerán aquí.</div>'
       +'</div>';
     return;
   }
 
+  // ── Header con contador ──
   lista.innerHTML='';
+  var header=document.createElement('div');
+  header.style.cssText='padding:10px 0 8px;font-size:12px;color:var(--tl);font-family:var(--font-main);';
+  header.innerHTML='<span style="font-weight:700;color:var(--td);">'+recs.length+' evento'+(recs.length!==1?'s':'')+' sin calificar</span> — Toca uno para añadir la nota';
+  lista.appendChild(header);
 
-  // ── Sección: Sin calificar ──
-  if(sinNota.length){
-    var h1=document.createElement('div');
-    h1.style.cssText='font-size:11px;font-weight:800;color:var(--tl);text-transform:uppercase;letter-spacing:.8px;padding:8px 0 6px;font-family:var(--font-main);';
-    h1.textContent='⏳ Pendientes de nota ('+sinNota.length+')';
-    lista.appendChild(h1);
-    sinNota.forEach(function(r){_renderCalifCard(r,lista,false);});
-  }
+  // ── Render cards ──
+  recs.forEach(function(r){
+    var fechaStr='';
+    if(r.fechaEvento){
+      try{
+        var d=new Date(r.fechaEvento+'T00:00:00');
+        fechaStr=d.getDate()+'/'+(d.getMonth()+1)+'/'+String(d.getFullYear()).slice(2);
+      }catch(e){}
+    }
 
-  // ── Sección: Con nota ──
-  if(conNota.length){
-    var h2=document.createElement('div');
-    h2.style.cssText='font-size:11px;font-weight:800;color:var(--gm);text-transform:uppercase;letter-spacing:.8px;padding:12px 0 6px;font-family:var(--font-main);';
-    h2.textContent='✅ Calificadas ('+conNota.length+')';
-    lista.appendChild(h2);
-    conNota.forEach(function(r){_renderCalifCard(r,lista,true);});
-  }
+    var card=document.createElement('div');
+    card.style.cssText='background:var(--w);border:1.5px solid var(--bd);border-radius:12px;padding:12px 14px;margin-bottom:8px;cursor:pointer;transition:border-color .15s;';
+    card.setAttribute('data-id',r.id);
+
+    card.innerHTML=
+      '<div style="display:flex;align-items:center;gap:6px;margin-bottom:5px;flex-wrap:wrap;">'
+        +'<span style="font-size:11px;font-weight:700;color:var(--gd);background:var(--bp);padding:1px 7px;border-radius:7px;border:1px solid var(--bd);">'+_e(r.tema||'—')+'</span>'
+        +(r.accion?'<span style="font-size:10px;color:var(--tl);">'+_e(r.accion)+'</span>':'')
+        +(fechaStr?'<span style="font-size:10px;color:var(--tl);">· '+fechaStr+'</span>':'')
+        +'<span style="margin-left:auto;font-size:11px;color:var(--tl);">Sin nota ›</span>'
+      +'</div>'
+      +'<div style="font-size:13px;font-weight:700;color:var(--td);font-family:var(--font-main);">'
+        +(r.icono?r.icono+' ':'')+_e(r.titulo||r.asunto||'Sin título')
+      +'</div>';
+
+    // Panel de nota (oculto por defecto)
+    var panel=document.createElement('div');
+    panel.id='nota-panel-'+r.id;
+    panel.style.cssText='display:none;margin-top:10px;padding-top:10px;border-top:1px solid var(--bd);';
+    panel.innerHTML=
+      '<div style="font-size:11px;color:var(--tl);margin-bottom:6px;font-family:var(--font-main);">Introduce la calificación:</div>'
+      +'<div style="display:flex;gap:8px;align-items:center;">'
+        +'<input type="number" min="0" max="10" step="0.1" placeholder="Ej: 7.5" id="inp-nota-'+r.id+'" style="flex:1;padding:10px;border:1.5px solid var(--gm);border-radius:8px;font-size:18px;font-weight:700;text-align:center;font-family:var(--font-main);background:var(--bl);color:var(--td);outline:none;" />'
+        +'<button onclick="califGuardarNota(this)" data-rid="'+r.id+'" style="padding:10px 18px;background:var(--gm);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:var(--font-main);">Guardar</button>'
+      +'</div>'
+      +'<div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap;">'
+        +[4,5,6,7,8,9,10].map(function(n){
+          return '<button data-inp="inp-nota-'+r.id+'" onclick="var el=document.getElementById(this.dataset.inp);if(el)el.value='+n+'" '
+            +'style="padding:5px 10px;background:var(--bp);border:1px solid var(--bd);border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;font-family:var(--font-main);color:var(--td);">'+n+'</button>';
+        }).join('')
+      +'</div>';
+
+    card.appendChild(panel);
+
+    // Toggle panel al tocar la card
+    card.addEventListener('click',function(e){
+      if(e.target.tagName==='BUTTON'||e.target.tagName==='INPUT') return;
+      var p=document.getElementById('nota-panel-'+r.id);
+      var abierto=p.style.display==='block';
+      // Cerrar todos los paneles
+      document.querySelectorAll('[id^="nota-panel-"]').forEach(function(x){x.style.display='none';});
+      document.querySelectorAll('#calif-lista .card-active').forEach(function(x){x.classList.remove('card-active');x.style.borderColor='var(--bd)';});
+      if(!abierto){
+        p.style.display='block';
+        card.style.borderColor='var(--gm)';
+        setTimeout(function(){var inp=document.getElementById('inp-nota-'+r.id);if(inp)inp.focus();},100);
+      }
+    });
+
+    lista.appendChild(card);
+  });
 
   // Actualizar resumen home
   try{
     var hcr=document.getElementById('home-calif-resumen');
     if(hcr){
-      hcr.textContent=sinNota.length>0?sinNota.length+' sin calificar':'¡Todo calificado! 🎉';
-      hcr.style.color=sinNota.length>0?'var(--td)':'var(--gm)';
+      var sinNota=(state.records||[]).filter(function(r){
+        if(r.archivado||!r.fechaEvento) return false;
+        var tipo=(r.accion||'').toLowerCase();
+        var esTipo=tipo.includes('examen')||tipo.includes('trabajo')||tipo.includes('práctica')||tipo.includes('practica');
+        if(!esTipo) return false;
+        var n=r.calificacion;
+        return n===undefined||n===null||n===''||isNaN(parseFloat(n));
+      }).length;
+      hcr.textContent=sinNota>0?sinNota+' sin calificar':'¡Todo calificado! 🎉';
+      hcr.style.color=sinNota>0?'var(--td)':'var(--gm)';
     }
   }catch(e){}
-}
-
-function _renderCalifCard(r,lista,tienNota){
-  function _e(s){return s?String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'):'';}
-  var fechaStr='';
-  if(r.fechaEvento){
-    try{var d=new Date(r.fechaEvento+'T00:00:00');
-      fechaStr=d.getDate()+'/'+(d.getMonth()+1)+'/'+String(d.getFullYear()).slice(2);}catch(e){}
-  }
-  var nota=tienNota?parseFloat(r.calificacion):null;
-  var notaColor=nota===null?'var(--tl)':nota>=5?'var(--gm)':'#e74c3c';
-  var notaLabel=tienNota?String(r.calificacion):'—';
-
-  var card=document.createElement('div');
-  card.style.cssText='background:var(--w);border:1.5px solid '+(tienNota?'var(--gm)':'var(--bd)')+';border-radius:12px;padding:12px 14px;margin-bottom:8px;cursor:pointer;transition:border-color .15s;';
-
-  card.innerHTML=
-    '<div style="display:flex;align-items:center;gap:8px;">'
-      +'<div style="flex:1;min-width:0;">'
-        +'<div style="display:flex;align-items:center;gap:5px;margin-bottom:4px;flex-wrap:wrap;">'
-          +'<span style="font-size:11px;font-weight:700;color:var(--gd);background:var(--bp);padding:1px 7px;border-radius:7px;border:1px solid var(--bd);">'+_e(r.tema||'—')+'</span>'
-          +(r.accion?'<span style="font-size:10px;color:var(--tl);">'+_e(r.accion)+'</span>':'')
-          +(fechaStr?'<span style="font-size:10px;color:var(--tl);">· '+fechaStr+'</span>':'')
-        +'</div>'
-        +'<div style="font-size:13px;font-weight:700;color:var(--td);">'+(r.icono?r.icono+' ':'')+_e(r.titulo||r.asunto||'Sin título')+'</div>'
-      +'</div>'
-      +'<div style="font-size:22px;font-weight:900;color:'+notaColor+';min-width:36px;text-align:center;flex-shrink:0;">'+notaLabel+'</div>'
-    +'</div>';
-
-  // Panel de nota (para añadir o editar)
-  var panel=document.createElement('div');
-  panel.id='nota-panel-'+r.id;
-  panel.style.cssText='display:none;margin-top:10px;padding-top:10px;border-top:1px solid var(--bd);';
-  panel.innerHTML=
-    '<div style="font-size:11px;color:var(--tl);margin-bottom:6px;font-family:var(--font-main);">'+(tienNota?'Editar calificación:':'Introduce la calificación:')+'</div>'
-    +'<div style="display:flex;gap:8px;align-items:center;">'
-      +'<input type="number" min="0" max="10" step="0.01" placeholder="0-10" value="'+(tienNota?nota:'')+'" id="inp-nota-'+r.id+'" '
-        +'style="flex:1;padding:10px;border:1.5px solid var(--gm);border-radius:8px;font-size:18px;font-weight:700;text-align:center;font-family:var(--font-main);background:var(--bl);color:var(--td);outline:none;" />'
-      +'<button data-rid="'+r.id+'" onclick="califGuardarNota(this)" '
-        +'style="padding:10px 18px;background:var(--gm);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:var(--font-main);">Guardar</button>'
-    +'</div>'
-    +'<div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap;">'
-      +[4,5,6,7,8,9,10].map(function(n){
-        return '<button data-inp="inp-nota-'+r.id+'" onclick="var el=document.getElementById(this.dataset.inp);if(el)el.value='+n+'" '
-          +'style="padding:5px 10px;background:var(--bp);border:1px solid var(--bd);border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;color:var(--td);">'+n+'</button>';
-      }).join('')
-    +'</div>';
-
-  card.appendChild(panel);
-
-  card.addEventListener('click',function(e){
-    if(e.target.tagName==='BUTTON'||e.target.tagName==='INPUT') return;
-    var p=document.getElementById('nota-panel-'+r.id);
-    var abierto=p.style.display==='block';
-    document.querySelectorAll('[id^="nota-panel-"]').forEach(function(x){x.style.display='none';});
-    document.querySelectorAll('#calif-lista .card-border-gm').forEach(function(x){x.style.borderColor='var(--bd)';});
-    if(!abierto){
-      p.style.display='block';
-      card.style.borderColor='var(--gm)';
-      setTimeout(function(){var inp=document.getElementById('inp-nota-'+r.id);if(inp)inp.focus();},100);
-    }
-  });
-  lista.appendChild(card);
 }
 
 function califGuardarNota(btn){
@@ -14022,7 +13969,7 @@ function califGuardarNota(btn){
   }
   var rec=(state.records||[]).find(function(r){return r.id===id||r.id===parseInt(id);});
   if(!rec){alert('Registro no encontrado');return;}
-  rec.calificacion=num.toFixed(2);
+  rec.calificacion=num.toFixed(1);
   persist().catch(function(){});
   showToast('✅ Nota guardada: '+num.toFixed(1));
   renderCalificaciones();
@@ -14407,10 +14354,6 @@ function nbExportarPDF(asig){
 function applyFontScale(val){
   var v=parseFloat(val)||1;
   document.documentElement.style.setProperty('--font-scale', v);
-  // Aplicar escala a elementos clave directamente
-  document.querySelectorAll('.tap-header-title,.sec-title,.record-titulo,.nota-texto,.h-task-sheet h3').forEach(function(el){
-    el.style.fontSize='';  // reset para que tome la variable
-  });
   var lbl=document.getElementById('font-scale-label');
   if(lbl) lbl.textContent=Math.round(v*100)+'%';
 }
@@ -14483,6 +14426,12 @@ function nbTabPagina(dir){
 var _lib={paginas:[],pagActual:0,herramienta:'lapiz',color:'#1a1a1a',grosor:4,radioGoma:6,fondo:'rayas',dibujando:false,trazoActual:[],historial:[],textoPendX:0,textoPendY:0,zoom:1,panX:0,panY:0,_pd0:null,_touchEndTime:0,figTipo:'rect',figX0:0,figY0:0,figX1:0,figY1:0,sel:{active:false,dragging:false,moving:false,resizing:null,resizeIdx:-1,x0:0,y0:0,x1:0,y1:0,mx:0,my:0,idxTrazos:[],idxTextos:[]},txtBold:false,txtItalic:false,txtUnder:false,txtSize:16};
 function libInit(){
   try{var s=localStorage.getItem('tp_libreta');if(s)_lib.paginas=JSON.parse(s);}catch(e){}
+  // Comprimir pts de trazos existentes al cargar (migración)
+  _lib.paginas.forEach(function(p){
+    (p.trazos||[]).forEach(function(t){
+      if(t.pts&&t.pts.length>8) t.pts=_decimarPts(t.pts,3);
+    });
+  });
   _lib.paginas.forEach(function(p){if(p.trazos)p.trazos=p.trazos.filter(function(t){return !t.borrador;});});
   if(!_lib.paginas.length)libNuevaPagina(true);
   var hoy=new Date().toISOString().slice(0,10);
@@ -14900,68 +14849,83 @@ function libUndo(){var u=_lib.historial.pop();if(!u)return;var pag=_lib.paginas[
 var _libFloatOpen=null;
 
 function libFloatToggle(panel){
-  // Cerrar si ya está abierto
-  if(_libFloatOpen===panel){
-    libFloatClose();return;
-  }
+  // Si ya está abierto el mismo, cerrarlo
+  if(_libFloatOpen===panel){libFloatClose();return;}
   libFloatClose();
   _libFloatOpen=panel;
 
-  // Crear cajón lateral overlay
-  var drawer=document.createElement('div');
-  drawer.id='lib-drawer-overlay';
-  drawer.style.cssText='position:fixed;inset:0;z-index:9998;display:flex;';
+  // Leer contenido del submenu oculto
+  var sub=document.getElementById('lib-sub-'+panel);
+  if(!sub) return;
 
-  // Fondo semitransparente para cerrar al tocar fuera
+  // Crear cajón overlay que se abre desde la izquierda hacia la derecha
+  var overlay=document.createElement('div');
+  overlay.id='lib-drawer-overlay';
+  overlay.style.cssText='position:fixed;inset:0;z-index:9998;display:flex;align-items:stretch;pointer-events:all;';
+
+  // Cajón izquierdo (contenido)
+  var drawer=document.createElement('div');
+  var titles={'herramienta':'✏️ Herramienta','color':'🎨 Color','grosor':'━ Grosor','goma':'🩹 Goma'};
+  drawer.style.cssText='width:220px;background:#fff;height:100%;overflow-y:auto;box-shadow:4px 0 24px rgba(0,0,0,.25);display:flex;flex-direction:column;animation:slideInLeft .18s ease;';
+
+  // Cabecera del cajón
+  var header=document.createElement('div');
+  header.style.cssText='padding:14px 16px 10px;border-bottom:1px solid #eee;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;';
+  header.innerHTML='<div style="font-size:15px;font-weight:800;color:#222;font-family:var(--font-main);">'+(titles[panel]||panel)+'</div>'
+    +'<button onclick="libFloatClose()" style="background:none;border:none;font-size:20px;cursor:pointer;color:#888;padding:0;line-height:1;">✕</button>';
+  drawer.appendChild(header);
+
+  // Contenido: clonar hijos del submenu
+  var body=document.createElement('div');
+  body.style.cssText='padding:12px;flex:1;display:flex;flex-direction:column;gap:8px;overflow-y:auto;';
+  Array.from(sub.children).forEach(function(child){
+    var clone=child.cloneNode(true);
+    // Re-bind events desde atributos onclick
+    clone.querySelectorAll('[onclick]').forEach(function(el){
+      var oc=el.getAttribute('onclick');
+      el.removeAttribute('onclick');
+      el.addEventListener('click',function(e){
+        e.stopPropagation();
+        try{eval(oc);}catch(err){console.warn(err);}
+      });
+    });
+    // Re-bind oninput/onchange
+    clone.querySelectorAll('[oninput]').forEach(function(el){
+      var oi=el.getAttribute('oninput');
+      el.removeAttribute('oninput');
+      el.addEventListener('input',function(){try{eval(oi);}catch(err){}});
+    });
+    clone.querySelectorAll('[onchange]').forEach(function(el){
+      var oc2=el.getAttribute('onchange');
+      el.removeAttribute('onchange');
+      el.addEventListener('change',function(){try{eval(oc2);}catch(err){}});
+    });
+    // Also bind inline onclick on the clone itself
+    if(clone.getAttribute && clone.getAttribute('onclick')){
+      var oc3=clone.getAttribute('onclick');
+      clone.removeAttribute('onclick');
+      clone.addEventListener('click',function(e){
+        e.stopPropagation();
+        try{eval(oc3);}catch(err){}
+      });
+    }
+    body.appendChild(clone);
+  });
+  drawer.appendChild(body);
+
+  // Fondo oscuro para cerrar
   var bg=document.createElement('div');
-  bg.style.cssText='flex:1;background:rgba(0,0,0,.3);';
+  bg.style.cssText='flex:1;background:rgba(0,0,0,.35);cursor:pointer;';
   bg.addEventListener('click',function(){libFloatClose();});
 
-  // El cajón en sí
-  var sub=document.getElementById('lib-sub-'+panel);
-  if(!sub){drawer.remove();_libFloatOpen=null;return;}
-
-  // Clonar el contenido del submenu en el cajón
-  var cajón=document.createElement('div');
-  cajón.style.cssText='width:220px;background:#fff;height:100%;overflow-y:auto;padding:16px 12px;box-shadow:4px 0 20px rgba(0,0,0,.2);display:flex;flex-direction:column;gap:8px;';
-
-  // Título del cajón
-  var titles={'herramienta':'🛠️ Herramienta','color':'🎨 Color','grosor':'━ Grosor','goma':'🩹 Goma'};
-  var titleEl=document.createElement('div');
-  titleEl.style.cssText='font-size:14px;font-weight:800;color:#222;margin-bottom:8px;font-family:var(--font-main);padding-bottom:8px;border-bottom:1px solid #eee;';
-  titleEl.textContent=titles[panel]||panel;
-  cajón.appendChild(titleEl);
-
-  // Copiar hijos del submenu oculto al cajón
-  Array.from(sub.children).forEach(function(child){
-    cajón.appendChild(child.cloneNode(true));
-  });
-
-  // Añadir eventos a los botones clonados
-  cajón.querySelectorAll('button[onclick]').forEach(function(btn){
-    var oc=btn.getAttribute('onclick');
-    btn.removeAttribute('onclick');
-    btn.addEventListener('click',function(){
-      eval(oc); // ejecutar el onclick original
-    });
-  });
-  cajón.querySelectorAll('input[oninput]').forEach(function(inp){
-    var oi=inp.getAttribute('oninput');
-    inp.addEventListener('input',function(){eval(oi);});
-  });
-  cajón.querySelectorAll('input[onchange]').forEach(function(inp){
-    var oc2=inp.getAttribute('onchange');
-    inp.addEventListener('change',function(){eval(oc2);});
-  });
-
-  drawer.appendChild(cajón);
-  drawer.appendChild(bg);
-  document.body.appendChild(drawer);
+  overlay.appendChild(drawer);
+  overlay.appendChild(bg);
+  document.body.appendChild(overlay);
 }
 
 function libFloatClose(){
   var ov=document.getElementById('lib-drawer-overlay');
-  if(ov) ov.remove();
+  if(ov)ov.remove();
   _libFloatOpen=null;
 }
 
@@ -14971,32 +14935,27 @@ function libSetToolFloat(tool){
   libSetTool(tool,document.getElementById(map[tool])||{});
   var icons={lapiz:'✏️',boli:'🖊️',texto:'𝐓',seleccion:'⬚',borrador:'🩹','borrador-m':'🩹','borrador-l':'🩹'};
   var mainBtn=document.getElementById('lt-lapiz');
-  if(mainBtn) mainBtn.textContent=icons[tool]||'✏️';
+  if(mainBtn)mainBtn.textContent=icons[tool]||'✏️';
   var ts=document.getElementById('lib-text-styles');
-  if(ts) ts.style.display=tool==='texto'?'flex':'none';
+  if(ts)ts.style.display=tool==='texto'?'flex':'none';
   document.querySelectorAll('.lib-float-sub').forEach(function(b){b.classList.remove('active');});
-  var ab=document.getElementById('ftool-'+tool);
-  if(ab) ab.classList.add('active');
+  var ab=document.getElementById('ftool-'+tool);if(ab)ab.classList.add('active');
 }
 
 function libSetColorFloat(color,dot){
   libSetColor(color,null);
   var btn=document.getElementById('lib-float-color-btn');
-  if(btn){
-    btn.style.background=color;
-    btn.style.border=color==='#ffffff'?'3px solid #ccc':'3px solid rgba(255,255,255,.9)';
-  }
+  if(btn){btn.style.background=color;btn.style.border=color==='#ffffff'?'3px solid #ccc':'3px solid rgba(255,255,255,.9)';}
   document.querySelectorAll('.lib-color-dot').forEach(function(d){d.classList.remove('active');});
-  if(dot) dot.classList.add('active');
+  if(dot)dot.classList.add('active');
   libFloatClose();
 }
 
 function libSetSizeFloat(size,btn){
   libSetSize(size,null);
   var prev=document.getElementById('lib-grosor-preview');
-  if(prev) prev.style.height=Math.min(size,20)+'px';
-  var sl=document.getElementById('lib-size-slider');
-  if(sl) sl.value=size;
+  if(prev)prev.style.height=Math.min(size,20)+'px';
+  var sl=document.getElementById('lib-size-slider');if(sl)sl.value=size;
   if(btn){
     document.querySelectorAll('.lib-size-row').forEach(function(b){b.classList.remove('active-size');});
     btn.classList.add('active-size');
@@ -15004,9 +14963,7 @@ function libSetSizeFloat(size,btn){
 }
 
 document.addEventListener('click',function(e){
-  if(_libFloatOpen&&!e.target.closest('#lib-float-bar')){
-    libFloatClose();
-  }
+  if(_libFloatOpen&&!e.target.closest('#lib-float-bar'))libFloatClose();
 });
 function libSetTool(t,btn){
   // Tamaños de goma
@@ -15054,11 +15011,33 @@ function libGuardarManual(){
   showToast('💾 Libreta guardada correctamente');
 }
 
+function _decimarPts(pts,step){
+  // Reduce points keeping every Nth - reduces storage 3-4x with minimal visual loss
+  if(!pts||pts.length<=4) return pts;
+  var out=[];
+  for(var i=0;i<pts.length;i+=step){out.push(pts[i]);}
+  if(out[out.length-1]!==pts[pts.length-1]) out.push(pts[pts.length-1]);
+  return out;
+}
+
 function libGuardar(){
   try{
-    localStorage.setItem('tp_libreta',JSON.stringify(_lib.paginas.map(function(p){
-      return{fecha:p.fecha,fondo:p.fondo,bgColor:p.bgColor,trazos:p.trazos,textos:p.textos};
-    })));
+    var pagesData=_lib.paginas.map(function(p){
+      return{
+        fecha:p.fecha,fondo:p.fondo,bgColor:p.bgColor,
+        trazos:(p.trazos||[]).map(function(t){
+          return Object.assign({},t,{pts:_decimarPts(t.pts,3)});
+        }),
+        textos:p.textos
+      };
+    });
+    var serialized=JSON.stringify(pagesData);
+    // Avisar si supera 2MB
+    if(serialized.length>2*1024*1024){
+      var kb=Math.round(serialized.length/1024);
+      console.warn('Tapunto: libreta ocupa '+kb+'KB en localStorage');
+    }
+    localStorage.setItem('tp_libreta',serialized);
     // Mostrar indicador guardado
     var ind=document.getElementById('lib-saved-indicator');
     if(ind){
@@ -15893,5 +15872,4 @@ if('serviceWorker' in navigator && location.hostname==='tapunto.app'){
 }
 </script>
 </body>
-</html
-  >
+</html>
