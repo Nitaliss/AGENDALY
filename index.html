@@ -27,9 +27,7 @@
     .app-card.soon{opacity:.65;cursor:default;}
     .app-card.soon:hover{transform:none;box-shadow:0 2px 8px rgba(0,0,0,.07);}
 
-    .app-card.tapunto-agenda{border:2px solid #2D5016;background:linear-gradient(135deg,#f0f7ec 0%,white 100%);}
-    .app-card.tapunto-agenda:hover{box-shadow:0 8px 32px rgba(45,80,22,.2);}
-
+    /* Tarjeta tapunto-voz — destacada */
     .app-card.tapunto-voz{border:2px solid #1565C0;background:linear-gradient(135deg,#f0f7ff 0%,white 100%);}
     .app-card.tapunto-voz:hover{box-shadow:0 8px 32px rgba(21,101,192,.2);}
 
@@ -43,7 +41,6 @@
     .badge-soon{background:#f3f4f6;color:#9ca3af;}
     .badge-free{background:#dbeafe;color:#1d4ed8;}
 
-    .btn-primary{display:inline-block;margin-top:10px;background:#2D5016;color:white;font-size:11px;font-weight:700;padding:6px 14px;border-radius:20px;text-decoration:none;}
     .btn-download{display:inline-block;margin-top:10px;background:#1565C0;color:white;font-size:11px;font-weight:700;padding:6px 14px;border-radius:20px;text-decoration:none;}
 
     .about{background:white;border-radius:20px;padding:32px;box-shadow:0 2px 8px rgba(0,0,0,.07);margin-bottom:32px;}
@@ -76,16 +73,15 @@
   <h2>Apps disponibles</h2>
   <div class="grid">
 
-    <!-- AGENDA — disponible -->
-    <a href="agenda/" class="app-card tapunto-agenda">
-      <span class="badge badge-live">Disponible</span>
+    <!-- AGENDA -->
+    <div class="app-card soon">
+      <span class="badge badge-soon">Próximamente</span>
       <div class="app-icon"><img src="agenda/icon-192.png" alt="Agenda"></div>
-      <div class="app-name" style="color:#2D5016;">Agenda</div>
+      <div class="app-name">Agenda</div>
       <div class="app-desc">Tu agenda estudiantil con libreta, tareas, horarios y más</div>
-      <span class="btn-primary">▶ Abrir app</span>
-    </a>
+    </div>
 
-    <!-- TAPUNTO-VOZ -->
+    <!-- TAPUNTO-VOZ — nueva tarjeta destacada -->
     <a href="tapunto-voz/" class="app-card tapunto-voz">
       <span class="badge badge-free">Gratuita</span>
       <div class="app-icon" style="background:#dbeafe;font-size:34px;">🎙</div>
@@ -129,12 +125,11 @@
 
 <footer>
   <div class="links">
-    <a href="agenda/">Agenda</a>
     <a href="tapunto-voz/">tapunto-voz</a>
     <a href="privacidad.html">Privacidad</a>
     <a href="mailto:tapunto.soporte@gmail.com">Contacto</a>
   </div>
-  © 2026 Alicia Prats & Enrique García · Tapunto · tapunto.app
+  © 2026 Tapunto · tapunto.app
 </footer>
 
 </body>
