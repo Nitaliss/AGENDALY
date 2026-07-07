@@ -12,6 +12,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#2D5016">
 <meta http-equiv="X-Content-Type-Options" content="nosniff">
+<meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
 <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
 <meta name="description" content="Tu agenda personal de productividad. Apunta. Organiza. Comunica.">
 <link rel="manifest" id="pwa-manifest">
@@ -915,6 +916,7 @@ body[data-mode="escolar"][data-theme="verde"]{
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#2D5016">
 <meta http-equiv="X-Content-Type-Options" content="nosniff">
+<meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
 <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
 <meta name="description" content="Tu agenda personal de productividad. Apunta. Organiza. Comunica.">
 <link rel="manifest" href="manifest.json">
@@ -2145,8 +2147,8 @@ body{margin:0;padding:0;overflow-x:hidden;}
 
 /* ── BOTTOM NAV ── */
 .bottom-nav{position:fixed;bottom:0;left:0;right:0;height:62px;background:#111;border-top:none;display:flex;z-index:500;box-shadow:0 -4px 20px rgba(0,0,0,.3);}
-.bnav-btn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;background:rgba(255,255,255,.12);border:1.5px solid rgba(255,255,255,.25);cursor:pointer;padding:5px 3px;transition:all .15s;color:#111;border-radius:14px;margin:5px 3px;min-width:0;}
-.bnav-btn.active{color:#111;border-radius:14px;box-shadow:0 2px 10px rgba(0,0,0,.25);}
+.bnav-btn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;background:rgba(255,255,255,.1);border:1.5px solid rgba(255,255,255,.2);cursor:pointer;padding:5px 2px;transition:all .15s;color:#111;border-radius:14px;margin:5px 3px;min-width:0;}
+.bnav-btn.active{color:#111;background:rgba(255,255,255,.25);border-radius:14px;}
 .bnav-btn:active{transform:scale(.92);}
 .bnav-ico{font-size:24px;line-height:1;}
 .bnav-lbl{font-size:10px;font-weight:800;font-family:var(--font-main);letter-spacing:.3px;color:#111;}
@@ -2927,13 +2929,7 @@ body.nb-mode #nb-pill-orden { display:none !important; }
     <span style="font-size:11px;color:#856404;flex:1;">Almacenamiento casi lleno. Toca para gestionar espacio.</span>
     <span style="font-size:11px;color:#856404;font-weight:700;">Ver →</span>
   </div>
-  <div id="home-cita" style="padding:10px 16px;min-height:48px;display:flex;align-items:center;background:#1a1a2e;border-bottom:1px solid rgba(255,255,255,.1);">
-  <span style="font-size:18px;flex-shrink:0;opacity:.7;">✨</span>
-  <div style="margin-left:10px;">
-    <div style="font-family:Caveat,cursive;font-size:15px;line-height:1.4;color:#fff;font-weight:600;">"El éxito es la suma de pequeños esfuerzos repetidos cada día."</div>
-    <div style="font-size:10px;color:rgba(255,255,255,.6);margin-top:1px;font-family:var(--font-main);">— R. Collier</div>
-  </div>
-</div>
+  <div id="home-cita"  style="padding:8px 16px;min-height:44px;display:flex;flex-direction:column;justify-content:center;background:rgba(0,0,0,.08);border-bottom:1px solid rgba(255,255,255,.1);"></div>
   <!-- SECCIÓN HORARIO HOY — siempre visible sin tabs -->
   <div id="home-horario-hoy" style="background:var(--bp);border-bottom:1px solid var(--bd);padding:6px 10px 8px;">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px;">
@@ -2960,27 +2956,30 @@ body.nb-mode #nb-pill-orden { display:none !important; }
   <div style="padding:6px 12px 100px;">
 
     <!-- FILA ACCESOS RÁPIDOS -->
-    <div style="display:flex;gap:6px;margin-bottom:12px;">
-      <button onclick="irSeccion('calendario')" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:10px 2px 8px;background:var(--w);border:1.5px solid var(--bd);border-radius:14px;cursor:pointer;font-family:var(--font-main);opacity:.85;">
-        <span style="font-size:20px;line-height:1;">📅</span>
-        <div style="font-size:9px;font-weight:700;color:var(--td);">Calendario</div>
+    <div style="display:flex;gap:5px;margin-bottom:12px;">
+      <button onclick="irSeccion('calendario')" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:8px 1px 7px;background:var(--w);border:1.5px solid var(--bd);border-radius:14px;cursor:pointer;font-family:var(--font-main);opacity:.85;">
+        <span style="font-size:18px;line-height:1;">📅</span>
+        <div style="font-size:8px;font-weight:700;color:var(--td);">Calendario</div>
       </button>
-      <button onclick="irSeccion('calificaciones')" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:10px 2px 8px;background:var(--w);border:1.5px solid var(--bd);border-radius:14px;cursor:pointer;font-family:var(--font-main);opacity:.85;">
-        <span style="font-size:20px;line-height:1;">📋</span>
-        <div style="font-size:9px;font-weight:700;color:var(--td);">Calificaciones</div>
-        <div style="font-size:8px;color:var(--tl);" id="home-calif-resumen"></div>
+      <button onclick="irSeccion('calificaciones')" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:8px 1px 7px;background:var(--w);border:1.5px solid var(--bd);border-radius:14px;cursor:pointer;font-family:var(--font-main);opacity:.85;">
+        <span style="font-size:18px;line-height:1;">📋</span>
+        <div style="font-size:8px;font-weight:700;color:var(--td);">Notas</div>
+        <div style="font-size:7px;color:var(--tl);" id="home-calif-resumen"></div>
       </button>
-      <button onclick="irSeccion('libreta')" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:10px 2px 8px;background:var(--w);border:1.5px solid var(--bd);border-radius:14px;cursor:pointer;font-family:var(--font-main);opacity:.85;">
-        <span style="font-size:20px;line-height:1;">📓</span>
-        <div style="font-size:9px;font-weight:700;color:var(--td);">Libreta</div>
+      <button onclick="irSeccion('profes')" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:8px 1px 7px;background:var(--w);border:1.5px solid var(--bd);border-radius:14px;cursor:pointer;font-family:var(--font-main);opacity:.85;">
+        <span style="font-size:18px;line-height:1;">👩‍🏫</span>
+        <div style="font-size:8px;font-weight:700;color:var(--td);">Mis Clases</div>
       </button>
-      <button onclick="irSeccion('estudio')" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:10px 2px 8px;background:var(--w);border:1.5px solid var(--bd);border-radius:14px;cursor:pointer;font-family:var(--font-main);opacity:.85;">
-        <span style="font-size:20px;line-height:1;">🍅</span>
-        <div style="font-size:9px;font-weight:700;color:var(--td);">Pomodoro</div>
+      <button onclick="irSeccion('libreta')" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:8px 1px 7px;background:var(--w);border:1.5px solid var(--bd);border-radius:14px;cursor:pointer;font-family:var(--font-main);opacity:.85;">
+        <span style="font-size:18px;line-height:1;">📓</span>
+        <div style="font-size:8px;font-weight:700;color:var(--td);">Libreta</div>
+      </button>
+      <button onclick="irSeccion('estudio')" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:8px 1px 7px;background:var(--w);border:1.5px solid var(--bd);border-radius:14px;cursor:pointer;font-family:var(--font-main);opacity:.85;">
+        <span style="font-size:18px;line-height:1;">🍅</span>
+        <div style="font-size:8px;font-weight:700;color:var(--td);">Pomodoro</div>
       </button>
     </div>
     
-
     <!-- Pomodoro hoy (compacto) -->
     <div id="home-pom-strip" style="display:none;background:var(--w);border:1px solid var(--bd);border-radius:8px;padding:6px 10px;margin-bottom:8px;cursor:pointer;" onclick="irSeccion('estudio')">
       <div style="font-size:10px;font-weight:700;color:var(--tm);font-family:var(--font-main);">🕐 Pomodoro hoy</div>
@@ -3010,17 +3009,12 @@ body.nb-mode #nb-pill-orden { display:none !important; }
       <label style="font-size:10px;font-weight:700;color:var(--tm);font-family:var(--font-main);letter-spacing:.5px;text-transform:uppercase;display:block;margin-bottom:5px;">&#128197; Fecha examen/entrega</label>
       <input type="date" id="h-task-fecha-evento" style="width:100%;padding:7px 10px;border:1.5px solid var(--gm);border-radius:8px;font-size:14px;font-family:var(--font-main);background:var(--w);color:var(--td);box-sizing:border-box;" />
     </div>
-    <!-- Icono + chips tipo -->
-    <div style="display:flex;align-items:flex-start;gap:8px;margin-bottom:10px;">
-      <button id="h-task-icono-btn" onclick="mostrarSelectorIconoHTask()" title="Elegir icono"
-        style="width:46px;height:46px;flex-shrink:0;border-radius:10px;border:1.5px solid var(--bd);background:var(--bp);font-size:22px;cursor:pointer;display:flex;align-items:center;justify-content:center;">📋</button>
-      <div style="display:flex;gap:5px;flex-wrap:wrap;flex:1;">
-        <button class="h-tipo-chip sel" onclick="hSelTipo(this,'Examen')">&#128221; Examen</button>
-        <button class="h-tipo-chip" onclick="hSelTipo(this,'Deberes')">&#128218; Deberes</button>
-        <button class="h-tipo-chip" onclick="hSelTipo(this,'Trabajo')">&#128203; Trabajo</button>
+    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;">
+      <button class="h-tipo-chip sel" onclick="hSelTipo(this,'Examen')">&#128221; Examen</button>
+      <button class="h-tipo-chip" onclick="hSelTipo(this,'Deberes')">&#128218; Deberes</button>
+      <button class="h-tipo-chip" onclick="hSelTipo(this,'Trabajo')">&#128203; Trabajo</button>
       <button class="h-tipo-chip" onclick="hSelTipo(this,'Proyecto')">&#128300; Proyecto</button>
       <button class="h-tipo-chip" onclick="hSelTipo(this,'Otro')">&#128172; Otro</button>
-      </div>
     </div>
     <!-- Foto + Docs adjuntos -->
     <div style="margin-bottom:8px;">
@@ -3047,7 +3041,7 @@ body.nb-mode #nb-pill-orden { display:none !important; }
     <div style="display:flex;gap:8px;align-items:flex-start;">
       <input type="text" id="h-task-titulo-inp" placeholder="Título (ej: Parcial 1, Lab 3...)" style="width:100%;padding:8px 10px;border:1px solid var(--bd);border-radius:8px;font-size:13px;background:var(--bp);color:var(--td);box-sizing:border-box;margin-bottom:8px;font-family:inherit;">
       <textarea class="h-task-ta" id="h-task-ta" placeholder="Describe la tarea, examen o trabajo..."></textarea>
-      <button class="h-mic-btn" id="h-mic-btn" onclick="hToggleMic();" title="Dictar">&#127897;&#65039;</button>
+      <button class="h-mic-btn" id="h-mic-btn" onclick="if(!isPremium){showUpgrade();return;}hToggleMic();" title="Dictar">&#127897;&#65039;</button>
     </div>
     <div class="h-task-meta" id="h-mic-status" style="margin-bottom:8px;min-height:14px;"></div>
     <div style="display:flex;gap:8px;">
@@ -3150,12 +3144,6 @@ body.nb-mode #nb-pill-orden { display:none !important; }
   <div class="tap-header">
     <button class="tap-header-btn" onclick="irHome()" style="flex-direction:column;gap:1px;"><span style="font-size:22px;line-height:1;color:#fff;font-weight:900;">&#8592;</span><span style="font-size:9px;color:#fff;font-weight:700;font-family:var(--font-main);">Inicio</span></button>
     <span class="tap-header-title">📓 Mi Libreta</span>
-    <!-- Nav páginas -->
-    <div style="display:flex;align-items:center;gap:4px;background:rgba(255,255,255,.12);border-radius:20px;padding:3px 8px;">
-      <button onclick="libPagAnterior()" style="background:none;border:none;color:#fff;font-size:20px;cursor:pointer;padding:0 4px;line-height:1;font-weight:900;" title="Página anterior">‹</button>
-      <span id="lib-nav-pag" style="font-size:11px;font-weight:700;color:#fff;font-family:var(--font-main);min-width:36px;text-align:center;">1/1</span>
-      <button onclick="libPagSiguiente()" style="background:none;border:none;color:#fff;font-size:20px;cursor:pointer;padding:0 4px;line-height:1;font-weight:900;" title="Página siguiente">›</button>
-    </div>
     <div style="display:flex;gap:2px;">
       <button class="tap-header-btn" onclick="libGuardarManual()" id="btn-lib-guardar" style="flex-direction:column;gap:1px;" title="Guardar ahora"><span style="font-size:16px;line-height:1;color:#fff;">💾</span><span style="font-size:7px;font-family:var(--font-main);color:#fff;">Guardar</span></button>
       <button class="tap-header-btn" onclick="libNuevaPagina()" style="flex-direction:column;gap:1px;"><span style="font-size:20px;line-height:1;color:#fff;font-weight:900;">+</span><span style="font-size:7px;font-family:var(--font-main);">Nueva</span></button>
@@ -3163,116 +3151,67 @@ body.nb-mode #nb-pill-orden { display:none !important; }
       <button class="tap-header-btn" onclick="libMenuCompartir()" style="flex-direction:column;gap:1px;"><span style="font-size:16px;line-height:1;">📤</span><span style="font-size:7px;font-family:var(--font-main);">Compartir</span></button>
     </div>
   </div>
-  <div id="lib-toolbar" style="display:none;"></div>
-
-  <!-- ════ BARRA FLOTANTE LATERAL ════ -->
-  <div style="flex:1;display:flex;min-height:0;position:relative;">
-  <div id="lib-float-bar" style="position:relative;z-index:100;display:flex;flex-direction:column;gap:6px;align-items:center;padding:8px 4px;background:rgba(255,255,255,.92);backdrop-filter:blur(4px);flex-shrink:0;overflow-y:auto;justify-content:center;border-right:1px solid var(--bd);">
-
-    <!-- Herramienta -->
-    <div style="position:relative;">
-      <button id="lt-lapiz" onclick="libFloatToggle('herramienta')" class="lib-float-btn active-tool"
-        style="width:44px;height:44px;border-radius:14px;border:none;background:rgba(255,255,255,.92);backdrop-filter:blur(8px);box-shadow:0 2px 12px rgba(0,0,0,.15);cursor:pointer;font-size:20px;display:flex;align-items:center;justify-content:center;">✏️</button>
-      <div id="lib-sub-herramienta" style="display:none;position:fixed;left:60px;top:auto;background:rgba(255,255,255,.97);backdrop-filter:blur(12px);border-radius:16px;box-shadow:0 4px 24px rgba(0,0,0,.18);padding:8px;flex-direction:column;gap:6px;min-width:52px;align-items:center;max-height:80vh;overflow-y:auto;z-index:9999;">
-        <button onclick="libSetToolFloat('lapiz')" id="ftool-lapiz" class="lib-float-sub active" title="Lápiz">✏️</button>
-        <button onclick="libSetToolFloat('boli')" id="ftool-boli" class="lib-float-sub" title="Bolígrafo">🖊️</button>
-        <button onclick="libSetToolFloat('texto')" id="ftool-texto" class="lib-float-sub" title="Texto" style="font-weight:900;">T</button>
-        <button onclick="libSetToolFloat('seleccion')" id="ftool-sel" class="lib-float-sub" title="Seleccionar">⬚</button>
-        <button onclick="libMenuFiguras();libFloatClose()" class="lib-float-sub" title="Figuras">◻</button>
-        <button onclick="libMenuEmojiSticker();libFloatClose()" class="lib-float-sub" title="Stickers">😊</button>
-        <div id="lib-text-styles" style="display:none;flex-direction:column;gap:4px;align-items:center;border-top:1px solid #eee;padding-top:6px;margin-top:2px;">
-          <button id="lt-bold" onclick="libToggleEstilo('bold')" class="lib-float-sub" style="font-weight:900;">B</button>
-          <button id="lt-italic" onclick="libToggleEstilo('italic')" class="lib-float-sub" style="font-style:italic;">I</button>
-          <button id="lt-under" onclick="libToggleEstilo('underline')" class="lib-float-sub" style="text-decoration:underline;">U</button>
-          <select id="lt-size" onchange="libSetTamTexto(this.value)" style="width:44px;font-size:10px;border:1px solid #ddd;border-radius:8px;padding:3px;">
-            <option value="12">12</option><option value="16" selected>16</option>
-            <option value="20">20</option><option value="28">28</option><option value="36">36</option>
-          </select>
-        </div>
-      </div>
+  <div id="lib-toolbar" style="display:flex;align-items:center;gap:4px;padding:5px 8px;background:var(--w);border-bottom:1px solid var(--bd);overflow-x:auto;flex-shrink:0;">
+    <!-- Herramientas de dibujo -->
+    <button class="lib-tool active" id="lt-lapiz" onclick="libSetTool('lapiz',this)" title="Lápiz">✏️</button>
+    <button class="lib-tool" id="lt-boli" onclick="libSetTool('boli',this)" title="Bolígrafo">🖊</button>
+    <button class="lib-tool" id="lt-sel" onclick="libSetTool('seleccion',this)" title="Seleccionar" style="font-size:12px;font-weight:900;color:#222;">⬚</button>
+    <button class="lib-tool" id="lt-text" onclick="libSetTool('texto',this)" title="Texto" style="font-weight:900;font-size:14px;color:#222;">T</button>
+    <!-- Controles de estilo texto (solo visibles en modo texto) -->
+    <div id="lib-text-styles" style="display:none;align-items:center;gap:3px;flex-shrink:0;">
+      <button id="lt-bold" onclick="libToggleEstilo('bold')" style="font-weight:900;font-size:12px;padding:2px 5px;border:1px solid var(--bd);border-radius:5px;background:transparent;cursor:pointer;color:#222;" title="Negrita">B</button>
+      <button id="lt-italic" onclick="libToggleEstilo('italic')" style="font-style:italic;font-size:12px;padding:2px 5px;border:1px solid var(--bd);border-radius:5px;background:transparent;cursor:pointer;color:#222;" title="Cursiva">I</button>
+      <button id="lt-under" onclick="libToggleEstilo('underline')" style="text-decoration:underline;font-size:12px;padding:2px 5px;border:1px solid var(--bd);border-radius:5px;background:transparent;cursor:pointer;color:#222;" title="Subrayado">U</button>
+      <select id="lt-size" onchange="libSetTamTexto(this.value)" style="font-size:10px;border:1px solid var(--bd);border-radius:5px;padding:2px;background:var(--w);color:#222;cursor:pointer;">
+        <option value="12">12</option>
+        <option value="16" selected>16</option>
+        <option value="20">20</option>
+        <option value="28">28</option>
+        <option value="36">36</option>
+      </select>
     </div>
-
-    <!-- Color -->
-    <div style="position:relative;">
-      <button onclick="libFloatToggle('color')" id="lib-float-color-btn" class="lib-float-btn"
-        style="width:44px;height:44px;border-radius:14px;background:#1a1a1a;border:3px solid rgba(255,255,255,.9);box-shadow:0 2px 12px rgba(0,0,0,.2);cursor:pointer;"></button>
-      <div id="lib-sub-color" style="display:none;position:fixed;left:60px;top:auto;background:rgba(255,255,255,.97);backdrop-filter:blur(12px);border-radius:16px;box-shadow:0 4px 24px rgba(0,0,0,.18);padding:10px;min-width:170px;flex-direction:column;z-index:9999;">
-        <div style="font-size:10px;font-weight:700;color:#666;margin-bottom:8px;">COLOR</div>
-        <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-bottom:8px;">
-          <div class="lib-color-dot active" style="background:#1a1a1a;" onclick="libSetColorFloat('#1a1a1a',this)"></div>
-          <div class="lib-color-dot" style="background:#fff;border:2px solid #ccc;" onclick="libSetColorFloat('#ffffff',this)"></div>
-          <div class="lib-color-dot" style="background:#e74c3c;" onclick="libSetColorFloat('#e74c3c',this)"></div>
-          <div class="lib-color-dot" style="background:#ff8c69;" onclick="libSetColorFloat('#ff8c69',this)"></div>
-          <div class="lib-color-dot" style="background:#f39c12;" onclick="libSetColorFloat('#f39c12',this)"></div>
-          <div class="lib-color-dot" style="background:#f1c40f;" onclick="libSetColorFloat('#f1c40f',this)"></div>
-          <div class="lib-color-dot" style="background:#2ecc71;" onclick="libSetColorFloat('#2ecc71',this)"></div>
-          <div class="lib-color-dot" style="background:#27ae60;" onclick="libSetColorFloat('#27ae60',this)"></div>
-          <div class="lib-color-dot" style="background:#2980b9;" onclick="libSetColorFloat('#2980b9',this)"></div>
-          <div class="lib-color-dot" style="background:#9b59b6;" onclick="libSetColorFloat('#9b59b6',this)"></div>
-          <div class="lib-color-dot" style="background:#e91e8c;" onclick="libSetColorFloat('#e91e8c',this)"></div>
-          <div class="lib-color-dot" style="background:#fd79a8;" onclick="libSetColorFloat('#fd79a8',this)"></div>
-          <div class="lib-color-dot" style="background:#a29bfe;" onclick="libSetColorFloat('#a29bfe',this)"></div>
-          <div class="lib-color-dot" style="background:#00cec9;" onclick="libSetColorFloat('#00cec9',this)"></div>
-          <div class="lib-color-dot" style="background:#636e72;" onclick="libSetColorFloat('#636e72',this)"></div>
-        </div>
-        <div style="display:flex;align-items:center;gap:6px;border-top:1px solid #eee;padding-top:8px;">
-          <span style="font-size:10px;color:#888;">Personalizado:</span>
-          <input type="color" id="lib-color-custom" value="#1a1a1a" onchange="libSetColorFloat(this.value,null)" style="width:28px;height:28px;border:none;border-radius:50%;padding:0;cursor:pointer;">
-        </div>
-      </div>
+    <div style="width:1px;height:20px;background:var(--bd);margin:0 1px;flex-shrink:0;"></div>
+    <!-- Emojis + Stickers unificados -->
+    <button class="lib-tool" id="lt-sticker" onclick="libMenuEmojiSticker()" title="Emojis y Stickers" style="font-size:13px;padding:2px 5px;">😊✨</button>
+    <div style="width:1px;height:20px;background:var(--bd);margin:0 1px;flex-shrink:0;"></div>
+    <!-- Gomas -->
+    <button class="lib-tool" id="lt-borrador" onclick="libSetTool('borrador',this)" title="Borrador S" style="font-size:11px;padding:2px 4px;color:#222;">🧹S</button>
+    <button class="lib-tool" id="lt-borrador-m" onclick="libSetTool('borrador-m',this)" title="Borrador M" style="font-size:12px;padding:2px 4px;color:#222;">🧹M</button>
+    <button class="lib-tool" id="lt-borrador-l" onclick="libSetTool('borrador-l',this)" title="Borrador L" style="font-size:13px;padding:2px 4px;color:#222;">🧹L</button>
+    <button class="lib-tool" onclick="libUndo()" title="Deshacer" style="color:#222;">↩</button>
+    <div style="width:1px;height:20px;background:var(--bd);margin:0 1px;flex-shrink:0;"></div>
+    <!-- Colores -->
+    <div style="display:flex;gap:3px;align-items:center;">
+      <div class="lib-color active" style="background:#1a1a1a;" onclick="libSetColor('#1a1a1a',this)"></div>
+      <div class="lib-color" style="background:#e74c3c;" onclick="libSetColor('#e74c3c',this)"></div>
+      <div class="lib-color" style="background:#2980b9;" onclick="libSetColor('#2980b9',this)"></div>
+      <div class="lib-color" style="background:#27ae60;" onclick="libSetColor('#27ae60',this)"></div>
+      <div class="lib-color" style="background:#f39c12;" onclick="libSetColor('#f39c12',this)"></div>
+      <div class="lib-color" style="background:#8e44ad;" onclick="libSetColor('#8e44ad',this)"></div>
+      <input type="color" id="lib-color-custom" value="#1a1a1a" onchange="libSetColor(this.value,null)" style="width:22px;height:22px;border:none;border-radius:50%;padding:0;cursor:pointer;">
     </div>
+    <div style="width:1px;height:20px;background:var(--bd);margin:0 2px;flex-shrink:0;"></div>
+    <!-- Grosores -->
+    <button class="lib-size active" data-size="2" onclick="libSetSize(2,this)" style="width:26px;height:20px;display:flex;align-items:center;justify-content:center;"><div style="width:16px;height:2px;background:#222;border-radius:2px;"></div></button>
+    <button class="lib-size" data-size="5" onclick="libSetSize(5,this)" style="width:26px;height:20px;display:flex;align-items:center;justify-content:center;"><div style="width:16px;height:5px;background:#222;border-radius:2px;"></div></button>
+    <button class="lib-size" data-size="10" onclick="libSetSize(10,this)" style="width:26px;height:20px;display:flex;align-items:center;justify-content:center;"><div style="width:16px;height:9px;background:#222;border-radius:3px;"></div></button>
+    <div style="width:1px;height:20px;background:var(--bd);margin:0 2px;flex-shrink:0;"></div>
+    <!-- Fondo + Plantillas unificados -->
+    <button id="lt-figura" class="lib-tool" onclick="libMenuFiguras()" title="Figuras geométricas" style="font-size:13px;padding:2px 6px;color:#222;">◻</button>
+    <button class="lib-tool" onclick="libMenuFondoPlantilla()" title="Fondo y Plantillas" style="font-size:10px;padding:3px 6px;color:#222;">🎨📄</button>
+    <!-- Indicador guardado — al final, color negro -->
+    <div style="flex:1;min-width:4px;"></div>
+    <div id="lib-saved-indicator" style="font-size:9px;color:#333;font-weight:700;font-family:var(--font-main);white-space:nowrap;padding:0 4px;flex-shrink:0;transition:opacity .5s;">✓ Guardado</div>
+  </div>
 
-    <!-- Grosor -->
-    <div style="position:relative;">
-      <button onclick="libFloatToggle('grosor')" class="lib-float-btn"
-        style="width:44px;height:44px;border-radius:14px;border:none;background:rgba(255,255,255,.92);backdrop-filter:blur(8px);box-shadow:0 2px 12px rgba(0,0,0,.15);cursor:pointer;display:flex;align-items:center;justify-content:center;">
-        <div id="lib-grosor-preview" style="width:24px;height:3px;background:#1a1a1a;border-radius:3px;"></div>
-      </button>
-      <div id="lib-sub-grosor" style="display:none;position:fixed;left:60px;top:auto;background:rgba(255,255,255,.97);backdrop-filter:blur(12px);border-radius:16px;box-shadow:0 4px 24px rgba(0,0,0,.18);padding:10px;min-width:150px;flex-direction:column;z-index:9999;">
-        <div style="font-size:10px;font-weight:700;color:#666;margin-bottom:8px;">GROSOR</div>
-        <div style="display:flex;flex-direction:column;gap:8px;">
-          <button onclick="libSetSizeFloat(2,this)" class="lib-size-row active-size" data-size="2"><div style="width:60px;height:2px;background:#222;border-radius:2px;"></div><span>Fino</span></button>
-          <button onclick="libSetSizeFloat(4,this)" class="lib-size-row" data-size="4"><div style="width:60px;height:4px;background:#222;border-radius:2px;"></div><span>Normal</span></button>
-          <button onclick="libSetSizeFloat(7,this)" class="lib-size-row" data-size="7"><div style="width:60px;height:7px;background:#222;border-radius:3px;"></div><span>Grueso</span></button>
-          <button onclick="libSetSizeFloat(14,this)" class="lib-size-row" data-size="14"><div style="width:60px;height:14px;background:#222;border-radius:4px;"></div><span>Extra</span></button>
-          <div style="border-top:1px solid #eee;padding-top:8px;">
-            <input type="range" id="lib-size-slider" min="1" max="40" value="3" oninput="libSetSizeFloat(parseInt(this.value),null)" style="width:100%;accent-color:var(--gm);">
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Goma -->
-    <div style="position:relative;">
-      <button onclick="libFloatToggle('goma')" class="lib-float-btn"
-        style="width:44px;height:44px;border-radius:14px;border:none;background:rgba(255,255,255,.92);backdrop-filter:blur(8px);box-shadow:0 2px 12px rgba(0,0,0,.15);cursor:pointer;font-size:20px;display:flex;align-items:center;justify-content:center;">🩹</button>
-      <div id="lib-sub-goma" style="display:none;position:fixed;left:60px;top:auto;background:rgba(255,255,255,.97);backdrop-filter:blur(12px);border-radius:16px;box-shadow:0 4px 24px rgba(0,0,0,.18);padding:10px;min-width:140px;flex-direction:column;z-index:9999;">
-        <div style="font-size:10px;font-weight:700;color:#666;margin-bottom:8px;">GOMA</div>
-        <div style="display:flex;flex-direction:column;gap:6px;">
-          <button onclick="libSetToolFloat('borrador');libFloatClose()" id="lt-borrador" class="lib-eraser-btn"><div style="width:16px;height:16px;background:#ddd;border-radius:4px;border:1px solid #bbb;flex-shrink:0;"></div><span>Pequeña</span></button>
-          <button onclick="libSetToolFloat('borrador-m');libFloatClose()" id="lt-borrador-m" class="lib-eraser-btn"><div style="width:22px;height:22px;background:#ddd;border-radius:5px;border:1px solid #bbb;flex-shrink:0;"></div><span>Mediana</span></button>
-          <button onclick="libSetToolFloat('borrador-l');libFloatClose()" id="lt-borrador-l" class="lib-eraser-btn"><div style="width:30px;height:30px;background:#ddd;border-radius:6px;border:1px solid #bbb;flex-shrink:0;"></div><span>Grande</span></button>
-        </div>
-      </div>
-    </div>
-
-    <div style="width:30px;height:1px;background:rgba(0,0,0,.1);margin:2px 0;"></div>
-
-    <!-- Deshacer -->
-    <button onclick="libUndo()" class="lib-float-btn" title="Deshacer"
-      style="width:44px;height:44px;border-radius:14px;border:none;background:rgba(255,255,255,.92);backdrop-filter:blur(8px);box-shadow:0 2px 12px rgba(0,0,0,.15);cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;">↩️</button>
-
-    <!-- Fondo -->
-    <button onclick="libMenuFondoPlantilla()" class="lib-float-btn" title="Fondo y plantilla"
-      style="width:44px;height:44px;border-radius:14px;border:none;background:rgba(255,255,255,.92);backdrop-filter:blur(8px);box-shadow:0 2px 12px rgba(0,0,0,.15);cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;">🎨</button>
-
-    <!-- Guardado -->
-    <div id="lib-saved-indicator" style="font-size:8px;color:#555;font-weight:700;text-align:center;line-height:1.2;font-family:var(--font-main);transition:opacity .5s;">✓<br>OK</div>
+  <div id="lib-nav-pag" style="display:flex;align-items:center;justify-content:space-between;padding:4px 10px;background:var(--bp);border-bottom:1px solid var(--bd);font-size:11px;font-family:var(--font-main);color:var(--tl);flex-shrink:0;">
+    <button onclick="libPagAnterior()" style="background:none;border:none;font-size:18px;cursor:pointer;color:var(--tl);padding:2px 8px;">‹</button>
+    <span id="lib-pag-label" style="cursor:pointer;" onclick="libResetZoom()">Página 1</span>
+    <button onclick="libPagSiguiente()" style="background:none;border:none;font-size:18px;cursor:pointer;color:var(--tl);padding:2px 8px;">›</button>
   </div>
   <div id="lib-canvas-wrap" style="flex:1;overflow:hidden;position:relative;touch-action:none;min-height:0;">
     <canvas id="lib-canvas" style="display:block;touch-action:none;cursor:crosshair;width:100%;height:100%;"></canvas>
   </div>
-  </div><!-- /flex-wrapper -->
   <div id="lib-text-input-wrap" style="display:none;position:fixed;z-index:600;">
     <textarea id="lib-text-input" rows="2" placeholder="Escribe aquí..." style="background:rgba(255,255,255,.95);border:2px dashed var(--ga);border-radius:6px;padding:4px 8px;font-size:16px;font-family:var(--font-main);color:#222;resize:none;min-width:140px;outline:none;"></textarea>
     <div style="display:flex;gap:4px;margin-top:3px;">
@@ -3638,10 +3577,6 @@ body.nb-mode #nb-pill-orden { display:none !important; }
   <div class="tap-header">
     <button class="tap-header-btn" id="btn-back-registros" onclick="(btnBackRegistrosClick||tapuntoNavBack)()" style="flex-direction:column;gap:1px;"><span style="font-size:22px;line-height:1;color:#fff;font-weight:900;">&#8592;</span><span style="font-size:9px;color:#fff;font-weight:700;font-family:var(--font-main);letter-spacing:.3px;">Mi agenda</span></button>
     <span class="tap-header-title" id="rec-header-title">Mi agenda</span>
-    <button class="tap-header-btn" onclick="irSeccion('albumes')" title="Mis Apuntes" style="flex-direction:column;gap:1px;">
-      <span style="font-size:18px;line-height:1;">🗂️</span>
-      <span style="font-size:6px;font-family:var(--font-main);">Apuntes</span>
-    </button>
     <button class="tap-header-btn" onclick="irSeccion('calificaciones')" title="Calificaciones" style="font-size:11px;font-weight:700;color:#fff;flex-direction:column;gap:1px;">
       <span style="font-size:18px;line-height:1;">📋</span>
       <span style="font-size:6px;font-family:var(--font-main);letter-spacing:-.2px;">Calificaciones</span>
@@ -3723,7 +3658,7 @@ body.nb-mode #nb-pill-orden { display:none !important; }
     <button class="tap-header-btn" onclick="irHome()" style="flex-direction:column;gap:1px;"><span style="font-size:22px;line-height:1;color:#fff;font-weight:900;">&#8592;</span><span style="font-size:9px;color:#fff;font-weight:700;font-family:var(--font-main);letter-spacing:.3px;">Inicio</span></button>
     <span class="tap-header-title">Mi agenda</span>
   
-    <label style="cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:44px;height:44px;border-radius:8px;background:rgba(255,255,255,0.15);padding:0 4px;gap:1px;"><input type="file" accept=".ics" style="display:none;" onchange="if(!confirm('¿Importar los eventos de este calendario a tu agenda Tapunto?\n\nSe abrirá una vista previa para que puedas seleccionar qué eventos añadir.')){this.value='';return;}icsImport(this.files[0]);this.value='';"><span style="font-size:18px;line-height:1;">📅</span><span style="font-size:8px;color:#fff;font-weight:700;font-family:var(--font-main);white-space:nowrap;">ICS</span></label>
+    <label style="cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:44px;height:44px;border-radius:8px;background:rgba(255,255,255,0.15);padding:0 4px;gap:1px;"><input type="file" accept=".ics" style="display:none;" onchange="if(!isPremium){showUpgrade();return;}if(!confirm('¿Importar los eventos de este calendario a tu agenda Tapunto?\n\nSe abrirá una vista previa para que puedas seleccionar qué eventos añadir.')){this.value='';return;}icsImport(this.files[0]);this.value='';"><span style="font-size:18px;line-height:1;">📅</span><span style="font-size:8px;color:#fff;font-weight:700;font-family:var(--font-main);white-space:nowrap;">ICS</span></label>
   
     
   </div>
@@ -3907,25 +3842,13 @@ body.nb-mode #nb-pill-orden { display:none !important; }
                 </button>
                 <div style="font-size:11px;color:var(--tl);text-align:center;">Solo accede a archivos creados por Tapunto en tu Drive</div>
               </div>
-              <div id="drive-connected" style="display:none;flex-direction:column;gap:10px;">
-                <!-- Estado sync y offload -->
-                <div style="display:flex;flex-direction:column;gap:4px;">
-                  <div style="font-size:12px;color:var(--tl);font-family:var(--font-main);" id="drive-last-sync-label">Última sync: —</div>
-                  <div style="display:flex;align-items:center;gap:6px;">
-                    <span id="drive-sync-timer-badge" style="font-size:10px;background:#e8f5e9;color:#2D5016;padding:2px 8px;border-radius:20px;font-family:var(--font-main);font-weight:700;">🔄 Sync automático: cada 5 min</span>
-                  </div>
-                  <div id="drive-offload-status" style="font-size:11px;color:var(--tl);font-family:var(--font-main);">☁️ Adjuntos en Drive: comprobando...</div>
-                </div>
-                <!-- Botones principales -->
+              <div id="drive-connected" style="display:none;flex-direction:column;gap:8px;">
+                <div style="font-size:12px;color:var(--tl);font-family:var(--font-main);" id="drive-last-sync-label">Última sync: —</div>
                 <div style="display:flex;gap:8px;flex-wrap:wrap;">
-                  <button onclick="subirADrive()" style="padding:8px 14px;background:var(--gm);color:#fff;border:none;border-radius:8px;font-family:var(--font-main);font-size:12px;font-weight:700;cursor:pointer;">☁️ Subir datos</button>
+                  <button onclick="subirADrive()" style="padding:8px 14px;background:var(--gm);color:#fff;border:none;border-radius:8px;font-family:var(--font-main);font-size:12px;font-weight:700;cursor:pointer;">☁️ Subir ahora</button>
                   <button onclick="descargarDeDrive()" style="padding:8px 14px;background:var(--bl);color:var(--td);border:1px solid var(--bd);border-radius:8px;font-family:var(--font-main);font-size:12px;font-weight:700;cursor:pointer;">⬇️ Descargar</button>
                   <button onclick="desconectarDrive()" style="padding:8px 14px;background:none;color:#E24B4A;border:1px solid #E24B4A;border-radius:8px;font-family:var(--font-main);font-size:11px;cursor:pointer;">Desconectar</button>
                 </div>
-                <!-- Botón offloading adjuntos -->
-                <button onclick="driveOffloadPendientesUI()" style="width:100%;padding:9px 14px;background:linear-gradient(135deg,#4285F4,#0F9D58);color:#fff;border:none;border-radius:8px;font-family:var(--font-main);font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;">
-                  🖼️ Subir fotos/docs a Drive (liberar espacio local)
-                </button>
               </div>
             </div>
           </div>
@@ -4188,284 +4111,10 @@ body.nb-mode #nb-pill-orden { display:none !important; }
 // Por ahora el módulo está preparado pero en modo "pendiente de activación"
 var DRIVE_CLIENT_ID = '388356757097-46k0lt1ighir45osunfrv7ko2nth7h7a.apps.googleusercontent.com'; // ← Aquí irá el Client ID de Google Cloud Console
 var DRIVE_SCOPE = 'https://www.googleapis.com/auth/drive.file';
-var DRIVE_FILE_NAME = 'tapunto-datos.json'; // nombre base para búsqueda
-function _driveNombreBackup(){
-  // Nombre con fecha: tapunto-datos-2026-07-07.json
-  var d=new Date();
-  var fecha=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
-  return 'tapunto-datos-'+fecha+'.json';
-}
+var DRIVE_FILE_NAME = 'tapunto-datos.json';
 var _driveFileId = null;
 var _driveAccessToken = null;
 var _driveAutoSyncEnabled = false;
-
-
-// ════════════════════════════════════════════════════
-// TAPUNTO DRIVE — Sync periódico + Offloading adjuntos
-
-// ── Wrapper UI para offloading con feedback ──
-async function driveOffloadPendientesUI(){
-  var btn=event&&event.target;
-  if(btn){btn.disabled=true;btn.textContent='⏳ Subiendo adjuntos...';}
-  var statusEl=document.getElementById('drive-offload-status');
-
-  try{
-    var result=await driveOffloadPendientes();
-    if(result&&result.subidos>0){
-      if(statusEl) statusEl.textContent='☁️ '+result.subidos+' archivo(s) subidos a Drive · espacio local liberado';
-      showToast('✅ '+result.subidos+' archivo(s) subidos a Drive');
-    } else if(result&&result.subidos===0){
-      if(statusEl) statusEl.textContent='☁️ Todos los adjuntos ya están en Drive';
-      showToast('✅ Todo sincronizado');
-    }
-    if(result&&result.errores>0){
-      if(statusEl) statusEl.textContent+=' · ⚠️ '+result.errores+' error(es)';
-    }
-  }catch(e){
-    showToast('⚠️ Error al subir adjuntos');
-  }finally{
-    if(btn){btn.disabled=false;btn.textContent='🖼️ Subir fotos/docs a Drive (liberar espacio local)';}
-  }
-}
-
-// ── Actualizar estado offload en UI ──
-function actualizarOffloadStatus(){
-  var statusEl=document.getElementById('drive-offload-status');
-  if(!statusEl||!_driveAccessToken) return;
-  var albums=getAlbums();
-  var totalLocal=0,totalDrive=0;
-  albums.forEach(function(alb){
-    (alb.fotos||[]).concat(alb.docs||[]).forEach(function(f){
-      if(f.driveId&&!f.data) totalDrive++;
-      else if(f.data&&f.data.startsWith('data:')) totalLocal++;
-    });
-  });
-  if(totalLocal===0&&totalDrive===0){
-    statusEl.textContent='☁️ No hay adjuntos guardados aún';
-  } else if(totalLocal===0){
-    statusEl.textContent='☁️ Todos los adjuntos en Drive ('+totalDrive+' archivos)';
-  } else {
-    statusEl.textContent='☁️ '+totalDrive+' en Drive · '+totalLocal+' pendientes de subir';
-  }
-}
-// ════════════════════════════════════════════════════
-
-var _driveSyncTimer = null;
-var _driveOffloadEnabled = true; // offload adjuntos si Drive conectado
-var DRIVE_FOLDER_NAME = 'Tapunto';
-var _driveFolderId = null; // ID de la carpeta de adjuntos en Drive
-
-// ── Iniciar sync periódico cada 5 minutos ──
-function iniciarSyncPeriodico(){
-  if(_driveSyncTimer) clearInterval(_driveSyncTimer);
-  _driveSyncTimer = setInterval(function(){
-    if(_driveAutoSyncEnabled && _driveAccessToken && currentUser){
-      driveSyncSubir().catch(function(e){
-        console.warn('Tapunto: sync periódico falló',e);
-      });
-    }
-  }, 5 * 60 * 1000); // 5 minutos
-  console.log('Tapunto: sync periódico activado (cada 5 min)');
-}
-
-function detenerSyncPeriodico(){
-  if(_driveSyncTimer){ clearInterval(_driveSyncTimer); _driveSyncTimer=null; }
-}
-
-// ── Obtener o crear carpeta de adjuntos en Drive ──
-async function _driveGetOrCreateFolder(){
-  if(_driveFolderId) return _driveFolderId;
-  try{
-    // Buscar carpeta existente
-    var searchRes = await fetch(
-      "https://www.googleapis.com/drive/v3/files?q=name%3D%27"+encodeURIComponent(DRIVE_FOLDER_NAME)+"%27+and+mimeType%3D%27application%2Fvnd.google-apps.folder%27+and+trashed%3Dfalse&fields=files(id,name)",
-      {headers:{'Authorization':'Bearer '+_driveAccessToken}}
-    );
-    var searchData = await searchRes.json();
-    if(searchData.files && searchData.files.length>0){
-      _driveFolderId = searchData.files[0].id;
-      return _driveFolderId;
-    }
-    // Crear carpeta nueva
-    var createRes = await fetch('https://www.googleapis.com/drive/v3/files',{
-      method:'POST',
-      headers:{'Authorization':'Bearer '+_driveAccessToken,'Content-Type':'application/json'},
-      body: JSON.stringify({name:DRIVE_FOLDER_NAME, mimeType:'application/vnd.google-apps.folder'})
-    });
-    var folder = await createRes.json();
-    _driveFolderId = folder.id;
-    console.log('Tapunto: carpeta Drive creada',_driveFolderId);
-    return _driveFolderId;
-  }catch(e){
-    console.warn('Tapunto: error creando carpeta Drive',e);
-    return null;
-  }
-}
-
-// ── Subir un archivo adjunto a Drive (offloading) ──
-// Recibe: {data: base64string, nombre: 'foto.jpg', tipo: 'image/jpeg'}
-// Devuelve: {driveId, driveUrl, nombre, tipo} o null si falla
-async function driveOffloadAdjunto(adjunto){
-  if(!_driveAccessToken || !adjunto || !adjunto.data) return null;
-  try{
-    var folderId = await _driveGetOrCreateFolder();
-    var mimeType = adjunto.tipo||'image/jpeg';
-    var nombre   = adjunto.nombre||('tapunto-'+Date.now());
-    var b64 = adjunto.data.indexOf(',')>=0 ? adjunto.data.split(',')[1] : adjunto.data;
-
-    // ── PASO 1: Crear archivo vacío con metadata ──
-    // Content-Type: application/json → request simple → sin preflight CORS ✅
-    var metaRes = await fetch('https://www.googleapis.com/drive/v3/files?fields=id', {
-      method: 'POST',
-      headers: {
-        'Authorization': 'Bearer '+_driveAccessToken,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        name: nombre,
-        mimeType: mimeType,
-        parents: folderId ? [folderId] : []
-      })
-    });
-    if(!metaRes.ok){
-      console.warn('Tapunto Drive paso1 error:', metaRes.status, await metaRes.text());
-      return null;
-    }
-    var metaData = await metaRes.json();
-    if(!metaData.id){ console.warn('Tapunto Drive: sin ID paso1'); return null; }
-    var fileId = metaData.id;
-    console.log('Tapunto Drive: archivo creado ID:', fileId);
-
-    // ── PASO 2: Subir contenido como text/plain con base64 ──
-    // text/plain ES un Content-Type simple → sin preflight CORS ✅
-    // Drive acepta el contenido y lo almacena correctamente
-    var uploadRes = await fetch(
-      'https://www.googleapis.com/upload/drive/v3/files/'+fileId+'?uploadType=media&fields=id,webViewLink',
-      {
-        method: 'PATCH',
-        headers: {
-          'Authorization': 'Bearer '+_driveAccessToken,
-          'Content-Type': 'text/plain'
-        },
-        body: b64
-      }
-    );
-    if(!uploadRes.ok){
-      console.warn('Tapunto Drive paso2 error:', uploadRes.status, await uploadRes.text());
-      // Limpiar archivo vacío
-      fetch('https://www.googleapis.com/drive/v3/files/'+fileId,{
-        method:'DELETE',headers:{'Authorization':'Bearer '+_driveAccessToken}
-      }).catch(function(){});
-      return null;
-    }
-    var uploadData = await uploadRes.json();
-
-    // ── PASO 3: Actualizar mimeType real ──
-    // Content-Type: application/json → simple → sin CORS ✅
-    fetch('https://www.googleapis.com/drive/v3/files/'+fileId,{
-      method:'PATCH',
-      headers:{
-        'Authorization':'Bearer '+_driveAccessToken,
-        'Content-Type':'application/json'
-      },
-      body:JSON.stringify({mimeType:mimeType})
-    }).catch(function(){});
-
-    console.log('Tapunto Drive: ✅ subido', nombre, '→ ID:', fileId);
-    return {
-      driveId:  fileId,
-      driveUrl: uploadData.webViewLink||('https://drive.google.com/file/d/'+fileId+'/view'),
-      nombre:   nombre,
-      tipo:     mimeType
-    };
-  }catch(e){
-    console.warn('Tapunto Drive upload error:', e.message||e);
-    return null;
-  }
-}
-
-// ── Offloading automático: procesar adjuntos pendientes ──
-// Busca en state.albums[] fotos con data:base64 y las sube a Drive
-// Reemplaza .data por .driveId + .driveUrl para liberar espacio local
-async function driveOffloadPendientes(){
-  if(!_driveAccessToken || !_driveOffloadEnabled) return;
-  var albums = getAlbums();
-  var subidos = 0;
-  var errores = 0;
-
-  for(var i=0; i<albums.length; i++){
-    var alb = albums[i];
-
-    // Procesar fotos[] (nuevo) y docs[] (legacy) — ambos
-    var archivos = (alb.fotos||[]).concat(alb.docs||[]);
-
-    for(var j=0; j<archivos.length; j++){
-      var f = archivos[j];
-      // Solo procesar si tiene data base64 y NO tiene ya driveId
-      if(f.data && typeof f.data==='string' && f.data.startsWith('data:') && !f.driveId){
-        // Construir nombre con asignatura + fecha + nombre original
-        var _asig = (alb.asig||'General').replace(/[^a-zA-Z0-9áéíóúÁÉÍÓÚñÑ\s]/g,'').trim().replace(/\s+/g,'_');
-        var _fecha = (alb.fecha||new Date().toISOString().slice(0,10)).slice(0,10);
-        var _ext = (f.nombre||'archivo').split('.').pop().toLowerCase();
-        var _base = (f.nombre||'archivo').replace(/\.[^.]+$/,'').replace(/[^a-zA-Z0-9áéíóúÁÉÍÓÚñÑ\s]/g,'').trim().replace(/\s+/g,'_').slice(0,30);
-        var _nombreDrive = _asig+'_'+_fecha+'_'+_base+'.'+_ext;
-        // Adjunto temporal con nombre enriquecido
-        var fConNombre = Object.assign({},f,{nombre:_nombreDrive});
-        console.log('Tapunto: subiendo a Drive:', _nombreDrive, Math.round(f.data.length/1024)+'KB');
-        var result = await driveOffloadAdjunto(fConNombre);
-        if(result){
-          f.driveId  = result.driveId;
-          f.driveUrl = result.driveUrl;
-          f.nombre   = f.nombre || result.nombre;
-          f.tipo     = f.tipo || result.tipo;
-          delete f.data; // liberar espacio local
-          subidos++;
-          console.log('Tapunto: ✅ subido', f.nombre, '→ driveId:', f.driveId);
-        } else {
-          errores++;
-          console.warn('Tapunto: ❌ falló subida de', f.nombre||'?');
-        }
-      }
-    }
-  }
-
-  if(subidos>0){
-    persist().catch(function(){});
-    console.log('Tapunto: '+subidos+' adjunto(s) subidos a Drive');
-    if(typeof showToast==='function') showToast('✅ '+subidos+' archivo(s) subidos a Drive');
-  }
-  if(errores>0) console.warn('Tapunto: '+errores+' adjunto(s) no se pudieron subir');
-  return {subidos:subidos, errores:errores};
-}
-
-// ── Descargar adjunto desde Drive para visualizarlo ──
-async function driveDescargarAdjunto(driveId){
-  if(!_driveAccessToken || !driveId) return null;
-  try{
-    var res = await fetch(
-      'https://www.googleapis.com/drive/v3/files/'+driveId+'?alt=media',
-      {headers:{'Authorization':'Bearer '+_driveAccessToken}}
-    );
-    if(!res.ok) return null;
-    var blob = await res.blob();
-    return URL.createObjectURL(blob);
-  }catch(e){
-    console.warn('Tapunto: error descargando adjunto',driveId,e);
-    return null;
-  }
-}
-
-// ── Eliminar adjunto de Drive ──
-async function driveEliminarAdjunto(driveId){
-  if(!_driveAccessToken || !driveId) return false;
-  try{
-    await fetch('https://www.googleapis.com/drive/v3/files/'+driveId,{
-      method:'DELETE',
-      headers:{'Authorization':'Bearer '+_driveAccessToken}
-    });
-    return true;
-  }catch(e){ return false; }
-}
 
 function initDriveState(){
   if(!currentUser) return;
@@ -4476,9 +4125,6 @@ function initDriveState(){
     _driveFileId = fileId || null;
     _driveAutoSyncEnabled = true;
     actualizarEstadoDrive('conectado');
-    iniciarSyncPeriodico();
-    // Offload adjuntos pendientes al conectar
-    setTimeout(function(){driveOffloadPendientes();},3000);
   } else {
     actualizarEstadoDrive('desconectado');
   }
@@ -4521,7 +4167,10 @@ function conectarGoogleDrive(){
     showToast('⚠️ Google Drive estará disponible próximamente. Usa la sincronización QR mientras tanto.');
     return;
   }
-  // Drive disponible para todos los usuarios
+  if(!isPremium){
+    showUpgrade();
+    return;
+  }
   // Abrir popup OAuth de Google
   var redirectUri = window.location.origin + window.location.pathname;
   var authUrl = 'https://accounts.google.com/o/oauth2/v2/auth'
@@ -4534,8 +4183,7 @@ function conectarGoogleDrive(){
   // Escuchar el token cuando vuelva
   var checkInterval = setInterval(function(){
     try{
-      var _pc=false;try{_pc=popup.closed;}catch(e){_pc=true;}
-      if(_pc){
+      if(popup.closed){
         clearInterval(checkInterval);
         return;
       }
@@ -4549,8 +4197,6 @@ function conectarGoogleDrive(){
           _driveAccessToken = token;
           _driveAutoSyncEnabled = true;
           localStorage.setItem('tp_drive_token_'+currentUser, token);
-          iniciarSyncPeriodico();
-          setTimeout(function(){driveOffloadPendientes();},5000);
           actualizarEstadoDrive('conectado');
           // Primera sincronización: subir datos actuales
           driveSyncSubir().then(function(){
@@ -4571,8 +4217,6 @@ function desconectarGoogleDrive(){
   _driveAccessToken = null;
   _driveFileId = null;
   _driveAutoSyncEnabled = false;
-  detenerSyncPeriodico();
-  _driveFolderId=null;
   localStorage.removeItem('tp_drive_token_'+currentUser);
   localStorage.removeItem('tp_drive_file_id_'+currentUser);
   actualizarEstadoDrive('desconectado');
@@ -4586,39 +4230,21 @@ async function driveSyncSubir(){
     // Incluir libreta (localStorage) en la sincronización
   var _libreta=null;
   try{var _ls=localStorage.getItem('tp_libreta');if(_ls)_libreta=JSON.parse(_ls);}catch(e){}
-  // Solo sincronizar campos necesarios (no todo state)
-  var dataObj={
-    version:'2.0',
-    fecha:new Date().toISOString(),
-    usuario:currentUser||'tapunto',
-    records:state.records||[],
-    temas:state.temas||[],
-    calificaciones:state.calificaciones||[],
-    recordatorios:state.recordatorios||[],
-    rutinas:state.rutinas||[],
-    notas:state.notas||[],
-    albums:state.albums||[],
-    horario:state.horario||null,
-    libreta:_libreta||[],
+  var dataObj=Object.assign({},state,{
+    _libreta:_libreta||[],
     config:{
       theme:state.theme||'sage',
       font:state.font||'Nunito',
-      fontScale:state.fontScale||1
+      fontScale:state.fontScale||1,
+      sheetsUrl:state.sheetsUrl||''
     }
-  };
+  });
   var data = JSON.stringify(dataObj);
     var blob = new Blob([data], {type:'application/json'});
-    // Obtener carpeta Tapunto para organizar todos los archivos juntos
-    var _syncFolderId = await _driveGetOrCreateFolder();
-    var _backupNombre = _driveNombreBackup();
-    var metadata = {name: _backupNombre, mimeType:'application/json', parents: _syncFolderId?[_syncFolderId]:[]};
+    var metadata = {name: DRIVE_FILE_NAME, mimeType:'application/json'};
     if(!_driveFileId){
       // Buscar si ya existe el archivo
-      // Buscar archivo de hoy o el más reciente
-      var _searchNombre = _driveNombreBackup();
-      var searchQ = "name%3D%27"+_searchNombre+"%27+and+trashed%3Dfalse";
-      if(_syncFolderId) searchQ += "+and+%27"+_syncFolderId+"%27+in+parents";
-      var searchRes = await fetch('https://www.googleapis.com/drive/v3/files?q='+searchQ+'&fields=files(id,modifiedTime)', {
+      var searchRes = await fetch('https://www.googleapis.com/drive/v3/files?q=name%3D%27'+DRIVE_FILE_NAME+'%27+and+trashed%3Dfalse&fields=files(id,modifiedTime)', {
         headers:{'Authorization':'Bearer '+_driveAccessToken}
       });
       var searchData = await searchRes.json();
@@ -4786,7 +4412,6 @@ function actualizarUIDrive(conectado){
     if(badge) badge.style.display='inline-block';
     var lastSync=localStorage.getItem('tp_drive_lastsync_'+(currentUser||''));
     var lbl=document.getElementById('drive-last-sync-label');
-    actualizarOffloadStatus();
     if(lbl){
       if(lastSync){
         var d=new Date(parseInt(lastSync));
@@ -4861,10 +4486,8 @@ async function _verificarTokenDrive(){
 
 async function _buscarOCrearArchivosDrive(){
   // Buscar si ya existe el archivo tapunto-datos.json en Drive
-  // Buscar cualquier archivo tapunto-datos*.json (con o sin fecha)
-  var searchQ="name+contains+'tapunto-datos'+and+trashed%3Dfalse";
   var searchRes=await fetch(
-    'https://www.googleapis.com/drive/v3/files?q='+searchQ+'&orderBy=modifiedTime+desc&fields=files(id,name,modifiedTime)',
+    'https://www.googleapis.com/drive/v3/files?q=name%3D%22'+_DRIVE_FILE_NAME+'%22+and+trashed%3Dfalse&fields=files(id,name,modifiedTime)',
     {headers:{Authorization:'Bearer '+_driveAccessToken}}
   );
   if(!searchRes.ok) throw new Error('Error buscando archivo en Drive');
@@ -5148,9 +4771,6 @@ console.error('Error cargando estado:',e);
 }
 }
 async function _cp(){
-// MODO PRUEBA: todo Free mientras se testea
-// TODO: revertir a premium cuando esté probado
-isPremium=true;applyPremiumUI();return;
 const key = localStorage.getItem('tp_license_'+currentUser);
 if(!key){isPremium=false;applyPremiumUI();return;}
 const h=await _hlk(key.toUpperCase());
@@ -5164,8 +4784,8 @@ const cfgDesc = document.getElementById('cfg-plan-desc');
 const cfgLic = document.getElementById('cfg-license-row');
 const cfgPrem = document.getElementById('cfg-premium-info');
 if(isPremium){
-if(badge){badge.className='plan-badge plan-premium'; badge.textContent='⭐ PREMIUM';}
-if(cfgBadge){cfgBadge.className='plan-badge plan-premium'; cfgBadge.textContent='⭐ PREMIUM';}
+badge.className='plan-badge plan-premium'; badge.textContent='⭐ PREMIUM';
+cfgBadge.className='plan-badge plan-premium'; cfgBadge.textContent='⭐ PREMIUM';
 cfgDesc.textContent='Registros ilimitados · Todos los temas · Imagen · 📖 Libreta PDF · 📄 PDF Notas';
 cfgLic.style.display='none'; cfgPrem.style.display='block';
 } else {
@@ -5187,15 +4807,11 @@ if(isPremium&&state.sheetsUrl) startAutoSync();
 }
 function updateFreeBar(){
 const bar = document.getElementById('free-bar');
-if(!bar) return;
-bar.style.display='none'; return; // MODO PRUEBA
 if(isPremium){ bar.style.display='none'; return; }
 bar.style.display='flex';
-const rc=document.getElementById('rec-count');
-if(rc) rc.textContent = state.records.length;
+document.getElementById('rec-count').textContent = state.records.length;
 }
 function checkDeviceLimit(){
-return true; // MODO PRUEBA
 if(isPremium) return true;
 const devKey = 'tp_devices_'+currentUser;
 const devId  = getOrCreateDeviceId();
@@ -5689,13 +5305,7 @@ function renderCatGrid(catIdx){
     var b2=document.createElement('button');
     if(e==='⬜'){b2.textContent='∅';b2.title='Sin icono';b2.style.cssText='font-size:18px;padding:8px;background:var(--bp);border:1px solid var(--bd);border-radius:8px;cursor:pointer;color:var(--tl);';}
     else{b2.textContent=e;b2.style.cssText='font-size:22px;padding:6px;background:var(--bp);border:1px solid var(--bd);border-radius:8px;cursor:pointer;';}
-    b2.onclick=function(ev){
-      ev.stopPropagation();
-      var ico=e==='⬜'?'':e;
-      var fn=window._icoTargetFn;
-      if(typeof fn==='function'){fn(ico);window._icoTargetFn=null;}
-      else{elegirIcono(ico);}
-    };
+    b2.onclick=function(ev){ev.stopPropagation();elegirIcono(e==='⬜'?'':e);};
     grid2.appendChild(b2);
   });
   contentDiv.appendChild(grid2);
@@ -5841,6 +5451,7 @@ let aiModalData=null;
 
 function setDictadoStatus(msg){ var el=document.getElementById('dictado-status'); if(el) el.textContent=msg; }
 function onImageSelected(e){
+  if(!isPremium){ showUpgrade(); return; }
   var files=Array.from(e.target.files||[]);
   if(!files.length) return;
   var preview=document.getElementById('nuevo-docs-preview');
@@ -6345,6 +5956,7 @@ alert('Restauradas '+nuevas+' notas nuevas.');
 };reader.readAsText(file);e.target.value='';
 }
 function mostrarPDFNotas(){
+if(!isPremium){showUpgrade();return;}
 var filtro=document.getElementById('notas-pdf-filter');
 if(filtro) filtro.style.display=filtro.style.display==='flex'?'none':'flex';
 }
@@ -7491,33 +7103,20 @@ hdr.appendChild(btnX);
 var body=document.createElement('div');
 body.style.cssText='overflow-y:auto;padding:16px 20px 32px;flex:1;';
 var secciones=[
-{id:'s0',titulo:'🏠 Inicio',texto:'La pantalla de inicio es tu punto de partida cada día. Verás:\n\n1️⃣ Una cita motivacional diaria con fondo oscuro — se renueva cada día automáticamente.\n2️⃣ Cuatro accesos rápidos: Calendario, Calificaciones, Libreta y Pomodoro.\n3️⃣ Tus próximas tareas ordenadas por urgencia (rojo = menos de 2 días, naranja = menos de 5).\n4️⃣ El horario del día actual si tienes rutinas configuradas.\n\nEn la esquina superior derecha: toca tu avatar para acceder al menú de perfil (Mi avatar, Ayuda, Mis datos, Configuración).\n\nLa barra inferior tiene siempre visible: 🏠 Inicio · 🗒️ Mi Agenda · ✅ To Do · 🔄 Rutinas · ⬅ Atrás.'},
-
-{id:'s1',titulo:'🗒️ Mi Agenda',texto:'Mi Agenda es el centro de tu organización. Tiene tres pestañas internas:\n\n📝 TAREAS — Todas tus tareas y eventos.\n• Toca el ＋ verde para crear una nueva tarea.\n• Filtra por asignatura tocando los chips de colores.\n• Toca una tarea para ver su detalle, editarla o añadirle archivos.\n• Mantén pulsada una tarea para acceder a opciones rápidas.\n\n🗂️ APUNTES — Todos tus archivos adjuntos organizados por asignatura.\n• Toca un archivo para abrirlo o descargarlo.\n• Mantén pulsado para eliminarlo.\n• Las imágenes se muestran en miniatura (4 por fila).\n\n📋 CALIFICACIONES — Tus notas pendientes y calificadas.\n• Las tareas sin nota aparecen en "Pendientes de nota".\n• Escribe la nota (con decimales) y pulsa ✓ para guardarla.\n• La tarea permanece aunque tenga nota.'},
-
-{id:'s2',titulo:'📅 Calendario',texto:'Vista mensual y semanal de todos tus eventos y tareas con fecha.\n\nCómo usarlo:\n1️⃣ Toca un día en el calendario para ver las tareas de ese día.\n2️⃣ Los puntos de colores indican tareas pendientes en esa fecha.\n3️⃣ Desliza el calendario hacia la izquierda o derecha para cambiar de mes.\n\nDesde el botón de Configuración también puedes importar calendarios externos en formato .ics (Google Calendar, Outlook, Moodle).'},
-
-{id:'s3',titulo:'📋 Calificaciones',texto:'Sección independiente con todas tus notas organizadas por asignatura.\n\nCómo añadir una nota:\n1️⃣ Ve a Mi Agenda → pestaña Calificaciones.\n2️⃣ Busca la tarea en "Pendientes de nota".\n3️⃣ Toca el campo de nota, escribe tu calificación (admite decimales, ej: 7.50).\n4️⃣ Toca ✓ para guardar.\n\nLa tarea NO desaparece al calificarla — pasa al grupo "Calificadas" para que tengas historial completo.\n\n💡 Premium: próximamente estadísticas y media por asignatura.'},
-
-{id:'s4',titulo:'📓 Mi Libreta',texto:'Tu libreta de dibujo digital con múltiples páginas.\n\nHerramientas disponibles (barra lateral izquierda):\n✏️ Herramienta → elige entre lápiz, bolígrafo, texto, selección, figuras o stickers.\n🎨 Color → 15 colores predefinidos y selector personalizado.\n━ Grosor → fino, normal, grueso o extra. También puedes usar el slider.\n🩹 Goma → tres tamaños: pequeña, mediana y grande.\n↩️ Deshacer → deshace el último trazo.\n🎨 Fondo → color liso, cuadrícula, rayas o puntos.\n\nToca cualquier botón para abrir el menú correspondiente — se abre como un cajón desde la izquierda. Toca fuera para cerrarlo.\n\nEl ＋ del header crea una nueva página. Las páginas se guardan automáticamente.'},
-
-{id:'s5',titulo:'📝 Nueva Tarea',texto:'Cómo crear una tarea paso a paso:\n\n1️⃣ Toca el botón verde ＋ en la barra inferior.\n2️⃣ Escribe el título de la tarea (ej: "Examen de Matemáticas").\n3️⃣ Elige el tipo tocando uno de los chips: Examen, Deberes, Trabajo, Proyecto u Otro.\n4️⃣ Toca el icono 📋 para elegir un emoji que identifique la tarea.\n5️⃣ Selecciona la asignatura en el desplegable (o escribe una nueva).\n6️⃣ Elige la fecha límite tocando el campo de fecha.\n7️⃣ Añade una descripción o notas si quieres.\n8️⃣ Adjunta fotos o documentos (Premium) tocando el botón 📎.\n9️⃣ Toca "💾 Guardar tarea" — ¡listo! 🎉\n\nTambién puedes crear tareas directamente desde Rutinas tocando una celda del horario.'},
-
-{id:'s6',titulo:'✅ To Do',texto:'Lista de tareas rápidas para cosas del día a día que no necesitan fecha ni asignatura.\n\nCómo usarlo:\n1️⃣ Escribe una tarea en el campo de texto.\n2️⃣ Toca ＋ o pulsa Enter para añadirla.\n3️⃣ Toca el círculo ○ de una tarea para marcarla como completada ✓.\n4️⃣ Toca el icono de papelera 🗑 para eliminarla.\n\nLas tareas completadas se mantienen hasta que las eliminas. Perfecta para listas de la compra, recados o cualquier cosa que no quieras olvidar hoy.'},
-
-{id:'s7',titulo:'🔄 Rutinas',texto:'Tu horario semanal de clases y actividades.\n\nCómo configurar tu horario:\n1️⃣ Ve a Rutinas desde la barra inferior.\n2️⃣ Toca una celda vacía para añadir una clase o actividad.\n3️⃣ Escribe el nombre de la asignatura, elige el color y guarda.\n4️⃣ Repite para cada día y hora.\n\nDesde el horario puedes crear tareas directamente:\n1️⃣ Toca una celda que ya tenga una asignatura.\n2️⃣ Selecciona "Crear tarea para esta asignatura".\n3️⃣ Elige el icono, tipo y descripción — la asignatura y fecha se rellenan solos.\n4️⃣ Guarda. La tarea aparece en Mi Agenda automáticamente.'},
-
-{id:'s8',titulo:'⏱ Pomodoro',texto:'Temporizador de estudio basado en la técnica Pomodoro.\n\nCómo funciona:\n1️⃣ Accede desde el botón 🍅 en la pantalla de Inicio.\n2️⃣ Toca ▶ para iniciar el temporizador (25 minutos de trabajo).\n3️⃣ Estudia sin distracciones hasta que suene la alarma. 🔔\n4️⃣ Toma un descanso de 5 minutos.\n5️⃣ Repite el ciclo. Después de 4 Pomodoros, descansa 15-20 minutos.\n\n💡 La técnica Pomodoro mejora la concentración y reduce el agotamiento mental. Muy usada por estudiantes para preparar exámenes.'},
-
-{id:'s9',titulo:'🎨 Temas y personalización',texto:'Personaliza Tapunto con temas aesthetic.\n\nCómo cambiar el tema:\n1️⃣ Toca tu avatar (esquina superior derecha).\n2️⃣ Ve a Configuración.\n3️⃣ Toca "Tema" y elige el que más te guste.\n\nTemas disponibles con Premium:\n🌿 Sage — verde natural y tranquilo (predeterminado, gratis)\n🏡 Cottagecore — tonos tierra y beige cálido\n📚 Dark Academia — oscuro y literario\n💜 Y2K — neón y cyberpunk estilo 2000s\n🌸 Pastel Dreams — rosas y lilas suaves\n🌙 Midnight — azul noche minimalista\n\nTambién puedes personalizar tu avatar: toca tu foto en la esquina superior y elige emoji, color de fondo o sube tu propia imagen.'},
-
-{id:'s10',titulo:'💾 Copia de seguridad local',texto:'Tapunto guarda tus datos automáticamente en tu dispositivo (sin internet). Para hacer una copia manual o moverla a otro dispositivo:\n\nEXPORTAR (guardar copia):\n1️⃣ Toca tu avatar → Configuración → "Exportar copia de seguridad".\n2️⃣ Se descarga un archivo tapunto-backup.json en tu dispositivo.\n3️⃣ Guárdalo en un lugar seguro (nube personal, correo, etc.).\n\nIMPORTAR (restaurar copia):\n1️⃣ Toca tu avatar → Configuración → "Importar copia de seguridad".\n2️⃣ Selecciona el archivo tapunto-backup.json.\n3️⃣ Confirma — tus datos se restauran al instante.\n\n⚠️ La importación reemplaza los datos actuales. Haz siempre una exportación antes de importar.'},
-
-{id:'s11',titulo:'☁️ Sincronización con Google Drive',texto:'Puedes sincronizar tus datos con Google Drive para tenerlos siempre a salvo y acceder desde cualquier dispositivo.\n\nQué se sincroniza:\n✅ Todas tus tareas y eventos\n✅ Tus calificaciones\n✅ Tus rutinas y horario\n✅ Tu lista To Do\n✅ Tus apuntes y archivos adjuntos\n✅ Configuración y tema activo\n\nQué NO se sincroniza (por tamaño):\n❌ Páginas de la libreta de dibujo (se guardan solo en el dispositivo)\n\nCómo conectar Google Drive:\n1️⃣ Toca tu avatar → Configuración → "Conectar Google Drive".\n2️⃣ Inicia sesión con tu cuenta de Google.\n3️⃣ Acepta el permiso — Tapunto solo accede a su propio archivo (tapunto-datos.json), nunca a tu Drive completo.\n4️⃣ Toca "Subir ahora" para hacer la primera copia.\n\nA partir de ahí, Tapunto sincroniza automáticamente al abrir y cerrar la app.\n\n🔒 Privacidad: Tapunto usa el permiso mínimo de Google (drive.file) — solo puede leer y escribir el archivo que él mismo crea. No accede a ningún otro archivo de tu Drive.'},
-
-{id:'s12',titulo:'⭐ Premium',texto:'Tapunto Premium desbloquea todo el potencial de la app por solo 3,99 €/año — menos de 35 céntimos al mes.\n\nQué incluye Premium:\n✅ Libreta de dibujo ilimitada (sin Premium: 3 páginas)\n✅ Todos los temas aesthetic (Cottagecore, Dark Academia, Y2K, Pastel, Midnight)\n✅ Adjuntos completos: fotos Y documentos (PDF, Word, etc.)\n✅ Múltiples horarios en Rutinas\n✅ Sincronización con Google Drive\n✅ Próximamente: estadísticas de calificaciones, widget Android y más\n\nCómo activar Premium:\n1️⃣ Toca tu avatar → Configuración → "Activar Premium".\n2️⃣ Introduce tu código de activación.\n3️⃣ Toca "Activar" — ¡ya eres Premium! ⭐\n\n¿Dónde conseguir el código? En tapunto.app o escribiéndonos a través de la web.'},
-
-{id:'s13',titulo:'🔒 Privacidad y seguridad',texto:'Tu privacidad es lo primero en Tapunto.\n\nCómo protegemos tus datos:\n🔐 Tus datos se guardan SOLO en tu dispositivo — no en servidores de Tapunto.\n🔐 No tenemos acceso a tu información personal.\n🔐 No hay publicidad ni rastreo de ningún tipo.\n🔐 No necesitas crear una cuenta para usar Tapunto.\n\nSi usas Google Drive (opcional, solo Premium):\n🔐 Solo accedemos al archivo tapunto-datos.json que la propia app crea.\n🔐 Usamos el permiso mínimo posible (drive.file) — Tapunto no puede ver ni tocar ningún otro archivo de tu Drive.\n🔐 Puedes desconectar Google Drive en cualquier momento desde Configuración.\n\nTapunto cumple con el Reglamento General de Protección de Datos (RGPD) de la Unión Europea.\n\nSi tienes alguna duda sobre privacidad escríbenos a través de tapunto.app.'}
+{id:'s0',titulo:'🏠 Inicio',texto:'La pantalla de inicio muestra el horario del día, tus próximas tareas y una cita motivacional diaria. En la esquina superior derecha: 🔍 Buscador global, 🔔 Notificaciones y los botones ☀️🔄🌙 de modo oscuro. El badge 🔥 aparece si llevas 2 o más días seguidos usando Tapunto. La barra inferior tiene: 🏠 Inicio · 📋 Mi Agenda · ✅ To Do · 📚 Apuntes · ← Atrás (vuelve siempre a la sección anterior). El avatar (esquina superior izquierda) permite personalizar color, emoji e imagen.'},
+{id:'s1',titulo:'📒 Mi Agenda',texto:'Organizada por asignaturas con separadores laterales. El color de cada separador se hereda del horario automáticamente. Toca el círculo de color junto a cada separador para cambiarlo (20 colores + selector libre + botón ↺ para recuperar el color del horario). El botón ＋ en la parte superior del sidebar crea un nuevo separador libre. Botón 🎨 Fondo en el header cambia el fondo de la portada (12 fondos). Las tareas pueden repetirse: cada semana, 15 días o mes — crea 4 repeticiones automáticamente.'},
+{id:'s2',titulo:'📅 Mi Calendario',texto:'Vista mensual y semanal con todos los eventos y tareas con fecha. Toca un día para ver sus tareas. Puedes importar calendarios externos en formato .ics (Google Calendar, Outlook, Moodle): ve a Ajustes → Importar calendario .ics, selecciona el archivo y elige qué eventos importar.'},
+{id:'s3',titulo:'📋 Mis Calificaciones',texto:'Registra tus notas por asignatura en una cuadrícula. Añade tipo (Examen, Trabajo, Prácticas, Proyecto, Oral), nota del 0 al 10 y observaciones. La casilla de nota aparece vacía hasta que introduces un valor. El botón ✕ elimina el registro. Se incluye en el backup y en la sincronización con Drive.'},
+{id:'s4',titulo:'📓 Mi Libreta',texto:'Canvas táctil para dibujar y escribir a mano. Herramientas: ✏️ Lápiz · 🖊 Bolígrafo · T Texto (B/I/U, tamaños) · 😊✨ Stickers (160 en 8 categorías) · ◻ Figuras geométricas (7 tipos) · 🧹 Borrador (S/M/L) · ↩ Deshacer. La herramienta ⬚ Selección permite mover, duplicar o borrar elementos; los stickers tienen handles de esquina para redimensionar. El fondo y la plantilla escalan con el zoom al hacer pinch con dos dedos. El botón 🔊 activa sonido de escritura (lápiz, bolígrafo, borrador); tócalo para silenciar 🔇. Navega entre páginas con ‹ ›.'},
+{id:'s5',titulo:'📝 Nueva Tarea',texto:'Toca ➕ en la barra inferior. Rellena asignatura, título, tipo y fecha de entrega. Activa la recurrencia si quieres que se repita: cada semana / 15 días / mes (crea 4 repeticiones). Al guardar, la app propone un recordatorio automático. Puedes adjuntar fotos (Premium).'},
+{id:'s6',titulo:'🔔 Recordatorios y notificaciones',texto:'Al crear una tarea con fecha, la app propone un recordatorio. Ve a Ajustes → Notificaciones para activarlas: toca 🔔 Activar y acepta el permiso del navegador. Con las notificaciones activas recibirás avisos aunque la app esté en segundo plano. El icono 🔔/🔕 del inicio y los botones de Ajustes están sincronizados.'},
+{id:'s7',titulo:'📚 Mis Apuntes',texto:'Organiza fotos y documentos por asignatura en carpetas. La barra de almacenamiento muestra el % usado (límite 5 MB del navegador). Si superas el 85%, aparece el flujo de 3 pasos para liberar espacio: 1) descargar backup, 2) confirmar, 3) elegir qué borrar.'},
+{id:'s8',titulo:'⏱ Pomodoro',texto:'Temporizador de estudio con técnica Pomodoro: periodos de trabajo concentrado alternados con descansos. Configura los tiempos, elige entre 9 sonidos de alarma y activa el modo sin distracciones. Accesible desde el avatar del inicio o desde ☰ Más.'},
+{id:'s9',titulo:'🎨 Temas y personalización',texto:'En Ajustes → Personalización elige entre 16 temas de color + 4 temas de temporada (🎄 Navidad, 🎃 Halloween, ☀️ Verano, 🎒 Vuelta al cole), 5 fuentes y tamaño de texto. El modo oscuro ☀️ Claro · 🔄 Auto · 🌙 Oscuro se controla desde la pantalla de inicio. Toca el avatar (64px) para personalizarlo: color de fondo, emoji o usa tu inicial. Todo se guarda en el backup.'},
+{id:'s10',titulo:'💾 Copia de seguridad',texto:'En Ajustes → Copia de seguridad exporta TODOS tus datos: tareas, calificaciones, apuntes, libreta, horario, rutinas, recordatorios y configuración. Para restaurar, importa ese archivo JSON. ⚠ Exporta con frecuencia: si el navegador borra el localStorage (caché, modo incógnito) perderás los datos sin un backup previo.'},
+{id:'s11',titulo:'☁️ Sincronización Drive',texto:'En Ajustes → Sincronización conecta tu Google Drive. Tapunto sube un archivo tapunto-datos.json con todas tus secciones y la libreta. Al descargar, se restauran todos los datos y la configuración. No se usa Google Sheets — todo va directamente a tu Drive. Requiere Premium. Activa la verificación en dos pasos en tu cuenta Google para mayor seguridad.'},
+{id:'s12',titulo:'⭐ Premium',texto:'Activa Premium con el código TAPUNTO-XXXX-XXXX en Ajustes o al tocar una función bloqueada ⭐. Incluye: dictado de voz, calendarios .ics, documentos ilimitados, sincronización con Google Drive, backup automático, temas premium y más. El precio está en tapunto.app.'},
+{id:'s13',titulo:'🔒 Privacidad y seguridad',texto:'Tapunto almacena todos tus datos exclusivamente en tu dispositivo (localStorage). No hay servidores propios ni acceso externo a tus datos. Tu PIN se guarda como hash SHA-256, nunca en texto claro. La sincronización con Google Drive es opcional y controlada por ti. Cumplimos RGPD, LOPDGDD, COPPA y DSA. Edad mínima: 14 años (o con consentimiento del tutor). Para derechos de privacidad: tapunto.soporte@gmail.com'}
 ];
 secciones.forEach(function(sec){
 var blk=document.createElement('div');
@@ -7600,6 +7199,7 @@ var key=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.
 dias.push({key:key,fecha:d.toLocaleDateString('es-ES',{day:'2-digit',month:'2-digit',year:'numeric'}),val:r.registros&&r.registros[key]!=null?r.registros[key]:null});
 }
 var registrados=dias.filter(function(d){return d.val!=null&&d.val!==false&&d.val!=='';});
+function esc(s){return s?String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;'):''}
 var filas=registrados.map(function(d){
 var v=r.tipo==='bool'?'✓ Sí':String(d.val);
 return '<tr><td style="padding:7px 10px;border-bottom:1px solid #eee;font-size:12px;color:#666;">'+esc(d.fecha)+'</td>'+
@@ -7658,6 +7258,8 @@ emailDiv.style.cssText='padding:12px 14px;border-bottom:0.5px solid var(--bd);';
 emailDiv.innerHTML='<div style="font-size:12px;font-weight:700;color:var(--td);font-family:var(--font-main);">'+(currentUser||'—')+'</div>'+(isPremium?'<div style="font-size:11px;color:#EF9F27;font-weight:600;">⭐ Premium activo</div>':'<div style="font-size:11px;color:var(--tl);">Plan Free</div>');
 menu.appendChild(emailDiv);
 var items=[
+{icon:'⏱',label:'Pomodoro',fn:function(){menu.remove();irSeccion('estudio');}},
+{icon:'🔄',label:'Rutinas',fn:function(){menu.remove();irSeccion('rutinas');}},
 {icon:'🎨',label:'Mi avatar',fn:function(){menu.remove();mostrarPersonalizarAvatar();}},
 {icon:'❓',label:'Ayuda',fn:function(){menu.remove();mostrarAyuda();}},
 {icon:'👤',label:'Mis datos',fn:function(){menu.remove();irSeccion('config');setTimeout(function(){var c=document.getElementById('cfg-block-firma');if(c){c.scrollIntoView({behavior:'smooth',block:'start'});var hdr=c.querySelector('.cfg-hdr');var body=c.querySelector('.cfg-body');if(hdr&&body&&body.style.display==='none')toggleCfg(hdr);}},450);}},
@@ -8941,8 +8543,7 @@ function exportBackupJSON(){
   var json=JSON.stringify(backup,null,2);
   var a=document.createElement('a');
   a.href=URL.createObjectURL(new Blob([json],{type:'application/json'}));
-  var _fd=new Date();var _fechaExp=_fd.getFullYear()+'-'+String(_fd.getMonth()+1).padStart(2,'0')+'-'+String(_fd.getDate()).padStart(2,'0');
-  a.download='tapunto-datos-'+_fechaExp+'.json';
+  a.download='Tapunto_backup_v2_'+new Date().toISOString().slice(0,10)+'.json';
   a.click();
   try{showToast('toast-ok');}catch(e){}
 }
@@ -9043,6 +8644,7 @@ const csv=[hdr,...rows.map(r=>[r.id,r.fecha,r.contacto,r.tema,r.accion,r.comunic
 const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8;'}));a.download='Tapunto_'+new Date().toISOString().slice(0,10)+'.csv';a.click();
 }
 function abrirLibreta(){
+if(!isPremium){showUpgrade();return;}
 const rows=getFiltered();
 if(!rows.length){alert('No hay registros que mostrar.');return;}
 const fcEl=document.getElementById('f-contacto');
@@ -9055,6 +8657,7 @@ if(_filtroFechaDesde||_filtroFechaHasta){partes.push((_filtroFechaDesde?'Desde '
 const filtroTitulo=partes.length?partes.join(' · '):'Todos los registros';
 const firma=getFirma();const nombre=firma.nombre||currentUser.split('@')[0];
 const fecha=new Date().toLocaleDateString('es-ES',{day:'2-digit',month:'long',year:'numeric'});
+function esc(s){return s?String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'):''}
 const estadoColor={pendiente:'#856404',resuelto:'#155724','en curso':'#0c5460'};
 const estadoBg={pendiente:'#fff3cd',resuelto:'#d4edda','en curso':'#d1ecf1'};
 const filas=rows.map(function(r){
@@ -9503,7 +9106,7 @@ try{initFontScale();}catch(_e){}
 await _cp();
 if(state.coverImageData&&isPremium) applyCoverImage(state.coverImageData);
 
-var _sbc=document.getElementById('script-box-content');if(_sbc)_sbc.value=APPS_SCRIPT_CODE;
+document.getElementById('script-box-content').value=APPS_SCRIPT_CODE;
 
 state.modo='trabajo';
 sortListas();
@@ -11166,12 +10769,15 @@ function hCeldaTap(asig,dia,slot){
   _hTipo='Examen';
   document.querySelectorAll('.h-tipo-chip').forEach(function(c){c.classList.remove('sel');});
   var fc=document.querySelector('.h-tipo-chip');if(fc)fc.classList.add('sel');
-  window._hTaskIcono='';window._icoTargetFn=null;
-  var iBtn=document.getElementById('h-task-icono-btn');
-  if(iBtn) iBtn.textContent='📋';
   var modal=document.getElementById('h-task-modal');if(modal)modal.style.display='flex';
 }
-function hCerrarModal(){var m=document.getElementById('h-task-modal');if(m)m.style.display='none';hPararMic();}
+function hCerrarModal(){
+  _hTaskFotoData=null;
+  var prev=document.getElementById('h-task-foto-prev');if(prev)prev.style.display='none';
+  var inp=document.getElementById('h-task-foto-inp');if(inp)inp.value='';
+  var m=document.getElementById('h-task-modal');if(m)m.style.display='none';
+  hPararMic();
+}
 function hSelTipo(btn,tipo){_hTipo=tipo;document.querySelectorAll('.h-tipo-chip').forEach(function(c){c.classList.remove('sel');});btn.classList.add('sel');}
 var _hTaskFotoData=null;
 function hTaskFotoSeleccionada(inp){
@@ -11213,39 +10819,16 @@ function hTaskFotoQuitar(){
   var prev=document.getElementById('h-task-foto-preview');if(prev)prev.style.display='none';
   var inp=document.getElementById('h-task-foto-inp');if(inp)inp.value='';
 }
-
-// ── Selector de icono para tarea desde horario ──
-function mostrarSelectorIconoHTask(){
-  window._icoTargetFn=function(emoji){
-    if(!emoji||!emoji.trim()) return;
-    _guardarIconoReciente(emoji.trim());
-    var btn=document.getElementById('h-task-icono-btn');
-    if(btn) btn.textContent=emoji.trim();
-    window._hTaskIcono=emoji.trim();
-    var ov=document.getElementById('emoji-picker-ov');
-    if(ov) ov.remove();
-    window._icoTargetFn=null;
-  };
-  mostrarSelectorIcono();
-}
-
-function _guardarIconoReciente(emoji){
-  if(!emoji) return;
-  var lista=JSON.parse(localStorage.getItem('tp_iconos_recientes')||'[]');
-  lista=lista.filter(function(e){return e!==emoji;});
-  lista.unshift(emoji);
-  localStorage.setItem('tp_iconos_recientes',JSON.stringify(lista.slice(0,5)));
-}
 function hGuardarTarea(){
   var texto=(document.getElementById('h-task-ta').value||'').trim();
-  if(!texto){var ta=document.getElementById('h-task-ta');if(ta){ta.focus();ta.style.borderColor='#c0392b';}return;}
+  // Descripción opcional
   var asig=_hCelda.asig;
   var fevEl=document.getElementById('h-task-fecha-evento');
   var fev=fevEl?fevEl.value.trim():'';
   var hTitulo=(document.getElementById('h-task-titulo-inp')&&document.getElementById('h-task-titulo-inp').value||'').trim();
   var rec={id:'hor'+Date.now(),fecha:new Date().toISOString().slice(0,10),contacto:'',
     tema:asig,titulo:hTitulo,accion:_hTipo,comunicado:'',estado:'pendiente',notas:texto,
-    icono:window._hTaskIcono&&window._hTaskIcono!=='📋'?window._hTaskIcono:'',recordatorio:'',created:new Date().toISOString(),imagenUrl:_hTaskFotoData||'',fechaEvento:fev};
+    icono:'',recordatorio:'',created:new Date().toISOString(),imagenUrl:_hTaskFotoData||'',fechaEvento:fev};
   if(!state.records)state.records=[];
   state.records.unshift(rec);
   if(!state.temas.includes(asig)){state.temas.push(asig);try{fillSelect('inp-tema',state.temas);}catch(e){}}
@@ -13109,13 +12692,7 @@ function renderCitaDiaria(){
   var el=document.getElementById('home-cita');if(!el)return;
   var d=new Date();var c=CITAS_DIA[(d.getFullYear()*366+d.getMonth()*31+d.getDate())%CITAS_DIA.length];
   var p=c.split(' — ');
-  el.style.background='#1a1a2e';
-  el.innerHTML=
-    '<span style="font-size:18px;flex-shrink:0;opacity:.7;">✨</span>'
-    +'<div style="margin-left:10px;">'
-      +'<div style="font-family:Caveat,cursive;font-size:15px;line-height:1.4;color:#fff;font-weight:600;">\"'+p[0]+'\"</div>'
-      +(p[1]?'<div style="font-size:10px;color:rgba(255,255,255,.6);margin-top:1px;font-family:var(--font-main);">— '+p[1]+'</div>':'')
-    +'</div>';
+  el.innerHTML='<span style="font-size:11px;line-height:1.5;color:rgba(255,255,255,.85);font-style:italic;">"'+p[0]+'"</span>'+(p[1]?'<span style="font-size:10px;color:rgba(255,255,255,.55);display:block;margin-top:2px;">— '+p[1]+'</span>':'');
 }
 
 // ── Avatar ──
@@ -13511,7 +13088,10 @@ function pomSetSound(type){
       <span style="font-size:26px;">&#9201;</span>
       <span>Pomodoro</span>
     </button>
-
+    <button class="mas-btn" onclick="cerrarMas();irSeccion('rutinas')">
+      <span style="font-size:26px;">&#128260;</span>
+      <span>Rutinas</span>
+    </button>
     <button class="mas-btn" onclick="cerrarMas();irSeccion('calendario')">
       <span style="font-size:26px;">&#128197;</span>
       <span>Agenda</span>
@@ -13547,7 +13127,7 @@ function pomSetSound(type){
   <button class="bnav-btn" id="bnav-rutinas" onclick="irSeccion('rutinas')" style="background:linear-gradient(145deg,#0a84ff,#0055d4);">
     <span class="bnav-ico">🔄</span><span class="bnav-lbl">Rutinas</span>
   </button>
-  <button id="bnav-back" onclick="navVolverAtras()" title="Volver" style="flex-shrink:0;width:40px;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(255,255,255,.18);border:1.5px solid rgba(255,255,255,.35);border-radius:14px;cursor:pointer;padding:5px 2px;margin:5px 3px 5px 0;">
+  <button id="bnav-back" onclick="navVolverAtras()" title="Volver" style="flex-shrink:0;width:40px;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(255,255,255,.15);border:1.5px solid rgba(255,255,255,.3);border-radius:14px;cursor:pointer;padding:5px 2px;margin:5px 3px 5px 0;">
     <span style="font-size:22px;font-weight:900;line-height:1;color:#111;">⬅</span>
   </button>
 </nav>
@@ -14757,12 +14337,6 @@ function nbTabPagina(dir){
 var _lib={paginas:[],pagActual:0,herramienta:'lapiz',color:'#1a1a1a',grosor:4,radioGoma:6,fondo:'rayas',dibujando:false,trazoActual:[],historial:[],textoPendX:0,textoPendY:0,zoom:1,panX:0,panY:0,_pd0:null,_touchEndTime:0,figTipo:'rect',figX0:0,figY0:0,figX1:0,figY1:0,sel:{active:false,dragging:false,moving:false,resizing:null,resizeIdx:-1,x0:0,y0:0,x1:0,y1:0,mx:0,my:0,idxTrazos:[],idxTextos:[]},txtBold:false,txtItalic:false,txtUnder:false,txtSize:16};
 function libInit(){
   try{var s=localStorage.getItem('tp_libreta');if(s)_lib.paginas=JSON.parse(s);}catch(e){}
-  // Comprimir pts de trazos existentes al cargar (migración)
-  _lib.paginas.forEach(function(p){
-    (p.trazos||[]).forEach(function(t){
-      if(t.pts&&t.pts.length>8) t.pts=_decimarPts(t.pts,3);
-    });
-  });
   _lib.paginas.forEach(function(p){if(p.trazos)p.trazos=p.trazos.filter(function(t){return !t.borrador;});});
   if(!_lib.paginas.length)libNuevaPagina(true);
   var hoy=new Date().toISOString().slice(0,10);
@@ -15175,127 +14749,6 @@ function libConfirmarTexto(){
 function libCancelarTexto(){document.getElementById('lib-text-input-wrap').style.display='none';}
 function libInsertarEmoji(){var cv=document.getElementById('lib-canvas');var ems=['😊','😂','❤️','🔥','⭐','✅','❌','📌','📝','🎯','💡','🚀','📚','✏️','🎉','💯','🤔','👍'];var panel=document.createElement('div');panel.style.cssText='position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:var(--w);border:1px solid var(--bd);border-radius:12px;padding:10px;display:flex;flex-wrap:wrap;gap:6px;z-index:600;max-width:280px;box-shadow:0 4px 20px rgba(0,0,0,.2);';ems.forEach(function(em){var btn=document.createElement('button');btn.textContent=em;btn.style.cssText='font-size:24px;background:none;border:none;cursor:pointer;padding:2px;';btn.addEventListener('click',function(){panel.remove();var pag=_lib.paginas[_lib.pagActual];if(!pag)return;if(!pag.textos)pag.textos=[];pag.textos.push({texto:em,x:(cv.width/2-_lib.panX)/_lib.zoom,y:(cv.height/2-_lib.panY)/_lib.zoom,color:'#222',size:32});libRedraw();libGuardar();});panel.appendChild(btn);});var cl=document.createElement('button');cl.textContent='✕';cl.style.cssText='width:100%;margin-top:4px;padding:4px;background:var(--bd);border:none;border-radius:6px;font-size:11px;cursor:pointer;';cl.addEventListener('click',function(){panel.remove();});panel.appendChild(cl);document.body.appendChild(panel);}
 function libUndo(){var u=_lib.historial.pop();if(!u)return;var pag=_lib.paginas[u.pagIdx];if(!pag)return;if(u.tipo==='trazo'&&pag.trazos.length)pag.trazos.pop();if(u.tipo==='texto'&&pag.textos&&pag.textos.length)pag.textos.pop();if(u.tipo==='borrador'){pag.trazos=u.trazos;pag.textos=u.textos;}libRedraw();libGuardar();}
-
-// ════ Barra flotante libreta ════
-var _libFloatOpen=null;
-
-function libFloatToggle(panel){
-  // Si ya está abierto el mismo, cerrarlo
-  if(_libFloatOpen===panel){libFloatClose();return;}
-  libFloatClose();
-  _libFloatOpen=panel;
-
-  // Leer contenido del submenu oculto
-  var sub=document.getElementById('lib-sub-'+panel);
-  if(!sub) return;
-
-  // Crear cajón overlay que se abre desde la izquierda hacia la derecha
-  var overlay=document.createElement('div');
-  overlay.id='lib-drawer-overlay';
-  overlay.style.cssText='position:fixed;inset:0;z-index:9998;display:flex;align-items:stretch;pointer-events:all;';
-
-  // Cajón izquierdo (contenido)
-  var drawer=document.createElement('div');
-  var titles={'herramienta':'✏️ Herramienta','color':'🎨 Color','grosor':'━ Grosor','goma':'🩹 Goma'};
-  drawer.style.cssText='width:220px;background:#fff;height:100%;overflow-y:auto;box-shadow:4px 0 24px rgba(0,0,0,.25);display:flex;flex-direction:column;animation:slideInLeft .18s ease;';
-
-  // Cabecera del cajón
-  var header=document.createElement('div');
-  header.style.cssText='padding:14px 16px 10px;border-bottom:1px solid #eee;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;';
-  header.innerHTML='<div style="font-size:15px;font-weight:800;color:#222;font-family:var(--font-main);">'+(titles[panel]||panel)+'</div>'
-    +'<button onclick="libFloatClose()" style="background:none;border:none;font-size:20px;cursor:pointer;color:#888;padding:0;line-height:1;">✕</button>';
-  drawer.appendChild(header);
-
-  // Contenido: clonar hijos del submenu
-  var body=document.createElement('div');
-  body.style.cssText='padding:12px;flex:1;display:flex;flex-direction:column;gap:8px;overflow-y:auto;';
-  Array.from(sub.children).forEach(function(child){
-    var clone=child.cloneNode(true);
-    // Re-bind events desde atributos onclick
-    clone.querySelectorAll('[onclick]').forEach(function(el){
-      var oc=el.getAttribute('onclick');
-      el.removeAttribute('onclick');
-      el.addEventListener('click',function(e){
-        e.stopPropagation();
-        try{eval(oc);}catch(err){console.warn(err);}
-      });
-    });
-    // Re-bind oninput/onchange
-    clone.querySelectorAll('[oninput]').forEach(function(el){
-      var oi=el.getAttribute('oninput');
-      el.removeAttribute('oninput');
-      el.addEventListener('input',function(){try{eval(oi);}catch(err){}});
-    });
-    clone.querySelectorAll('[onchange]').forEach(function(el){
-      var oc2=el.getAttribute('onchange');
-      el.removeAttribute('onchange');
-      el.addEventListener('change',function(){try{eval(oc2);}catch(err){}});
-    });
-    // Also bind inline onclick on the clone itself
-    if(clone.getAttribute && clone.getAttribute('onclick')){
-      var oc3=clone.getAttribute('onclick');
-      clone.removeAttribute('onclick');
-      clone.addEventListener('click',function(e){
-        e.stopPropagation();
-        try{eval(oc3);}catch(err){}
-      });
-    }
-    body.appendChild(clone);
-  });
-  drawer.appendChild(body);
-
-  // Fondo oscuro para cerrar
-  var bg=document.createElement('div');
-  bg.style.cssText='flex:1;background:rgba(0,0,0,.35);cursor:pointer;';
-  bg.addEventListener('click',function(){libFloatClose();});
-
-  overlay.appendChild(drawer);
-  overlay.appendChild(bg);
-  document.body.appendChild(overlay);
-}
-
-function libFloatClose(){
-  var ov=document.getElementById('lib-drawer-overlay');
-  if(ov)ov.remove();
-  _libFloatOpen=null;
-}
-
-function libSetToolFloat(tool){
-  var map={lapiz:'lt-lapiz',boli:'lt-boli',texto:'lt-text',seleccion:'lt-sel',
-           borrador:'lt-borrador','borrador-m':'lt-borrador-m','borrador-l':'lt-borrador-l'};
-  libSetTool(tool,document.getElementById(map[tool])||{});
-  var icons={lapiz:'✏️',boli:'🖊️',texto:'𝐓',seleccion:'⬚',borrador:'🩹','borrador-m':'🩹','borrador-l':'🩹'};
-  var mainBtn=document.getElementById('lt-lapiz');
-  if(mainBtn)mainBtn.textContent=icons[tool]||'✏️';
-  var ts=document.getElementById('lib-text-styles');
-  if(ts)ts.style.display=tool==='texto'?'flex':'none';
-  document.querySelectorAll('.lib-float-sub').forEach(function(b){b.classList.remove('active');});
-  var ab=document.getElementById('ftool-'+tool);if(ab)ab.classList.add('active');
-}
-
-function libSetColorFloat(color,dot){
-  libSetColor(color,null);
-  var btn=document.getElementById('lib-float-color-btn');
-  if(btn){btn.style.background=color;btn.style.border=color==='#ffffff'?'3px solid #ccc':'3px solid rgba(255,255,255,.9)';}
-  document.querySelectorAll('.lib-color-dot').forEach(function(d){d.classList.remove('active');});
-  if(dot)dot.classList.add('active');
-  libFloatClose();
-}
-
-function libSetSizeFloat(size,btn){
-  libSetSize(size,null);
-  var prev=document.getElementById('lib-grosor-preview');
-  if(prev)prev.style.height=Math.min(size,20)+'px';
-  var sl=document.getElementById('lib-size-slider');if(sl)sl.value=size;
-  if(btn){
-    document.querySelectorAll('.lib-size-row').forEach(function(b){b.classList.remove('active-size');});
-    btn.classList.add('active-size');
-  }
-}
-
-document.addEventListener('click',function(e){
-  if(_libFloatOpen&&!e.target.closest('#lib-float-bar'))libFloatClose();
-});
 function libSetTool(t,btn){
   // Tamaños de goma
   if(t==='borrador'){_lib.radioGoma=6;}
@@ -15320,14 +14773,7 @@ function libNuevaPagina(silent){var hoy=new Date().toISOString().slice(0,10);_li
 function libPagAnterior(){if(_lib.pagActual>0){_lib.pagActual--;_lib.zoom=1;_lib.panX=0;_lib.panY=0;_lib.historial=[];libRedraw();libActualizarNavPag();}}
 function libPagSiguiente(){if(_lib.pagActual<_lib.paginas.length-1){_lib.pagActual++;_lib.zoom=1;_lib.panX=0;_lib.panY=0;_lib.historial=[];libRedraw();libActualizarNavPag();}}
 function libRenderPagina(){_lib.zoom=1;_lib.panX=0;_lib.panY=0;_lib.historial=[];libRedraw();}
-function libActualizarNavPag(){
-  var el=document.getElementById('lib-nav-pag');
-  if(!el) return;
-  var total=_lib.paginas?_lib.paginas.length:1;
-  var actual=(_lib.pagActual||0)+1;
-  el.textContent=actual+'/'+total;
-}
-
+function libActualizarNavPag(){var lbl=document.getElementById('lib-pag-label');if(!lbl)return;var pag=_lib.paginas[_lib.pagActual];var f='';if(pag&&pag.fecha){try{var d=new Date(pag.fecha+'T00:00:00');f=' · '+d.getDate()+'/'+(d.getMonth()+1)+'/'+String(d.getFullYear()).slice(2);}catch(e){}}var z=_lib.zoom!==1?' · '+Math.round(_lib.zoom*100)+'%':'';lbl.textContent='Pág '+(_lib.pagActual+1)+' de '+_lib.paginas.length+f+z;}
 function libResetZoom(){_lib.zoom=1;_lib.panX=0;_lib.panY=0;libRedraw();libActualizarNavPag();}
 function libGuardarManual(){
   var btn=document.getElementById('btn-lib-guardar');
@@ -15349,33 +14795,11 @@ function libGuardarManual(){
   showToast('💾 Libreta guardada correctamente');
 }
 
-function _decimarPts(pts,step){
-  // Reduce points keeping every Nth - reduces storage 3-4x with minimal visual loss
-  if(!pts||pts.length<=4) return pts;
-  var out=[];
-  for(var i=0;i<pts.length;i+=step){out.push(pts[i]);}
-  if(out[out.length-1]!==pts[pts.length-1]) out.push(pts[pts.length-1]);
-  return out;
-}
-
 function libGuardar(){
   try{
-    var pagesData=_lib.paginas.map(function(p){
-      return{
-        fecha:p.fecha,fondo:p.fondo,bgColor:p.bgColor,
-        trazos:(p.trazos||[]).map(function(t){
-          return Object.assign({},t,{pts:_decimarPts(t.pts,3)});
-        }),
-        textos:p.textos
-      };
-    });
-    var serialized=JSON.stringify(pagesData);
-    // Avisar si supera 2MB
-    if(serialized.length>2*1024*1024){
-      var kb=Math.round(serialized.length/1024);
-      console.warn('Tapunto: libreta ocupa '+kb+'KB en localStorage');
-    }
-    localStorage.setItem('tp_libreta',serialized);
+    localStorage.setItem('tp_libreta',JSON.stringify(_lib.paginas.map(function(p){
+      return{fecha:p.fecha,fondo:p.fondo,bgColor:p.bgColor,trazos:p.trazos,textos:p.textos};
+    })));
     // Mostrar indicador guardado
     var ind=document.getElementById('lib-saved-indicator');
     if(ind){
