@@ -4518,7 +4518,8 @@ function conectarGoogleDrive(){
   // Escuchar el token cuando vuelva
   var checkInterval = setInterval(function(){
     try{
-      if(popup.closed){
+      var _pc=false;try{_pc=popup.closed;}catch(e){_pc=true;}
+      if(_pc){
         clearInterval(checkInterval);
         return;
       }
@@ -9486,7 +9487,7 @@ try{initFontScale();}catch(_e){}
 await _cp();
 if(state.coverImageData&&isPremium) applyCoverImage(state.coverImageData);
 
-document.getElementById('script-box-content').value=APPS_SCRIPT_CODE;
+var _sbc=document.getElementById('script-box-content');if(_sbc)_sbc.value=APPS_SCRIPT_CODE;
 
 state.modo='trabajo';
 sortListas();
