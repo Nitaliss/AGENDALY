@@ -4235,9 +4235,9 @@ function actualizarOffloadStatus(){
   var albums=getAlbums();
   var totalLocal=0,totalDrive=0;
   albums.forEach(function(alb){
-    (alb.fotos||[]).forEach(function(f){
+    (alb.fotos||[]).concat(alb.docs||[]).forEach(function(f){
       if(f.driveId&&!f.data) totalDrive++;
-      else if(f.data) totalLocal++;
+      else if(f.data&&f.data.startsWith('data:')) totalLocal++;
     });
   });
   if(totalLocal===0&&totalDrive===0){
@@ -4374,22 +4374,27 @@ async function driveOffloadPendientes(){
 
   for(var i=0; i<albums.length; i++){
     var alb = albums[i];
-    var fotos = alb.fotos || [];
-    for(var j=0; j<fotos.length; j++){
-      var f = fotos[j];
+
+    // Procesar fotos[] (nuevo) y docs[] (legacy) — ambos
+    var archivos = (alb.fotos||[]).concat(alb.docs||[]);
+
+    for(var j=0; j<archivos.length; j++){
+      var f = archivos[j];
       // Solo procesar si tiene data base64 y NO tiene ya driveId
-      if(f.data && f.data.startsWith('data:') && !f.driveId){
+      if(f.data && typeof f.data==='string' && f.data.startsWith('data:') && !f.driveId){
+        console.log('Tapunto: subiendo a Drive:', f.nombre||'sin nombre', f.tipo||'?', Math.round(f.data.length/1024)+'KB');
         var result = await driveOffloadAdjunto(f);
         if(result){
-          // Guardar referencia Drive y eliminar base64 local
           f.driveId  = result.driveId;
           f.driveUrl = result.driveUrl;
           f.nombre   = f.nombre || result.nombre;
           f.tipo     = f.tipo || result.tipo;
           delete f.data; // liberar espacio local
           subidos++;
+          console.log('Tapunto: ✅ subido', f.nombre, '→ driveId:', f.driveId);
         } else {
           errores++;
+          console.warn('Tapunto: ❌ falló subida de', f.nombre||'?');
         }
       }
     }
@@ -4397,11 +4402,11 @@ async function driveOffloadPendientes(){
 
   if(subidos>0){
     persist().catch(function(){});
-    console.log('Tapunto: '+subidos+' adjunto(s) subidos a Drive, espacio liberado');
-    showToast && showToast('✅ '+subidos+' archivo(s) subidos a Drive');
+    console.log('Tapunto: '+subidos+' adjunto(s) subidos a Drive');
+    if(typeof showToast==='function') showToast('✅ '+subidos+' archivo(s) subidos a Drive');
   }
   if(errores>0) console.warn('Tapunto: '+errores+' adjunto(s) no se pudieron subir');
-  return {subidos, errores};
+  return {subidos:subidos, errores:errores};
 }
 
 // ── Descargar adjunto desde Drive para visualizarlo ──
