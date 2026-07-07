@@ -1,0 +1,8 @@
+# Cabeceras de seguridad solo para la agenda
+/agenda/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+
+# Raíz y resto del sitio — sin restricciones adicionales
+/*
+  X-Content-Type-Options: nosniff
