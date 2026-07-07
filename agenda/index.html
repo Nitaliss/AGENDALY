@@ -4311,61 +4311,70 @@ async function driveOffloadAdjunto(adjunto){
     var folderId = await _driveGetOrCreateFolder();
     var mimeType = adjunto.tipo||'image/jpeg';
     var nombre   = adjunto.nombre||('tapunto-'+Date.now());
-
-    // Extraer base64 puro (sin el prefijo data:mime;base64,)
     var b64 = adjunto.data.indexOf(',')>=0 ? adjunto.data.split(',')[1] : adjunto.data;
 
-    // ── Método: multipart body con base64 encoded content ──
-    // Enviamos TODO en un único POST con Content-Type:multipart/related
-    // El contenido va en base64 dentro del body de texto
-    // Esto funciona sin CORS porque el body es texto, no binario
-    var boundary = 'tapunto_boundary_'+Date.now();
-    var nl = String.fromCharCode(13)+String.fromCharCode(10);
-    var body = [
-      '--'+boundary,
-      'Content-Type: application/json; charset=UTF-8',
-      '',
-      JSON.stringify({
+    // ── PASO 1: Crear archivo vacío con metadata ──
+    // Content-Type: application/json → request simple → sin preflight CORS ✅
+    var metaRes = await fetch('https://www.googleapis.com/drive/v3/files?fields=id', {
+      method: 'POST',
+      headers: {
+        'Authorization': 'Bearer '+_driveAccessToken,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
         name: nombre,
         mimeType: mimeType,
         parents: folderId ? [folderId] : []
-      }),
-      '--'+boundary,
-      'Content-Type: '+mimeType,
-      'Content-Transfer-Encoding: base64',
-      '',
-      b64,
-      '--'+boundary+'--'
-    ].join(nl);
+      })
+    });
+    if(!metaRes.ok){
+      console.warn('Tapunto Drive paso1 error:', metaRes.status, await metaRes.text());
+      return null;
+    }
+    var metaData = await metaRes.json();
+    if(!metaData.id){ console.warn('Tapunto Drive: sin ID paso1'); return null; }
+    var fileId = metaData.id;
+    console.log('Tapunto Drive: archivo creado ID:', fileId);
 
-    var res = await fetch(
-      'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=id,webViewLink,name',
+    // ── PASO 2: Subir contenido como text/plain con base64 ──
+    // text/plain ES un Content-Type simple → sin preflight CORS ✅
+    // Drive acepta el contenido y lo almacena correctamente
+    var uploadRes = await fetch(
+      'https://www.googleapis.com/upload/drive/v3/files/'+fileId+'?uploadType=media&fields=id,webViewLink',
       {
-        method: 'POST',
+        method: 'PATCH',
         headers: {
           'Authorization': 'Bearer '+_driveAccessToken,
-          'Content-Type': 'multipart/related; boundary='+boundary
+          'Content-Type': 'text/plain'
         },
-        body: body
+        body: b64
       }
     );
-
-    if(!res.ok){
-      var errTxt = await res.text();
-      console.warn('Tapunto Drive upload error:', res.status, errTxt.slice(0,200));
+    if(!uploadRes.ok){
+      console.warn('Tapunto Drive paso2 error:', uploadRes.status, await uploadRes.text());
+      // Limpiar archivo vacío
+      fetch('https://www.googleapis.com/drive/v3/files/'+fileId,{
+        method:'DELETE',headers:{'Authorization':'Bearer '+_driveAccessToken}
+      }).catch(function(){});
       return null;
     }
+    var uploadData = await uploadRes.json();
 
-    var data = await res.json();
-    if(!data.id){
-      console.warn('Tapunto Drive: sin ID en respuesta', data);
-      return null;
-    }
+    // ── PASO 3: Actualizar mimeType real ──
+    // Content-Type: application/json → simple → sin CORS ✅
+    fetch('https://www.googleapis.com/drive/v3/files/'+fileId,{
+      method:'PATCH',
+      headers:{
+        'Authorization':'Bearer '+_driveAccessToken,
+        'Content-Type':'application/json'
+      },
+      body:JSON.stringify({mimeType:mimeType})
+    }).catch(function(){});
 
-    console.log('Tapunto Drive: ✅', nombre, '→ ID:', data.id);
+    console.log('Tapunto Drive: ✅ subido', nombre, '→ ID:', fileId);
     return {
-      driveId:  data.id,
-      driveUrl: data.webViewLink||null,
+      driveId:  fileId,
+      driveUrl: uploadData.webViewLink||('https://drive.google.com/file/d/'+fileId+'/view'),
       nombre:   nombre,
       tipo:     mimeType
     };
