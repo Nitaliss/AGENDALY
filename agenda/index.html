@@ -3047,7 +3047,7 @@ body.nb-mode #nb-pill-orden { display:none !important; }
     <div style="display:flex;gap:8px;align-items:flex-start;">
       <input type="text" id="h-task-titulo-inp" placeholder="Título (ej: Parcial 1, Lab 3...)" style="width:100%;padding:8px 10px;border:1px solid var(--bd);border-radius:8px;font-size:13px;background:var(--bp);color:var(--td);box-sizing:border-box;margin-bottom:8px;font-family:inherit;">
       <textarea class="h-task-ta" id="h-task-ta" placeholder="Describe la tarea, examen o trabajo..."></textarea>
-      <button class="h-mic-btn" id="h-mic-btn" onclick="if(!isPremium){showUpgrade();return;}hToggleMic();" title="Dictar">&#127897;&#65039;</button>
+      <button class="h-mic-btn" id="h-mic-btn" onclick="hToggleMic();" title="Dictar">&#127897;&#65039;</button>
     </div>
     <div class="h-task-meta" id="h-mic-status" style="margin-bottom:8px;min-height:14px;"></div>
     <div style="display:flex;gap:8px;">
@@ -3723,7 +3723,7 @@ body.nb-mode #nb-pill-orden { display:none !important; }
     <button class="tap-header-btn" onclick="irHome()" style="flex-direction:column;gap:1px;"><span style="font-size:22px;line-height:1;color:#fff;font-weight:900;">&#8592;</span><span style="font-size:9px;color:#fff;font-weight:700;font-family:var(--font-main);letter-spacing:.3px;">Inicio</span></button>
     <span class="tap-header-title">Mi agenda</span>
   
-    <label style="cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:44px;height:44px;border-radius:8px;background:rgba(255,255,255,0.15);padding:0 4px;gap:1px;"><input type="file" accept=".ics" style="display:none;" onchange="if(!isPremium){showUpgrade();return;}if(!confirm('¿Importar los eventos de este calendario a tu agenda Tapunto?\n\nSe abrirá una vista previa para que puedas seleccionar qué eventos añadir.')){this.value='';return;}icsImport(this.files[0]);this.value='';"><span style="font-size:18px;line-height:1;">📅</span><span style="font-size:8px;color:#fff;font-weight:700;font-family:var(--font-main);white-space:nowrap;">ICS</span></label>
+    <label style="cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:44px;height:44px;border-radius:8px;background:rgba(255,255,255,0.15);padding:0 4px;gap:1px;"><input type="file" accept=".ics" style="display:none;" onchange="if(!confirm('¿Importar los eventos de este calendario a tu agenda Tapunto?\n\nSe abrirá una vista previa para que puedas seleccionar qué eventos añadir.')){this.value='';return;}icsImport(this.files[0]);this.value='';"><span style="font-size:18px;line-height:1;">📅</span><span style="font-size:8px;color:#fff;font-weight:700;font-family:var(--font-main);white-space:nowrap;">ICS</span></label>
   
     
   </div>
@@ -4423,10 +4423,7 @@ function conectarGoogleDrive(){
     showToast('⚠️ Google Drive estará disponible próximamente. Usa la sincronización QR mientras tanto.');
     return;
   }
-  if(!isPremium){
-    showUpgrade();
-    return;
-  }
+  // Drive disponible para todos los usuarios
   // Abrir popup OAuth de Google
   var redirectUri = window.location.origin + window.location.pathname;
   var authUrl = 'https://accounts.google.com/o/oauth2/v2/auth'
@@ -5042,6 +5039,9 @@ console.error('Error cargando estado:',e);
 }
 }
 async function _cp(){
+// MODO PRUEBA: todo Free mientras se testea
+// TODO: revertir a premium cuando esté probado
+isPremium=true;applyPremiumUI();return;
 const key = localStorage.getItem('tp_license_'+currentUser);
 if(!key){isPremium=false;applyPremiumUI();return;}
 const h=await _hlk(key.toUpperCase());
@@ -5055,8 +5055,8 @@ const cfgDesc = document.getElementById('cfg-plan-desc');
 const cfgLic = document.getElementById('cfg-license-row');
 const cfgPrem = document.getElementById('cfg-premium-info');
 if(isPremium){
-badge.className='plan-badge plan-premium'; badge.textContent='⭐ PREMIUM';
-cfgBadge.className='plan-badge plan-premium'; cfgBadge.textContent='⭐ PREMIUM';
+if(badge){badge.className='plan-badge plan-premium'; badge.textContent='⭐ PREMIUM';}
+if(cfgBadge){cfgBadge.className='plan-badge plan-premium'; cfgBadge.textContent='⭐ PREMIUM';}
 cfgDesc.textContent='Registros ilimitados · Todos los temas · Imagen · 📖 Libreta PDF · 📄 PDF Notas';
 cfgLic.style.display='none'; cfgPrem.style.display='block';
 } else {
@@ -5078,11 +5078,15 @@ if(isPremium&&state.sheetsUrl) startAutoSync();
 }
 function updateFreeBar(){
 const bar = document.getElementById('free-bar');
+if(!bar) return;
+bar.style.display='none'; return; // MODO PRUEBA
 if(isPremium){ bar.style.display='none'; return; }
 bar.style.display='flex';
-document.getElementById('rec-count').textContent = state.records.length;
+const rc=document.getElementById('rec-count');
+if(rc) rc.textContent = state.records.length;
 }
 function checkDeviceLimit(){
+return true; // MODO PRUEBA
 if(isPremium) return true;
 const devKey = 'tp_devices_'+currentUser;
 const devId  = getOrCreateDeviceId();
@@ -5728,7 +5732,6 @@ let aiModalData=null;
 
 function setDictadoStatus(msg){ var el=document.getElementById('dictado-status'); if(el) el.textContent=msg; }
 function onImageSelected(e){
-  if(!isPremium){ showUpgrade(); return; }
   var files=Array.from(e.target.files||[]);
   if(!files.length) return;
   var preview=document.getElementById('nuevo-docs-preview');
@@ -6233,7 +6236,6 @@ alert('Restauradas '+nuevas+' notas nuevas.');
 };reader.readAsText(file);e.target.value='';
 }
 function mostrarPDFNotas(){
-if(!isPremium){showUpgrade();return;}
 var filtro=document.getElementById('notas-pdf-filter');
 if(filtro) filtro.style.display=filtro.style.display==='flex'?'none':'flex';
 }
@@ -7402,7 +7404,7 @@ var secciones=[
 
 {id:'s10',titulo:'💾 Copia de seguridad local',texto:'Tapunto guarda tus datos automáticamente en tu dispositivo (sin internet). Para hacer una copia manual o moverla a otro dispositivo:\n\nEXPORTAR (guardar copia):\n1️⃣ Toca tu avatar → Configuración → "Exportar copia de seguridad".\n2️⃣ Se descarga un archivo tapunto-backup.json en tu dispositivo.\n3️⃣ Guárdalo en un lugar seguro (nube personal, correo, etc.).\n\nIMPORTAR (restaurar copia):\n1️⃣ Toca tu avatar → Configuración → "Importar copia de seguridad".\n2️⃣ Selecciona el archivo tapunto-backup.json.\n3️⃣ Confirma — tus datos se restauran al instante.\n\n⚠️ La importación reemplaza los datos actuales. Haz siempre una exportación antes de importar.'},
 
-{id:'s11',titulo:'☁️ Sincronización con Google Drive',texto:'Con Premium puedes sincronizar tus datos con Google Drive para tenerlos siempre a salvo y acceder desde cualquier dispositivo.\n\nQué se sincroniza:\n✅ Todas tus tareas y eventos\n✅ Tus calificaciones\n✅ Tus rutinas y horario\n✅ Tu lista To Do\n✅ Tus apuntes y archivos adjuntos\n✅ Configuración y tema activo\n\nQué NO se sincroniza (por tamaño):\n❌ Páginas de la libreta de dibujo (se guardan solo en el dispositivo)\n\nCómo conectar Google Drive:\n1️⃣ Toca tu avatar → Configuración → "Conectar Google Drive".\n2️⃣ Inicia sesión con tu cuenta de Google.\n3️⃣ Acepta el permiso — Tapunto solo accede a su propio archivo (tapunto-datos.json), nunca a tu Drive completo.\n4️⃣ Toca "Subir ahora" para hacer la primera copia.\n\nA partir de ahí, Tapunto sincroniza automáticamente al abrir y cerrar la app.\n\n🔒 Privacidad: Tapunto usa el permiso mínimo de Google (drive.file) — solo puede leer y escribir el archivo que él mismo crea. No accede a ningún otro archivo de tu Drive.'},
+{id:'s11',titulo:'☁️ Sincronización con Google Drive',texto:'Puedes sincronizar tus datos con Google Drive para tenerlos siempre a salvo y acceder desde cualquier dispositivo.\n\nQué se sincroniza:\n✅ Todas tus tareas y eventos\n✅ Tus calificaciones\n✅ Tus rutinas y horario\n✅ Tu lista To Do\n✅ Tus apuntes y archivos adjuntos\n✅ Configuración y tema activo\n\nQué NO se sincroniza (por tamaño):\n❌ Páginas de la libreta de dibujo (se guardan solo en el dispositivo)\n\nCómo conectar Google Drive:\n1️⃣ Toca tu avatar → Configuración → "Conectar Google Drive".\n2️⃣ Inicia sesión con tu cuenta de Google.\n3️⃣ Acepta el permiso — Tapunto solo accede a su propio archivo (tapunto-datos.json), nunca a tu Drive completo.\n4️⃣ Toca "Subir ahora" para hacer la primera copia.\n\nA partir de ahí, Tapunto sincroniza automáticamente al abrir y cerrar la app.\n\n🔒 Privacidad: Tapunto usa el permiso mínimo de Google (drive.file) — solo puede leer y escribir el archivo que él mismo crea. No accede a ningún otro archivo de tu Drive.'},
 
 {id:'s12',titulo:'⭐ Premium',texto:'Tapunto Premium desbloquea todo el potencial de la app por solo 3,99 €/año — menos de 35 céntimos al mes.\n\nQué incluye Premium:\n✅ Libreta de dibujo ilimitada (sin Premium: 3 páginas)\n✅ Todos los temas aesthetic (Cottagecore, Dark Academia, Y2K, Pastel, Midnight)\n✅ Adjuntos completos: fotos Y documentos (PDF, Word, etc.)\n✅ Múltiples horarios en Rutinas\n✅ Sincronización con Google Drive\n✅ Próximamente: estadísticas de calificaciones, widget Android y más\n\nCómo activar Premium:\n1️⃣ Toca tu avatar → Configuración → "Activar Premium".\n2️⃣ Introduce tu código de activación.\n3️⃣ Toca "Activar" — ¡ya eres Premium! ⭐\n\n¿Dónde conseguir el código? En tapunto.app o escribiéndonos a través de la web.'},
 
@@ -8931,7 +8933,6 @@ const csv=[hdr,...rows.map(r=>[r.id,r.fecha,r.contacto,r.tema,r.accion,r.comunic
 const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8;'}));a.download='Tapunto_'+new Date().toISOString().slice(0,10)+'.csv';a.click();
 }
 function abrirLibreta(){
-if(!isPremium){showUpgrade();return;}
 const rows=getFiltered();
 if(!rows.length){alert('No hay registros que mostrar.');return;}
 const fcEl=document.getElementById('f-contacto');
