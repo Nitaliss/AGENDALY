@@ -12,13 +12,25 @@
     header p { font-size: 13px; opacity: 0.8; }
     main { max-width: 760px; margin: 40px auto; padding: 0 24px 60px; }
     h2 { font-size: 17px; font-weight: 700; color: #2D5016; margin: 32px 0 10px; border-left: 4px solid #2D5016; padding-left: 12px; }
+    h3 { font-size: 15px; font-weight: 700; color: #333; margin: 20px 0 8px; }
     p { font-size: 14px; color: #333; margin-bottom: 12px; }
     ul { font-size: 14px; color: #333; margin: 8px 0 12px 20px; }
     ul li { margin-bottom: 6px; }
     a { color: #2D5016; }
     .box { background: white; border-radius: 12px; padding: 24px; box-shadow: 0 1px 4px rgba(0,0,0,.08); margin-bottom: 8px; }
+    .box-drive { background: #e8f0fe; border-radius: 12px; padding: 24px; border-left: 4px solid #4285F4; margin: 16px 0; }
+    .box-drive h3 { color: #1a73e8; margin-top: 0; }
+    .box-warning { background: #fff8e1; border-radius: 12px; padding: 16px 20px; border-left: 4px solid #f9a825; margin: 16px 0; font-size: 14px; color: #555; }
     footer { text-align: center; font-size: 12px; color: #888; padding: 24px; border-top: 1px solid #e5e7eb; margin-top: 40px; }
     .badge { display: inline-block; background: #e8f5e9; color: #2D5016; font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 20px; margin-bottom: 16px; }
+    .badge-drive { display: inline-block; background: #e8f0fe; color: #1a73e8; font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 20px; margin-left: 8px; }
+    code { background: #f1f3f4; padding: 2px 6px; border-radius: 4px; font-size: 12px; font-family: monospace; }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; margin: 12px 0; }
+    th { background: #2D5016; color: white; padding: 8px 12px; text-align: left; }
+    td { padding: 8px 12px; border-bottom: 1px solid #e5e7eb; }
+    tr:nth-child(even) td { background: #f9fafb; }
+    .check { color: #2D5016; font-weight: 700; }
+    .cross { color: #c62828; font-weight: 700; }
   </style>
 </head>
 <body>
@@ -31,77 +43,151 @@
 <main>
 
   <div class="box">
-    <span class="badge">Actualizada: junio 2026</span>
+    <span class="badge">Actualizada: julio 2026</span>
+    <span class="badge-drive">Incluye uso de Google Drive API</span>
     <p>En Tapunto nos tomamos muy en serio la privacidad de nuestros usuarios. Esta política explica de forma clara y sencilla qué datos recogemos, cómo los usamos y cuáles son tus derechos.</p>
-    <p><strong>Responsable:</strong> Tapunto · <a href="mailto:tapunto.soporte@gmail.com">tapunto.soporte@gmail.com</a></p>
+    <p><strong>Responsable:</strong> Tapunto · <a href="mailto:tapunto.soporte@gmail.com">tapunto.soporte@gmail.com</a><br>
+    <strong>Web:</strong> <a href="https://tapunto.app">tapunto.app</a></p>
   </div>
 
   <h2>1. ¿Qué datos recogemos?</h2>
-  <p>Tapunto está diseñada para funcionar principalmente de forma local en tu dispositivo. Los datos que puedes llegar a compartir con nosotros son:</p>
+  <p>Tapunto está diseñada para funcionar principalmente de forma local en tu dispositivo. <strong>No tenemos servidores propios que almacenen tus datos personales.</strong></p>
   <ul>
-    <li><strong>Datos de uso:</strong> tareas, notas, calificaciones, horarios y configuración que introduces en la app. Estos datos se guardan <strong>únicamente en tu dispositivo</strong> y no se envían a ningún servidor de Tapunto.</li>
-    <li><strong>Cuenta de Google (opcional):</strong> si conectas Google Drive, accedemos solo al email asociado a tu cuenta de Google para identificar el espacio de almacenamiento. No almacenamos tu contraseña.</li>
-    <li><strong>Archivos de backup (opcional):</strong> si usas la sincronización con Google Drive, el archivo de backup (.json) se guarda en tu propio Google Drive. Tapunto no tiene acceso a otros archivos de tu Drive.</li>
-    <li><strong>Dirección de email (opcional):</strong> solo si te registras para el plan Premium o contactas con soporte.</li>
+    <li><strong>Datos de uso de la app:</strong> tareas, calificaciones, horarios, rutinas, notas To Do, apuntes y configuración que introduces. Estos datos se guardan <strong>únicamente en tu dispositivo</strong> (almacenamiento local del navegador) y no se envían a ningún servidor de Tapunto.</li>
+    <li><strong>Cuenta de Google (opcional, solo Premium):</strong> si conectas Google Drive, accedemos al email asociado a tu cuenta de Google únicamente para identificar tu espacio de almacenamiento. No almacenamos tu contraseña de Google.</li>
+    <li><strong>Archivo de copia de seguridad en Google Drive (opcional, solo Premium):</strong> si activas la sincronización, Tapunto crea y gestiona un único archivo llamado <code>tapunto-datos.json</code> en tu Google Drive. Ver sección 4 para más detalles.</li>
+    <li><strong>Email de contacto (opcional):</strong> solo si contactas con nuestro equipo de soporte o activas el plan Premium.</li>
   </ul>
 
   <h2>2. ¿Cómo usamos tus datos?</h2>
   <ul>
     <li>Para que la app funcione correctamente en tu dispositivo.</li>
-    <li>Para guardar y restaurar tu copia de seguridad en Google Drive si lo has activado.</li>
-    <li>Para gestionar tu suscripción Premium si la tienes.</li>
-    <li>Para responder a tus solicitudes de soporte.</li>
+    <li>Para guardar y restaurar tu copia de seguridad en Google Drive, si lo has activado voluntariamente.</li>
+    <li>Para gestionar tu suscripción Premium, si la tienes.</li>
+    <li>Para responder a tus solicitudes de soporte técnico.</li>
   </ul>
-  <p><strong>Tapunto nunca vende tus datos a terceros.</strong></p>
+  <p><strong>Tapunto nunca vende tus datos a terceros.</strong> Nunca usamos tus datos para publicidad ni para análisis de comportamiento.</p>
 
-  <h2>3. Google Drive</h2>
-  <p>Si conectas tu cuenta de Google, Tapunto solicita acceso al ámbito <code>drive.file</code>, que permite únicamente crear, leer y modificar los archivos que la propia app genera en tu Drive. Tapunto <strong>no puede acceder</strong> a otros archivos, fotos o documentos de tu Google Drive.</p>
-  <p>Puedes revocar este acceso en cualquier momento desde <a href="https://myaccount.google.com/permissions" target="_blank">myaccount.google.com/permissions</a>.</p>
-  <p>El uso de la API de Google Drive por parte de Tapunto cumple con la <a href="https://developers.google.com/terms/api-services-user-data-policy" target="_blank">Política de datos de usuario de los servicios de API de Google</a>, incluidos los requisitos de uso limitado.</p>
+  <h2>3. Almacenamiento local — sin conexión</h2>
+  <p>Todos los datos de la app se guardan en el almacenamiento local de tu dispositivo usando las tecnologías estándar del navegador (<code>localStorage</code> e <code>IndexedDB</code>). Estos datos incluyen:</p>
+  <ul>
+    <li>Tus tareas y eventos de agenda</li>
+    <li>Tus calificaciones</li>
+    <li>Tu horario y rutinas</li>
+    <li>Tu lista To Do</li>
+    <li>Tus apuntes y archivos adjuntos</li>
+    <li>Las páginas de tu libreta de dibujo</li>
+    <li>Tu configuración y tema aesthetic activo</li>
+  </ul>
+  <p>Tapunto funciona completamente sin conexión a internet. La conexión solo es necesaria si activas la sincronización con Google Drive (opcional, Premium).</p>
 
-  <h2>4. ¿Con quién compartimos tus datos?</h2>
+  <h2>4. Google Drive — Sincronización de copia de seguridad</h2>
+
+  <div class="box-drive">
+    <h3>🔵 Uso de Google Drive API — Información requerida por Google</h3>
+    <p>Tapunto utiliza la API de Google Drive con el ámbito de acceso <code>https://www.googleapis.com/auth/drive.file</code>.</p>
+    <p><strong>Este ámbito permite únicamente:</strong></p>
+    <ul>
+      <li>Crear, leer y modificar los archivos que la propia app Tapunto ha creado en tu Drive.</li>
+      <li>Tapunto crea un único archivo: <code>tapunto-datos.json</code></li>
+    </ul>
+    <p><strong>Este ámbito NO permite:</strong></p>
+    <ul>
+      <li>Acceder a ningún otro archivo de tu Google Drive.</li>
+      <li>Ver tus fotos, documentos, hojas de cálculo ni ningún otro contenido de tu Drive.</li>
+      <li>Eliminar archivos que no haya creado Tapunto.</li>
+    </ul>
+  </div>
+
+  <h3>4.1 ¿Qué datos se sincronizan con Google Drive?</h3>
+  <p>Cuando activas la sincronización, Tapunto sube a tu Google Drive un único archivo JSON (<code>tapunto-datos.json</code>) con el siguiente contenido:</p>
+
+  <table>
+    <tr><th>Dato sincronizado</th><th>Descripción</th></tr>
+    <tr><td>Tareas y eventos</td><td>Todas tus tareas de Mi Agenda con título, fecha, asignatura, tipo e icono</td></tr>
+    <tr><td>Asignaturas</td><td>Lista de materias/asignaturas que has creado</td></tr>
+    <tr><td>Calificaciones</td><td>Notas registradas en cada tarea evaluable</td></tr>
+    <tr><td>Recordatorios</td><td>Alertas y recordatorios configurados</td></tr>
+    <tr><td>Rutinas y horario</td><td>Tu horario semanal de clases</td></tr>
+    <tr><td>To Do</td><td>Tu lista de tareas rápidas</td></tr>
+    <tr><td>Apuntes y archivos adjuntos</td><td>Referencias a archivos adjuntados en tareas</td></tr>
+    <tr><td>Libreta de dibujo</td><td>Trazos y páginas de tu libreta (solo trazos, no capturas PNG)</td></tr>
+    <tr><td>Configuración</td><td>Tema aesthetic activo, fuente y escala de texto</td></tr>
+  </table>
+
+  <p><strong>No se sincroniza:</strong> contraseñas, tokens de acceso, datos de pago ni información personal adicional a la que tú hayas introducido.</p>
+
+  <h3>4.2 Cómo funciona la sincronización</h3>
+  <ul>
+    <li><strong>Subir:</strong> Tapunto convierte tus datos en un archivo JSON y lo sube a tu Google Drive. Si el archivo ya existe, lo actualiza. Si no existe, lo crea.</li>
+    <li><strong>Descargar:</strong> Tapunto lee el archivo <code>tapunto-datos.json</code> de tu Drive y restaura los datos en tu dispositivo.</li>
+    <li><strong>Automático:</strong> la sincronización puede activarse automáticamente al abrir y cerrar la app (configurable).</li>
+  </ul>
+
+  <h3>4.3 Cómo desconectar Google Drive</h3>
+  <p>Puedes desconectar Google Drive en cualquier momento:</p>
+  <ul>
+    <li>Dentro de Tapunto: <strong>Avatar → Configuración → Desconectar Google Drive</strong></li>
+    <li>Desde tu cuenta de Google: <a href="https://myaccount.google.com/permissions" target="_blank">myaccount.google.com/permissions</a> → busca "Tapunto" y revoca el acceso.</li>
+  </ul>
+  <p>Al desconectar, Tapunto elimina el token de acceso de tu dispositivo. El archivo <code>tapunto-datos.json</code> permanece en tu Drive (puedes eliminarlo manualmente si lo deseas).</p>
+
+  <h3>4.4 Cumplimiento de la política de Google</h3>
+  <p>El uso que Tapunto hace de la información recibida de las APIs de Google se ajusta a la <a href="https://developers.google.com/terms/api-services-user-data-policy" target="_blank">Política de datos de usuario de los servicios de API de Google</a>, incluidos los requisitos de uso limitado (<em>Limited Use</em>). Tapunto:</p>
+  <ul>
+    <li>Solo usa los datos de Google Drive para proporcionar la funcionalidad de copia de seguridad dentro de la app.</li>
+    <li>No transfiere los datos de Google Drive a terceros.</li>
+    <li>No usa los datos de Google Drive para publicidad ni para análisis de comportamiento.</li>
+    <li>No permite que personas físicas lean los datos de Google Drive del usuario, salvo si es necesario por razones de seguridad o cumplimiento legal, con el consentimiento expreso del usuario.</li>
+  </ul>
+
+  <h2>5. ¿Con quién compartimos tus datos?</h2>
   <p>Tapunto no comparte tus datos personales con terceros, salvo en los siguientes casos estrictamente necesarios:</p>
   <ul>
-    <li><strong>Google LLC:</strong> para la autenticación OAuth y el almacenamiento en Google Drive, si lo activas voluntariamente.</li>
+    <li><strong>Google LLC:</strong> para la autenticación OAuth 2.0 y el almacenamiento en Google Drive, únicamente si lo activas voluntariamente.</li>
     <li><strong>Obligación legal:</strong> si una autoridad competente nos lo exige por ley.</li>
   </ul>
 
-  <h2>5. Seguridad</h2>
-  <p>Tomamos las siguientes medidas para proteger tus datos:</p>
+  <h2>6. Seguridad</h2>
   <ul>
-    <li>El PIN de acceso se almacena como hash SHA-256, nunca en texto claro.</li>
-    <li>Toda la comunicación con Google Drive usa HTTPS y OAuth 2.0.</li>
-    <li>Los datos de la app se almacenan en el almacenamiento local del dispositivo (localStorage), protegido por el sistema operativo.</li>
+    <li>Toda la comunicación con Google Drive usa HTTPS y OAuth 2.0 — nunca almacenamos tu contraseña de Google.</li>
+    <li>Los datos de la app se almacenan en el almacenamiento local del dispositivo (<code>localStorage</code> e <code>IndexedDB</code>), protegido por el sistema operativo.</li>
+    <li>Los tokens de acceso a Google Drive se guardan solo en memoria durante la sesión activa.</li>
     <li>Tapunto no tiene servidores propios que almacenen tus datos personales.</li>
   </ul>
 
-  <h2>6. Menores de edad</h2>
-  <p>Tapunto está dirigida a estudiantes, incluyendo menores de 14 años. No recogemos intencionadamente datos personales de menores sin el consentimiento de sus padres o tutores. Si eres padre o tutor y crees que tu hijo ha proporcionado datos personales sin tu consentimiento, contáctanos en <a href="mailto:tapunto.soporte@gmail.com">tapunto.soporte@gmail.com</a> y los eliminaremos.</p>
-  <p>Cumplimos con el Reglamento General de Protección de Datos (RGPD), la Ley Orgánica de Protección de Datos (LOPDGDD) y la Children's Online Privacy Protection Act (COPPA).</p>
+  <h2>7. Menores de edad</h2>
+  <p>Tapunto está dirigida a estudiantes, incluyendo menores de edad. No recogemos datos personales de menores sin el consentimiento de sus padres o tutores. La app no requiere registro ni cuenta para funcionar.</p>
+  <p>Si eres padre o tutor y crees que tu hijo ha proporcionado datos personales sin tu consentimiento, contáctanos en <a href="mailto:tapunto.soporte@gmail.com">tapunto.soporte@gmail.com</a> y los eliminaremos a la mayor brevedad.</p>
+  <p>Cumplimos con el Reglamento General de Protección de Datos (RGPD), la Ley Orgánica de Protección de Datos y Garantía de Derechos Digitales (LOPDGDD) y la Children's Online Privacy Protection Act (COPPA).</p>
 
-  <h2>7. Tus derechos</h2>
+  <h2>8. Tus derechos (RGPD)</h2>
   <p>De acuerdo con el RGPD, tienes derecho a:</p>
   <ul>
     <li><strong>Acceso:</strong> saber qué datos tenemos sobre ti.</li>
     <li><strong>Rectificación:</strong> corregir datos incorrectos.</li>
     <li><strong>Supresión:</strong> solicitar que eliminemos tus datos.</li>
-    <li><strong>Portabilidad:</strong> recibir tus datos en formato exportable (el backup .json de la app).</li>
+    <li><strong>Portabilidad:</strong> recibir tus datos en formato exportable (el archivo backup JSON de la app).</li>
     <li><strong>Oposición:</strong> oponerte al tratamiento de tus datos.</li>
+    <li><strong>Retirada del consentimiento:</strong> puedes desconectar Google Drive en cualquier momento sin que ello afecte al uso de la app.</li>
   </ul>
   <p>Para ejercer cualquiera de estos derechos escríbenos a <a href="mailto:tapunto.soporte@gmail.com">tapunto.soporte@gmail.com</a>. Responderemos en un plazo máximo de 30 días.</p>
 
-  <h2>8. Cookies y rastreo</h2>
-  <p>Tapunto no usa cookies de rastreo ni publicidad. No integramos ningún SDK de analítica de terceros (Google Analytics, Facebook Pixel, etc.). La única información que se guarda localmente son los datos de la propia app en el almacenamiento del navegador (localStorage).</p>
+  <h2>9. Cookies y rastreo</h2>
+  <p>Tapunto <strong>no usa cookies de rastreo ni publicidad</strong>. No integramos ningún SDK de analítica de terceros (Google Analytics, Facebook Pixel, etc.). La única información que se guarda localmente son los datos de la propia app en el almacenamiento del navegador.</p>
 
-  <h2>9. Cambios en esta política</h2>
+  <h2>10. Cambios en esta política</h2>
   <p>Si realizamos cambios significativos en esta política de privacidad, lo notificaremos dentro de la propia app. La fecha de última actualización siempre aparece al inicio de este documento.</p>
 
-  <h2>10. Contacto</h2>
-  <p>Para cualquier consulta sobre privacidad:</p>
+  <h2>11. Contacto</h2>
   <ul>
     <li>Email: <a href="mailto:tapunto.soporte@gmail.com">tapunto.soporte@gmail.com</a></li>
     <li>Web: <a href="https://tapunto.app">tapunto.app</a></li>
   </ul>
+
+  <div class="box-warning">
+    ℹ️ Esta política de privacidad cumple con los requisitos de la <strong>Política de datos de usuario de los servicios de API de Google</strong> y está actualizada para la solicitud de verificación del ámbito <code>drive.file</code>.
+  </div>
 
 </main>
 
