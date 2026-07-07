@@ -4394,8 +4394,16 @@ async function driveOffloadPendientes(){
       var f = archivos[j];
       // Solo procesar si tiene data base64 y NO tiene ya driveId
       if(f.data && typeof f.data==='string' && f.data.startsWith('data:') && !f.driveId){
-        console.log('Tapunto: subiendo a Drive:', f.nombre||'sin nombre', f.tipo||'?', Math.round(f.data.length/1024)+'KB');
-        var result = await driveOffloadAdjunto(f);
+        // Construir nombre con asignatura + fecha + nombre original
+        var _asig = (alb.asig||'General').replace(/[^a-zA-Z0-9áéíóúÁÉÍÓÚñÑ\s]/g,'').trim().replace(/\s+/g,'_');
+        var _fecha = (alb.fecha||new Date().toISOString().slice(0,10)).slice(0,10);
+        var _ext = (f.nombre||'archivo').split('.').pop().toLowerCase();
+        var _base = (f.nombre||'archivo').replace(/\.[^.]+$/,'').replace(/[^a-zA-Z0-9áéíóúÁÉÍÓÚñÑ\s]/g,'').trim().replace(/\s+/g,'_').slice(0,30);
+        var _nombreDrive = _asig+'_'+_fecha+'_'+_base+'.'+_ext;
+        // Adjunto temporal con nombre enriquecido
+        var fConNombre = Object.assign({},f,{nombre:_nombreDrive});
+        console.log('Tapunto: subiendo a Drive:', _nombreDrive, Math.round(f.data.length/1024)+'KB');
+        var result = await driveOffloadAdjunto(fConNombre);
         if(result){
           f.driveId  = result.driveId;
           f.driveUrl = result.driveUrl;
