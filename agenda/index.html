@@ -12,7 +12,6 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#2D5016">
 <meta http-equiv="X-Content-Type-Options" content="nosniff">
-<meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
 <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
 <meta name="description" content="Tu agenda personal de productividad. Apunta. Organiza. Comunica.">
 <link rel="manifest" id="pwa-manifest">
@@ -916,7 +915,6 @@ body[data-mode="escolar"][data-theme="verde"]{
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#2D5016">
 <meta http-equiv="X-Content-Type-Options" content="nosniff">
-<meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
 <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
 <meta name="description" content="Tu agenda personal de productividad. Apunta. Organiza. Comunica.">
 <link rel="manifest" href="manifest.json">
@@ -3152,6 +3150,12 @@ body.nb-mode #nb-pill-orden { display:none !important; }
   <div class="tap-header">
     <button class="tap-header-btn" onclick="irHome()" style="flex-direction:column;gap:1px;"><span style="font-size:22px;line-height:1;color:#fff;font-weight:900;">&#8592;</span><span style="font-size:9px;color:#fff;font-weight:700;font-family:var(--font-main);">Inicio</span></button>
     <span class="tap-header-title">📓 Mi Libreta</span>
+    <!-- Nav páginas -->
+    <div style="display:flex;align-items:center;gap:4px;background:rgba(255,255,255,.12);border-radius:20px;padding:3px 8px;">
+      <button onclick="libPagAnterior()" style="background:none;border:none;color:#fff;font-size:20px;cursor:pointer;padding:0 4px;line-height:1;font-weight:900;" title="Página anterior">‹</button>
+      <span id="lib-nav-pag" style="font-size:11px;font-weight:700;color:#fff;font-family:var(--font-main);min-width:36px;text-align:center;">1/1</span>
+      <button onclick="libPagSiguiente()" style="background:none;border:none;color:#fff;font-size:20px;cursor:pointer;padding:0 4px;line-height:1;font-weight:900;" title="Página siguiente">›</button>
+    </div>
     <div style="display:flex;gap:2px;">
       <button class="tap-header-btn" onclick="libGuardarManual()" id="btn-lib-guardar" style="flex-direction:column;gap:1px;" title="Guardar ahora"><span style="font-size:16px;line-height:1;color:#fff;">💾</span><span style="font-size:7px;font-family:var(--font-main);color:#fff;">Guardar</span></button>
       <button class="tap-header-btn" onclick="libNuevaPagina()" style="flex-direction:column;gap:1px;"><span style="font-size:20px;line-height:1;color:#fff;font-weight:900;">+</span><span style="font-size:7px;font-family:var(--font-main);">Nueva</span></button>
@@ -15205,7 +15209,14 @@ function libNuevaPagina(silent){var hoy=new Date().toISOString().slice(0,10);_li
 function libPagAnterior(){if(_lib.pagActual>0){_lib.pagActual--;_lib.zoom=1;_lib.panX=0;_lib.panY=0;_lib.historial=[];libRedraw();libActualizarNavPag();}}
 function libPagSiguiente(){if(_lib.pagActual<_lib.paginas.length-1){_lib.pagActual++;_lib.zoom=1;_lib.panX=0;_lib.panY=0;_lib.historial=[];libRedraw();libActualizarNavPag();}}
 function libRenderPagina(){_lib.zoom=1;_lib.panX=0;_lib.panY=0;_lib.historial=[];libRedraw();}
-function libActualizarNavPag(){var lbl=document.getElementById('lib-pag-label');if(!lbl)return;var pag=_lib.paginas[_lib.pagActual];var f='';if(pag&&pag.fecha){try{var d=new Date(pag.fecha+'T00:00:00');f=' · '+d.getDate()+'/'+(d.getMonth()+1)+'/'+String(d.getFullYear()).slice(2);}catch(e){}}var z=_lib.zoom!==1?' · '+Math.round(_lib.zoom*100)+'%':'';lbl.textContent='Pág '+(_lib.pagActual+1)+' de '+_lib.paginas.length+f+z;}
+function libActualizarNavPag(){
+  var el=document.getElementById('lib-nav-pag');
+  if(!el) return;
+  var total=_lib.paginas?_lib.paginas.length:1;
+  var actual=(_lib.pagActual||0)+1;
+  el.textContent=actual+'/'+total;
+}
+
 function libResetZoom(){_lib.zoom=1;_lib.panX=0;_lib.panY=0;libRedraw();libActualizarNavPag();}
 function libGuardarManual(){
   var btn=document.getElementById('btn-lib-guardar');
