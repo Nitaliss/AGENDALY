@@ -4309,61 +4309,64 @@ async function driveOffloadAdjunto(adjunto){
   if(!_driveAccessToken || !adjunto || !adjunto.data) return null;
   try{
     var folderId = await _driveGetOrCreateFolder();
-    var mimeType = adjunto.tipo||'application/octet-stream';
+    var mimeType = adjunto.tipo||'image/jpeg';
     var nombre   = adjunto.nombre||('tapunto-'+Date.now());
 
-    // Convertir base64 a bytes
+    // Convertir base64 a bytes binarios
     var b64 = adjunto.data.indexOf(',')>=0 ? adjunto.data.split(',')[1] : adjunto.data;
     var byteStr = atob(b64);
     var bytes = new Uint8Array(byteStr.length);
     for(var i=0;i<byteStr.length;i++) bytes[i]=byteStr.charCodeAt(i);
 
-    // Upload multipart usando boundary manual con ArrayBuffer
-    // Este método evita el CORS que genera FormData
-    var boundary = 'tapunto_'+Date.now()+'_boundary';
-    var CRLF = '\r\n';
-    var metaJSON = JSON.stringify({
+    // ── PASO 1: Iniciar upload resumable (sin binarios = sin CORS preflight) ──
+    var meta = {
       name: nombre,
       mimeType: mimeType,
       parents: folderId ? [folderId] : []
-    });
-
-    // Construir body como ArrayBuffer combinando texto + binario
-    var partMeta = '--'+boundary+CRLF
-      +'Content-Type: application/json; charset=UTF-8'+CRLF+CRLF
-      +metaJSON+CRLF
-      +'--'+boundary+CRLF
-      +'Content-Type: '+mimeType+CRLF+CRLF;
-    var partEnd  = CRLF+'--'+boundary+'--';
-
-    var enc = new TextEncoder();
-    var metaBytes = enc.encode(partMeta);
-    var endBytes  = enc.encode(partEnd);
-    var combined  = new Uint8Array(metaBytes.length + bytes.length + endBytes.length);
-    combined.set(metaBytes, 0);
-    combined.set(bytes, metaBytes.length);
-    combined.set(endBytes, metaBytes.length + bytes.length);
-
-    var uploadRes = await fetch(
-      'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=id,webViewLink',
+    };
+    // Paso 1: solo Authorization + Content-Type:json → NO dispara preflight CORS
+    var initRes = await fetch(
+      'https://www.googleapis.com/upload/drive/v3/files?uploadType=resumable',
       {
         method: 'POST',
         headers: {
           'Authorization': 'Bearer '+_driveAccessToken,
-          'Content-Type': 'multipart/related; boundary='+boundary
+          'Content-Type': 'application/json'
         },
-        body: combined.buffer
+        body: JSON.stringify(meta)
       }
     );
+    if(!initRes.ok){
+      var e1=await initRes.text();
+      console.warn('Tapunto Drive init error:', initRes.status, e1);
+      return null;
+    }
+    // La URI de upload viene en el header Location
+    var uploadUri = initRes.headers.get('Location') || initRes.headers.get('location');
+    if(!uploadUri){
+      console.warn('Tapunto Drive: no Location header', [...initRes.headers.entries()]);
+      return null;
+    }
+    console.log('Tapunto Drive: upload URI obtenida');
 
+    // ── PASO 2: Subir contenido binario a la URI de upload ──
+    // Paso 2: PUT a la URI de upload — Content-Type simple, sin headers custom
+    var uploadRes = await fetch(uploadUri, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': mimeType
+      },
+      body: bytes.buffer
+    });
     if(!uploadRes.ok){
-      var errTxt = await uploadRes.text();
-      console.warn('Tapunto Drive upload failed:', uploadRes.status, errTxt);
+      var e2=await uploadRes.text();
+      console.warn('Tapunto Drive upload error:', uploadRes.status, e2);
       return null;
     }
     var result = await uploadRes.json();
-    if(!result.id){ console.warn('Tapunto Drive: no id', result); return null; }
-    console.log('Tapunto Drive: ✅', nombre, '→', result.id);
+    if(!result.id){ console.warn('Tapunto Drive: no id en respuesta', result); return null; }
+
+    console.log('Tapunto Drive: ✅ subido', nombre, '('+Math.round(bytes.length/1024)+'KB) → ID:', result.id);
     return {
       driveId:  result.id,
       driveUrl: result.webViewLink||null,
