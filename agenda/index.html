@@ -4309,52 +4309,64 @@ async function driveOffloadAdjunto(adjunto){
   if(!_driveAccessToken || !adjunto || !adjunto.data) return null;
   try{
     var folderId = await _driveGetOrCreateFolder();
+    var mimeType = adjunto.tipo || 'application/octet-stream';
+    var nombre   = adjunto.nombre || ('tapunto-'+Date.now());
 
-    // Convertir base64 a Uint8Array
+    // Paso 1: Crear metadata del archivo
+    var metadata = {
+      name: nombre,
+      mimeType: mimeType,
+      parents: folderId ? [folderId] : []
+    };
+    var metaRes = await fetch('https://www.googleapis.com/drive/v3/files?fields=id,webViewLink', {
+      method: 'POST',
+      headers: {
+        'Authorization': 'Bearer '+_driveAccessToken,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(metadata)
+    });
+    if(!metaRes.ok){
+      var e1=await metaRes.text();
+      console.warn('Tapunto Drive: error creando metadata', metaRes.status, e1);
+      return null;
+    }
+    var metaData = await metaRes.json();
+    if(!metaData.id){ console.warn('Tapunto Drive: no id en metadata', metaData); return null; }
+
+    // Paso 2: Subir contenido binario al archivo creado
     var b64 = adjunto.data.indexOf(',')>=0 ? adjunto.data.split(',')[1] : adjunto.data;
     var byteStr = atob(b64);
     var bytes = new Uint8Array(byteStr.length);
     for(var i=0;i<byteStr.length;i++) bytes[i]=byteStr.charCodeAt(i);
-    var mimeType = adjunto.tipo || 'application/octet-stream';
-    var fileBlob = new Blob([bytes], {type: mimeType});
-
-    // Metadata JSON
-    var metadata = {
-      name: adjunto.nombre || ('tapunto-'+Date.now()),
-      mimeType: mimeType,
-      parents: folderId ? [folderId] : []
-    };
-
-    // FormData multipart — el método correcto para Drive API
-    var form = new FormData();
-    form.append('metadata', new Blob([JSON.stringify(metadata)], {type:'application/json'}));
-    form.append('file', fileBlob);
 
     var uploadRes = await fetch(
-      'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=id,webViewLink,webContentLink',
+      'https://www.googleapis.com/upload/drive/v3/files/'+metaData.id+'?uploadType=media&fields=id,webViewLink',
       {
-        method: 'POST',
-        headers: {'Authorization': 'Bearer '+_driveAccessToken},
-        body: form
+        method: 'PATCH',
+        headers: {
+          'Authorization': 'Bearer '+_driveAccessToken,
+          'Content-Type': mimeType
+        },
+        body: bytes.buffer
       }
     );
-
     if(!uploadRes.ok){
-      var errText = await uploadRes.text();
-      console.warn('Tapunto Drive upload error:', uploadRes.status, errText);
+      var e2=await uploadRes.text();
+      console.warn('Tapunto Drive: error subiendo contenido', uploadRes.status, e2);
+      // Limpiar archivo vacío creado
+      fetch('https://www.googleapis.com/drive/v3/files/'+metaData.id,{
+        method:'DELETE', headers:{'Authorization':'Bearer '+_driveAccessToken}
+      }).catch(function(){});
       return null;
     }
 
     var uploadData = await uploadRes.json();
-    if(!uploadData.id){
-      console.warn('Tapunto Drive: no id in response', uploadData);
-      return null;
-    }
-
+    console.log('Tapunto Drive: ✅ archivo subido', nombre, '→', metaData.id);
     return {
-      driveId:  uploadData.id,
-      driveUrl: uploadData.webViewLink || uploadData.webContentLink || null,
-      nombre:   adjunto.nombre,
+      driveId:  metaData.id,
+      driveUrl: metaData.webViewLink || uploadData.webViewLink || null,
+      nombre:   nombre,
       tipo:     mimeType
     };
   }catch(e){
