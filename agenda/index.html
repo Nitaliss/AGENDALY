@@ -380,6 +380,7 @@ body{font-family:var(--font-main);font-size:calc(14px * var(--font-scale,1));bac
 #sec-registros .notif-banner-inner{margin-top:0!important;}
 #stats-row{padding-top:6px!important;}
 .section{display:none;}.section.active{display:block;}
+#sec-tracker.active,#sec-profes.active,#sec-registros.active,#sec-libreta.active{display:flex!important;flex-direction:column;}
 .sec-title{font-family:'Caveat',cursive;font-size:22px;color:var(--tm);
   margin-bottom:14px;padding-bottom:6px;border-bottom:1px solid var(--bd);}
 
@@ -2525,6 +2526,27 @@ body.nb-mode #nb-pill-orden { display:none !important; }
 .lib-color.active{border-color:#333;transform:scale(1.25);}
 .lib-size{background:none;border:1px solid transparent;border-radius:6px;cursor:pointer;color:var(--td);padding:2px;}
 .lib-size.active{border-color:var(--gd);background:var(--bl);}
+
+/* ── Mi Tracker ── */
+.tracker-diamond{width:14px;height:14px;transform:rotate(45deg);border-radius:3px;flex-shrink:0;display:block;transition:transform .12s;pointer-events:none;min-width:14px;min-height:14px;}
+.tracker-diamond-empty{background:rgba(0,0,0,.04)!important;border:2px solid var(--bd);}
+.tracker-diamond.filled{box-shadow:0 2px 6px rgba(0,0,0,.15);}
+.tracker-cell{width:26px;min-width:26px;height:26px;cursor:pointer;text-align:center;vertical-align:middle;border-radius:4px;transition:background .1s;}
+.tracker-cell:hover{background:rgba(0,0,0,.06);}
+.tracker-cell:hover .tracker-diamond{transform:rotate(45deg) scale(1.2);}
+.tracker-legend-item{display:flex;align-items:center;gap:10px;font-size:11px;font-weight:600;color:var(--td);font-family:var(--font-main);}
+.tracker-day-header{font-size:9px;color:var(--tl);font-family:var(--font-main);width:26px;min-width:26px;text-align:center;vertical-align:middle;padding:2px 0;}
+.tracker-month-label{font-size:11px;font-weight:700;color:var(--td);font-family:var(--font-main);min-width:36px;width:36px;padding-right:6px;white-space:nowrap;vertical-align:middle;}
+/* ── Mis Clases / Profes ── */
+.profe-card{background:var(--w);border-radius:16px;padding:14px;border:4px solid var(--bd);display:flex;flex-direction:column;gap:8px;position:relative;transition:box-shadow .2s;}
+.profe-card:hover{box-shadow:0 4px 16px rgba(0,0,0,.12);}
+.profe-card-header{display:flex;align-items:center;gap:8px;margin-bottom:2px;}
+.profe-card-asig{font-size:14px;font-weight:800;color:var(--td);font-family:var(--font-main);flex:1;}
+.profe-card-label{font-size:10px;font-weight:700;color:var(--tl);text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px;font-family:var(--font-main);}
+.profe-card-input{width:100%;border:1.5px solid var(--bd);border-radius:8px;padding:6px 8px;font-size:12px;font-family:var(--font-main);color:var(--td);background:var(--bp,#f8f9fa);resize:none;outline:none;transition:border .15s;box-sizing:border-box;}
+.profe-card-input:focus{border-color:var(--gm);}
+.profe-card-del{position:absolute;top:8px;right:8px;background:none;border:none;color:#ccc;font-size:16px;cursor:pointer;padding:2px;line-height:1;transition:color .15s;}
+.profe-card-del:hover{color:#e74c3c;}
 </style>
 <script>(function(){try{if(localStorage.getItem('tp_dark_mode')==='1')document.documentElement.style.background='#1a1a2e';}catch(e){};}());</script>
 </head>
@@ -3766,6 +3788,52 @@ body.nb-mode #nb-pill-orden { display:none !important; }
   </div>
 </div>
 
+<!-- ══ MIS CLASES / PROFES ══ -->
+<div id="sec-profes" class="section">
+  <div class="tap-header" style="background:var(--gd);">
+    <button class="tap-header-back" onclick="tapuntoNavBack()">←</button>
+    <span class="tap-header-title">👩‍🏫 Mis Clases</span>
+    <div style="display:flex;gap:4px;"></div>
+  </div>
+  <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 14px 0;flex-shrink:0;">
+    <button onclick="profsesPagAnterior()" id="profes-btn-prev"
+      style="background:none;border:none;font-size:26px;cursor:pointer;color:var(--td);font-weight:900;padding:4px 10px;">‹</button>
+    <span id="profes-nav-pag" style="font-size:12px;font-weight:700;color:var(--tl);font-family:var(--font-main);">1/1</span>
+    <button onclick="profesPagSiguiente()" id="profes-btn-next"
+      style="background:none;border:none;font-size:26px;cursor:pointer;color:var(--td);font-weight:900;padding:4px 10px;">›</button>
+  </div>
+  <div id="profes-grid" style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px;padding:10px 14px 80px;overflow-y:auto;flex:1;"></div>
+</div>
+
+<!-- ══ MI TRACKER ══ -->
+<div id="sec-tracker" class="section">
+  <div class="tap-header" style="background:var(--gd);">
+    <button class="tap-header-back" onclick="tapuntoNavBack()">←</button>
+    <span class="tap-header-title">🔷 Mi Tracker</span>
+    <div style="display:flex;gap:4px;">
+      <button onclick="trackerAnioAnterior()" class="tap-header-btn" title="Año anterior" style="font-size:14px;">‹ <span id="tracker-anio-label">2026</span></button>
+      <button onclick="trackerAnioSiguiente()" class="tap-header-btn" title="Año siguiente" style="font-size:14px;">›</button>
+    </div>
+  </div>
+
+  <!-- Leyenda -->
+  <div style="display:flex;align-items:center;gap:12px;padding:10px 14px 4px;flex-shrink:0;flex-wrap:wrap;">
+    <span style="font-size:11px;font-weight:700;color:var(--tl);font-family:var(--font-main);">LEYENDA</span>
+    <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+      <div class="tracker-legend-item"><div class="tracker-diamond" style="background:#27ae60;"></div><span>Genial</span></div>
+      <div class="tracker-legend-item"><div class="tracker-diamond" style="background:#f1c40f;"></div><span>Bien</span></div>
+      <div class="tracker-legend-item"><div class="tracker-diamond" style="background:#e67e22;"></div><span>Regular</span></div>
+      <div class="tracker-legend-item"><div class="tracker-diamond" style="background:#e74c3c;"></div><span>Mal día</span></div>
+      <div class="tracker-legend-item"><div class="tracker-diamond tracker-diamond-empty"></div><span>Sin marcar</span></div>
+    </div>
+  </div>
+
+  <!-- Grid -->
+  <div style="overflow:auto;flex:1;padding:4px 10px 80px;">
+    <div id="tracker-grid" style="display:inline-block;min-width:100%;"></div>
+  </div>
+</div>
+
 <div id="sec-config" class="section">
   <!-- HEADER CONFIGURACIÓN -->
   <div class="tap-header"><button class="tap-header-btn" onclick="irHome()" style="flex-direction:column;gap:1px;"><span style="font-size:22px;line-height:1;color:#fff;font-weight:900;">&#8592;</span><span style="font-size:9px;color:#fff;font-weight:700;font-family:var(--font-main);letter-spacing:.3px;">Inicio</span></button><span class="tap-header-title">Configuración</span>
@@ -4115,6 +4183,336 @@ var DRIVE_FILE_NAME = 'tapunto-datos.json';
 var _driveFileId = null;
 var _driveAccessToken = null;
 var _driveAutoSyncEnabled = false;
+
+
+// ════ MIS CLASES / PROFES ════
+var _profesPagActual=0, _PROFES_POR_PAG=6;
+
+
+// ════ MI TRACKER — Mood Tracker con Rombos ════
+var _trackerAnio = new Date().getFullYear();
+var TRACKER_COLORES = [null,'#27ae60','#f1c40f','#e67e22','#e74c3c'];
+var TRACKER_LABELS  = ['-','Genial','Bien','Regular','Mal día'];
+var TRACKER_MESES   = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+var TRACKER_DIAS_MES= [31,28,31,30,31,30,31,31,30,31,30,31];
+
+function getTrackerData(){
+  if(!state.tracker) state.tracker={};
+  return state.tracker;
+}
+
+function trackerKey(anio,mes,dia){
+  return anio+'-'+String(mes+1).padStart(2,'0')+'-'+String(dia).padStart(2,'0');
+}
+
+function trackerAnioAnterior(){
+  _trackerAnio--;
+  renderTracker();
+}
+function trackerAnioSiguiente(){
+  _trackerAnio++;
+  renderTracker();
+}
+
+function trackerTocarDia(anio,mes,dia){
+  var data=getTrackerData();
+  var key=trackerKey(anio,mes,dia);
+  var actual=data[key]||0;
+  var siguiente=(actual+1)%5; // 0=vacío,1=genial,2=bien,3=regular,4=mal
+  if(siguiente===0) delete data[key];
+  else data[key]=siguiente;
+  persist().catch(function(){});
+  // Actualizar solo el rombo tocado
+  var cell=document.getElementById('tracker-cell-'+key);
+  if(cell) trackerActualizarCell(cell,siguiente);
+  // Mostrar label
+  if(siguiente>0) showToast(TRACKER_LABELS[siguiente]);
+}
+
+function trackerActualizarCell(cell,valor){
+  var diamond=cell.querySelector('.tracker-diamond');
+  if(!diamond) return;
+  if(valor===0||!valor){
+    diamond.style.background='transparent';
+    diamond.classList.remove('filled');
+    diamond.classList.add('tracker-diamond-empty');
+  } else {
+    diamond.style.background=TRACKER_COLORES[valor];
+    diamond.style.border='none';
+    diamond.classList.add('filled');
+    diamond.classList.remove('tracker-diamond-empty');
+  }
+}
+
+function renderTracker(){
+  var grid=document.getElementById('tracker-grid');
+  var label=document.getElementById('tracker-anio-label');
+  if(!grid) return;
+  if(label) label.textContent=_trackerAnio;
+
+  var data=getTrackerData();
+  var anio=_trackerAnio;
+  var esBisiesto=(anio%4===0&&(anio%100!==0||anio%400===0));
+  var diasMes=TRACKER_DIAS_MES.slice();
+  if(esBisiesto) diasMes[1]=29;
+  var maxDias=31;
+
+  var table=document.createElement('table');
+  table.style.cssText='border-collapse:separate;border-spacing:3px;table-layout:fixed;';
+
+  // ── HEADER: columna vacía + días 1-31 ──
+  var thead=document.createElement('tr');
+  var th0=document.createElement('td');
+  th0.style.cssText='width:38px;min-width:38px;';
+  thead.appendChild(th0);
+  for(var d=1;d<=maxDias;d++){
+    var th=document.createElement('td');
+    th.className='tracker-day-header';
+    th.textContent=d;
+    thead.appendChild(th);
+  }
+  table.appendChild(thead);
+
+  // ── FILAS: una por mes ──
+  for(var m=0;m<12;m++){
+    var tr=document.createElement('tr');
+
+    // Label mes
+    var tdLabel=document.createElement('td');
+    tdLabel.className='tracker-month-label';
+    tdLabel.textContent=TRACKER_MESES[m];
+    tr.appendChild(tdLabel);
+
+    // Columnas: días 1-31
+    for(var d2=1;d2<=maxDias;d2++){
+      var td=document.createElement('td');
+      td.className='tracker-cell';
+
+      if(d2>diasMes[m]){
+        // Día no existe en este mes — celda vacía sutil
+        td.style.cssText='opacity:.15;cursor:default;';
+        var dot=document.createElement('div');
+        dot.style.cssText='width:6px;height:6px;border-radius:50%;background:var(--bd);margin:auto;';
+        td.appendChild(dot);
+      } else {
+        var key=trackerKey(anio,m,d2);
+        td.id='tracker-cell-'+key;
+        var valor=data[key]||0;
+
+        var diamond=document.createElement('div');
+        diamond.className='tracker-diamond'+(valor===0?' tracker-diamond-empty':' filled');
+        if(valor>0){
+          diamond.style.background=TRACKER_COLORES[valor];
+          diamond.style.border='none';
+        }
+
+        // Hoy: borde en la celda
+        var hoy=new Date();
+        if(hoy.getFullYear()===anio&&hoy.getMonth()===m&&hoy.getDate()===d2){
+          td.style.outline='2px solid var(--gm)';
+          td.style.outlineOffset='1px';
+          td.style.borderRadius='3px';
+        }
+
+        diamond.style.margin='auto';
+        td.appendChild(diamond);
+
+        // Click handler
+        (function(a,mes,dia){
+          td.addEventListener('click',function(){trackerTocarDia(a,mes,dia);});
+          td.title=TRACKER_MESES[mes]+' '+dia+(valor>0?' — '+TRACKER_LABELS[valor]:'');
+        })(anio,m,d2);
+      }
+      tr.appendChild(td);
+    }
+    table.appendChild(tr);
+  }
+
+  grid.innerHTML='';
+  grid.appendChild(table);
+}
+
+function getProfes(){ if(!state.profes)state.profes=[]; return state.profes; }
+
+function profesSincronizarHorario(){
+  var profes=getProfes(), asigSet={}, coloresMap={};
+  try{
+    var hs=getHS();
+    console.log('Tapunto profes: schedules=',hs.schedules.length,'activo=',hs.activo);
+    (hs.schedules||[]).forEach(function(sch){
+      if(!sch||!sch.grid) return;
+      console.log('Tapunto profes: grid keys=',Object.keys(sch.grid).length,'values=',Object.values(sch.grid).slice(0,3));
+      Object.values(sch.grid).forEach(function(asig){
+        if(asig&&typeof asig==='string'&&asig.trim()){
+          var a=asig.trim(); asigSet[a]=true;
+          if(sch.colores&&sch.colores[a]!==undefined&&coloresMap[a]===undefined)
+            coloresMap[a]=sch.colores[a];
+        }
+      });
+    });
+  }catch(e){ console.warn('Tapunto profes:',e); }
+  (state.temas||[]).forEach(function(t){ if(t&&t.trim()) asigSet[t.trim()]=true; });
+  console.log('Tapunto profes: asignaturas detectadas:', Object.keys(asigSet));
+  Object.keys(asigSet).forEach(function(asig){
+    if(!profes.find(function(p){ return p.asig===asig; })){
+      profes.push({
+        id:'profe_'+Date.now()+'_'+Math.random().toString(36).slice(2,6),
+        asig:asig, colorIdx:(coloresMap[asig]!==undefined)?coloresMap[asig]:(profes.length%8),
+        nombre:'', contacto:'', tutoria:'', notas:''
+      });
+    }
+  });
+}
+
+function renderProfes(){
+  profesSincronizarHorario();
+  var profes=getProfes();
+  var grid=document.getElementById('profes-grid');
+  var navPag=document.getElementById('profes-nav-pag');
+  var btnPrev=document.getElementById('profes-btn-prev');
+  var btnNext=document.getElementById('profes-btn-next');
+  if(!grid) return;
+  _PROFES_POR_PAG = window.innerWidth>=600 ? 6 : 4;
+  var totalPags=Math.max(1,Math.ceil(profes.length/_PROFES_POR_PAG));
+  if(_profesPagActual>=totalPags) _profesPagActual=totalPags-1;
+  if(_profesPagActual<0) _profesPagActual=0;
+  if(navPag) navPag.textContent=(_profesPagActual+1)+'/'+totalPags;
+  if(btnPrev) btnPrev.style.opacity=_profesPagActual===0?'.3':'1';
+  if(btnNext) btnNext.style.opacity=_profesPagActual>=totalPags-1?'.3':'1';
+  var inicio=_profesPagActual*_PROFES_POR_PAG;
+  var pagina=profes.slice(inicio,inicio+_PROFES_POR_PAG);
+  grid.innerHTML='';
+  if(profes.length===0){
+    grid.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:40px 20px;color:var(--tl);font-family:var(--font-main);"><div style="font-size:40px;margin-bottom:12px;">👩‍🏫</div><div style="font-size:14px;font-weight:700;margin-bottom:6px;">Aún no tienes clases</div><div style="font-size:12px;">Configura tu horario en Rutinas o toca "＋ Nueva clase"</div></div>';
+    // Añadir botón de nueva clase vacío
+    var addBtn=document.createElement('button');
+    addBtn.onclick=profesNuevaTarjeta;
+    addBtn.style.cssText='grid-column:1/-1;border:2px dashed var(--bd);border-radius:16px;background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;padding:16px;color:var(--tl);font-family:var(--font-main);margin-top:8px;';
+    addBtn.innerHTML='<span style="font-size:20px;">＋</span><span style="font-size:13px;font-weight:700;">Nueva clase</span>';
+    grid.appendChild(addBtn);
+    return;
+  }
+  pagina.forEach(function(p){
+    var color=H_COLORS[p.colorIdx%H_COLORS.length]||{bg:'#e0e0e0',tx:'#1a1a1a'};
+    var card=document.createElement('div');
+    card.className='profe-card';
+    card.style.borderColor=color.bg;
+    card.style.borderWidth='4px';
+
+    var delBtn=document.createElement('button');
+    delBtn.className='profe-card-del'; delBtn.title='Eliminar'; delBtn.textContent='✕';
+    (function(pid){delBtn.onclick=function(){profesEliminar(pid);};})(p.id);
+    card.appendChild(delBtn);
+
+    var hdr=document.createElement('div'); hdr.className='profe-card-header';
+    var dot=document.createElement('div');
+    dot.style.cssText='width:14px;height:14px;border-radius:50%;flex-shrink:0;background:'+color.bg+';border:1.5px solid rgba(0,0,0,.1);';
+    var asigEl=document.createElement('div'); asigEl.className='profe-card-asig'; asigEl.textContent=p.asig;
+    hdr.appendChild(dot); hdr.appendChild(asigEl); card.appendChild(hdr);
+
+    function mkLabel(txt){var l=document.createElement('div');l.className='profe-card-label';l.textContent=txt;return l;}
+    function mkTA(ph,val,campo){
+      var ta=document.createElement('textarea');
+      ta.className='profe-card-input';ta.rows=2;ta.placeholder=ph;ta.value=val||'';
+      (function(c){ta.addEventListener('change',function(){profesGuardar(p.id,c,this.value);});})(campo);
+      return ta;
+    }
+    function mkInp(ph,val,campo){
+      var inp=document.createElement('input');
+      inp.type='text';inp.className='profe-card-input';inp.placeholder=ph;inp.value=val||'';
+      (function(c){inp.addEventListener('change',function(){profesGuardar(p.id,c,this.value);});})(campo);
+      return inp;
+    }
+    card.appendChild(mkLabel('👤 Nombre'));
+    card.appendChild(mkInp('Nombre del profesor/a...',p.nombre,'nombre'));
+    card.appendChild(mkLabel('🕐 Hora de tutoría'));
+    card.appendChild(mkInp('Ej: Martes 11:00 sala 3...',p.tutoria,'tutoria'));
+    card.appendChild(mkLabel('💬 Observaciones'));
+    card.appendChild(mkTA('Lo que quieras anotar...',p.notas,'notas'));
+    grid.appendChild(card);
+  });
+
+  if(pagina.length<_PROFES_POR_PAG&&_profesPagActual===totalPags-1){
+    var addBtn=document.createElement('button');
+    addBtn.onclick=profesNuevaTarjeta;
+    addBtn.style.cssText='border:2px dashed var(--bd);border-radius:16px;background:transparent;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;min-height:160px;color:var(--tl);font-family:var(--font-main);transition:all .15s;';
+    addBtn.innerHTML='<span style="font-size:32px;">＋</span><span style="font-size:12px;font-weight:700;">Nueva clase</span>';
+    addBtn.onmouseover=function(){this.style.background='rgba(0,0,0,.04)';};
+    addBtn.onmouseout=function(){this.style.background='transparent';};
+    grid.appendChild(addBtn);
+  }
+}
+
+function profesGuardar(id,campo,valor){
+  var p=getProfes().find(function(x){return x.id===id;});
+  if(!p) return;
+  p[campo]=valor;
+  persist().catch(function(){});
+}
+
+function profesNuevaTarjeta(){
+  // Mini modal inline para añadir clase
+  var existing=document.getElementById('profes-nueva-modal');
+  if(existing){existing.remove();return;}
+  var modal=document.createElement('div');
+  modal.id='profes-nueva-modal';
+  modal.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px;';
+  // Construir modal con DOM para evitar problemas de escape
+  var box=document.createElement('div');
+  box.style.cssText='background:var(--w);border-radius:20px;padding:24px;width:100%;max-width:320px;box-shadow:0 8px 32px rgba(0,0,0,.2);';
+
+  var title=document.createElement('div');
+  title.style.cssText='font-size:16px;font-weight:800;color:var(--td);font-family:var(--font-main);margin-bottom:16px;';
+  title.textContent='➕ Nueva clase';
+  box.appendChild(title);
+
+  var inp=document.createElement('input');
+  inp.id='profes-nueva-inp'; inp.type='text'; inp.placeholder='Nombre de la asignatura...';
+  inp.style.cssText='width:100%;border:1.5px solid var(--bd);border-radius:10px;padding:10px 12px;font-size:14px;font-family:var(--font-main);color:var(--td);background:var(--bp,#f8f9fa);outline:none;box-sizing:border-box;margin-bottom:14px;';
+  inp.addEventListener('keydown',function(e){if(e.key==='Enter')profesNuevaGuardar();});
+  box.appendChild(inp);
+
+  var btnRow=document.createElement('div'); btnRow.style.cssText='display:flex;gap:8px;';
+  var btnOk=document.createElement('button');
+  btnOk.style.cssText='flex:1;padding:10px;background:var(--gm);color:#fff;border:none;border-radius:10px;font-family:var(--font-main);font-size:13px;font-weight:700;cursor:pointer;';
+  btnOk.textContent='✅ Añadir'; btnOk.onclick=profesNuevaGuardar;
+  var btnCerrar=document.createElement('button');
+  btnCerrar.style.cssText='padding:10px 16px;background:var(--bl);border:1.5px solid var(--bd);border-radius:10px;font-family:var(--font-main);font-size:13px;cursor:pointer;';
+  btnCerrar.textContent='✕'; btnCerrar.onclick=profesNuevaCerrar;
+  btnRow.appendChild(btnOk); btnRow.appendChild(btnCerrar);
+  box.appendChild(btnRow);
+  modal.appendChild(box);
+
+  modal.addEventListener('click',function(e){if(e.target===modal)modal.remove();});
+  document.body.appendChild(modal);
+  var inp=document.getElementById('profes-nueva-inp');
+  if(inp){inp.focus();inp.addEventListener('keydown',function(e){if(e.key==='Enter')profesNuevaGuardar();});}
+}
+
+function profesNuevaCerrar(){var m=document.getElementById('profes-nueva-modal');if(m)m.remove();}
+function profesNuevaGuardar(){
+  var inp=document.getElementById('profes-nueva-inp');
+  var asig=inp?inp.value.trim():'';
+  if(!asig){if(inp){inp.style.borderColor='#e74c3c';inp.focus();}return;}
+  var profes=getProfes();
+  if(profes.find(function(p){return p.asig===asig;})){showToast('Ya tienes una tarjeta para '+asig);return;}
+  profes.push({id:'profe_'+Date.now()+'_'+Math.random().toString(36).slice(2,6),asig:asig,colorIdx:profes.length%8,nombre:'',contacto:'',tutoria:'',notas:''});
+  _profesPagActual=Math.ceil(profes.length/_PROFES_POR_PAG)-1;
+  persist().catch(function(){});
+  var modal=document.getElementById('profes-nueva-modal');if(modal)modal.remove();
+  renderProfes();
+  showToast('✅ Clase "'+asig+'" añadida');
+}
+
+function profesEliminar(id){
+  if(!confirm('¿Eliminar esta tarjeta?')) return;
+  state.profes=getProfes().filter(function(p){return p.id!==id;});
+  persist().catch(function(){});
+  renderProfes();
+}
+
+function profsesPagAnterior(){if(_profesPagActual<=0)return;_profesPagActual--;renderProfes();}
+function profesPagSiguiente(){var t=Math.ceil(getProfes().length/_PROFES_POR_PAG);if(_profesPagActual>=t-1)return;_profesPagActual++;renderProfes();}
 
 function initDriveState(){
   if(!currentUser) return;
@@ -7115,6 +7513,10 @@ var secciones=[
 {id:'s9',titulo:'🎨 Temas y personalización',texto:'En Ajustes → Personalización elige entre 16 temas de color + 4 temas de temporada (🎄 Navidad, 🎃 Halloween, ☀️ Verano, 🎒 Vuelta al cole), 5 fuentes y tamaño de texto. El modo oscuro ☀️ Claro · 🔄 Auto · 🌙 Oscuro se controla desde la pantalla de inicio. Toca el avatar (64px) para personalizarlo: color de fondo, emoji o usa tu inicial. Todo se guarda en el backup.'},
 {id:'s10',titulo:'💾 Copia de seguridad',texto:'En Ajustes → Copia de seguridad exporta TODOS tus datos: tareas, calificaciones, apuntes, libreta, horario, rutinas, recordatorios y configuración. Para restaurar, importa ese archivo JSON. ⚠ Exporta con frecuencia: si el navegador borra el localStorage (caché, modo incógnito) perderás los datos sin un backup previo.'},
 {id:'s11',titulo:'☁️ Sincronización Drive',texto:'En Ajustes → Sincronización conecta tu Google Drive. Tapunto sube un archivo tapunto-datos.json con todas tus secciones y la libreta. Al descargar, se restauran todos los datos y la configuración. No se usa Google Sheets — todo va directamente a tu Drive. Requiere Premium. Activa la verificación en dos pasos en tu cuenta Google para mayor seguridad.'},
+{id:'s11b',titulo:'🔷 Mi Tracker',texto:'Mi Tracker es tu diario visual de estado de ánimo del año. Accede desde el menú de tu avatar (esquina superior derecha).\n\nCómo usarlo:\n1️⃣ Toca tu avatar → Mi Tracker.\n2️⃣ Verás una tabla con los 12 meses y los días 1-31.\n3️⃣ Toca cualquier rombo para marcar cómo te has sentido ese día.\n4️⃣ Cada toque cambia el color del rombo — sigue tocando para cambiar de estado.\n\nSignificado de los colores:\n◆ Verde → Genial\n◆ Amarillo → Bien\n◆ Naranja → Regular\n◆ Rojo → Mal día\n◇ Vacío → Sin marcar\n\nEl día de hoy aparece resaltado con un borde de color. Puedes navegar entre años con las flechas ‹ ›.\n\nTus datos del tracker se incluyen en el backup y en la sincronización con Google Drive.'},
+
+{id:'s11c',titulo:'👩‍🏫 Mis Clases',texto:'Mis Clases es tu directorio personal de asignaturas y profesores. Accede desde el botón 👩‍🏫 en la pantalla de Inicio.\n\nLas tarjetas se crean automáticamente desde tu horario de Rutinas — con el mismo nombre y color de cada asignatura.\n\nCada tarjeta tiene:\n👤 Nombre — el nombre del profesor/a\n🕐 Hora de tutoría — cuándo puedes ir a preguntar\n💬 Observaciones — lo que quieras anotar (campo libre)\n\nPara añadir una clase que no está en tu horario:\n1️⃣ Toca el botón ＋ Nueva clase al final de la lista.\n2️⃣ Escribe el nombre de la asignatura.\n3️⃣ Rellena los campos que quieras.\n\nPara eliminar una tarjeta: toca el botón ✕ en la esquina superior derecha de la tarjeta.\n\nNavega entre páginas con las flechas ‹ › si tienes más de 6 clases.'},
+
 {id:'s12',titulo:'⭐ Premium',texto:'Activa Premium con el código TAPUNTO-XXXX-XXXX en Ajustes o al tocar una función bloqueada ⭐. Incluye: dictado de voz, calendarios .ics, documentos ilimitados, sincronización con Google Drive, backup automático, temas premium y más. El precio está en tapunto.app.'},
 {id:'s13',titulo:'🔒 Privacidad y seguridad',texto:'Tapunto almacena todos tus datos exclusivamente en tu dispositivo (localStorage). No hay servidores propios ni acceso externo a tus datos. Tu PIN se guarda como hash SHA-256, nunca en texto claro. La sincronización con Google Drive es opcional y controlada por ti. Cumplimos RGPD, LOPDGDD, COPPA y DSA. Edad mínima: 14 años (o con consentimiento del tutor). Para derechos de privacidad: tapunto.soporte@gmail.com'}
 ];
@@ -7260,6 +7662,7 @@ menu.appendChild(emailDiv);
 var items=[
 {icon:'⏱',label:'Pomodoro',fn:function(){menu.remove();irSeccion('estudio');}},
 {icon:'🔄',label:'Rutinas',fn:function(){menu.remove();irSeccion('rutinas');}},
+{icon:'🔷',label:'Mi Tracker',fn:function(){menu.remove();irSeccion('tracker');}},
 {icon:'🎨',label:'Mi avatar',fn:function(){menu.remove();mostrarPersonalizarAvatar();}},
 {icon:'❓',label:'Ayuda',fn:function(){menu.remove();mostrarAyuda();}},
 {icon:'👤',label:'Mis datos',fn:function(){menu.remove();irSeccion('config');setTimeout(function(){var c=document.getElementById('cfg-block-firma');if(c){c.scrollIntoView({behavior:'smooth',block:'start'});var hdr=c.querySelector('.cfg-hdr');var body=c.querySelector('.cfg-body');if(hdr&&body&&body.style.display==='none')toggleCfg(hdr);}},450);}},
@@ -7423,7 +7826,8 @@ _updateBnavActive(tab);
 function switchTab(tab,btn){
 document.querySelectorAll('.section').forEach(function(s){s.classList.remove('active');s.style.display='none';});
 var _st=document.getElementById('sec-'+tab);
-if(_st){_st.classList.add('active');_st.style.display=(tab==='libreta')?'flex':'block';}
+if(_st){_st.classList.add('active');_st.style.display=(tab==='libreta'||tab==='registros'||tab==='tracker'||tab==='profes')?'flex':'block';
+if(tab==='registros'||tab==='libreta'||tab==='tracker'||tab==='profes')_st.style.flexDirection='column';}
 var _sb=document.getElementById('save-cancel-btns');
 if(_sb) _sb.style.display=(tab==='nuevo')?'flex':'none';
 if(tab==='nuevo'){setTimeout(function(){
@@ -7445,6 +7849,8 @@ if(tab==='recordatorios'){renderReminders();renderAlertasInteligentes();}
 if(tab==='calendario') renderCalendario();
 if(tab==='notas'){if(!state.notas) state.notas=[];renderNotas();setTimeout(function(){var i=document.getElementById('nota-input');if(i)i.focus();},100);if(isPremium&&state.sheetsUrl) syncFromSheets(false).catch(function(){});}
 if(tab==='rutinas'){if(!state.rutinas) state.rutinas=[];renderRutinasHoy();}
+if(tab==='tracker'){renderTracker();}
+if(tab==='profes'){if(!state.profes)state.profes=[];renderProfes();}
 if(tab==='albumes'){renderAlbumes();}
 if(tab==='calificaciones'){renderCalificaciones();}
 if(tab==='albumes'){try{albActualizarAlmacenamiento();}catch(e){}}
@@ -8519,6 +8925,8 @@ function exportBackupJSON(){
     usuario:currentUser||'tapunto',
     // Tareas y datos base
     records:state.records||[],
+    profes:state.profes||[],
+    tracker:state.tracker||{},
     contactos:state.contactos||[],
     temas:state.temas||[],
     acciones:state.acciones||[],
