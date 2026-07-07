@@ -4177,6 +4177,194 @@ var _driveFileId = null;
 var _driveAccessToken = null;
 var _driveAutoSyncEnabled = false;
 
+
+// ════════════════════════════════════════════════════
+// TAPUNTO DRIVE — Sync periódico + Offloading adjuntos
+// ════════════════════════════════════════════════════
+
+var _driveSyncTimer = null;
+var _driveOffloadEnabled = true; // offload adjuntos si Drive conectado
+var DRIVE_FOLDER_NAME = 'Tapunto Adjuntos';
+var _driveFolderId = null; // ID de la carpeta de adjuntos en Drive
+
+// ── Iniciar sync periódico cada 5 minutos ──
+function iniciarSyncPeriodico(){
+  if(_driveSyncTimer) clearInterval(_driveSyncTimer);
+  _driveSyncTimer = setInterval(function(){
+    if(_driveAutoSyncEnabled && _driveAccessToken && currentUser){
+      driveSyncSubir().catch(function(e){
+        console.warn('Tapunto: sync periódico falló',e);
+      });
+    }
+  }, 5 * 60 * 1000); // 5 minutos
+  console.log('Tapunto: sync periódico activado (cada 5 min)');
+}
+
+function detenerSyncPeriodico(){
+  if(_driveSyncTimer){ clearInterval(_driveSyncTimer); _driveSyncTimer=null; }
+}
+
+// ── Obtener o crear carpeta de adjuntos en Drive ──
+async function _driveGetOrCreateFolder(){
+  if(_driveFolderId) return _driveFolderId;
+  try{
+    // Buscar carpeta existente
+    var searchRes = await fetch(
+      "https://www.googleapis.com/drive/v3/files?q=name%3D%27"+encodeURIComponent(DRIVE_FOLDER_NAME)+"%27+and+mimeType%3D%27application%2Fvnd.google-apps.folder%27+and+trashed%3Dfalse&fields=files(id,name)",
+      {headers:{'Authorization':'Bearer '+_driveAccessToken}}
+    );
+    var searchData = await searchRes.json();
+    if(searchData.files && searchData.files.length>0){
+      _driveFolderId = searchData.files[0].id;
+      return _driveFolderId;
+    }
+    // Crear carpeta nueva
+    var createRes = await fetch('https://www.googleapis.com/drive/v3/files',{
+      method:'POST',
+      headers:{'Authorization':'Bearer '+_driveAccessToken,'Content-Type':'application/json'},
+      body: JSON.stringify({name:DRIVE_FOLDER_NAME, mimeType:'application/vnd.google-apps.folder'})
+    });
+    var folder = await createRes.json();
+    _driveFolderId = folder.id;
+    console.log('Tapunto: carpeta Drive creada',_driveFolderId);
+    return _driveFolderId;
+  }catch(e){
+    console.warn('Tapunto: error creando carpeta Drive',e);
+    return null;
+  }
+}
+
+// ── Subir un archivo adjunto a Drive (offloading) ──
+// Recibe: {data: base64string, nombre: 'foto.jpg', tipo: 'image/jpeg'}
+// Devuelve: {driveId, driveUrl, nombre, tipo} o null si falla
+async function driveOffloadAdjunto(adjunto){
+  if(!_driveAccessToken || !adjunto || !adjunto.data) return null;
+  try{
+    var folderId = await _driveGetOrCreateFolder();
+    // Convertir base64 a blob
+    var byteStr = atob(adjunto.data.split(',')[1] || adjunto.data);
+    var ab = new ArrayBuffer(byteStr.length);
+    var ia = new Uint8Array(ab);
+    for(var i=0;i<byteStr.length;i++) ia[i]=byteStr.charCodeAt(i);
+    var blob = new Blob([ab],{type:adjunto.tipo||'application/octet-stream'});
+
+    // Metadata
+    var metadata = {
+      name: adjunto.nombre || ('tapunto-adjunto-'+Date.now()),
+      mimeType: adjunto.tipo || 'application/octet-stream',
+      parents: folderId ? [folderId] : []
+    };
+
+    // Multipart upload
+    var boundary = '-------tapunto_boundary_'+Date.now();
+    var delimiter = '\r\n--'+boundary+'\r\n';
+    var closeDelimiter = '\r\n--'+boundary+'--';
+
+    var metaStr = delimiter
+      +'Content-Type: application/json\r\n\r\n'
+      +JSON.stringify(metadata)
+      +delimiter
+      +'Content-Type: '+(adjunto.tipo||'application/octet-stream')+'\r\n'
+      +'Content-Transfer-Encoding: base64\r\n\r\n'
+      +(adjunto.data.split(',')[1]||adjunto.data)
+      +closeDelimiter;
+
+    var uploadRes = await fetch(
+      'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=id,webViewLink,webContentLink',
+      {
+        method:'POST',
+        headers:{
+          'Authorization':'Bearer '+_driveAccessToken,
+          'Content-Type':'multipart/related; boundary="'+boundary+'"'
+        },
+        body: metaStr
+      }
+    );
+    var uploadData = await uploadRes.json();
+    if(!uploadData.id) return null;
+
+    return {
+      driveId: uploadData.id,
+      driveUrl: uploadData.webViewLink || uploadData.webContentLink,
+      nombre: adjunto.nombre,
+      tipo: adjunto.tipo
+    };
+  }catch(e){
+    console.warn('Tapunto: error subiendo adjunto a Drive',e);
+    return null;
+  }
+}
+
+// ── Offloading automático: procesar adjuntos pendientes ──
+// Busca en state.albums[] fotos con data:base64 y las sube a Drive
+// Reemplaza .data por .driveId + .driveUrl para liberar espacio local
+async function driveOffloadPendientes(){
+  if(!_driveAccessToken || !_driveOffloadEnabled) return;
+  var albums = getAlbums();
+  var subidos = 0;
+  var errores = 0;
+
+  for(var i=0; i<albums.length; i++){
+    var alb = albums[i];
+    var fotos = alb.fotos || [];
+    for(var j=0; j<fotos.length; j++){
+      var f = fotos[j];
+      // Solo procesar si tiene data base64 y NO tiene ya driveId
+      if(f.data && f.data.startsWith('data:') && !f.driveId){
+        var result = await driveOffloadAdjunto(f);
+        if(result){
+          // Guardar referencia Drive y eliminar base64 local
+          f.driveId  = result.driveId;
+          f.driveUrl = result.driveUrl;
+          f.nombre   = f.nombre || result.nombre;
+          f.tipo     = f.tipo || result.tipo;
+          delete f.data; // liberar espacio local
+          subidos++;
+        } else {
+          errores++;
+        }
+      }
+    }
+  }
+
+  if(subidos>0){
+    persist().catch(function(){});
+    console.log('Tapunto: '+subidos+' adjunto(s) subidos a Drive, espacio liberado');
+    showToast && showToast('✅ '+subidos+' archivo(s) subidos a Drive');
+  }
+  if(errores>0) console.warn('Tapunto: '+errores+' adjunto(s) no se pudieron subir');
+  return {subidos, errores};
+}
+
+// ── Descargar adjunto desde Drive para visualizarlo ──
+async function driveDescargarAdjunto(driveId){
+  if(!_driveAccessToken || !driveId) return null;
+  try{
+    var res = await fetch(
+      'https://www.googleapis.com/drive/v3/files/'+driveId+'?alt=media',
+      {headers:{'Authorization':'Bearer '+_driveAccessToken}}
+    );
+    if(!res.ok) return null;
+    var blob = await res.blob();
+    return URL.createObjectURL(blob);
+  }catch(e){
+    console.warn('Tapunto: error descargando adjunto',driveId,e);
+    return null;
+  }
+}
+
+// ── Eliminar adjunto de Drive ──
+async function driveEliminarAdjunto(driveId){
+  if(!_driveAccessToken || !driveId) return false;
+  try{
+    await fetch('https://www.googleapis.com/drive/v3/files/'+driveId,{
+      method:'DELETE',
+      headers:{'Authorization':'Bearer '+_driveAccessToken}
+    });
+    return true;
+  }catch(e){ return false; }
+}
+
 function initDriveState(){
   if(!currentUser) return;
   var stored = localStorage.getItem('tp_drive_token_'+currentUser);
@@ -4186,6 +4374,9 @@ function initDriveState(){
     _driveFileId = fileId || null;
     _driveAutoSyncEnabled = true;
     actualizarEstadoDrive('conectado');
+    iniciarSyncPeriodico();
+    // Offload adjuntos pendientes al conectar
+    setTimeout(function(){driveOffloadPendientes();},3000);
   } else {
     actualizarEstadoDrive('desconectado');
   }
@@ -4258,6 +4449,8 @@ function conectarGoogleDrive(){
           _driveAccessToken = token;
           _driveAutoSyncEnabled = true;
           localStorage.setItem('tp_drive_token_'+currentUser, token);
+          iniciarSyncPeriodico();
+          setTimeout(function(){driveOffloadPendientes();},5000);
           actualizarEstadoDrive('conectado');
           // Primera sincronización: subir datos actuales
           driveSyncSubir().then(function(){
@@ -4278,6 +4471,8 @@ function desconectarGoogleDrive(){
   _driveAccessToken = null;
   _driveFileId = null;
   _driveAutoSyncEnabled = false;
+  detenerSyncPeriodico();
+  _driveFolderId=null;
   localStorage.removeItem('tp_drive_token_'+currentUser);
   localStorage.removeItem('tp_drive_file_id_'+currentUser);
   actualizarEstadoDrive('desconectado');
@@ -4291,15 +4486,26 @@ async function driveSyncSubir(){
     // Incluir libreta (localStorage) en la sincronización
   var _libreta=null;
   try{var _ls=localStorage.getItem('tp_libreta');if(_ls)_libreta=JSON.parse(_ls);}catch(e){}
-  var dataObj=Object.assign({},state,{
-    _libreta:_libreta||[],
+  // Solo sincronizar campos necesarios (no todo state)
+  var dataObj={
+    version:'2.0',
+    fecha:new Date().toISOString(),
+    usuario:currentUser||'tapunto',
+    records:state.records||[],
+    temas:state.temas||[],
+    calificaciones:state.calificaciones||[],
+    recordatorios:state.recordatorios||[],
+    rutinas:state.rutinas||[],
+    notas:state.notas||[],
+    albums:state.albums||[],
+    horario:state.horario||null,
+    libreta:_libreta||[],
     config:{
       theme:state.theme||'sage',
       font:state.font||'Nunito',
-      fontScale:state.fontScale||1,
-      sheetsUrl:state.sheetsUrl||''
+      fontScale:state.fontScale||1
     }
-  });
+  };
   var data = JSON.stringify(dataObj);
     var blob = new Blob([data], {type:'application/json'});
     var metadata = {name: DRIVE_FILE_NAME, mimeType:'application/json'};
@@ -4963,8 +5169,7 @@ async function activateLicense(){
   // Verificar código
   var esValido=false;
   try{
-    if(raw==='TAPU-TEST-2026'){esValido=true;}
-    else{var h=await _hlk(raw);esValido=_vkh.includes(h);}
+    var h=await _hlk(raw);esValido=_vkh.includes(h);
   }catch(e){esValido=false;}
 
   if(esValido){
