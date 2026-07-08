@@ -2951,7 +2951,13 @@ body.nb-mode #nb-pill-orden { display:none !important; }
     <span style="font-size:11px;color:#856404;flex:1;">Almacenamiento casi lleno. Toca para gestionar espacio.</span>
     <span style="font-size:11px;color:#856404;font-weight:700;">Ver →</span>
   </div>
-  <div id="home-cita"  style="padding:8px 16px;min-height:44px;display:flex;flex-direction:column;justify-content:center;background:rgba(0,0,0,.08);border-bottom:1px solid rgba(255,255,255,.1);"></div>
+  <div id="home-cita" style="padding:10px 16px;min-height:52px;display:flex;align-items:center;background:#1a1a2e;border-bottom:1px solid rgba(255,255,255,.1);">
+  <span style="font-size:18px;flex-shrink:0;opacity:.7;">✨</span>
+  <div style="margin-left:10px;">
+    <div style="font-family:Caveat,cursive;font-size:15px;line-height:1.4;color:#fff;font-weight:600;">"El éxito es la suma de pequeños esfuerzos repetidos cada día."</div>
+    <div style="font-size:10px;color:rgba(255,255,255,.6);margin-top:1px;font-family:var(--font-main);">— R. Collier</div>
+  </div>
+</div>
   <!-- SECCIÓN HORARIO HOY — siempre visible sin tabs -->
   <div id="home-horario-hoy" style="background:var(--bp);border-bottom:1px solid var(--bd);padding:6px 10px 8px;">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px;">
@@ -2985,7 +2991,7 @@ body.nb-mode #nb-pill-orden { display:none !important; }
       </button>
       <button onclick="irSeccion('calificaciones')" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:8px 1px 7px;background:var(--w);border:1.5px solid var(--bd);border-radius:14px;cursor:pointer;font-family:var(--font-main);opacity:.85;">
         <span style="font-size:18px;line-height:1;">📋</span>
-        <div style="font-size:8px;font-weight:700;color:var(--td);">Notas</div>
+        <div style="font-size:8px;font-weight:700;color:var(--td);">Calificaciones</div>
         <div style="font-size:7px;color:var(--tl);" id="home-calif-resumen"></div>
       </button>
       <button onclick="irSeccion('profes')" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:8px 1px 7px;background:var(--w);border:1.5px solid var(--bd);border-radius:14px;cursor:pointer;font-family:var(--font-main);opacity:.85;">
@@ -3809,7 +3815,10 @@ body.nb-mode #nb-pill-orden { display:none !important; }
 <div id="sec-tracker" class="section">
   <div class="tap-header" style="background:var(--gd);">
     <button class="tap-header-back" onclick="tapuntoNavBack()">←</button>
-    <span class="tap-header-title">🔷 Mi Tracker</span>
+    <div style="display:flex;flex-direction:column;gap:1px;">
+      <span class="tap-header-title" style="font-size:15px;">🔷 Mi Tracker</span>
+      <span style="font-size:10px;color:rgba(255,255,255,.7);font-family:var(--font-main);">¿Cómo te ha ido el día?</span>
+    </div>
     <div style="display:flex;gap:4px;">
       <button onclick="trackerAnioAnterior()" class="tap-header-btn" title="Año anterior" style="font-size:14px;">‹ <span id="tracker-anio-label">2026</span></button>
       <button onclick="trackerAnioSiguiente()" class="tap-header-btn" title="Año siguiente" style="font-size:14px;">›</button>
@@ -4398,6 +4407,13 @@ function renderProfes(){
     card.className='profe-card';
     card.style.borderColor=color.bg;
     card.style.borderWidth='4px';
+    card.setAttribute('data-profe-id',p.id);
+    // Indicador guardado
+    var saveInd=document.createElement('div');
+    saveInd.className='profe-save-ind';
+    saveInd.textContent='✓ Guardado';
+    saveInd.style.cssText='position:absolute;bottom:8px;right:10px;font-size:10px;font-weight:700;color:var(--gm);opacity:0;transition:opacity .3s;font-family:var(--font-main);pointer-events:none;';
+    card.appendChild(saveInd);
 
     var delBtn=document.createElement('button');
     delBtn.className='profe-card-del'; delBtn.title='Eliminar'; delBtn.textContent='✕';
@@ -4448,6 +4464,12 @@ function profesGuardar(id,campo,valor){
   if(!p) return;
   p[campo]=valor;
   persist().catch(function(){});
+  // Indicador visual guardado
+  var card=document.querySelector('[data-profe-id="'+id+'"]');
+  if(card){
+    var ind=card.querySelector('.profe-save-ind');
+    if(ind){clearTimeout(ind._t);ind.style.opacity='1';ind._t=setTimeout(function(){ind.style.opacity='0';},1500);}
+  }
 }
 
 function profesNuevaTarjeta(){
@@ -7511,7 +7533,8 @@ var secciones=[
 {id:'s7',titulo:'📚 Mis Apuntes',texto:'Organiza fotos y documentos por asignatura en carpetas. La barra de almacenamiento muestra el % usado (límite 5 MB del navegador). Si superas el 85%, aparece el flujo de 3 pasos para liberar espacio: 1) descargar backup, 2) confirmar, 3) elegir qué borrar.'},
 {id:'s8',titulo:'⏱ Pomodoro',texto:'Temporizador de estudio con técnica Pomodoro: periodos de trabajo concentrado alternados con descansos. Configura los tiempos, elige entre 9 sonidos de alarma y activa el modo sin distracciones. Accesible desde el avatar del inicio o desde ☰ Más.'},
 {id:'s9',titulo:'🎨 Temas y personalización',texto:'En Ajustes → Personalización elige entre 16 temas de color + 4 temas de temporada (🎄 Navidad, 🎃 Halloween, ☀️ Verano, 🎒 Vuelta al cole), 5 fuentes y tamaño de texto. El modo oscuro ☀️ Claro · 🔄 Auto · 🌙 Oscuro se controla desde la pantalla de inicio. Toca el avatar (64px) para personalizarlo: color de fondo, emoji o usa tu inicial. Todo se guarda en el backup.'},
-{id:'s10',titulo:'💾 Copia de seguridad',texto:'En Ajustes → Copia de seguridad exporta TODOS tus datos: tareas, calificaciones, apuntes, libreta, horario, rutinas, recordatorios y configuración. Para restaurar, importa ese archivo JSON. ⚠ Exporta con frecuencia: si el navegador borra el localStorage (caché, modo incógnito) perderás los datos sin un backup previo.'},
+{id:'s10',titulo:'💾 Copia de seguridad local',texto:'Tapunto guarda tus datos automáticamente en tu dispositivo. Para hacer una copia manual o moverla a otro dispositivo:\n\n¿QUÉ INCLUYE LA COPIA?\n✅ Todas tus tareas y eventos\n✅ Tus asignaturas y calificaciones\n✅ Tu horario y rutinas\n✅ Tu lista To Do\n✅ Tus apuntes y adjuntos\n✅ Tus datos de Mis Clases\n✅ Tu Tracker de estado de ánimo\n✅ Tu configuración y tema\n❌ Las páginas de la libreta (guardadas aparte en el dispositivo)\n\nEXPORTAR (guardar copia):\n1️⃣ Toca tu avatar → Configuración → "Backup completo JSON".\n2️⃣ Se descarga tapunto-datos-FECHA.json en tu dispositivo.\n3️⃣ Guárdalo en un lugar seguro.\n\nIMPORTAR (restaurar copia):\n1️⃣ Toca tu avatar → Configuración → "Restaurar backup".\n2️⃣ Selecciona el archivo JSON.\n3️⃣ Confirma — tus datos se restauran al instante.\n\n⚠️ La importación reemplaza los datos actuales. Haz siempre una exportación antes de importar.'},
+
 {id:'s11',titulo:'☁️ Sincronización Drive',texto:'En Ajustes → Sincronización conecta tu Google Drive. Tapunto sube un archivo tapunto-datos.json con todas tus secciones y la libreta. Al descargar, se restauran todos los datos y la configuración. No se usa Google Sheets — todo va directamente a tu Drive. Requiere Premium. Activa la verificación en dos pasos en tu cuenta Google para mayor seguridad.'},
 {id:'s11b',titulo:'🔷 Mi Tracker',texto:'Mi Tracker es tu diario visual de estado de ánimo del año. Accede desde el menú de tu avatar (esquina superior derecha).\n\nCómo usarlo:\n1️⃣ Toca tu avatar → Mi Tracker.\n2️⃣ Verás una tabla con los 12 meses y los días 1-31.\n3️⃣ Toca cualquier rombo para marcar cómo te has sentido ese día.\n4️⃣ Cada toque cambia el color del rombo — sigue tocando para cambiar de estado.\n\nSignificado de los colores:\n◆ Verde → Genial\n◆ Amarillo → Bien\n◆ Naranja → Regular\n◆ Rojo → Mal día\n◇ Vacío → Sin marcar\n\nEl día de hoy aparece resaltado con un borde de color. Puedes navegar entre años con las flechas ‹ ›.\n\nTus datos del tracker se incluyen en el backup y en la sincronización con Google Drive.'},
 
@@ -13100,7 +13123,12 @@ function renderCitaDiaria(){
   var el=document.getElementById('home-cita');if(!el)return;
   var d=new Date();var c=CITAS_DIA[(d.getFullYear()*366+d.getMonth()*31+d.getDate())%CITAS_DIA.length];
   var p=c.split(' — ');
-  el.innerHTML='<span style="font-size:11px;line-height:1.5;color:rgba(255,255,255,.85);font-style:italic;">"'+p[0]+'"</span>'+(p[1]?'<span style="font-size:10px;color:rgba(255,255,255,.55);display:block;margin-top:2px;">— '+p[1]+'</span>':'');
+  el.style.cssText='padding:10px 16px;min-height:52px;display:flex;align-items:center;background:#1a1a2e;border-bottom:1px solid rgba(255,255,255,.1);';
+  el.innerHTML='<span style="font-size:18px;flex-shrink:0;opacity:.7;">✨</span>'
+    +'<div style="margin-left:10px;">'
+    +'<div style="font-family:Caveat,cursive;font-size:15px;line-height:1.4;color:#fff;font-weight:600;">\"'+p[0]+'\"</div>'
+    +(p[1]?'<div style="font-size:10px;color:rgba(255,255,255,.6);margin-top:1px;font-family:var(--font-main);">— '+p[1]+'</div>':'')
+    +'</div>';
 }
 
 // ── Avatar ──
@@ -16042,4 +16070,6 @@ if('serviceWorker' in navigator && location.hostname==='tapunto.app'){
 }
 </script>
 </body>
-</html>
+</html{id:'s11',titulo:'☁️ Sincronización con Google Drive',texto:'Con Tapunto puedes sincronizar tus datos con Google Drive para tenerlos siempre a salvo y acceder desde cualquier dispositivo (funcionalidad disponible para todos los usuarios).\n\n¿QUÉ SE SINCRONIZA?\n✅ Todas tus tareas y eventos\n✅ Tus asignaturas\n✅ Tus calificaciones\n✅ Tu horario y rutinas\n✅ Tu lista To Do\n✅ Tus apuntes y adjuntos (fotos y documentos)\n✅ Tus datos de Mis Clases (nombre profe, tutoría, observaciones)\n✅ Tu Tracker de estado de ánimo\n✅ Tu configuración y tema activo\n❌ Las páginas de la libreta de dibujo (solo en el dispositivo)\n\n¿CÓMO FUNCIONA?\n1️⃣ Toca tu avatar → Configuración → Conectar Google Drive.\n2️⃣ Inicia sesión con tu cuenta de Google.\n3️⃣ Acepta el permiso — Tapunto solo accede a su propio archivo.\n4️⃣ Tus datos se suben automáticamente cada 5 minutos.\n\nEl archivo se llama tapunto-datos-YYYY-MM-DD.json y se guarda en la carpeta "Tapunto" de tu Drive.\n\n☁️ ADJUNTOS A DRIVE: Toca "Subir fotos/docs a Drive" para subir tus adjuntos y liberar espacio en el dispositivo. Los archivos se guardan con el nombre asignatura_fecha_nombre en la carpeta Tapunto.\n\n🔒 Tapunto solo puede leer y escribir los archivos que él mismo crea (permiso drive.file). No accede a ningún otro archivo de tu Drive.'},
+
+>
