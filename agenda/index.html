@@ -2536,6 +2536,17 @@ body.nb-mode #nb-pill-orden { display:none !important; }
 .tracker-legend-item{display:flex;align-items:center;gap:10px;font-size:11px;font-weight:600;color:var(--td);font-family:var(--font-main);}
 .tracker-day-header{font-size:9px;color:var(--tl);font-family:var(--font-main);width:26px;min-width:26px;text-align:center;vertical-align:middle;padding:2px 0;}
 .tracker-month-label{font-size:11px;font-weight:700;color:var(--td);font-family:var(--font-main);min-width:36px;width:36px;padding-right:6px;white-space:nowrap;vertical-align:middle;}
+
+/* ── Libreta barra flotante ── */
+.lib-float-btn{width:36px;height:36px;border:none;background:transparent;border-radius:8px;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;transition:background .12s;color:#222;}
+.lib-float-btn:hover,.lib-float-btn.active{background:var(--gd);color:#fff;}
+.lib-float-btn.active .lib-float-color-dot{border:2px solid #fff;}
+.lib-color-float{width:24px;height:24px;border-radius:50%;cursor:pointer;transition:transform .1s;border:2px solid transparent;}
+.lib-color-float:hover{transform:scale(1.2);}
+.lib-size-float{display:flex;align-items:center;gap:10px;background:none;border:none;cursor:pointer;padding:4px 6px;border-radius:8px;transition:background .1s;width:100%;}
+.lib-size-float:hover,.lib-size-float.active{background:var(--bl);}
+.lib-size-float span{font-size:11px;color:var(--tl);font-family:var(--font-main);}
+
 /* ── Mis Clases / Profes ── */
 .profe-card{background:var(--w);border-radius:16px;padding:14px;border:4px solid var(--bd);display:flex;flex-direction:column;gap:8px;position:relative;transition:box-shadow .2s;}
 .profe-card:hover{box-shadow:0 4px 16px rgba(0,0,0,.12);}
@@ -3193,7 +3204,7 @@ var _IMG_LOGO_SM='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAgAAAAIACAIAAAB7
 
 
 <!-- ══ MI LIBRETA ══ -->
-<div id="sec-libreta" class="section">
+<div id="sec-libreta" class="section" style="overflow:visible;">
   <div class="tap-header">
     <button class="tap-header-btn" onclick="irHome()" style="flex-direction:column;gap:1px;"><span style="font-size:22px;line-height:1;color:#fff;font-weight:900;">&#8592;</span><span style="font-size:9px;color:#fff;font-weight:700;font-family:var(--font-main);">Inicio</span></button>
     <span class="tap-header-title">📓 Mi Libreta</span>
@@ -3204,7 +3215,7 @@ var _IMG_LOGO_SM='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAgAAAAIACAIAAAB7
       <button class="tap-header-btn" onclick="libMenuCompartir()" style="flex-direction:column;gap:1px;"><span style="font-size:16px;line-height:1;">📤</span><span style="font-size:7px;font-family:var(--font-main);">Compartir</span></button>
     </div>
   </div>
-  <div id="lib-toolbar" style="display:flex;align-items:center;gap:4px;padding:5px 8px;background:var(--w);border-bottom:1px solid var(--bd);overflow-x:auto;flex-shrink:0;">
+  <div id="lib-toolbar" style="display:none;">
     <!-- Herramientas de dibujo -->
     <button class="lib-tool active" id="lt-lapiz" onclick="libSetTool('lapiz',this)" title="Lápiz">✏️</button>
     <button class="lib-tool" id="lt-boli" onclick="libSetTool('boli',this)" title="Bolígrafo">🖊</button>
@@ -3262,8 +3273,87 @@ var _IMG_LOGO_SM='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAgAAAAIACAIAAAB7
     <span id="lib-pag-label" style="cursor:pointer;" onclick="libResetZoom()">Página 1</span>
     <button onclick="libPagSiguiente()" style="background:none;border:none;font-size:18px;cursor:pointer;color:var(--tl);padding:2px 8px;">›</button>
   </div>
-  <div id="lib-canvas-wrap" style="flex:1;overflow:hidden;position:relative;touch-action:none;min-height:0;">
-    <canvas id="lib-canvas" style="display:block;touch-action:none;cursor:crosshair;width:100%;height:100%;"></canvas>
+    <!-- SUBMENÚ COLOR — posición fija lateral -->
+  <div id="lib-float-color" style="position:fixed;left:64px;top:50%;transform:translateY(-50%);z-index:9999;display:none;background:var(--w);border-radius:14px;box-shadow:0 4px 20px rgba(0,0,0,.18);padding:10px;border:1px solid var(--bd);min-width:160px;">
+    <div style="font-size:10px;font-weight:700;color:var(--tl);margin-bottom:8px;font-family:var(--font-main);">COLOR</div>
+    <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-bottom:8px;">
+      <div class="lib-color-float" style="background:#1a1a1a;" onclick="libSetColor('#1a1a1a',this);libFloatCerrar()"></div>
+      <div class="lib-color-float" style="background:#ffffff;border:1.5px solid #ddd;" onclick="libSetColor('#ffffff',this);libFloatCerrar()"></div>
+      <div class="lib-color-float" style="background:#e74c3c;" onclick="libSetColor('#e74c3c',this);libFloatCerrar()"></div>
+      <div class="lib-color-float" style="background:#e67e22;" onclick="libSetColor('#e67e22',this);libFloatCerrar()"></div>
+      <div class="lib-color-float" style="background:#f1c40f;" onclick="libSetColor('#f1c40f',this);libFloatCerrar()"></div>
+      <div class="lib-color-float" style="background:#27ae60;" onclick="libSetColor('#27ae60',this);libFloatCerrar()"></div>
+      <div class="lib-color-float" style="background:#2980b9;" onclick="libSetColor('#2980b9',this);libFloatCerrar()"></div>
+      <div class="lib-color-float" style="background:#8e44ad;" onclick="libSetColor('#8e44ad',this);libFloatCerrar()"></div>
+      <div class="lib-color-float" style="background:#fd79a8;" onclick="libSetColor('#fd79a8',this);libFloatCerrar()"></div>
+      <div class="lib-color-float" style="background:#00b894;" onclick="libSetColor('#00b894',this);libFloatCerrar()"></div>
+    </div>
+    <div style="display:flex;align-items:center;gap:6px;">
+      <span style="font-size:10px;color:var(--tl);font-family:var(--font-main);">Personalizado:</span>
+      <input type="color" value="#1a1a1a" onchange="libSetColor(this.value,null);libFloatCerrar()" style="width:28px;height:28px;border:none;border-radius:50%;padding:0;cursor:pointer;">
+    </div>
+  </div>
+
+  <!-- SUBMENÚ GROSOR — posición fija lateral -->
+  <div id="lib-float-grosor" style="position:fixed;left:64px;top:50%;transform:translateY(-50%);z-index:9999;display:none;background:var(--w);border-radius:14px;box-shadow:0 4px 20px rgba(0,0,0,.18);padding:10px;border:1px solid var(--bd);">
+    <div style="font-size:10px;font-weight:700;color:var(--tl);margin-bottom:10px;font-family:var(--font-main);">GROSOR</div>
+    <div style="display:flex;flex-direction:column;gap:8px;align-items:flex-start;">
+      <button class="lib-size-float active" data-size="2" onclick="libSetSize(2,this);libFloatCerrar()">
+        <div style="width:60px;height:2px;background:#222;border-radius:2px;"></div><span>Fino</span>
+      </button>
+      <button class="lib-size-float" data-size="5" onclick="libSetSize(5,this);libFloatCerrar()">
+        <div style="width:60px;height:5px;background:#222;border-radius:3px;"></div><span>Medio</span>
+      </button>
+      <button class="lib-size-float" data-size="10" onclick="libSetSize(10,this);libFloatCerrar()">
+        <div style="width:60px;height:10px;background:#222;border-radius:4px;"></div><span>Grueso</span>
+      </button>
+      <button class="lib-size-float" data-size="20" onclick="libSetSize(20,this);libFloatCerrar()">
+        <div style="width:60px;height:18px;background:#222;border-radius:6px;"></div><span>Extra</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- SUBMENÚ FONDO — posición fija lateral -->
+  <div id="lib-float-fondo" style="position:fixed;left:64px;top:50%;transform:translateY(-50%);z-index:9999;display:none;background:var(--w);border-radius:14px;box-shadow:0 4px 20px rgba(0,0,0,.18);padding:10px;border:1px solid var(--bd);min-width:180px;">
+    <div style="font-size:10px;font-weight:700;color:var(--tl);margin-bottom:8px;font-family:var(--font-main);">FONDO</div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:8px;">
+      <button onclick="libSetFondo('blanco');libFloatCerrar()" style="padding:6px;border:1.5px solid var(--bd);border-radius:8px;background:#fff;font-size:11px;font-family:var(--font-main);cursor:pointer;">Blanco</button>
+      <button onclick="libSetFondo('cuadricula');libFloatCerrar()" style="padding:6px;border:1.5px solid var(--bd);border-radius:8px;background:#fff;font-size:11px;font-family:var(--font-main);cursor:pointer;">Cuadrícula</button>
+      <button onclick="libSetFondo('lineas');libFloatCerrar()" style="padding:6px;border:1.5px solid var(--bd);border-radius:8px;background:#fff;font-size:11px;font-family:var(--font-main);cursor:pointer;">Líneas</button>
+      <button onclick="libSetFondo('puntos');libFloatCerrar()" style="padding:6px;border:1.5px solid var(--bd);border-radius:8px;background:#fff;font-size:11px;font-family:var(--font-main);cursor:pointer;">Puntos</button>
+      <button onclick="libSetFondo('negro');libFloatCerrar()" style="padding:6px;border:1.5px solid #333;border-radius:8px;background:#1a1a1a;color:#fff;font-size:11px;font-family:var(--font-main);cursor:pointer;">Negro</button>
+      <button onclick="libMenuFondoPlantilla();libFloatCerrar()" style="padding:6px;border:1.5px solid var(--bd);border-radius:8px;background:var(--bl);font-size:11px;font-family:var(--font-main);cursor:pointer;">Más...</button>
+    </div>
+  </div>
+  <div id="lib-canvas-wrap" style="flex:1;overflow:visible;position:relative;touch-action:none;min-height:0;">
+    
+  <!-- BARRA FLOTANTE LATERAL — Herramientas principales -->
+  <div id="lib-float-bar" style="position:absolute;left:8px;top:8px;z-index:9999;display:flex;flex-direction:column;gap:4px;">
+    
+    <!-- Herramienta activa -->
+    <div style="background:var(--w);border-radius:12px;box-shadow:0 2px 12px rgba(0,0,0,.15);padding:4px;display:flex;flex-direction:column;gap:2px;border:1px solid var(--bd);">
+      <button class="lib-float-btn active" id="lf-lapiz" onclick="libSetTool('lapiz',this);libFloatCerrar()" title="Lápiz">✏️</button>
+      <button class="lib-float-btn" id="lf-boli" onclick="libSetTool('boli',this);libFloatCerrar()" title="Bolígrafo">🖊</button>
+      <button class="lib-float-btn" id="lf-text" onclick="libSetTool('texto',this);libFloatCerrar()" title="Texto" style="font-weight:900;font-size:14px;color:#222;">T</button>
+      <button class="lib-float-btn" id="lf-borrador" onclick="libSetTool('borrador',this);libFloatCerrar()" title="Borrador">🧹</button>
+      <div style="height:1px;background:var(--bd);margin:2px 0;"></div>
+      <button class="lib-float-btn" onclick="libUndo()" title="Deshacer" style="font-size:16px;">↩</button>
+    </div>
+
+    <!-- Botones de submenú -->
+    <div style="background:var(--w);border-radius:12px;box-shadow:0 2px 12px rgba(0,0,0,.15);padding:4px;display:flex;flex-direction:column;gap:2px;border:1px solid var(--bd);">
+      <button class="lib-float-btn" onclick="libFloatAbrir('color')" title="Color" id="lf-color-btn">
+        <div id="lf-color-preview" style="width:18px;height:18px;border-radius:50%;background:#1a1a1a;border:2px solid rgba(0,0,0,.2);margin:auto;"></div>
+      </button>
+      <button class="lib-float-btn" onclick="libFloatAbrir('grosor')" title="Grosor">━</button>
+      <button class="lib-float-btn" onclick="libFloatAbrir('fondo')" title="Fondo y plantillas" style="font-size:11px;">🎨</button>
+      <button class="lib-float-btn" onclick="libMenuEmojiSticker()" title="Emojis" style="font-size:13px;">😊</button>
+    </div>
+  </div>
+
+
+
+  <canvas id="lib-canvas" style="display:block;touch-action:none;cursor:crosshair;width:100%;height:100%;position:relative;z-index:1;"></canvas>
   </div>
   <div id="lib-text-input-wrap" style="display:none;position:fixed;z-index:600;">
     <textarea id="lib-text-input" rows="2" placeholder="Escribe aquí..." style="background:rgba(255,255,255,.95);border:2px dashed var(--ga);border-radius:6px;padding:4px 8px;font-size:16px;font-family:var(--font-main);color:#222;resize:none;min-width:140px;outline:none;"></textarea>
@@ -4081,15 +4171,7 @@ var _IMG_LOGO_SM='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAgAAAAIACAIAAAB7
             </div>
             <!-- Tamaño de texto -->
             <div style="margin-top:14px;">
-              <div style="font-size:11px;font-weight:700;color:var(--tm);text-transform:uppercase;letter-spacing:.4px;margin-bottom:8px;">🔤 Tamaño de texto</div>
-              <div style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--bl);border:1px solid var(--bd);border-radius:10px;">
-                <span style="font-size:11px;color:var(--tl);">A</span>
-                <input type="range" id="font-scale-slider" min="0.85" max="1.3" step="0.05" value="1"
-                  style="flex:1;accent-color:var(--ga);"
-                  oninput="applyFontScale(this.value)" onchange="saveFontScale(this.value)"/>
-                <span style="font-size:16px;color:var(--td);">A</span>
-                <span id="font-scale-label" style="font-size:11px;color:var(--tl);min-width:28px;text-align:right;">100%</span>
-              </div>
+              
             </div>
             <div id="custom-cover-block" style="margin-top:14px;display:none;">
               <div style="font-size:11px;font-weight:700;color:var(--tm);text-transform:uppercase;letter-spacing:.4px;margin-bottom:6px;">🖼 Imagen personalizada en portada</div>
@@ -4559,6 +4641,111 @@ function profesEliminar(id){
 function profsesPagAnterior(){if(_profesPagActual<=0)return;_profesPagActual--;renderProfes();}
 function profesPagSiguiente(){var t=Math.ceil(getProfes().length/_PROFES_POR_PAG);if(_profesPagActual>=t-1)return;_profesPagActual++;renderProfes();}
 
+
+
+// ════════════════════════════════════════════════════
+// TAPUNTO — IndexedDB para Fotos/Adjuntos
+// ════════════════════════════════════════════════════
+
+var _fotoIDB = null;
+var _FOTO_DB_NAME = 'tapunto_fotos_db';
+var _FOTO_STORE   = 'fotos';
+
+function fotoIDBOpen(){
+  return new Promise(function(resolve,reject){
+    if(_fotoIDB){ resolve(_fotoIDB); return; }
+    var req = indexedDB.open(_FOTO_DB_NAME, 1);
+    req.onupgradeneeded = function(e){
+      var db = e.target.result;
+      if(!db.objectStoreNames.contains(_FOTO_STORE)){
+        db.createObjectStore(_FOTO_STORE, {keyPath:'id'});
+      }
+    };
+    req.onsuccess = function(e){ _fotoIDB=e.target.result; resolve(_fotoIDB); };
+    req.onerror   = function(){ reject(req.error); };
+  });
+}
+
+// Guardar foto en IDB — devuelve el id para guardar en state
+async function fotoIDBGuardar(id, data, nombre, tipo){
+  try{
+    var db = await fotoIDBOpen();
+    var tx = db.transaction(_FOTO_STORE,'readwrite');
+    tx.objectStore(_FOTO_STORE).put({id:id, data:data, nombre:nombre, tipo:tipo});
+    return new Promise(function(res,rej){
+      tx.oncomplete=function(){res(id);};
+      tx.onerror=function(){rej(tx.error);};
+    });
+  }catch(e){
+    console.warn('Tapunto fotoIDB: error guardando',e);
+    return null;
+  }
+}
+
+// Leer foto desde IDB
+async function fotoIDBLeer(id){
+  try{
+    var db = await fotoIDBOpen();
+    var tx = db.transaction(_FOTO_STORE,'readonly');
+    return new Promise(function(res,rej){
+      var req = tx.objectStore(_FOTO_STORE).get(id);
+      req.onsuccess = function(){ res(req.result||null); };
+      req.onerror   = function(){ rej(req.error); };
+    });
+  }catch(e){ return null; }
+}
+
+// Eliminar foto de IDB
+async function fotoIDBEliminar(id){
+  try{
+    var db = await fotoIDBOpen();
+    var tx = db.transaction(_FOTO_STORE,'readwrite');
+    tx.objectStore(_FOTO_STORE).delete(id);
+    return new Promise(function(res){ tx.oncomplete=function(){res(true);}; });
+  }catch(e){ return false; }
+}
+
+// Tamaño total de fotos en IDB
+async function fotoIDBTamano(){
+  try{
+    var db = await fotoIDBOpen();
+    var tx = db.transaction(_FOTO_STORE,'readonly');
+    return new Promise(function(res,rej){
+      var req = tx.objectStore(_FOTO_STORE).getAll();
+      req.onsuccess = function(){
+        var total = req.result.reduce(function(t,f){ return t+(f.data?f.data.length:0); },0);
+        res(total);
+      };
+      req.onerror = function(){ res(0); };
+    });
+  }catch(e){ return 0; }
+}
+
+// Migrar fotos existentes en state.albums a IDB
+async function fotoIDBMigrarDesdeState(){
+  var albums = state.albums||[];
+  var migradas = 0;
+  for(var i=0; i<albums.length; i++){
+    var fotos = albums[i].fotos||[];
+    for(var j=0; j<fotos.length; j++){
+      var f = fotos[j];
+      // Si tiene data base64 y NO tiene idbKey ni driveId
+      if(f.data && f.data.startsWith('data:') && !f.idbKey && !f.driveId){
+        var ok = await fotoIDBGuardar(f.id, f.data, f.nombre, f.tipo);
+        if(ok){
+          f.idbKey = f.id; // marcar como en IDB
+          delete f.data;   // liberar del state
+          migradas++;
+        }
+      }
+    }
+  }
+  if(migradas>0){
+    persist().catch(function(){});
+    console.log('Tapunto: '+migradas+' fotos migradas a IndexedDB');
+  }
+  return migradas;
+}
 
 // ════ LIBRETA — Backup PNG a Drive + Aviso 7 días ════
 
@@ -6283,12 +6470,16 @@ try{
     }
     // Añadir adjuntos con la estructura correcta
     docs.forEach(function(doc){
-      alb.fotos.push({
-        id:'f'+Date.now()+Math.random(),
-        data:doc.data,
-        nombre:doc.nombre,
-        tipo:doc.tipo
-      });
+      (function(){
+        var _fid='f'+Date.now()+Math.random().toString(36).slice(2,6);
+        var _fobj={id:_fid,nombre:doc.nombre,tipo:doc.tipo,idbKey:_fid};
+        alb.fotos.push(_fobj);
+        // Guardar data en IDB, no en state
+        fotoIDBGuardar(_fid,doc.data,doc.nombre,doc.tipo).catch(function(){
+          // Fallback: guardar en state si IDB falla
+          _fobj.data=doc.data; delete _fobj.idbKey;
+        });
+      })();
     });
     window._nuevoDocs=[];
     persist().catch(function(){});
@@ -7645,11 +7836,12 @@ var body=document.createElement('div');
 body.style.cssText='overflow-y:auto;padding:16px 20px 32px;flex:1;';
 var secciones=[
 {id:'s0',titulo:'🏠 Inicio',texto:'La pantalla de inicio muestra el horario del día, tus próximas tareas y una cita motivacional diaria. En la esquina superior derecha: 🔍 Buscador global, 🔔 Notificaciones y los botones ☀️🔄🌙 de modo oscuro. El badge 🔥 aparece si llevas 2 o más días seguidos usando Tapunto. La barra inferior tiene: 🏠 Inicio · 📋 Mi Agenda · ✅ To Do · 📚 Apuntes · ← Atrás (vuelve siempre a la sección anterior). El avatar (esquina superior izquierda) permite personalizar color, emoji e imagen.'},
-{id:'s1',titulo:'📒 Mi Agenda',texto:'Organizada por asignaturas con separadores laterales. El color de cada separador se hereda del horario automáticamente. Toca el círculo de color junto a cada separador para cambiarlo (20 colores + selector libre + botón ↺ para recuperar el color del horario). El botón ＋ en la parte superior del sidebar crea un nuevo separador libre. Botón 🎨 Fondo en el header cambia el fondo de la portada (12 fondos). Las tareas pueden repetirse: cada semana, 15 días o mes — crea 4 repeticiones automáticamente.'},
-{id:'s-nav',titulo:'🧭 Cómo navegar',texto:'Tapunto tiene 4 botones en la barra inferior:\n\n🏠 Inicio — Horario, accesos rápidos y próximas tareas.\n🗒️ Mi Agenda — Tus tareas, apuntes y calificaciones.\n✅ To Do — Lista de tareas rápidas.\n🔄 Rutinas — Tu horario semanal.\n⬅ Flecha — Volver atrás.\n\nDesde Inicio tienes acceso rápido a:\n📅 Calendario · 📋 Calificaciones · 👩‍🏫 Mis Clases · 📓 Libreta · 🍅 Pomodoro\n\nDesde tu avatar (arriba a la derecha):\n🔷 Mi Tracker · 🎨 Mi avatar · ❓ Ayuda · 👤 Mis datos · ⚙️ Configuración · 🚪 Cerrar sesión.'},
+{id:'s1',titulo:'📒 Mi Agenda',texto:'Tu agenda organizada por asignatura y tipo de tarea.\n\nUSAR EL BUSCADOR:\nToca el icono 🔍 en el header de Mi Agenda para buscar entre todas tus tareas. Filtra por contacto, asunto o cualquier texto.\n\nVISTAS:\n📋 Lista — todas las tareas ordenadas por fecha\n📅 Calendario — vista mensual\n\nFILTROS:\nToca cualquier asignatura o tipo para filtrar. Toca de nuevo para quitar el filtro.\n\nCREAR TAREA:\nToca el botón + (verde) o toca una celda del horario.'},
+
 {id:'s2',titulo:'📅 Mi Calendario',texto:'Vista mensual y semanal con todos los eventos y tareas con fecha. Toca un día para ver sus tareas. Puedes importar calendarios externos en formato .ics (Google Calendar, Outlook, Moodle): ve a Ajustes → Importar calendario .ics, selecciona el archivo y elige qué eventos importar.'},
 {id:'s3',titulo:'📋 Mis Calificaciones',texto:'Registra tus notas por asignatura en una cuadrícula. Añade tipo (Examen, Trabajo, Prácticas, Proyecto, Oral), nota del 0 al 10 y observaciones. La casilla de nota aparece vacía hasta que introduces un valor. El botón ✕ elimina el registro. Se incluye en el backup y en la sincronización con Drive.'},
-{id:'s4',titulo:'📓 Mi Libreta',texto:'Canvas táctil para dibujar y escribir a mano. Herramientas: ✏️ Lápiz · 🖊 Bolígrafo · T Texto (B/I/U, tamaños) · 😊✨ Stickers (160 en 8 categorías) · ◻ Figuras geométricas (7 tipos) · 🧹 Borrador (S/M/L) · ↩ Deshacer. La herramienta ⬚ Selección permite mover, duplicar o borrar elementos; los stickers tienen handles de esquina para redimensionar. El fondo y la plantilla escalan con el zoom al hacer pinch con dos dedos. El botón 🔊 activa sonido de escritura (lápiz, bolígrafo, borrador); tócalo para silenciar 🔇. Navega entre páginas con ‹ ›.'},
+{id:'s4',titulo:'📓 Mi Libreta',texto:'La libreta es tu espacio de dibujo libre con herramientas profesionales.\n\nHERRAMIENTAS (barra flotante izquierda):\n✏️ Lápiz — trazo suave\n🖊 Bolígrafo — trazo firme\nT Texto — escribe en cualquier lugar\n🧹 Borrador — borra trazos\n↩ Deshacer — deshace el último trazo\n\nSUBMENÚS (toca los iconos flotantes):\n🎨 Color — 10 colores + personalizado\n━ Grosor — fino, medio, grueso, extra\n🎨 Fondo — blanco, cuadrícula, líneas, puntos, negro\n😊 Emojis y stickers\n\nNAVEGACIÓN:\n‹ › — cambiar de página\n+ Nueva página (botón en el header)\n\nALMACENAMIENTO:\nLa libreta usa IndexedDB — sin límite de espacio, separado del almacenamiento principal de la app.\nHaz backup desde Avatar → Configuración → Google Drive → "Guardar libreta en Drive".'},
+
 {id:'s5',titulo:'📝 Nueva Tarea',texto:'Toca ➕ en la barra inferior. Rellena asignatura, título, tipo y fecha de entrega. Activa la recurrencia si quieres que se repita: cada semana / 15 días / mes (crea 4 repeticiones). Al guardar, la app propone un recordatorio automático. Puedes adjuntar fotos (Premium).'},
 {id:'s6',titulo:'🔔 Recordatorios y notificaciones',texto:'Al crear una tarea con fecha, la app propone un recordatorio. Ve a Ajustes → Notificaciones para activarlas: toca 🔔 Activar y acepta el permiso del navegador. Con las notificaciones activas recibirás avisos aunque la app esté en segundo plano. El icono 🔔/🔕 del inicio y los botones de Ajustes están sincronizados.'},
 {id:'s7',titulo:'📚 Mis Apuntes',texto:'Organiza fotos y documentos por asignatura en carpetas. La barra de almacenamiento muestra el % usado (límite 5 MB del navegador). Si superas el 85%, aparece el flujo de 3 pasos para liberar espacio: 1) descargar backup, 2) confirmar, 3) elegir qué borrar.'},
@@ -9678,6 +9870,11 @@ sortListas();
 checkTrial();
 checkLicenseExpiry();
 updatePortadaNombre();
+// Migrar fotos a IndexedDB al arrancar
+setTimeout(function(){
+  fotoIDBMigrarDesdeState().catch(function(e){console.warn('Tapunto: migración fotos IDB',e);});
+},2000); // 2s después para no bloquear el arranque
+
 // Migrar libreta de localStorage a IndexedDB al arrancar
 (function(){
   try{
@@ -13442,6 +13639,11 @@ function calcularAlmacenamiento(){
     var _libPags=_lib.paginas||[];
     if(_libPags.length>0) libBytes=JSON.stringify(_libPags).length*2;
   }catch(e){}
+  // Mostrar tamaño IDB fotos async
+  fotoIDBTamano().then(function(fotoBytes){
+    var el=document.getElementById('idb-fotos-size');
+    if(el) el.textContent='📷 Fotos locales (IDB): ~'+Math.round(fotoBytes/1024)+'KB';
+  }).catch(function(){});
   // Debug: log all localStorage keys and sizes
   var _keyBreakdown=[];
   try{
@@ -15520,6 +15722,45 @@ function libConfirmarTexto(){
 function libCancelarTexto(){document.getElementById('lib-text-input-wrap').style.display='none';}
 function libInsertarEmoji(){var cv=document.getElementById('lib-canvas');var ems=['😊','😂','❤️','🔥','⭐','✅','❌','📌','📝','🎯','💡','🚀','📚','✏️','🎉','💯','🤔','👍'];var panel=document.createElement('div');panel.style.cssText='position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:var(--w);border:1px solid var(--bd);border-radius:12px;padding:10px;display:flex;flex-wrap:wrap;gap:6px;z-index:600;max-width:280px;box-shadow:0 4px 20px rgba(0,0,0,.2);';ems.forEach(function(em){var btn=document.createElement('button');btn.textContent=em;btn.style.cssText='font-size:24px;background:none;border:none;cursor:pointer;padding:2px;';btn.addEventListener('click',function(){panel.remove();var pag=_lib.paginas[_lib.pagActual];if(!pag)return;if(!pag.textos)pag.textos=[];pag.textos.push({texto:em,x:(cv.width/2-_lib.panX)/_lib.zoom,y:(cv.height/2-_lib.panY)/_lib.zoom,color:'#222',size:32});libRedraw();libGuardar();});panel.appendChild(btn);});var cl=document.createElement('button');cl.textContent='✕';cl.style.cssText='width:100%;margin-top:4px;padding:4px;background:var(--bd);border:none;border-radius:6px;font-size:11px;cursor:pointer;';cl.addEventListener('click',function(){panel.remove();});panel.appendChild(cl);document.body.appendChild(panel);}
 function libUndo(){var u=_lib.historial.pop();if(!u)return;var pag=_lib.paginas[u.pagIdx];if(!pag)return;if(u.tipo==='trazo'&&pag.trazos.length)pag.trazos.pop();if(u.tipo==='texto'&&pag.textos&&pag.textos.length)pag.textos.pop();if(u.tipo==='borrador'){pag.trazos=u.trazos;pag.textos=u.textos;}libRedraw();libGuardar();}
+
+// ── Libreta barra flotante — abrir/cerrar submenús ──
+function libFloatAbrir(tipo){
+  var paneles=['lib-float-color','lib-float-grosor','lib-float-fondo'];
+  var target=document.getElementById('lib-float-'+tipo);
+  var isOpen=target&&target.style.display!=='none';
+  // Cerrar todos primero
+  paneles.forEach(function(p){
+    var el=document.getElementById(p);
+    if(el) el.style.display='none';
+  });
+  if(!isOpen&&target){
+    // Posicionar junto a la barra flotante
+    var bar=document.getElementById('lib-float-bar');
+    if(bar){
+      var rect=bar.getBoundingClientRect();
+      target.style.left=(rect.right+6)+'px';
+      target.style.top=rect.top+'px';
+      target.style.transform='none';
+    }
+    target.style.display='block';
+  }
+}
+function libFloatCerrar(){
+  ['lib-float-color','lib-float-grosor','lib-float-fondo'].forEach(function(p){
+    var el=document.getElementById(p);
+    if(el) el.style.display='none';
+  });
+}
+// Sincronizar color preview en la barra flotante
+function libFloatSyncColor(color){
+  var prev=document.getElementById('lf-color-preview');
+  if(prev) prev.style.background=color;
+}
+// Cerrar submenús al tocar el canvas
+document.addEventListener('click',function(e){
+  if(e.target && e.target.id==='lib-canvas') libFloatCerrar();
+});
+
 function libSetTool(t,btn){
   // Tamaños de goma
   if(t==='borrador'){_lib.radioGoma=6;}
@@ -15536,7 +15777,8 @@ function libSetTool(t,btn){
   var ts=document.getElementById('lib-text-styles');
   if(ts)ts.style.display=t==='texto'?'flex':'none';
 }
-function libSetColor(c,el){_lib.color=c;document.querySelectorAll('.lib-color').forEach(function(b){b.classList.remove('active');});if(el)el.classList.add('active');}
+function libSetColor(c,el){
+  libFloatSyncColor&&libFloatSyncColor(c);_lib.color=c;document.querySelectorAll('.lib-color').forEach(function(b){b.classList.remove('active');});if(el)el.classList.add('active');}
 function libSetSize(s,btn){_lib.grosor=s;document.querySelectorAll('.lib-size').forEach(function(b){b.classList.remove('active');});if(btn)btn.classList.add('active');}
 function libCambiarFondo(){var p=document.getElementById('lib-fondo-panel');if(p)p.style.display='flex';}
 function libSetFondo(tipo,color){var pag=_lib.paginas[_lib.pagActual];if(!pag)return;pag.fondo=tipo;pag.bgColor=(tipo==='custom'&&color)?color:null;libRedraw();libGuardar();if(tipo!=='custom'){var p=document.getElementById('lib-fondo-panel');if(p)p.style.display='none';}}
