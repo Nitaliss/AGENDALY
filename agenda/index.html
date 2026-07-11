@@ -2948,7 +2948,7 @@ body.nb-mode #nb-pill-orden { display:none !important; }
     </div>
 
     <!-- TABS -->
-    
+    <div id="notif-banner" style="display:none;background:#fff8e1;border:1px solid #f0c040;padding:10px 16px;font-size:13px;align-items:center;gap:10px;flex-wrap:wrap;">🔔 <span>Activa las notificaciones para recibir avisos de tus recordatorios</span> <button onclick="pedirPermisoNotif()" style="padding:4px 12px;background:var(--gm);color:#fff;border:none;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;">Activar</button> <button onclick="cerrarNotifBanner()" style="padding:4px 10px;background:#eee;color:#666;border:none;border-radius:6px;font-size:12px;cursor:pointer;">Ahora no</button></div>
 <div class="hdr-top" style="display:none!important;">
   <button class="btn-home" style="display:none!important;" onclick="irHome()" title="Página principal">⬅ INICIO</button>
   <div class="hdr-actions">
@@ -3069,7 +3069,47 @@ body.nb-mode #nb-pill-orden { display:none !important; }
         <span style="font-size:18px;line-height:1;">📓</span>
         <div style="font-size:8px;font-weight:700;color:var(--td);">Libreta</div>
       </button>
+      <button onclick="irSeccion('estudio')" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:8px 1px 7px;background:var(--w);border:1.5px solid var(--bd);border-radius:14px;cursor:pointer;font-family:var(--font-main);opacity:.85;">
+        <span style="font-size:18px;line-height:1;">🍅</span>
+        <div style="font-size:8px;font-weight:700;color:var(--td);">Pomodoro</div>
+      </button>
+    </div>
+    
+    <!-- Pomodoro hoy (compacto) -->
+    <div id="home-pom-strip" style="display:none;background:var(--w);border:1px solid var(--bd);border-radius:8px;padding:6px 10px;margin-bottom:8px;cursor:pointer;" onclick="irSeccion('estudio')">
+      <div style="font-size:10px;font-weight:700;color:var(--tm);font-family:var(--font-main);">🕐 Pomodoro hoy</div>
+      <div id="home-pom-today" style="font-size:12px;font-weight:700;color:var(--td);font-family:var(--font-main);line-height:1.4;margin-top:2px;"></div>
+    </div>
+    <!-- Panel de alertas -->
+    <div id="home-alertas-panel" style="border-radius:8px;border:1px solid var(--bd);background:var(--w);margin-bottom:8px;"></div>
+    <!-- Tareas próximas con urgencia -->
+    <div id="home-proximas-tareas"></div>
+    <!-- Campos ocultos para compatibilidad -->
+    <div id="home-tab-resumen-panel" style="display:none;"></div>
+    <div id="home-tab-horario-panel" style="display:none;"></div>
+    <div id="home-streak" style="display:none;"></div>
+    <div id="home-motiv-card" style="display:none !important;"></div>
+    <div id="home-exam-progress" style="display:none !important;"></div>
+  </div>
 
+</div><!-- /sec-home -->
+
+<!-- Modal tarea horario -->
+<div id="h-task-modal">
+  <div class="h-task-sheet">
+    <h3 id="h-task-titulo">Matemáticas</h3>
+
+    <div class="h-task-meta" id="h-task-meta" style="margin-bottom:10px;">Lunes · 9:00</div>
+    <div style="margin-bottom:10px;padding:8px 10px;background:var(--bp);border-radius:8px;border:1px solid var(--bd);">
+      <label style="font-size:10px;font-weight:700;color:var(--tm);font-family:var(--font-main);letter-spacing:.5px;text-transform:uppercase;display:block;margin-bottom:5px;">&#128197; Fecha examen/entrega</label>
+      <input type="date" id="h-task-fecha-evento" style="width:100%;padding:7px 10px;border:1.5px solid var(--gm);border-radius:8px;font-size:14px;font-family:var(--font-main);background:var(--w);color:var(--td);box-sizing:border-box;" />
+    </div>
+    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;">
+      <button class="h-tipo-chip sel" onclick="hSelTipo(this,'Examen')">&#128221; Examen</button>
+      <button class="h-tipo-chip" onclick="hSelTipo(this,'Deberes')">&#128218; Deberes</button>
+      <button class="h-tipo-chip" onclick="hSelTipo(this,'Trabajo')">&#128203; Trabajo</button>
+      <button class="h-tipo-chip" onclick="hSelTipo(this,'Proyecto')">&#128300; Proyecto</button>
+      <button class="h-tipo-chip" onclick="hSelTipo(this,'Otro')">&#128172; Otro</button>
     </div>
     <!-- Foto + Docs adjuntos -->
     <div style="margin-bottom:8px;">
@@ -4411,17 +4451,6 @@ function profesSincronizarHorario(){
 function renderProfes(){
   profesSincronizarHorario();
   var profes=getProfes();
-  if(profes.length===0){
-    var _es=document.createElement('div');
-    _es.innerHTML='<div style="text-align:center;padding:40px 16px;">'
-      +'<div style="font-size:44px;">👩‍🏫</div>'
-      +'<div style="font-size:15px;font-weight:700;color:var(--td);font-family:var(--font-main);">Aún no hay clases</div>'
-      +'<div style="font-size:13px;color:var(--tl);font-family:var(--font-main);">Añade tu horario en Rutinas y las asignaturas aparecerán aquí automáticamente.</div>'
-      +'</div>';
-    document.getElementById('profes-grid')&&(document.getElementById('profes-grid').innerHTML='');
-    document.getElementById('profes-grid')&&document.getElementById('profes-grid').appendChild(_es);
-    return;
-  }
   var grid=document.getElementById('profes-grid');
   var navPag=document.getElementById('profes-nav-pag');
   var btnPrev=document.getElementById('profes-btn-prev');
@@ -7510,14 +7539,6 @@ if(!list) return;
 var todasNotas=state.notas||[];
 var mostrarArchivadas=list.getAttribute('data-show-arch')==='1';
 var notas=todasNotas.filter(function(n){return !n.archivado;}); // Archivadas ocultas en To Do
-  if(notas.length===0){
-    lista.innerHTML='<div style="display:flex;flex-direction:column;align-items:center;padding:40px 16px;text-align:center;gap:10px;">'
-      +'<div style="font-size:44px;">✅</div>'
-      +'<div style="font-size:15px;font-weight:700;color:var(--td);font-family:var(--font-main);">¡Lista limpia!</div>'
-      +'<div style="font-size:13px;color:var(--tl);font-family:var(--font-main);max-width:240px;line-height:1.5);">Tus tareas rápidas aparecerán aquí. Escribe arriba para añadir una.</div>'
-      +'</div>';
-    return;
-  }
 var toggleArch=document.getElementById('notas-arch-toggle');
 if(!toggleArch){
 toggleArch=document.createElement('button');
@@ -7823,6 +7844,11 @@ function actualizarBtnNotif(activas){
   var btnCfg=document.getElementById('btn-notif-cfg');
   if(btnCfg) btnCfg.textContent=activas?'🔔':'🔕';
 }
+function initNotificaciones(){
+  var activas=localStorage.getItem('tp_notif')!=='0';
+  actualizarBtnNotif(activas);
+}
+/* ══ FIN NOTIFICACIONES ══ */
 
 function irHome(){
 var secs=['home','nuevo','registros','recordatorios','calendario','notas','config','albumes','estudio','calificaciones','rutinas','libreta'];
@@ -7846,15 +7872,21 @@ document.getElementById('hdr-section-title').textContent='TAPUNTO';
 var sb=document.getElementById('save-cancel-btns');if(sb)sb.style.display='none';
 renderHomeBadges();
 renderAlertas();
-// Renderizar horario — doble rAF garantiza layout calculado
-requestAnimationFrame(function(){
-  requestAnimationFrame(function(){
+// Esperar a que el wrap tenga ancho real antes de renderizar
+(function _waitAndRender(intento){
+  var wrap=document.getElementById('home-horario-wrap');
+  var home=document.getElementById('sec-home');
+  if(!wrap||!home) return;
+  if(wrap.offsetWidth>0){
     try{renderHorarioHome();}catch(e){}
     try{renderResumen&&renderResumen();}catch(e){}
     try{renderProximasTareas&&renderProximasTareas();}catch(e){}
     try{actualizarBadgeAvatar&&actualizarBadgeAvatar();}catch(e){}
-  });
-});
+  } else if(intento<30){
+    // Reintentar cada 100ms hasta 3 segundos
+    setTimeout(function(){_waitAndRender(intento+1);},100);
+  }
+})(0);
 }
 function renderHomeBadges(){
 var h=new Date().getHours();
@@ -9131,8 +9163,31 @@ function importBackupJSON(e){
   reader.readAsText(file);
   e.target.value='';
 }
-
-
+function exportBackupJSON(){
+var b={version:'1.0',fecha:new Date().toISOString(),records:state.records,contactos:state.contactos,temas:state.temas,acciones:state.acciones,comunicados:state.comunicados};
+var a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(b,null,2)],{type:'application/json'}));
+a.download='Tapunto_backup_'+new Date().toISOString().slice(0,10)+'.json';a.click();
+}
+function importBackupJSON(e){
+var file=e.target.files[0];if(!file)return;
+var reader=new FileReader();
+reader.onload=function(ev){
+try{
+var b=JSON.parse(ev.target.result);
+if(!b.records||!Array.isArray(b.records)){alert('Archivo inválido.');return;}
+var ids=new Set(state.records.map(r=>r.id));var n=0;
+b.records.forEach(function(r){if(r.id&&!ids.has(r.id)){state.records.push(r);n++;}});
+if(b.contactos)b.contactos.forEach(function(c){if(c&&!state.contactos.includes(c))state.contactos.push(c);});
+if(b.temas)b.temas.forEach(function(t){if(t&&!state.temas.includes(t))state.temas.push(t);});
+if(b.horario&&b.horario.schedules){state.horario=b.horario;}
+if(b.rutinas&&b.rutinas.length){state.rutinas=b.rutinas;}
+if(b.notas&&b.notas.length){state.notas=b.notas;}
+if(b.planData){state.planData=b.planData;}
+persist().catch(function(){});renderStats();renderRecords();
+alert('Restaurado: '+n+' registros nuevos'+(b.horario?' + horario':'')+'.');
+}catch(err){alert('Error: '+err.message);}
+};reader.readAsText(file);e.target.value='';
+}
 function exportCSV(){
 const rows=getFiltered();if(!rows.length){alert('No hay registros.');return;}
 const hdr=['ID','Fecha','Contacto','Tema','Acción','Comunicado','Estado','Notas','Recordatorio','Creado','Imagen'];
@@ -9613,10 +9668,10 @@ checkLicenseExpiry();
 updatePortadaNombre();
 // Cargar datos de ejemplo si es la primera vez
 setTimeout(function(){try{ejemploCargar();}catch(e){}},300);
-// Badge
-setTimeout(function(){try{actualizarBadgeAvatar();}catch(e){}},900);
-// irHome se llama desde cerrarSplash después de que el splash desaparece
-// así los datos de ejemplo ya están cargados cuando se renderiza el horario
+irHome();
+// Badge tras login
+setTimeout(function(){try{actualizarBadgeAvatar();}catch(e){}},600);
+
 mostrarSplash();
 setTimeout(cerrarSplash, 800);
 setTimeout(checkBackupSemanal, 5000);
@@ -9783,7 +9838,7 @@ var url='https://calendar.google.com/calendar/render?action=TEMPLATE'
 window.open(url,'_blank');
 }
 let _emailRecId=null,srEmail=null,grabandoEmail=false;
-
+function abrirMail(id){abrirEmailModal(id);}
 function abrirEmailModal(id){
 const r=state.records.find(rec=>rec.id===id);if(!r)return;
 _emailRecId=id;
@@ -10156,13 +10211,6 @@ for(var i=0;i<resto;i++) body+='<div class="cal-day empty"></div>';
 document.getElementById('cal-body').innerHTML=body;
 var panel=document.getElementById('cal-day-panel');
 if(panel) panel.style.display='none';
-var calEmpty=document.getElementById('cal-empty-msg');
-var mesRecords=(state.records||[]).filter(function(r){
-  if(!r.fecha) return false;
-  var d=new Date(r.fecha);
-  return d.getMonth()===calMonth&&d.getFullYear()===calYear;
-});
-if(calEmpty) calEmpty.style.display=mesRecords.length===0?'block':'none';
 }
 function abrirRegistroDesdeCalendario(id){
 var r=state.records.find(function(rec){return rec.id===id;});
@@ -10616,7 +10664,10 @@ if(state.acciones) state.acciones.sort(function(a,b){return a.localeCompare(b,'e
 if(state.comunicados) state.comunicados.sort(function(a,b){return a.localeCompare(b,'es',{sensitivity:'base'});});
 }
 var modoRegistro='voz';
-
+function onConfidencialChange(){
+var chk=document.getElementById('inp-confidencial');
+if(aviso) aviso.style.display=(chk&&chk.checked)?'block':'none';
+}
 function calVerDiaFecha(dStr){
 var parts=dStr.split('-');
 var year=parseInt(parts[0]),month=parseInt(parts[1])-1,day=parseInt(parts[2]);
@@ -10723,6 +10774,12 @@ function dictarCampo(campoId,btn){
   }
 }
 
+function restore(){
+  if(finalizado) return;
+  finalizado=true;
+  btn.innerHTML=orig;
+  btn.style.background='var(--gm)';
+}
 
 function cancelEdit(){
 editingId=null;
@@ -10993,8 +11050,8 @@ splash.classList.add('fade-out');
 setTimeout(function(){
 splash.style.display='none';
 splash.classList.remove('fade-out');
-// Splash desaparecido — ir a home y renderizar con datos ya cargados
-try{irHome();}catch(e){}
+// En este punto el splash ya no existe y sec-home es completamente visible
+renderHorarioHome();
 renderAlertas();
 try{renderSemanaStrip&&renderSemanaStrip();}catch(_){}
 renderResumen&&renderResumen();
@@ -11112,7 +11169,6 @@ function renderHorarioHome(){
   var wrap0=document.getElementById('home-horario-wrap');
   if(!wrap0) return;
   var h=getHS(),sch=getSch();
-
   var nEl=document.getElementById('home-horario-nombre');
   if(nEl){
     if(_hEdit){
@@ -11494,7 +11550,10 @@ function pomShowSuggestion(isBreakEnd){var t=document.createElement('div');t.sty
 
 /* ── renderAlertas ── */
 function renderAlertas(){clearTimeout(window._raDeb);window._raDeb=setTimeout(function(){_renderAlertasActual();},80);}
-
+function _renderAlertasActual(){
+  clearTimeout(window._raDeb);
+  window._raDeb=setTimeout(function(){_renderAlertasActual();},80);
+}
 function _renderAlertasActual(){
   var panel=document.getElementById('home-alertas-panel');
   if(!panel) return;
@@ -14266,20 +14325,6 @@ function renderCalificaciones(){
     if(r.archivado) return false;
     // Sin fecha de evento no aplica
     if(!r.fechaEvento||!r.fechaEvento.trim()) return false;
-  if(recs.length===0){
-    var _ec=document.createElement('div');
-    _ec.style.cssText='display:flex;flex-direction:column;align-items:center;padding:40px 16px;text-align:center;gap:12px;';
-    _ec.innerHTML='<div style="font-size:44px;">📋</div>'
-      +'<div style="font-size:15px;font-weight:700;color:var(--td);font-family:var(--font-main);">Sin calificaciones aún</div>'
-      +'<div style="font-size:13px;color:var(--tl);font-family:var(--font-main);max-width:280px;line-height:1.5;">Crea una tarea de tipo Examen, Trabajo o Práctica y añade la nota cuando la tengas.</div>';
-    var _bc=document.createElement('button');
-    _bc.textContent='＋ Nueva tarea';
-    _bc.style.cssText='padding:10px 20px;background:var(--gd);color:#fff;border:none;border-radius:12px;font-family:var(--font-main);font-size:13px;font-weight:700;cursor:pointer;';
-    _bc.onclick=function(){irSeccion('nuevo');};
-    _ec.appendChild(_bc);
-    lista.innerHTML='';lista.appendChild(_ec);
-    return;
-  }
     // Solo tipos evaluables
     var tipo=(r.accion||'').toLowerCase();
     var esTipo=tipo.includes('examen')||tipo.includes('trabajo')||tipo.includes('práctica')||tipo.includes('practica')||tipo.includes('oral')||tipo.includes('proyecto');
@@ -15985,6 +16030,92 @@ function albActualizarAlmacenamiento(){
   }
 }
 
+function albLiberarEspacio(){
+  var panel=document.createElement('div');
+  panel.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:800;display:flex;align-items:flex-end;';
+  var sheet=document.createElement('div');
+  sheet.style.cssText='background:var(--w);width:100%;border-radius:18px 18px 0 0;padding:20px 16px 36px;font-family:var(--font-main);max-height:90vh;overflow-y:auto;';
+  panel.appendChild(sheet);document.body.appendChild(panel);
+  panel.addEventListener('click',function(e){if(e.target===panel)panel.remove();});
+  var paso=0,backupHecho=false;
+
+  function mkBtn(txt,bg,col,fn){
+    var b=document.createElement('button');
+    b.style.cssText='display:block;width:100%;padding:12px;background:'+bg+';color:'+col+';border:none;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;margin-bottom:8px;font-family:var(--font-main);';
+    b.innerHTML=txt;b.addEventListener('click',fn);return b;
+  }
+  function box(html,bg,border){
+    var d=document.createElement('div');
+    d.style.cssText='background:'+bg+';border:1px solid '+border+';border-radius:10px;padding:10px 12px;font-size:11px;line-height:1.6;margin-bottom:14px;';
+    d.innerHTML=html;return d;
+  }
+
+  function render(){
+    sheet.innerHTML='';
+    var h=document.createElement('div');h.style.cssText='font-size:15px;font-weight:800;color:var(--td);margin-bottom:8px;';
+    var s=document.createElement('div');s.style.cssText='font-size:12px;color:var(--tl);margin-bottom:14px;line-height:1.6;';
+
+    if(paso===0){
+      h.textContent='🗑 Liberar espacio — 3 pasos';
+      s.innerHTML='Las fotos y docs guardados ocupan espacio (máx. 5 MB en el navegador).<br><br>'
+        +'<strong>Proceso:</strong><br>'
+        +'① Descargar copia de seguridad<br>'
+        +'② Confirmar que se ha guardado<br>'
+        +'③ Eliminar para liberar espacio<br><br>'
+        +'<span style="color:#c0392b;font-weight:700;">⚠️ Si eliminas sin descargar primero, perderás tus datos para siempre.</span>';
+      sheet.appendChild(h);sheet.appendChild(s);
+      sheet.appendChild(box('📌 El archivo descargado (.json) guárdalo en Google Drive, iCloud o en tu ordenador.','#FFF3CD','#FFD966'));
+      sheet.appendChild(mkBtn('Entendido — empezar ➜','var(--gd)','#fff',function(){paso=1;render();}));
+      sheet.appendChild(mkBtn('Cancelar','var(--bd)','var(--tl)',function(){panel.remove();}));
+
+    }else if(paso===1){
+      h.textContent='① Descarga tu copia de seguridad';
+      s.innerHTML='Se descargará <strong>Tapunto_backup.json</strong> con todos tus datos.<br><br>'
+        +'👉 <strong>Guárdalo</strong> antes de continuar al paso 2.';
+      sheet.appendChild(h);sheet.appendChild(s);
+      sheet.appendChild(box('💡 Cuando pulses el botón, el archivo se descargará automáticamente. Comprueba la carpeta Descargas.','#e8f4e8','#a8d8a8'));
+      sheet.appendChild(mkBtn('⬇️ Descargar copia de seguridad ahora','var(--gd)','#fff',function(){
+        try{exportBackupJSON();}catch(e){}
+        backupHecho=true;
+        setTimeout(function(){paso=2;render();},1000);
+      }));
+      sheet.appendChild(mkBtn('← Volver','var(--bd)','var(--tl)',function(){paso=0;render();}));
+
+    }else if(paso===2){
+      h.textContent='② ¿Tienes el archivo guardado?';
+      s.innerHTML='Comprueba que <strong>Tapunto_backup.json</strong> está en tu carpeta de Descargas o en el lugar donde lo guardaste.<br><br>'
+        +'<span style="color:#c0392b;font-weight:700;">🔴 NO continúes si no ves el archivo. Sin backup, los datos se perderán para siempre.</span>';
+      sheet.appendChild(h);sheet.appendChild(s);
+      sheet.appendChild(box('✅ ¿Lo ves en Descargas? → Pulsa "Sí, tengo el backup"<br>❌ ¿No lo ves? → Vuelve y descárgalo de nuevo','#e8f4e8','#a8d8a8'));
+      sheet.appendChild(mkBtn('✅ Sí, tengo el archivo guardado','#27ae60','#fff',function(){
+        if(!backupHecho){alert('⚠️ No hemos detectado la descarga.\nVuelve al paso anterior y descarga primero.');paso=1;render();return;}
+        paso=3;render();
+      }));
+      sheet.appendChild(mkBtn('← Volver — descargar primero','var(--bd)','var(--tl)',function(){paso=1;render();}));
+
+    }else if(paso===3){
+      h.textContent='③ Eliminar para liberar espacio';
+      s.innerHTML='Elige qué quieres eliminar. <strong>El backup que descargaste contiene todo</strong> — podrás importarlo en Ajustes cuando necesites recuperar los datos.';
+      sheet.appendChild(h);sheet.appendChild(s);
+      sheet.appendChild(box('Recuerda: eliminar aquí <strong>NO</strong> borra el backup que descargaste. Solo borra los datos de la app.','#FFF3CD','#FFD966'));
+      sheet.appendChild(mkBtn('🖼 Eliminar solo fotos y documentos adjuntos<br><small style="font-weight:400;font-size:10px;">El texto de los álbumes se conserva</small>','#e67e22','#fff',function(){
+        if(!confirm('¿Eliminar todas las fotos y documentos de Mis Apuntes?\nEl texto se conserva.\nEsta acción no se puede deshacer.'))return;
+        var albs=getAlbums();albs.forEach(function(a){a.fotos=[];a.docs=[];});
+        state.albums=albs;persist().catch(function(){});
+        panel.remove();renderAlbumes();albActualizarAlmacenamiento();
+        alert('✅ Fotos y documentos eliminados. Espacio liberado.');
+      }));
+      sheet.appendChild(mkBtn('🗑 Eliminar TODOS los apuntes<br><small style="font-weight:400;font-size:10px;">Borra todos los álbumes y su contenido</small>','#e74c3c','#fff',function(){
+        if(!confirm('⚠️ ¿Eliminar TODOS los álbumes y apuntes?\nEsta acción no se puede deshacer.'))return;
+        state.albums=[];persist().catch(function(){});
+        panel.remove();renderAlbumes();albActualizarAlmacenamiento();
+        alert('✅ Todos los apuntes eliminados. Espacio liberado.');
+      }));
+      sheet.appendChild(mkBtn('← Volver','var(--bd)','var(--tl)',function(){paso=2;render();}));
+    }
+  }
+  render();
+}
 
 function albLiberar(){
   var panel = document.createElement('div');
@@ -16730,7 +16861,10 @@ if('serviceWorker' in navigator && location.hostname==='tapunto.app'){
       <p class="mpp-title">🚀 Mis primeros pasos</p>
       <p class="mpp-sub">Getting started · Guía de inicio</p>
       <button class="mpp-close" onclick="cerrarPrimerosPasos()">✕</button>
-      
+      <div id="mpp-ejemplo-btn" style="display:none;margin-top:10px;padding:8px 12px;background:#f5f5f5;border-radius:10px;display:flex;align-items:center;justify-content:space-between;gap:8px;">
+        <span style="font-size:11px;color:#666;font-family:var(--font-main);">💡 Hay datos de ejemplo cargados</span>
+        <button onclick="cerrarPrimerosPasos();ejemploEliminar()" style="padding:5px 10px;background:#888;color:#fff;border:none;border-radius:7px;font-size:11px;font-weight:700;cursor:pointer;font-family:var(--font-main);">🗑️ Eliminar</button>
+      </div>
     </div>
 
     <!-- Nota sobre datos de ejemplo -->
