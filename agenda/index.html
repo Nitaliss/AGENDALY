@@ -2541,6 +2541,43 @@ body.nb-mode #nb-pill-orden { display:none !important; }
 /* Canvas no captura eventos sobre la sidebar */
 #lib-canvas-wrap{pointer-events:none;}
 #lib-canvas-wrap canvas,#lib-canvas-wrap *:not(#lib-sidebar){pointer-events:auto;}
+
+/* ── Onboarding ── */
+#tapunto-onboarding{position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,.7);display:flex;align-items:center;justify-content:center;padding:20px;}
+.ob-card{background:#fff;border-radius:24px;padding:28px 24px;max-width:340px;width:100%;text-align:center;position:relative;}
+.ob-step{display:none;flex-direction:column;align-items:center;gap:14px;}
+.ob-step.active{display:flex;}
+.ob-emoji{font-size:56px;line-height:1;}
+.ob-title{font-size:20px;font-weight:800;color:#1a1a2e;font-family:var(--font-main);}
+.ob-desc{font-size:14px;color:#666;font-family:var(--font-main);line-height:1.6;}
+.ob-dots{display:flex;gap:6px;justify-content:center;}
+.ob-dot{width:8px;height:8px;border-radius:50%;background:#ddd;transition:background .2s;}
+.ob-dot.active{background:var(--gd);}
+.ob-btn{width:100%;padding:14px;background:var(--gd);color:#fff;border:none;border-radius:14px;font-family:var(--font-main);font-size:15px;font-weight:700;cursor:pointer;transition:opacity .15s;}
+.ob-btn:hover{opacity:.9;}
+.ob-skip{font-size:12px;color:#aaa;cursor:pointer;font-family:var(--font-main);margin-top:4px;}
+.ob-skip:hover{color:#888;}
+
+
+/* ── Mis Primeros Pasos ── */
+#modal-primeros-pasos{position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,.6);display:none;align-items:flex-end;justify-content:center;padding:0;}
+#modal-primeros-pasos.open{display:flex;}
+.mpp-sheet{background:#fff;border-radius:24px 24px 0 0;width:100%;max-width:520px;max-height:92vh;overflow-y:auto;padding:0 0 32px;}
+.mpp-header{position:sticky;top:0;background:#fff;padding:20px 24px 12px;border-bottom:1px solid #f0f0f0;z-index:1;}
+.mpp-title{font-size:20px;font-weight:800;color:#1a1a2e;font-family:var(--font-main);margin:0;}
+.mpp-sub{font-size:12px;color:#888;font-family:var(--font-main);margin-top:2px;}
+.mpp-close{position:absolute;top:16px;right:16px;background:none;border:none;font-size:22px;cursor:pointer;color:#888;padding:4px;}
+.mpp-paso{display:flex;gap:14px;padding:16px 24px;border-bottom:1px solid #f5f5f5;}
+.mpp-paso:last-child{border-bottom:none;}
+.mpp-num{width:36px;height:36px;border-radius:50%;background:var(--gd);color:#fff;font-size:14px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:var(--font-main);}
+.mpp-body{flex:1;}
+.mpp-paso-title{font-size:14px;font-weight:700;color:#1a1a2e;font-family:var(--font-main);margin-bottom:4px;}
+.mpp-paso-en{font-size:11px;color:#aaa;font-family:var(--font-main);font-style:italic;margin-bottom:6px;}
+.mpp-paso-desc{font-size:13px;color:#555;font-family:var(--font-main);line-height:1.6;}
+.mpp-tip{background:#f0faf5;border-radius:10px;padding:8px 12px;margin-top:8px;font-size:12px;color:#2d6a4f;font-family:var(--font-main);}
+.mpp-btn-ir{display:inline-flex;align-items:center;gap:6px;margin-top:10px;padding:8px 14px;background:var(--gd);color:#fff;border:none;border-radius:10px;font-family:var(--font-main);font-size:12px;font-weight:700;cursor:pointer;}
+.mpp-divider{padding:12px 24px 4px;font-size:10px;font-weight:700;color:#bbb;text-transform:uppercase;letter-spacing:1px;font-family:var(--font-main);}
+
 /* ── Mi Tracker ── */
 .tracker-diamond{width:14px;height:14px;transform:rotate(45deg);border-radius:3px;flex-shrink:0;display:block;transition:transform .12s;pointer-events:none;min-width:14px;min-height:14px;}
 .tracker-diamond-empty{background:rgba(0,0,0,.04)!important;border:2px solid var(--bd);}
@@ -2549,6 +2586,8 @@ body.nb-mode #nb-pill-orden { display:none !important; }
 .tracker-cell:hover{background:rgba(0,0,0,.06);}
 .tracker-cell:hover .tracker-diamond{transform:rotate(45deg) scale(1.2);}
 .tracker-legend-item{display:flex;align-items:center;gap:10px;font-size:11px;font-weight:600;color:var(--td);font-family:var(--font-main);}
+#tracker-grid{position:relative;}
+#tracker-grid::after{content:"";position:sticky;right:0;top:0;width:24px;height:100%;background:linear-gradient(to right,transparent,var(--w));pointer-events:none;flex-shrink:0;}
 .tracker-day-header{font-size:9px;color:var(--tl);font-family:var(--font-main);width:26px;min-width:26px;text-align:center;vertical-align:middle;padding:2px 0;}
 .tracker-month-label{font-size:11px;font-weight:700;color:var(--td);font-family:var(--font-main);min-width:36px;width:36px;padding-right:6px;white-space:nowrap;vertical-align:middle;}
 /* ── Mis Clases / Profes ── */
@@ -2980,6 +3019,15 @@ body.nb-mode #nb-pill-orden { display:none !important; }
         <button onclick="horarioPDF()" id="btn-pdf-horario" style="background:var(--bl);border:1px solid var(--bd);border-radius:6px;padding:3px 8px;font-size:11px;color:var(--tl);cursor:pointer;font-family:var(--font-main);">PDF</button>
       </div>
     </div>
+    <!-- AVISO BACKUP -->
+    <div id="home-aviso-backup" style="display:none;margin:8px 14px 0;padding:10px 14px;background:#e8f4fd;border-radius:12px;border-left:4px solid #2980b9;font-family:var(--font-main);">
+      <div style="font-size:12px;font-weight:700;color:#1a5276;margin-bottom:2px;">💾 Hace más de 30 días sin backup</div>
+      <div style="font-size:11px;color:#1a5276;margin-bottom:8px;">Haz una copia de seguridad para no perder tus datos.</div>
+      <div style="display:flex;gap:6px;">
+        <button onclick="exportBackupJSON()" style="flex:1;padding:6px;background:#2980b9;color:#fff;border:none;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;">💾 Backup ahora</button>
+        <button onclick="backupAviso_posponer()" style="padding:6px 10px;background:none;border:1px solid #2980b9;border-radius:8px;font-size:11px;color:#1a5276;cursor:pointer;">Más tarde</button>
+      </div>
+    </div>
     <!-- AVISO LIBRETA -->
     <div id="home-aviso-libreta" style="display:none;margin:8px 14px 0;padding:10px 14px;background:#fff3cd;border-radius:12px;border-left:4px solid #f39c12;font-family:var(--font-main);">
       <div style="font-size:12px;font-weight:700;color:#856404;margin-bottom:2px;">📓 Tu libreta no tiene copia de seguridad</div>
@@ -3145,6 +3193,7 @@ body.nb-mode #nb-pill-orden { display:none !important; }
     </button>
     <span class="tap-header-title">📋 Calificaciones</span>
     <div style="display:flex;gap:4px;">
+      <button class="tap-header-btn" onclick="irSeccion('nuevo')" title="Nueva tarea" style="font-size:20px;">＋</button>
       <button class="tap-header-btn" onclick="califExportarPDF()" title="PDF" style="font-size:16px;color:#fff;flex-direction:column;gap:1px;">
         <span style="font-size:16px;line-height:1;">📄</span>
         <span style="font-size:7px;font-family:var(--font-main);font-weight:700;">PDF</span>
@@ -3542,7 +3591,7 @@ body.nb-mode #nb-pill-orden { display:none !important; }
         <button type="button" class="tipo-chip-nuevo" onclick="selTipoNuevo(this,'Otro')">&#128172; Otro</button>
       </div>
       <input type="hidden" id="inp-tipo-nuevo" value="Examen"/>
-      <input type="hidden" id="inp-contacto" value=""/>
+      
     </div>
 
     <input type="hidden" id="inp-estado" value="pendiente"/>
@@ -3592,22 +3641,7 @@ body.nb-mode #nb-pill-orden { display:none !important; }
         <span>⊕ Opciones extra (alerta, recordatorio...)</span>
         <span id="mas-opciones-arrow">▼</span>
       </button>
-      <div id="mas-opciones-body" style="display:none;flex-direction:column;gap:12px;margin-top:10px;">
-
-          <input type="hidden" id="inp-accion" value=""/>
-        <input type="hidden" id="inp-comunicado" value=""/>
-
-        <!-- Alerta -->
-        <!-- Alerta / Recordatorio -->
-        <div>
-          <label class="tap-label">&#128276; Alerta / Recordatorio</label>
-          <input type="datetime-local" id="inp-alerta"
-            style="width:100%;padding:8px;border:1px solid var(--bd);border-radius:8px;background:var(--bp);font-family:var(--font-main);font-size:13px;color:var(--td);outline:none;box-sizing:border-box;"/>
-        </div>
-
-
-
-      </div>
+      
     </div>
 
     <!-- Botones guardar/cancelar (modo edición) -->
@@ -3854,6 +3888,10 @@ body.nb-mode #nb-pill-orden { display:none !important; }
       <span class="tap-header-title" style="font-size:15px;">🔷 Mi Tracker</span>
       <span style="font-size:10px;color:rgba(255,255,255,.7);font-family:var(--font-main);">¿Cómo te ha ido el día?</span>
     </div>
+    <button onclick="trackerExportarPNG()" class="tap-header-btn" title="Exportar imagen" style="font-size:12px;font-weight:700;display:flex;flex-direction:column;align-items:center;gap:1px;font-family:var(--font-main);padding:4px 8px;">
+      <span style="font-size:16px;">📤</span>
+      <span style="font-size:8px;color:rgba(255,255,255,.85);">Exportar</span>
+    </button>
     <div style="display:flex;gap:4px;">
       <button onclick="trackerAnioAnterior()" class="tap-header-btn" title="Año anterior" style="font-size:14px;">‹ <span id="tracker-anio-label">2026</span></button>
       <button onclick="trackerAnioSiguiente()" class="tap-header-btn" title="Año siguiente" style="font-size:14px;">›</button>
@@ -3916,6 +3954,9 @@ body.nb-mode #nb-pill-orden { display:none !important; }
               <div id="storage-warn" style="display:none;margin-top:8px;padding:8px 10px;background:#fff3cd;border-radius:8px;font-size:11px;color:#856404;">
                 ⚠️ Espacio casi lleno. Entra en cada sección y elimina lo que no necesites.
               </div>
+            </div>
+            <div style="font-size:11px;color:var(--tl);font-family:var(--font-main);margin-bottom:8px;padding:8px 10px;background:var(--bl);border-radius:8px;">
+              💡 Los datos de agenda ocupan poco espacio. La libreta y las fotos usan IndexedDB — prácticamente sin límite.
             </div>
             <div id="storage-breakdown" style="display:flex;flex-direction:column;gap:8px;"></div>
             <button onclick="calcularAlmacenamiento()" style="width:100%;margin-top:12px;padding:9px;background:var(--bl);border:1px solid var(--bd);border-radius:8px;font-size:12px;cursor:pointer;font-family:var(--font-main);color:var(--tl);">🔄 Actualizar</button>
@@ -4712,55 +4753,7 @@ function actualizarEstadoDrive(estado){
   }
 }
 
-function conectarGoogleDrive(){
-  if(!DRIVE_CLIENT_ID){
-    showToast('⚠️ Google Drive estará disponible próximamente. Usa la sincronización QR mientras tanto.');
-    return;
-  }
-  if(!isPremium){
-    showUpgrade();
-    return;
-  }
-  // Abrir popup OAuth de Google
-  var redirectUri = window.location.origin + window.location.pathname;
-  var authUrl = 'https://accounts.google.com/o/oauth2/v2/auth'
-    +'?client_id='+encodeURIComponent(DRIVE_CLIENT_ID)
-    +'&redirect_uri='+encodeURIComponent(redirectUri)
-    +'&response_type=token'
-    +'&scope='+encodeURIComponent(DRIVE_SCOPE)
-    +'&prompt=consent';
-  var popup = window.open(authUrl, 'tapunto-drive-auth', 'width=500,height=600,left=100,top=100');
-  // Escuchar el token cuando vuelva
-  var checkInterval = setInterval(function(){
-    try{
-      if(popup.closed){
-        clearInterval(checkInterval);
-        return;
-      }
-      var hash = popup.location.hash;
-      if(hash && hash.includes('access_token')){
-        clearInterval(checkInterval);
-        popup.close();
-        var params = new URLSearchParams(hash.substring(1));
-        var token = params.get('access_token');
-        if(token){
-          _driveAccessToken = token;
-          _driveAutoSyncEnabled = true;
-          localStorage.setItem('tp_drive_token_'+currentUser, token);
-          actualizarEstadoDrive('conectado');
-          // Primera sincronización: subir datos actuales
-          driveSyncSubir().then(function(){
-            showToast('✓ Google Drive conectado. Tus datos se sincronizarán automáticamente 🐾');
-          }).catch(function(e){
-            showToast('Drive conectado pero error en primera sync: '+e.message);
-          });
-        }
-      }
-    }catch(e){
-      // Cross-origin, esperando redirección
-    }
-  }, 500);
-}
+// [conectarGoogleDrive duplicado eliminado]
 
 function desconectarGoogleDrive(){
   if(!confirm('¿Desconectar Google Drive? Tus datos locales no se eliminarán.')) return;
@@ -5381,10 +5374,8 @@ let id = localStorage.getItem('tp_device_id');
 if(!id){ id = 'dev_'+Math.random().toString(36).slice(2,10); localStorage.setItem('tp_device_id', id); }
 return id;
 }
-function showUpgrade(){
-  var ov=document.getElementById('upg-ov');
-  if(ov) ov.style.display='flex';
-}
+// [showUpgrade duplicado eliminado]
+
 function cerrarYCelebrar(){
   var celebrar=window._premiumActivado||false;
   closeUpgrade();
@@ -5400,24 +5391,7 @@ function cerrarYCelebrar(){
     setTimeout(function(){cel.remove();try{irHome();}catch(e){}},3000);
   }
 }
-function closeUpgrade(){
-  var ov=document.getElementById('upg-ov');
-  if(ov) ov.style.display='none';
-  var msg=document.getElementById('upg-msg');
-  if(msg){msg.textContent='';msg.style.cssText='';}
-  var inp=document.getElementById('license-input');
-  if(inp){inp.value='';inp.disabled=false;}
-  var btnAct=document.getElementById('btn-activar-lic');
-  if(btnAct){btnAct.disabled=false;btnAct.style.opacity='1';}
-  var btnCerrar=document.getElementById('btn-cerrar-upg');
-  if(btnCerrar){
-    btnCerrar.textContent='Cerrar';
-    btnCerrar.style.background='';btnCerrar.style.color='';
-    btnCerrar.style.borderColor='';btnCerrar.style.fontWeight='';
-  }
-
-}
-
+// [closeUpgrade duplicado eliminado]
 
 function showUpgrade(){
   var ov=document.getElementById('upg-ov');
@@ -5756,13 +5730,8 @@ result+=String.fromCharCode(str.charCodeAt(i)^key.charCodeAt(i%key.length));
 return result;
 }catch(e){return encoded;}
 }
-function saveApiKey(p){
-const v=document.getElementById(p+'-key').value.trim();
-if(!v){alert('Introduce una clave.');return;}
-const cifrada=_xc(v,currentUser||'tapunto');
-localStorage.setItem('tp_apikey_'+p,cifrada);
-document.getElementById(p+'-status').innerHTML='<span style="color:#155724">✓ Clave guardada (cifrada)</span>';
-}
+// [saveApiKey duplicado eliminado]
+
 function getApiKey(p){
 const raw=localStorage.getItem('tp_apikey_'+p)||'';
 if(!raw) return '';
@@ -5772,7 +5741,8 @@ return _xd(raw,currentUser||'tapunto');
 function saveSheetsUrl(){}
 function saveSheetsToken(){}
 function desconectarSheets(){}
-function copiarScript(){}
+// [copiarScript duplicado eliminado]
+
 function formatearSheets(){}
 function startAutoSync(){}
 function setSyncStatus(s,msg){}
@@ -6000,7 +5970,8 @@ let aiModalData=null;
 
 
 
-function setDictadoStatus(msg){ var el=document.getElementById('dictado-status'); if(el) el.textContent=msg; }
+// [setDictadoStatus duplicado eliminado]
+
 function onImageSelected(e){
   if(!isPremium){ showUpgrade(); return; }
   var files=Array.from(e.target.files||[]);
@@ -7654,9 +7625,9 @@ hdr.appendChild(btnX);
 var body=document.createElement('div');
 body.style.cssText='overflow-y:auto;padding:16px 20px 32px;flex:1;';
 var secciones=[
-{id:'s0',titulo:'🏠 Inicio',texto:'La pantalla de inicio muestra el horario del día, tus próximas tareas y una cita motivacional diaria. En la esquina superior derecha: 🔍 Buscador global, 🔔 Notificaciones y los botones ☀️🔄🌙 de modo oscuro. El badge 🔥 aparece si llevas 2 o más días seguidos usando Tapunto. La barra inferior tiene: 🏠 Inicio · 📋 Mi Agenda · ✅ To Do · 📚 Apuntes · ← Atrás (vuelve siempre a la sección anterior). El avatar (esquina superior izquierda) permite personalizar color, emoji e imagen.'},
+{id:'s0',titulo:'🏠 Inicio',texto:'La pantalla de inicio es tu centro de control. Muestra:\n\n🗓️ Tu horario de hoy (configúralo en Rutinas)\n✨ Una cita motivacional diaria\n📌 Tus próximas tareas\n\nACCESOS RÁPIDOS:\n📅 Calendario · 📋 Calificaciones · 👩‍🏫 Mis Clases · 📓 Libreta · 🍅 Pomodoro\n\nAVISOS AUTOMÁTICOS:\n⚠️ Si llevas 7 días sin guardar la libreta en Drive, aparece un aviso.\n💾 Si llevas 30 días sin hacer backup JSON, aparece un recordatorio azul.\n\nSi es tu primera vez, ve al menú del avatar → 🚀 Primeros pasos.'},
 {id:'s1',titulo:'📒 Mi Agenda',texto:'Organizada por asignaturas con separadores laterales. El color de cada separador se hereda del horario automáticamente. Toca el círculo de color junto a cada separador para cambiarlo (20 colores + selector libre + botón ↺ para recuperar el color del horario). El botón ＋ en la parte superior del sidebar crea un nuevo separador libre. Botón 🎨 Fondo en el header cambia el fondo de la portada (12 fondos). Las tareas pueden repetirse: cada semana, 15 días o mes — crea 4 repeticiones automáticamente.'},
-{id:'s-nav',titulo:'🧭 Cómo navegar',texto:'Tapunto tiene 4 botones en la barra inferior:\n\n🏠 Inicio — Horario, accesos rápidos y próximas tareas.\n🗒️ Mi Agenda — Tareas, apuntes y calificaciones.\n✅ To Do — Lista de tareas rápidas.\n🔄 Rutinas — Tu horario semanal.\n⬅ Flecha — Volver a la sección anterior.\n\nDesde Inicio tienes acceso rápido a:\n📅 Calendario · 📋 Calificaciones · 👩‍🏫 Mis Clases · 📓 Libreta · 🍅 Pomodoro\n\nDesde tu avatar (arriba a la derecha):\n🔷 Mi Tracker · 🎨 Mi avatar · ❓ Ayuda · 👤 Mis datos · ⚙️ Configuración · 🚪 Cerrar sesión.\n\nEn Mi Libreta, la barra de herramientas está en el LATERAL IZQUIERDO (no arriba). Toca los iconos para cambiar herramienta o abrir paneles de color, grosor y fondo.'},
+{id:'s-nav',titulo:'🧭 Cómo navegar',texto:'Tapunto tiene 4 botones en la barra inferior:\n\n🏠 Inicio — Horario, accesos rápidos y próximas tareas.\n🗒️ Mi Agenda — Tareas, apuntes y calificaciones.\n✅ To Do — Lista de tareas rápidas.\n🔄 Rutinas — Tu horario semanal.\n⬅ Flecha — Volver a la sección anterior.\n\nDesde Inicio tienes acceso rápido a:\n📅 Calendario · 📋 Calificaciones · 👩‍🏫 Mis Clases · 📓 Libreta · 🍅 Pomodoro\n\nDesde tu avatar (arriba a la derecha):\n🚀 Primeros pasos · 🔷 Mi Tracker · 🎨 Mi avatar · ❓ Ayuda · 👤 Mis datos · ⚙️ Configuración · 🚪 Cerrar sesión.\n\n💡 ¿Primera vez? Toca tu avatar → Primeros pasos para una guía completa en español e inglés.'},
 {id:'s2',titulo:'📅 Mi Calendario',texto:'Vista mensual y semanal con todos los eventos y tareas con fecha. Toca un día para ver sus tareas. Puedes importar calendarios externos en formato .ics (Google Calendar, Outlook, Moodle): ve a Ajustes → Importar calendario .ics, selecciona el archivo y elige qué eventos importar.'},
 {id:'s3',titulo:'📋 Mis Calificaciones',texto:'Registra tus notas por asignatura en una cuadrícula. Añade tipo (Examen, Trabajo, Prácticas, Proyecto, Oral), nota del 0 al 10 y observaciones. La casilla de nota aparece vacía hasta que introduces un valor. El botón ✕ elimina el registro. Se incluye en el backup y en la sincronización con Drive.'},
 {id:'s4',titulo:'📓 Mi Libreta',texto:'La libreta es tu espacio de dibujo libre. Accede desde el botón Libreta en Inicio o desde Mi Agenda.\n\nBARRA DE HERRAMIENTAS (lateral izquierda):\nToca cualquier botón para activar la herramienta:\n✏️ Lápiz — trazo suave y natural\n🖊 Bolígrafo — trazo más firme\nT — Texto: toca el canvas y escribe\n🧹 Borrador — borra por donde pasas\n↩ Deshacer — elimina el último trazo\n\nPANELES DESPLEGABLES:\nToca estos botones para abrir el panel hacia la derecha:\n● (círculo de color) → Panel de COLOR: 10 colores + selector personalizado\n━ → Panel de GROSOR: fino / medio / grueso / extra\n🎨 → Panel de FONDO: blanco, rayas, cuadros, puntos, negro, kraft\n😊 → Insertar emoji o sticker\n\nPara cerrar un panel: toca de nuevo el mismo botón o toca el canvas.\n\nNAVEGACIÓN DE PÁGINAS:\n‹ ›  en el header para cambiar de página\n+ Nueva — crea una página nueva\n🗑️ Borrar — elimina la página actual\n\nGUARDADO:\nLos trazos se guardan automáticamente en el dispositivo (IndexedDB, sin límite de espacio).\nHaz copia de seguridad: Configuración → Google Drive → Guardar libreta en Drive.'},
@@ -7815,6 +7786,7 @@ emailDiv.style.cssText='padding:12px 14px;border-bottom:0.5px solid var(--bd);';
 emailDiv.innerHTML='<div style="font-size:12px;font-weight:700;color:var(--td);font-family:var(--font-main);">'+(currentUser||'—')+'</div>'+(isPremium?'<div style="font-size:11px;color:#EF9F27;font-weight:600;">⭐ Premium activo</div>':'<div style="font-size:11px;color:var(--tl);">Plan Free</div>');
 menu.appendChild(emailDiv);
 var items=[
+{icon:'🚀',label:'Primeros pasos',fn:function(){menu.remove();mostrarPrimerosPasos();}},
 {icon:'🔷',label:'Mi Tracker',fn:function(){menu.remove();irSeccion('tracker');}},
 {icon:'🎨',label:'Mi avatar',fn:function(){menu.remove();mostrarPersonalizarAvatar();}},
 {icon:'❓',label:'Ayuda',fn:function(){menu.remove();mostrarAyuda();}},
@@ -7978,6 +7950,7 @@ _updateBnavActive(tab);
 }
 function switchTab(tab,btn){
 document.querySelectorAll('.section').forEach(function(s){s.classList.remove('active');s.style.display='none';});
+['lib-sb-color','lib-sb-grosor','lib-sb-fondo'].forEach(function(p){var el=document.getElementById(p);if(el)el.style.display='none';});
 var _st=document.getElementById('sec-'+tab);
 if(_st){_st.classList.add('active');_st.style.display=(tab==='libreta'||tab==='registros'||tab==='tracker'||tab==='profes')?'flex':'block';
 if(tab==='registros'||tab==='libreta'||tab==='tracker'||tab==='profes')_st.style.flexDirection='column';}
@@ -7996,7 +7969,7 @@ if(fEl&&!fEl.value){
 }
 },50);}
 if(tab==='registros'){window._nbMostrarPortada=true;window._nbAsigActiva=null;renderStats();renderRecords();}
-if(tab==='home'){try{renderResumen();renderHorarioHome();renderProximasTareas();libretaComprobarAviso();}catch(e){}}
+if(tab==='home'){try{renderResumen();renderHorarioHome();renderProximasTareas();libretaComprobarAviso();backupComprobarAviso();}catch(e){}}
 if(tab==='config'){renderThemes();loadPinConfig();loadSheetsToken();loadFirmaConfig();renderLists();}
 if(tab==='recordatorios'){renderReminders();renderAlertasInteligentes();}
 if(tab==='calendario') renderCalendario();
@@ -9107,6 +9080,8 @@ function exportBackupJSON(){
   var _fd=new Date();
   var _fechaB=_fd.getFullYear()+'-'+String(_fd.getMonth()+1).padStart(2,'0')+'-'+String(_fd.getDate()).padStart(2,'0');
   a.download='tapunto-datos-'+_fechaB+'.json';
+  // Guardar fecha del último backup
+  localStorage.setItem('tp_last_backup_'+currentUser, Date.now().toString());
   a.click();
   try{showToast('toast-ok');}catch(e){}
 }
@@ -9661,7 +9636,9 @@ if(isIOS){
 initNotificaciones();
 const _firma=getFirma();
 const _dispName=(_firma.nombre||currentUser.split('@')[0]).split(' ')[0];
-document.getElementById('user-greet').textContent='Hola, '+_dispName.charAt(0).toUpperCase()+_dispName.slice(1)+' 🐾';
+var _hora=new Date().getHours();
+var _saludo=_hora<13?'Buenos días':(_hora<20?'Buenas tardes':'Buenas noches');
+document.getElementById('user-greet').textContent=_saludo+', '+_dispName.charAt(0).toUpperCase()+_dispName.slice(1)+' 👋';
 document.getElementById('cfg-email').textContent=currentUser;
 document.body.setAttribute('data-theme',state.theme||'azul');
 try{applyFont(state.font||'Nunito');}catch(_e){}
@@ -12353,6 +12330,9 @@ function pomComplete(){
   pomPause();
   pomBeep();
   if(navigator.vibrate) navigator.vibrate([300,100,300]);
+  // Toast visual
+  var _msg=_pom.mode==='work'?'🍅 ¡Sesión completada! Tómate un descanso 😊':'✅ ¡Descanso terminado! A trabajar 💪';
+  showToast(_msg);
 
   // Flash animation on circle
   var wrap = document.getElementById('pom-circle-wrap');
@@ -13476,9 +13456,9 @@ function calcularAlmacenamiento(){
   var bar=document.getElementById('storage-bar');
   var lbl=document.getElementById('storage-pct-label');
   var warn=document.getElementById('storage-warn');
-  if(bar){bar.style.width=pct+'%';bar.style.background=pct>85?'#e74c3c':pct>65?'#f39c12':'var(--gm)';}
-  if(lbl) lbl.textContent=(totalBytes/1024/1024).toFixed(2)+' MB de 5 MB ('+pct+'%)';
-  if(warn) warn.style.display=pct>85?'block':'none';
+  if(bar) bar.style.display='none';
+  if(lbl) lbl.style.display='none';
+  if(warn) warn.style.display='none';
 }
 // Calcular al abrir el panel
 document.addEventListener('DOMContentLoaded',function(){
@@ -15469,6 +15449,186 @@ async function fotoIDBMigrarDesdeState(){
   return migradas;
 }
 
+
+// ── Onboarding primer arranque ──
+function obMostrar(){
+  var el=document.getElementById('tapunto-onboarding');
+  if(el) el.style.display='flex';
+  document.getElementById('ob-nombre-inp')&&document.getElementById('ob-nombre-inp').focus();
+}
+function obSiguiente(paso){
+  document.querySelectorAll('.ob-step').forEach(function(s){s.classList.remove('active');});
+  var el=document.getElementById('ob-step-'+paso);
+  if(el){el.classList.add('active');}
+  if(paso===2) setTimeout(function(){var inp=document.getElementById('ob-nombre-inp');if(inp)inp.focus();},200);
+}
+function obGuardarNombre(){
+  var inp=document.getElementById('ob-nombre-inp');
+  var nombre=inp?inp.value.trim():'';
+  if(nombre){
+    var firma=getFirma();
+    firma.nombre=nombre;
+    localStorage.setItem('tp_firma_'+currentUser, JSON.stringify(firma));
+    var greet=document.getElementById('user-greet');
+    if(greet) greet.textContent='Hola, '+nombre.charAt(0).toUpperCase()+nombre.slice(1)+' 🐾';
+  }
+  obSiguiente(3);
+}
+function obFinalizar(seccion){
+  localStorage.setItem('tp_onboarding_done_'+currentUser,'1');
+  var el=document.getElementById('tapunto-onboarding');
+  if(el) el.style.display='none';
+  if(seccion) irSeccion(seccion);
+}
+function obCerrar(){
+  localStorage.setItem('tp_onboarding_done_'+currentUser,'1');
+  var el=document.getElementById('tapunto-onboarding');
+  if(el) el.style.display='none';
+}
+function obComprobar(){
+  if(!currentUser) return;
+  var hecho=localStorage.getItem('tp_onboarding_done_'+currentUser);
+  if(!hecho) setTimeout(obMostrar, 800);
+}
+
+
+// ── Exportar Tracker como imagen PNG ──
+function trackerExportarPNG(){
+  var grid=document.getElementById('tracker-grid');
+  if(!grid){showToast('Abre Mi Tracker primero');return;}
+
+  // Crear canvas con el grid del tracker
+  var anio=_trackerAnio||new Date().getFullYear();
+  var W=760, H=320;
+  var cv=document.createElement('canvas');
+  cv.width=W; cv.height=H;
+  var ctx=cv.getContext('2d');
+
+  // Fondo claro
+  ctx.fillStyle='#ffffff';
+  ctx.fillRect(0,0,W,H);
+  // Borde sutil
+  ctx.strokeStyle='#e8e8e8';
+  ctx.lineWidth=1;
+  ctx.strokeRect(0,0,W,H);
+
+  // Título
+  ctx.fillStyle='#1a1a2e';
+  ctx.font='bold 18px system-ui,sans-serif';
+  ctx.fillText('Mi Tracker '+anio+' — Tapunto',20,30);
+
+  // Leyenda
+  var colores={1:'#27ae60',2:'#f1c40f',3:'#e67e22',4:'#e74c3c'};
+  var labels={1:'Genial',2:'Bien',3:'Regular',4:'Mal día'};
+  var lx=20;
+  Object.keys(colores).forEach(function(k){
+    ctx.fillStyle=colores[k];
+    ctx.beginPath();
+    var cx=lx+7,cy=50;
+    ctx.save();ctx.translate(cx,cy);ctx.rotate(Math.PI/4);
+    ctx.fillRect(-6,-6,12,12);ctx.restore();
+    ctx.fillStyle='#444';
+    ctx.font='11px system-ui,sans-serif';
+    ctx.fillText(labels[k],lx+18,54);
+    lx+=70;
+  });
+
+  // Grid
+  var data=getTrackerData();
+  var meses=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+  var esBis=(anio%4===0&&(anio%100!==0||anio%400===0));
+  var diasMes=[31,esBis?29:28,31,30,31,30,31,31,30,31,30,31];
+  var cellW=22, cellH=18, startX=36, startY=72;
+
+  // Cabecera días
+  ctx.fillStyle='#999';
+  ctx.font='9px system-ui,sans-serif';
+  for(var d=1;d<=31;d++){
+    ctx.fillText(d,(d-1)*cellW+startX+5,startY-4);
+  }
+
+  // Filas meses
+  for(var m=0;m<12;m++){
+    // Label mes
+    ctx.fillStyle='#555';
+    ctx.font='bold 10px system-ui,sans-serif';
+    ctx.fillText(meses[m],2,startY+m*cellH+cellH-4);
+
+    for(var d2=1;d2<=31;d2++){
+      var x=startX+(d2-1)*cellW;
+      var y=startY+m*cellH;
+      if(d2>diasMes[m]){
+        ctx.fillStyle='rgba(0,0,0,.04)';
+        ctx.fillRect(x+2,y+2,cellW-4,cellH-4);
+      } else {
+        var key=trackerKey(anio,m,d2);
+        var val=data[key]||0;
+        if(val>0){
+          ctx.fillStyle=colores[val]||'#888';
+          ctx.save();ctx.translate(x+cellW/2,y+cellH/2);ctx.rotate(Math.PI/4);
+          var sz=Math.min(cellW,cellH)/2-2;
+          ctx.fillRect(-sz,-sz,sz*2,sz*2);ctx.restore();
+        } else {
+          ctx.strokeStyle='rgba(0,0,0,.12)';
+          ctx.lineWidth=1;
+          ctx.save();ctx.translate(x+cellW/2,y+cellH/2);ctx.rotate(Math.PI/4);
+          var sz2=Math.min(cellW,cellH)/2-3;
+          ctx.strokeRect(-sz2,-sz2,sz2*2,sz2*2);ctx.restore();
+        }
+      }
+    }
+  }
+
+  // Watermark
+  ctx.fillStyle='rgba(0,0,0,.2)';
+  ctx.font='10px system-ui,sans-serif';
+  ctx.fillText('tapunto.app',W-80,H-8);
+
+  // Descargar
+  var link=document.createElement('a');
+  link.download='tapunto-tracker-'+anio+'.png';
+  link.href=cv.toDataURL('image/png');
+  link.click();
+  showToast('✅ Imagen guardada');
+}
+
+
+// ── Recordatorio backup 30 días ──
+function backupComprobarAviso(){
+  var aviso=document.getElementById('home-aviso-backup');
+  if(!aviso||!currentUser) return;
+  var ultima=parseInt(localStorage.getItem('tp_last_backup_'+currentUser)||'0');
+  var posponer=parseInt(localStorage.getItem('tp_backup_posponer_'+currentUser)||'0');
+  var diasSin=Math.floor((Date.now()-ultima)/(1000*60*60*24));
+  var diasPos=Math.floor((Date.now()-posponer)/(1000*60*60*24));
+  // Mostrar si >30 días sin backup Y >7 días desde posponer
+  if(diasSin>=30 && diasPos>=7){
+    aviso.style.display='block';
+  } else {
+    aviso.style.display='none';
+  }
+}
+function backupAviso_posponer(){
+  localStorage.setItem('tp_backup_posponer_'+currentUser, Date.now().toString());
+  var aviso=document.getElementById('home-aviso-backup');
+  if(aviso) aviso.style.display='none';
+  showToast('Te recordamos en 7 días 👍');
+}
+
+
+// ── Mis Primeros Pasos ──
+function mostrarPrimerosPasos(){
+  var modal=document.getElementById('modal-primeros-pasos');
+  if(modal){modal.classList.add('open');modal.style.display='flex';}
+  // Cerrar menú avatar si está abierto
+  var menu=document.querySelector('.avatar-menu');
+  if(menu) menu.remove();
+}
+function cerrarPrimerosPasos(){
+  var modal=document.getElementById('modal-primeros-pasos');
+  if(modal){modal.classList.remove('open');modal.style.display='none';}
+}
+
 function libSetTool(t,btn){
   // Tamaños de goma
   if(t==='borrador'){_lib.radioGoma=6;}
@@ -16354,7 +16514,122 @@ if('serviceWorker' in navigator && location.hostname==='tapunto.app'){
 }
 </script>
 <div id="lib-sb-color" class="lib-sb-panel" style="display:none;min-width:180px;"><div style="font-size:10px;font-weight:700;color:#888;margin-bottom:8px;">COLOR</div><div style="display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-bottom:10px;"><div class="lib-cp" style="background:#1a1a1a;" onclick="libSBColor('#1a1a1a')"></div><div class="lib-cp" style="background:#fff;border:1.5px solid #ddd;" onclick="libSBColor('#ffffff')"></div><div class="lib-cp" style="background:#e74c3c;" onclick="libSBColor('#e74c3c')"></div><div class="lib-cp" style="background:#e67e22;" onclick="libSBColor('#e67e22')"></div><div class="lib-cp" style="background:#f1c40f;" onclick="libSBColor('#f1c40f')"></div><div class="lib-cp" style="background:#27ae60;" onclick="libSBColor('#27ae60')"></div><div class="lib-cp" style="background:#2980b9;" onclick="libSBColor('#2980b9')"></div><div class="lib-cp" style="background:#8e44ad;" onclick="libSBColor('#8e44ad')"></div><div class="lib-cp" style="background:#fd79a8;" onclick="libSBColor('#fd79a8')"></div><div class="lib-cp" style="background:#00b894;" onclick="libSBColor('#00b894')"></div></div><input type="color" value="#1a1a1a" onchange="libSBColor(this.value)" style="width:100%;height:28px;border:none;border-radius:8px;cursor:pointer;"></div><div id="lib-sb-grosor" class="lib-sb-panel" style="display:none;"><div style="font-size:10px;font-weight:700;color:#888;margin-bottom:10px;">GROSOR</div><div style="display:flex;flex-direction:column;gap:8px;"><button class="lib-sz-btn" onclick="libSBSize(2,this)"><div style="width:56px;height:2px;background:#222;border-radius:2px;"></div><span>Fino</span></button><button class="lib-sz-btn" onclick="libSBSize(5,this)"><div style="width:56px;height:5px;background:#222;border-radius:3px;"></div><span>Medio</span></button><button class="lib-sz-btn active" onclick="libSBSize(10,this)"><div style="width:56px;height:10px;background:#222;border-radius:4px;"></div><span>Grueso</span></button><button class="lib-sz-btn" onclick="libSBSize(20,this)"><div style="width:56px;height:18px;background:#222;border-radius:6px;"></div><span>Extra</span></button></div></div><div id="lib-sb-fondo" class="lib-sb-panel" style="display:none;min-width:170px;"><div style="font-size:10px;font-weight:700;color:#888;margin-bottom:8px;">FONDO</div><div style="display:grid;grid-template-columns:repeat(2,1fr);gap:6px;margin-bottom:8px;"><button class="lib-fondo-opt" onclick="libSetFondo('blanco');libSBCerrar()">⬜ Blanco</button><button class="lib-fondo-opt" onclick="libSetFondo('rayas');libSBCerrar()">📄 Rayas</button><button class="lib-fondo-opt" onclick="libSetFondo('cuadros');libSBCerrar()">⊞ Cuadros</button><button class="lib-fondo-opt" onclick="libSetFondo('puntos');libSBCerrar()">· Puntos</button><button class="lib-fondo-opt" onclick="libSetFondo('negro');libSBCerrar()" style="background:#1a1a1a;color:#fff;">⬛ Negro</button><button class="lib-fondo-opt" onclick="libSetFondo('kraft');libSBCerrar()" style="background:#d4a574;">📦 Kraft</button></div><input type="color" value="#fffef8" onchange="libSetFondo('custom',this.value);libSBCerrar()" style="width:100%;height:26px;border:none;border-radius:8px;cursor:pointer;"></div>
-</body>
-</html{id:'s11',titulo:'☁️ Sincronización con Google Drive',texto:'Con Tapunto puedes sincronizar tus datos con Google Drive para tenerlos siempre a salvo y acceder desde cualquier dispositivo (funcionalidad disponible para todos los usuarios).\n\n¿QUÉ SE SINCRONIZA?\n✅ Todas tus tareas y eventos\n✅ Tus asignaturas\n✅ Tus calificaciones\n✅ Tu horario y rutinas\n✅ Tu lista To Do\n✅ Tus apuntes y adjuntos (fotos y documentos)\n✅ Tus datos de Mis Clases (nombre profe, tutoría, observaciones)\n✅ Tu Tracker de estado de ánimo\n✅ Tu configuración y tema activo\n❌ Las páginas de la libreta de dibujo (solo en el dispositivo)\n\n¿CÓMO FUNCIONA?\n1️⃣ Toca tu avatar → Configuración → Conectar Google Drive.\n2️⃣ Inicia sesión con tu cuenta de Google.\n3️⃣ Acepta el permiso — Tapunto solo accede a su propio archivo.\n4️⃣ Tus datos se suben automáticamente cada 5 minutos.\n\nEl archivo se llama tapunto-datos-YYYY-MM-DD.json y se guarda en la carpeta "Tapunto" de tu Drive.\n\n☁️ ADJUNTOS A DRIVE: Toca "Subir fotos/docs a Drive" para subir tus adjuntos y liberar espacio en el dispositivo. Los archivos se guardan con el nombre asignatura_fecha_nombre en la carpeta Tapunto.\n\n🔒 Tapunto solo puede leer y escribir los archivos que él mismo crea (permiso drive.file). No accede a ningún otro archivo de tu Drive.'},
 
->
+<!-- ══ ONBOARDING ══ -->
+<div id="tapunto-onboarding" style="display:none;" onclick="if(event.target===this)obCerrar()">
+  <div class="ob-card">
+    <!-- Paso 1: Bienvenida -->
+    <div class="ob-step active" id="ob-step-1">
+      <div class="ob-emoji">👋</div>
+      <div class="ob-title">¡Bienvenido/a a Tapunto!</div>
+      <div class="ob-desc">Tu agenda personal para el instituto. Todo guardado en tu dispositivo, sin registros ni nubes obligatorias.</div>
+      <div class="ob-dots"><div class="ob-dot active"></div><div class="ob-dot"></div><div class="ob-dot"></div></div>
+      <button class="ob-btn" onclick="obSiguiente(2)">Empezar →</button>
+      <span class="ob-skip" onclick="obCerrar()">Saltar tutorial</span>
+    </div>
+    <!-- Paso 2: Nombre -->
+    <div class="ob-step" id="ob-step-2">
+      <div class="ob-emoji">😊</div>
+      <div class="ob-title">¿Cómo te llamamos?</div>
+      <div class="ob-desc">Ponemos tu nombre en la pantalla de inicio para que se sienta tuya.</div>
+      <input id="ob-nombre-inp" type="text" placeholder="Tu nombre o apodo..." maxlength="20"
+        style="width:100%;padding:12px 14px;border:2px solid var(--bd);border-radius:12px;font-family:var(--font-main);font-size:15px;box-sizing:border-box;outline:none;transition:border .2s;"
+        onfocus="this.style.borderColor='var(--gd)'" onblur="this.style.borderColor='var(--bd)'"
+        onkeydown="if(event.key==='Enter')obGuardarNombre()">
+      <div class="ob-dots"><div class="ob-dot"></div><div class="ob-dot active"></div><div class="ob-dot"></div></div>
+      <button class="ob-btn" onclick="obGuardarNombre()">Continuar →</button>
+      <span class="ob-skip" onclick="obSiguiente(3)">Saltar</span>
+    </div>
+    <!-- Paso 3: Siguiente paso -->
+    <div class="ob-step" id="ob-step-3">
+      <div class="ob-emoji">🗓️</div>
+      <div class="ob-title">Añade tu horario</div>
+      <div class="ob-desc">Con tu horario configurado, Tapunto muestra tus clases de hoy, crea apuntes por asignatura y genera tus Mis Clases automáticamente.</div>
+      <div class="ob-dots"><div class="ob-dot"></div><div class="ob-dot"></div><div class="ob-dot active"></div></div>
+      <button class="ob-btn" onclick="obFinalizar('rutinas')">Ir a Rutinas →</button>
+      <span class="ob-skip" onclick="obFinalizar(null)">Ahora no</span>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══ MIS PRIMEROS PASOS ══ -->
+<div id="modal-primeros-pasos" onclick="if(event.target===this)cerrarPrimerosPasos()">
+  <div class="mpp-sheet">
+    <div class="mpp-header">
+      <p class="mpp-title">🚀 Mis primeros pasos</p>
+      <p class="mpp-sub">Getting started · Guía de inicio</p>
+      <button class="mpp-close" onclick="cerrarPrimerosPasos()">✕</button>
+    </div>
+
+    <div class="mpp-divider">📋 Lo esencial / The essentials</div>
+
+    <div class="mpp-paso">
+      <div class="mpp-num">1</div>
+      <div class="mpp-body">
+        <div class="mpp-paso-title">🗓️ Configura tu horario</div>
+        <div class="mpp-paso-en">Set up your timetable</div>
+        <div class="mpp-paso-desc">Todo en Tapunto parte del horario. Una vez configurado, verás tus clases de hoy en el Inicio, tus profesores en Mis Clases y podrás crear tareas por asignatura.<br><br><em>Everything in Tapunto starts with your timetable. Once set up, you'll see today's classes on the Home screen, your teachers in My Classes, and you can create tasks by subject.</em></div>
+        <div class="mpp-tip">💡 Ve a Rutinas → toca el + → elige el día y hora → escribe la asignatura.<br><em>Go to Routines → tap + → choose day and time → write the subject.</em></div>
+        <button class="mpp-btn-ir" onclick="cerrarPrimerosPasos();irSeccion('rutinas')">🔄 Ir a Rutinas →</button>
+      </div>
+    </div>
+
+    <div class="mpp-paso">
+      <div class="mpp-num">2</div>
+      <div class="mpp-body">
+        <div class="mpp-paso-title">📝 Crea tu primera tarea</div>
+        <div class="mpp-paso-en">Create your first task</div>
+        <div class="mpp-paso-desc">Toca el botón verde ＋ en la barra inferior para crear una tarea. Elige asignatura, fecha y tipo (Examen, Entrega, Apuntes...). Las tareas aparecen en Mi Agenda y en el Calendario.<br><br><em>Tap the green ＋ button at the bottom to create a task. Choose subject, date and type (Exam, Homework, Notes...). Tasks appear in My Agenda and Calendar.</em></div>
+        <div class="mpp-tip">💡 Las tareas de tipo Examen o Trabajo pueden tener nota — aparecen en Calificaciones.<br><em>Tasks of type Exam or Work can have a grade — they appear in Grades.</em></div>
+        <button class="mpp-btn-ir" onclick="cerrarPrimerosPasos();document.querySelector('.fab-btn')&&document.querySelector('.fab-btn').click()">＋ Nueva tarea →</button>
+      </div>
+    </div>
+
+    <div class="mpp-paso">
+      <div class="mpp-num">3</div>
+      <div class="mpp-body">
+        <div class="mpp-paso-title">👩‍🏫 Conoce a tus profes</div>
+        <div class="mpp-paso-en">Meet your teachers</div>
+        <div class="mpp-paso-desc">Después de configurar el horario, ve a Mis Clases desde el Inicio. Aparecerán tus asignaturas automáticamente. Añade el nombre del profesor, su horario de tutoría y notas importantes.<br><br><em>After setting up your timetable, go to My Classes from the Home screen. Your subjects will appear automatically. Add the teacher's name, tutoring hours, and important notes.</em></div>
+        <button class="mpp-btn-ir" onclick="cerrarPrimerosPasos();irSeccion('profes')">👩‍🏫 Mis Clases →</button>
+      </div>
+    </div>
+
+    <div class="mpp-divider">✨ Extras / Extra features</div>
+
+    <div class="mpp-paso">
+      <div class="mpp-num">4</div>
+      <div class="mpp-body">
+        <div class="mpp-paso-title">🔷 Mi Tracker de estado de ánimo</div>
+        <div class="mpp-paso-en">My mood tracker</div>
+        <div class="mpp-paso-desc">Toca un rombo cada día para registrar cómo te has sentido. Al final del año tienes una imagen completa de tu bienestar. Puedes exportarla como imagen.<br><br><em>Tap a diamond each day to record how you felt. At year's end you have a complete picture of your wellbeing. You can export it as an image.</em></div>
+        <button class="mpp-btn-ir" onclick="cerrarPrimerosPasos();irSeccion('tracker')">🔷 Mi Tracker →</button>
+      </div>
+    </div>
+
+    <div class="mpp-paso">
+      <div class="mpp-num">5</div>
+      <div class="mpp-body">
+        <div class="mpp-paso-title">📓 La libreta de dibujo</div>
+        <div class="mpp-paso-en">The drawing notebook</div>
+        <div class="mpp-paso-desc">Dibuja, escribe a mano o haz esquemas. La barra de herramientas está en el lateral izquierdo. Toca ●, ━ o 🎨 para cambiar color, grosor o fondo. Los trazos se guardan sin límite de espacio.<br><br><em>Draw, handwrite or make diagrams. The toolbar is on the left side. Tap ●, ━ or 🎨 to change color, thickness or background. Strokes are saved with no space limit.</em></div>
+        <button class="mpp-btn-ir" onclick="cerrarPrimerosPasos();irSeccion('libreta')">📓 Ir a Libreta →</button>
+      </div>
+    </div>
+
+    <div class="mpp-paso">
+      <div class="mpp-num">6</div>
+      <div class="mpp-body">
+        <div class="mpp-paso-title">💾 Haz un backup</div>
+        <div class="mpp-paso-en">Make a backup</div>
+        <div class="mpp-paso-desc">Tus datos se guardan solo en este dispositivo. Haz una copia de seguridad periódica para no perder nada. También puedes conectar Google Drive para sincronizar automáticamente.<br><br><em>Your data is saved only on this device. Make a periodic backup so you don't lose anything. You can also connect Google Drive to sync automatically.</em></div>
+        <div class="mpp-tip">💡 Avatar → Configuración → Backup completo JSON<br><em>Avatar → Settings → Full JSON Backup</em></div>
+        <button class="mpp-btn-ir" onclick="cerrarPrimerosPasos();irSeccion('config')">⚙️ Configuración →</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+</body>
