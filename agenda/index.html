@@ -5314,6 +5314,7 @@ console.error('Error cargando estado:',e);
 }
 }
 async function _cp(){
+isPremium=true;applyPremiumUI();return; // MODO PRUEBA — eliminar antes de publicar
 const key = localStorage.getItem('tp_license_'+currentUser);
 if(!key){isPremium=false;applyPremiumUI();return;}
 const h=await _hlk(key.toUpperCase());
@@ -5351,11 +5352,13 @@ if(isPremium&&state.sheetsUrl) startAutoSync();
 function updateFreeBar(){
 const bar = document.getElementById('free-bar');
 if(!bar) return;
+bar.style.display='none'; return; // MODO PRUEBA — eliminar antes de publicar
 if(isPremium){ bar.style.display='none'; return; }
 bar.style.display='flex';
 document.getElementById('rec-count').textContent = state.records.length;
 }
 function checkDeviceLimit(){
+return true; // MODO PRUEBA — eliminar antes de publicar
 if(isPremium) return true;
 const devKey = 'tp_devices_'+currentUser;
 const devId  = getOrCreateDeviceId();
