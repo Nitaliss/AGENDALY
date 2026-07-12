@@ -6171,11 +6171,11 @@ fechaEl.value=new Date(now-now.getTimezoneOffset()*60000).toISOString().slice(0,
 fechaEl.style.display='block';
 }
 const fecha=fechaEl?fechaEl.value:'';
-const tema=(document.getElementById('inp-tema').value||'').trim();
-const contacto=(document.getElementById('inp-contacto').value||'').trim();
-const accion=document.getElementById('inp-accion').value;
-const comunicado=document.getElementById('inp-comunicado').value;
-const notas=document.getElementById('inp-notas').value;
+const tema=(document.getElementById('inp-tema')?document.getElementById('inp-tema').value||'':'').trim();
+const contacto=(document.getElementById('inp-contacto')?document.getElementById('inp-contacto').value||'':'').trim();
+const accion=document.getElementById('inp-accion')?document.getElementById('inp-accion').value:'';
+const comunicado=document.getElementById('inp-comunicado')?document.getElementById('inp-comunicado').value:'';
+const notas=document.getElementById('inp-notas')?document.getElementById('inp-notas').value:'';
 const titulo=(document.getElementById('inp-titulo')&&document.getElementById('inp-titulo').value||'').trim();
 let estado=document.getElementById('inp-estado').value;
 if(!fecha){showWarn('La fecha es obligatoria.');if(saveBtn)saveBtn.disabled=false;return;}
@@ -6212,6 +6212,15 @@ saveBtn.classList.remove('editing');
 if(state.sheetsUrl) setTimeout(function(){syncToSheets();},300);
 if(navigator.vibrate) navigator.vibrate(50);
 renderRecords();
+// Limpiar imagen y docs para la siguiente tarea
+currentImageBase64=null;currentImageMime=null;currentImageName=null;currentImageUrl=null;
+window._nuevoDocs=[];
+var _prev=document.getElementById('img-preview');if(_prev){_prev.style.display='none';_prev.src='';}
+var _rmBtn=document.getElementById('img-remove-btn');if(_rmBtn)_rmBtn.style.display='none';
+var _area=document.getElementById('img-upload-area');if(_area)_area.classList.remove('has-img');
+var _imgStatus=document.getElementById('img-status');if(_imgStatus)_imgStatus.textContent='';
+var _docsPreview=document.getElementById('nuevo-docs-preview');if(_docsPreview)_docsPreview.innerHTML='';
+var _imgInp=document.getElementById('inp-imagen-galeria');if(_imgInp)_imgInp.value='';
 irSeccion('registros');
 setTimeout(function(){showToast('toast-upd');},300);
 return;
@@ -6228,7 +6237,8 @@ if(contacto&&!state.contactos.includes(contacto)){state.contactos.push(contacto)
 const icono=(document.getElementById('inp-icono')||{value:'📋'}).value||'📋';
 const fechaEvento=(document.getElementById('inp-fecha-evento')&&document.getElementById('inp-fecha-evento').value||'').trim();const rec={id:newId,fecha,contacto,tema,titulo,accion,comunicado,estado,notas,icono,fechaEvento,
 recordatorio:calcReminder(fecha),created:new Date().toISOString(),
-imagenUrl:imagenUrl||'',confidencial:confidencial};
+imagenUrl:imagenUrl||'',confidencial:confidencial,
+docs:(window._nuevoDocs||[]).map(function(d){return {nombre:d.nombre,tipo:d.tipo,data:d.data};})};
 if(state.records.find(r=>r.id===rec.id)){
 if(saveBtn) saveBtn.disabled=false;
 return;
@@ -11756,7 +11766,58 @@ function verRegistro(id){
   closeBtn.style.cssText='width:100%;padding:12px;background:var(--bp);border:1px solid var(--bd);border-radius:10px;font-family:"Lato",sans-serif;font-size:14px;font-weight:600;color:var(--tl);cursor:pointer;margin-top:8px;';
   closeBtn.textContent='✕ Cerrar';
   closeBtn.onclick=function(){modal.style.display='none';};
-  sheet.appendChild(closeBtn);
+  sheet.appendChild(closeBtn);// ── Documentos adjuntos ──
+  if(r.docs&&r.docs.length>0){
+    var docsDiv=document.createElement('div');
+    docsDiv.style.cssText='margin-top:10px;';
+    var docsTitle=document.createElement('div');
+    docsTitle.style.cssText='font-size:11px;font-weight:700;color:var(--tl);margin-bottom:6px;font-family:var(--font-main);';
+    docsTitle.textContent='📎 Archivos adjuntos';
+    docsDiv.appendChild(docsTitle);
+    r.docs.forEach(function(doc){
+      var docBtn=document.createElement('button');
+      docBtn.style.cssText='display:flex;align-items:center;gap:8px;width:100%;padding:8px 10px;background:var(--bl);border:1px solid var(--bd);border-radius:8px;margin-bottom:4px;cursor:pointer;font-family:var(--font-main);font-size:12px;color:var(--td);text-align:left;';
+      var ext=(doc.nombre||'').split('.').pop().toLowerCase();
+      var ico=ext==='pdf'?'📄':ext==='doc'||ext==='docx'?'📝':ext==='ppt'||ext==='pptx'?'📊':'📎';
+      docBtn.innerHTML='<span style="font-size:16px;">'+ico+'</span><span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">'+doc.nombre+'</span>';
+      docBtn.onclick=function(){
+        if(doc.data){
+          try{
+            // Convert base64 dataURL to Blob for proper opening
+            var parts=doc.data.split(',');
+            var mime=parts[0].match(/:(.*?);/)[1];
+            var binary=atob(parts[1]);
+            var arr=new Uint8Array(binary.length);
+            for(var i=0;i<binary.length;i++) arr[i]=binary.charCodeAt(i);
+            var blob=new Blob([arr],{type:mime});
+            var url=URL.createObjectURL(blob);
+            // Open images and PDFs in new tab; download other files
+            if(mime.indexOf('image/')===0||mime.indexOf('pdf')>=0){
+              window.open(url,'_blank');
+              setTimeout(function(){URL.revokeObjectURL(url);},10000);
+            } else {
+              var a=document.createElement('a');
+              a.href=url;
+              a.download=doc.nombre||'archivo';
+              document.body.appendChild(a);
+              a.click();
+              document.body.removeChild(a);
+              setTimeout(function(){URL.revokeObjectURL(url);},5000);
+            }
+          }catch(e){
+            // Fallback: direct download
+            var a=document.createElement('a');
+            a.href=doc.data;
+            a.download=doc.nombre||'archivo';
+            a.click();
+          }
+        }
+      };
+      docsDiv.appendChild(docBtn);
+    });
+    sheet.appendChild(docsDiv);
+  }
+  
   modal.style.display='flex';
 }
 document.addEventListener('click',function(e){
