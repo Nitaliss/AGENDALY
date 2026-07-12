@@ -2636,10 +2636,19 @@ body.nb-mode #nb-pill-orden { display:none !important; }
   <div class="upg-modal">
     <div class="upg-stars">✨</div>
     <h3 style="font-size:20px;margin-bottom:4px;">Tapunto Premium</h3>
-    <div style="font-size:22px;font-weight:900;color:var(--gd);margin:8px 0 2px;">3,99€ <span style="font-size:13px;font-weight:400;color:var(--tl);">/ año</span></div>
-    <p style="font-size:11px;color:var(--tl);margin-bottom:14px;">Menos de 33 céntimos al mes 🎉</p>
+    <div style="font-size:22px;font-weight:900;color:var(--gd);margin:8px 0 2px;">1,99€ <span style="font-size:13px;font-weight:400;color:var(--tl);">/ año</span></div>
+    <p style="font-size:11px;color:var(--tl);margin-bottom:10px;">Precio de lanzamiento · sube a 3,99€ en 2027 🎉</p>
     <div class="upg-features">
-      <div class="upg-feat"><span>∞</span> Tareas, notas y libreta ilimitadas</div>
+      <div class="upg-feat"><span>✅</span> Tareas, notas y clases ilimitadas</div>
+      <div class="upg-feat"><span>✅</span> 2 horarios + colores ilimitados</div>
+      <div class="upg-feat"><span>✅</span> Rutinas propias ilimitadas</div>
+      <div class="upg-feat"><span>✅</span> Libreta ilimitada</div>
+      <div class="upg-feat"><span>🎙️</span> Dictado de voz</div>
+      <div class="upg-feat"><span>📷</span> Fotos adjuntas</div>
+      <div class="upg-feat"><span>📤</span> Exportar PDF</div>
+      <div class="upg-feat"><span>💾</span> Backup de datos</div>
+      <div class="upg-feat"><span>📱</span> Hasta 5 dispositivos</div>
+    </div>
       <div class="upg-feat"><span>🎤</span> Dictado de voz</div>
       <div class="upg-feat"><span>☁️</span> Sincronización Google Drive</div>
       <div class="upg-feat"><span>📄</span> Exportar PDF · Importar ICS</div>
@@ -2658,6 +2667,7 @@ body.nb-mode #nb-pill-orden { display:none !important; }
     <hr class="upg-divider"/>
     <p style="font-size:11px;color:var(--th);margin-bottom:4px;">Compra tu licencia anual en:</p>
     <div style="font-family:'Caveat',cursive;font-size:18px;color:var(--gd);margin-bottom:14px;">tapunto.app/premium</div>
+    <button onclick="closeUpgrade()" style="width:100%;padding:10px;background:none;border:none;font-family:var(--font-main);font-size:12px;color:var(--tl);cursor:pointer;margin-bottom:6px;">Ahora no</button>
     <button id="btn-cerrar-upg" onclick="cerrarYCelebrar()" style="width:100%;padding:11px;background:var(--bl);border:1.5px solid var(--bd);border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;font-family:var(--font-main);color:var(--tl);">Cerrar</button>
   </div>
 </div>
@@ -3153,7 +3163,7 @@ body.nb-mode #nb-pill-orden { display:none !important; }
 </div>
 
 <!-- ══ MIS DOCUMENTOS ══ -->
-<div id="sec-albumes" class="section">
+<div id="sec-albumes" class="section" style="display:none!important;">
   <div class="tap-header">
     <button class="tap-header-btn" onclick="irHome()" style="flex-direction:column;gap:1px;"><span style="font-size:22px;line-height:1;color:#fff;font-weight:900;">&#8592;</span><span style="font-size:9px;color:#fff;font-weight:700;font-family:var(--font-main);letter-spacing:.3px;">Inicio</span></button>
     <span class="tap-header-title">Mis Apuntes 📚</span>
@@ -3929,7 +3939,7 @@ body.nb-mode #nb-pill-orden { display:none !important; }
         <div class="cfg-basic" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
           <div style="display:flex;align-items:center;gap:6px;">
             <span class="plan-badge plan-free" id="cfg-plan-badge" style="font-size:12px;padding:4px 12px;">FREE</span>
-            <span style="font-size:11px;color:var(--tl);" id="cfg-plan-desc">20 tareas · 30 notas · 3 páginas libreta</span>
+            <span style="font-size:11px;color:var(--tl);" id="cfg-plan-desc">10 tareas · 10 notas · 1 página libreta · 5 clases</span>
           </div>
           <div id="cfg-license-row">
             <button onclick="showUpgrade()" style="padding:7px 14px;background:linear-gradient(135deg,#f59e0b,#d97706);color:white;border:none;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:5px;">⭐ Hazte Premium · 3,99€/año</button>
@@ -3983,7 +3993,7 @@ body.nb-mode #nb-pill-orden { display:none !important; }
               <button onclick="icsOpenFilePicker()" style="padding:10px 18px;background:#4285F4;color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;">📅 Importar ICS</button>
             </div>
             
-            <!-- Google Drive Sync -->
+            <!-- Google Drive Sync ══ v40 ══ -->
             <div style="margin-top:14px;padding:12px;background:var(--bl);border-radius:10px;border:1px solid var(--bd);">
               <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
                 <div style="font-size:12px;font-weight:700;color:var(--td);font-family:var(--font-main);">☁️ Google Drive</div>
@@ -4451,6 +4461,7 @@ function profesSincronizarHorario(){
 function renderProfes(){
   profesSincronizarHorario();
   var profes=getProfes();
+  if(!isPremium&&profes.length>5) profes=profes.slice(0,5);
   var grid=document.getElementById('profes-grid');
   var navPag=document.getElementById('profes-nav-pag');
   var btnPrev=document.getElementById('profes-btn-prev');
@@ -5400,6 +5411,33 @@ function cerrarYCelebrar(){
   }
 }
 
+function mostrarMiPlan(){
+  var ov=document.createElement('div');
+  ov.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.65);display:flex;align-items:center;justify-content:center;z-index:9990;padding:16px;';
+  ov.innerHTML=
+    '<div style="background:var(--w);border-radius:18px;padding:24px 20px;max-width:320px;width:100%;font-family:var(--font-main);text-align:center;">'+
+      '<div style="font-size:36px;margin-bottom:8px;">⭐</div>'+
+      '<h3 style="font-size:18px;font-weight:800;color:var(--td);margin-bottom:4px;">Plan Premium activo</h3>'+
+      '<p style="font-size:11px;color:var(--tl);margin-bottom:14px;">Tapunto v40 · Gracias por tu apoyo 🎉</p>'+
+      '<div style="display:flex;flex-direction:column;gap:5px;margin-bottom:16px;text-align:left;">'+
+        '<div style="font-size:12px;color:var(--td);">✅ Tareas, notas y clases ilimitadas</div>'+
+        '<div style="font-size:12px;color:var(--td);">✅ 2 horarios + colores ilimitados</div>'+
+        '<div style="font-size:12px;color:var(--td);">✅ Rutinas propias ilimitadas</div>'+
+        '<div style="font-size:12px;color:var(--td);">✅ Libreta ilimitada</div>'+
+        '<div style="font-size:12px;color:var(--td);">✅ 🎙️ Dictado de voz</div>'+
+        '<div style="font-size:12px;color:var(--td);">✅ 📷 Fotos adjuntas</div>'+
+        '<div style="font-size:12px;color:var(--td);">✅ 📤 Exportar PDF</div>'+
+        '<div style="font-size:12px;color:var(--td);">✅ 💾 Backup de datos</div>'+
+        '<div style="font-size:12px;color:var(--td);">✅ Hasta 5 dispositivos</div>'+
+      '</div>'+
+      '<button onclick="this.closest(\'.miplan-wrap\').remove()" style="width:100%;padding:12px;background:linear-gradient(135deg,#1D9E75,#0e7a5a);color:#fff;border:none;border-radius:12px;font-family:var(--font-main);font-size:14px;font-weight:700;cursor:pointer;">✓ Cerrar</button>'+
+    '</div>';
+  // Add class to outer div for easy removal
+  ov.className='miplan-wrap';
+  ov.onclick=function(e){if(e.target===ov)ov.remove();};
+  document.body.appendChild(ov);
+}
+
 function showUpgrade(){
   var ov=document.getElementById('upg-ov');
   if(ov) ov.style.display='flex';
@@ -6142,7 +6180,7 @@ const titulo=(document.getElementById('inp-titulo')&&document.getElementById('in
 let estado=document.getElementById('inp-estado').value;
 if(!fecha){showWarn('La fecha es obligatoria.');if(saveBtn)saveBtn.disabled=false;return;}
 if(!tema){showWarn('El asunto es obligatorio.');if(saveBtn)saveBtn.disabled=false;return;}
-if(!isPremium&&state.records.length>=20&&!editingId){showUpgrade();if(saveBtn)saveBtn.disabled=false;return;}
+if(!isPremium&&state.records.length>=10&&!editingId){showUpgrade();if(saveBtn)saveBtn.disabled=false;return;}
 if(!estado) estado='pendiente';
 let imagenUrl=currentImageUrl;
 try{
@@ -6601,6 +6639,7 @@ inp.click();
 // MIS RUTINAS
 // ═══════════════════════════════════════
 function abrirNuevaRutina(){
+  if(!isPremium){showUpgrade();return;}
 var existing=document.getElementById('nueva-rutina-ov');
 if(existing){existing.remove();}
 var overlay=document.createElement('div');
@@ -6934,7 +6973,21 @@ function verHoy(){renderRutinasHoy();}
 function renderRutinasGrid(){
 var list=document.getElementById('rutinas-list');
 if(!list) return;
-if(!state.rutinas||!state.rutinas.length){
+// Free: solo mostrar rutina demo; si no hay ninguna mostrar empty state
+var rutinas=state.rutinas||[];
+if(!rutinas.some(function(r){return r._esDemo;})){try{asegurarRutinaDemo();rutinas=state.rutinas||[];}catch(e){}}
+if(!isPremium) rutinas=rutinas.filter(function(r){return r._esDemo;});
+if(!rutinas.length){
+  if(!isPremium){
+    // Free sin demo: mostrar la demo como ejemplo mínimo con candado
+    list.innerHTML='<div style="padding:24px 16px;text-align:center;font-family:var(--font-main);">'
+      +'<div style="font-size:40px;margin-bottom:10px;">🔄</div>'
+      +'<div style="font-size:14px;font-weight:700;color:var(--td);margin-bottom:6px;">Crea tus propias rutinas</div>'
+      +'<div style="font-size:12px;color:var(--tl);margin-bottom:14px;line-height:1.5;">Hábitos diarios que marcan la diferencia.<br>Disponible con Premium.</div>'
+      +'<button onclick="showUpgrade()" style="padding:10px 20px;background:var(--gd);color:#fff;border:none;border-radius:12px;font-family:var(--font-main);font-size:13px;font-weight:700;cursor:pointer;">⭐ Obtener Premium</button>'
+      +'</div>';
+    list.style.cssText='';return;
+  }
   list.innerHTML='<div class="empty" style="padding:30px;text-align:center;">No hay rutinas. Pulsa + para crear una.</div>';
   list.style.cssText='';return;
 }
@@ -6942,11 +6995,24 @@ list.style.cssText='display:grid;grid-template-columns:repeat(3,1fr);gap:10px;pa
 list.innerHTML='';
 var today=new Date();
 var todayKey=today.getFullYear()+'-'+String(today.getMonth()+1).padStart(2,'0')+'-'+String(today.getDate()).padStart(2,'0');
-state.rutinas.forEach(function(r){
+rutinas.forEach(function(r){
+  var esDemo=!!r._esDemo;
+  var soloLectura=esDemo&&!isPremium;
   var hecho=r.registros&&r.registros[todayKey]!==undefined&&r.registros[todayKey]!==null&&r.registros[todayKey]!=='';
   var card=document.createElement('button');
-  card.style.cssText='background:var(--w,#fff);border:2px solid '+(hecho?'#1D9E75':'var(--gd)')+';border-radius:14px;padding:12px 8px;display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer;position:relative;box-shadow:0 3px 0 '+(hecho?'#1D9E75':'var(--gd)')+';';
-  if(hecho){
+  var borderColor=soloLectura?'#aaa':(hecho?'#1D9E75':'var(--gd)');
+  card.style.cssText='background:var(--w,#fff);border:2px solid '+borderColor+';border-radius:14px;padding:12px 8px;display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer;position:relative;box-shadow:0 3px 0 '+borderColor+';'+(soloLectura?'opacity:0.85;':'');
+  // Badge demo
+  if(soloLectura){
+    var badge=document.createElement('div');
+    badge.style.cssText='position:absolute;top:-6px;right:-6px;background:#888;color:#fff;font-size:9px;font-weight:700;font-family:var(--font-main);padding:2px 5px;border-radius:6px;';
+    badge.textContent='DEMO';card.appendChild(badge);
+    // Candado
+    var lock=document.createElement('div');
+    lock.style.cssText='position:absolute;top:5px;left:5px;font-size:11px;';
+    lock.textContent='🔒';card.appendChild(lock);
+  }
+  if(hecho&&!soloLectura){
     var tick=document.createElement('div');
     tick.style.cssText='position:absolute;top:6px;right:6px;width:16px;height:16px;background:#1D9E75;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;color:#fff;';
     tick.textContent='✓';card.appendChild(tick);
@@ -6954,9 +7020,22 @@ state.rutinas.forEach(function(r){
   var ico=document.createElement('div');ico.style.cssText='font-size:28px;line-height:1;';ico.textContent=r.icono||'🌱';
   var nom=document.createElement('div');nom.style.cssText='font-size:10px;font-weight:700;color:var(--td);font-family:var(--font-main);text-align:center;line-height:1.3;word-break:break-word;';nom.textContent=r.nombre||'Rutina';
   card.appendChild(ico);card.appendChild(nom);
-  card.onclick=(function(rutina){return function(){abrirDetalleRutina(rutina.id);};})(r);
+  if(soloLectura){
+    // Tap en demo → mostrar upgrade
+    card.onclick=function(){showUpgrade();};
+  } else {
+    card.onclick=(function(rutina){return function(){abrirDetalleRutina(rutina.id);};})(r);
+  }
   list.appendChild(card);
 });
+// Si es Free: añadir tarjeta "+" bloqueada al final
+if(!isPremium){
+  var addCard=document.createElement('button');
+  addCard.style.cssText='background:var(--bl);border:2px dashed #aaa;border-radius:14px;padding:12px 8px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;cursor:pointer;opacity:0.7;';
+  addCard.innerHTML='<div style="font-size:24px;">🔒</div><div style="font-size:10px;color:var(--tl);font-family:var(--font-main);font-weight:700;">Premium</div>';
+  addCard.onclick=function(){showUpgrade();};
+  list.appendChild(addCard);
+}
 }
 
 function abrirDetalleRutina(id){
@@ -7472,6 +7551,7 @@ actualizarGrafica(defaultTipo);
 }
 
 function guardarNota(){
+  if(!isPremium&&(state.notas||[]).length>=10){showUpgrade();return;}
 var inp=document.getElementById('nota-input');
 var texto=inp?inp.value.trim():'';
 if(!texto) return;
@@ -7807,6 +7887,27 @@ btn.appendChild(iconSpan);btn.appendChild(labelSpan);
 btn.onclick=item.fn;
 menu.appendChild(btn);
 });
+// ── Botón Plan (siempre visible) ──
+var divPrem=document.createElement('div');
+divPrem.style.cssText='padding:8px 10px;border-top:0.5px solid var(--bd);';
+var btnPrem=document.createElement('button');
+if(isPremium){
+  btnPrem.style.cssText='width:100%;padding:9px 12px;background:linear-gradient(135deg,#1D9E75,#0e7a5a);color:#fff;border:none;border-radius:8px;font-family:var(--font-main);font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;';
+  btnPrem.innerHTML='⭐ Mi plan Premium';
+  btnPrem.onclick=function(){menu.remove();mostrarMiPlan();};
+} else {
+  btnPrem.style.cssText='width:100%;padding:9px 12px;background:linear-gradient(135deg,#f59e0b,#d97706);color:#fff;border:none;border-radius:8px;font-family:var(--font-main);font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;';
+  btnPrem.innerHTML='⭐ Obtener Premium';
+  btnPrem.onclick=function(){menu.remove();showUpgrade();};
+}
+divPrem.appendChild(btnPrem);
+menu.appendChild(divPrem);
+// ── Versión en footer ──
+var verDiv=document.createElement('div');
+verDiv.style.cssText='padding:6px 14px 8px;text-align:center;';
+verDiv.innerHTML='<span style="font-size:10px;color:var(--tl);font-family:var(--font-main);">Tapunto v40 · 2026</span>';
+menu.appendChild(verDiv);
+
 document.body.appendChild(menu);
 setTimeout(function(){
 document.addEventListener('click',function close(){
@@ -7987,7 +8088,7 @@ if(tab==='config'){renderThemes();loadPinConfig();loadSheetsToken();loadFirmaCon
 if(tab==='recordatorios'){renderReminders();renderAlertasInteligentes();}
 if(tab==='calendario') renderCalendario();
 if(tab==='notas'){if(!state.notas) state.notas=[];renderNotas();setTimeout(function(){var i=document.getElementById('nota-input');if(i)i.focus();},100);if(isPremium&&state.sheetsUrl) syncFromSheets(false).catch(function(){});}
-if(tab==='rutinas'){if(!state.rutinas) state.rutinas=[];renderRutinasHoy();}
+if(tab==='rutinas'){if(!state.rutinas) state.rutinas=[];try{asegurarRutinaDemo();}catch(e){}renderRutinasHoy();}
 if(tab==='tracker'){renderTracker();}
 if(tab==='profes'){if(!state.profes)state.profes=[];renderProfes();}
 if(tab==='albumes'){renderAlbumes();}
@@ -9055,6 +9156,7 @@ function exportarDatosCompletos(){
   showWarn('✓ Backup guardado ('+kb+' KB) en tu carpeta de Descargas. Muévelo a una carpeta segura llamada TAPUNTO-AGENDA para no perderlo.');
 }
 function exportBackupJSON(){
+  // v40: backup y Drive activos para demo
   // Recuperar libreta del localStorage
   var _libData=null;
   try{var _ls=localStorage.getItem('tp_libreta');if(_ls)_libData=JSON.parse(_ls);}catch(e){}
@@ -9668,6 +9770,8 @@ checkLicenseExpiry();
 updatePortadaNombre();
 // Cargar datos de ejemplo si es la primera vez
 setTimeout(function(){try{ejemploCargar();}catch(e){}},300);
+// Rutina demo: siempre disponible para usuarios Free
+setTimeout(function(){try{asegurarRutinaDemo();}catch(e){}},400);
 irHome();
 // Badge tras login
 setTimeout(function(){try{actualizarBadgeAvatar();}catch(e){}},600);
@@ -11158,7 +11262,8 @@ function hAutoColor(asig,sch){
   if(sch.colores[asig]===undefined){
     var used=Object.values(sch.colores);
     var idx=0,tries=0;
-    while(used.includes(idx)&&tries<8){idx=(idx+1)%8;tries++;}
+    var maxColors=isPremium?18:2;
+    while(used.includes(idx)&&tries<maxColors&&tries<8){idx=(idx+1)%8;tries++;}
     sch.colores[asig]=idx;
   }
   return sch.colores[asig];
@@ -11422,7 +11527,10 @@ function cancelarEdicionHorario(){
   renderHorarioHome();
   showToast('Cambios descartados');
 }
-function switchHorario(dir){var h=getHS();h.activo=(h.activo+dir+2)%2;persist().catch(function(){});renderHorarioHome();}
+function switchHorario(dir){
+  if(!isPremium){showUpgrade();return;}
+  var h=getHS();h.activo=(h.activo+dir+2)%2;persist().catch(function(){});renderHorarioHome();
+}
 function hRenombrar(nombre){getSch().nombre=nombre;}
 function hEditSlot(si,val){
   var sch=getSch();
@@ -13954,24 +14062,23 @@ function icsOpenFilePicker(){
 /* ═══ HELP SECTION ═══ */
 (function(){
   var items=[
-    {q:'\uD83C\uDFE0 Inicio', a:'Muestra la cita del d\u00EDa, el horario y tareas urgentes. Toca el avatar para personalizarlo (color, emoji o inicial). Los botones \u2600\uFE0F\uD83D\uDD04\uD83C\uDF19 controlan el modo de color. La barra inferior: \uD83C\uDFE0 Inicio \u00B7 \uD83D\uDCD2 Mi Agenda \u00B7 \u2705 To Do \u00B7 \uD83D\uDCDA Apuntes \u00B7 \u2190 Atr\u00E1s.'},
-    {q:'\uD83D\uDCD2 Mi Agenda', a:'Separadores laterales por asignatura. Pulsa \uFF0B arriba del sidebar para crear uno nuevo. El c\u00EDrculo junto a cada separador abre la paleta de colores. Usa \uD83C\uDFA8 Fondo en el header para cambiar el fondo de portada. Las tareas pueden repetirse: cada semana, 15 d\u00EDas o mes.'},
-    {q:'\u2705 To Do', a:'Tareas r\u00E1pidas. Escribe y pulsa A\u00F1adir. El cursor permanece para escribir otra sin salir. Usa \uD83C\uDF99\uFE0F para dictar. Archiva o elimina con los botones de cada tarea.'},
-    {q:'\uD83D\uDCD3 Mi Libreta', a:'Canvas t\u00E1ctil para dibujar y escribir. Herramientas: \u270F\uFE0F L\u00E1piz \u00B7 \uD83D\uDD8A\uFE0F Boli \u00B7 T Texto \u00B7 \uD83D\uDE0A Stickers (160) \u00B7 \u25FB Figuras \u00B7 \uD83E\uDDF9 Borrador \u00B7 \u21A9 Deshacer. Bot\u00F3n \uD83D\uDD0A sonido de escritura. Fondos y plantillas escalan con el zoom.'},
-    {q:'\uD83D\uDCDA Apuntes', a:'Fotos y documentos por asignaturas. A\u00F1ade desde c\u00E1mara o galer\u00EDa. Toca para ver, mant\u00E9n pulsado para opciones (compartir, eliminar).'},
-    {q:'\uD83D\uDCC5 Calendario e ICS', a:'Vista mensual. Para importar: Google Calendar \u2192 \u2699\uFE0F Configuraci\u00F3n \u2192 Exportar \u2192 descarga .ics \u2192 en Tapunto Ajustes \u2192 Importar ICS \u2192 asigna tipo a cada evento.'},
-    {q:'\uD83C\uDF45 Pomodoro', a:'Temporizador con 9 sonidos (generados localmente, sin derechos de autor). Configura tiempo de trabajo y descanso. Las sesiones se registran autom\u00E1ticamente.'},
-    {q:'\uD83D\uDCCA Calificaciones', a:'Introduce notas por asignatura y calcula la media. Exporta como PDF \u2B50.'},
-    {q:'\uD83D\uDD12 PIN y seguridad', a:'Act\u00EDvalo en Ajustes \u2192 Seguridad. Se guarda como hash SHA-256, nunca en texto claro. Los datos se cifran con AES-GCM en tu dispositivo.'},
-    {q:'\u2601\uFE0F Google Drive y backup', a:'El backup guarda todos tus datos en un .json. Gu\u00E1rdalo o s\u00FAbelo a Drive. Para restaurar: Ajustes \u2192 Restaurar backup. La sincronizaci\u00F3n Drive (Premium) guarda autom\u00E1ticamente en tu nube.'},
-    {q:'\uD83D\uDCCA Almacenamiento', a:'En Ajustes \u2192 Almacenamiento ves el espacio usado (m\u00E1ximo 5MB). Muestra el desglose por secci\u00F3n. Si superas el 85% aparece aviso en el inicio. Para liberar espacio, elimina manualmente desde cada secci\u00F3n.'},
-    {q:'\uD83C\uDFA8 Personalizaci\u00F3n', a:'En Ajustes \u2192 Personalizaci\u00F3n: 16 temas + 4 de temporada, 5 fuentes. El avatar se personaliza tocando el c\u00EDrculo del inicio: 12 colores, 16 emojis o tu inicial.'},
-    {q:'\u2699\uFE0F Configuraci\u00F3n', a:'PIN \u00B7 notificaciones \u00B7 sonido Pomodoro \u00B7 fuente \u00B7 backup \u00B7 Drive \u00B7 almacenamiento \u00B7 Premium.'},
-    {q:'\uD83D\uDD14 Notificaciones', a:'Toca \uD83D\uDD14 en el inicio para activarlas. Se programan localmente, sin servidores externos.'},
-    {q:'\u2190 Navegar', a:'El bot\u00F3n \u2190 en la barra inferior vuelve a la secci\u00F3n anterior. Al cancelar una nueva tarea tambi\u00E9n vuelve atr\u00E1s.'},
-    {q:'\u2B50 Premium', a:'Registros ilimitados \u00B7 dictado de voz \u00B7 fotos en Drive \u00B7 sincronizaci\u00F3n Drive \u00B7 backup autom\u00E1tico \u00B7 todos los temas \u00B7 exportar PDF \u00B7 m\u00FAltiples dispositivos. Obt\u00E9n tu c\u00F3digo en tapunto.app.'},
-  ,
-    {q:'\u2139\uFE0F Acerca de', a:'Tapunto es desarrollada por Alicia Prats y Enrique Garc\u00EDa \u00A9 2026 \u00B7 Valencia, Espa\u00F1a \u00B7 tapunto.app. Contacto: tapunto.soporte@gmail.com'}];
+    {q:'🏠 Inicio',a:'La pantalla de inicio muestra:\n\n📅 Tu horario de hoy · ✨ Cita motivacional · 📌 Próximas tareas\n\nAccesos rápidos: Calendario · Calificaciones · Mis Clases · Libreta · Pomodoro\n\nToca el avatar (arriba derecha) para: Primeros pasos · Avisos · Personalizar · Configuración.\n\nDATOS DE EJEMPLO: La primera vez verás datos de ejemplo en gris. Elimínalos desde el banner del Inicio o desde Avatar → Primeros Pasos.'},
+    {q:'📒 Mi Agenda',a:'Guarda tus tareas, exámenes y trabajos.\n\nPlan gratuito: hasta 10 tareas activas.\nPremium: ilimitadas.\n\nCada tarea puede tener: asignatura, tipo, fecha de entrega, notas y foto adjunta (Premium).\n\nToca una tarea para ver detalle, editar, duplicar o eliminar.'},
+    {q:'✅ To Do',a:'Lista de tareas rápidas. Escribe y pulsa Añadir.\n\nPlan gratuito: hasta 10 notas.\nPremium: ilimitadas.\n\nUsa 🎙️ para dictar (Premium). Toca la tarea para marcarla como hecha o eliminarla.'},
+    {q:'📅 Calendario',a:'Vista mensual de tus tareas con punto de color según urgencia. Toca un día para ver las tareas de ese día.\n\nImportar desde Google Calendar (.ics): Configuración → Importar ICS (Premium).'},
+    {q:'📊 Calificaciones',a:'Muestra tus exámenes y trabajos pendientes de nota. Toca uno para añadir la calificación.\n\nExporta el informe en PDF (Premium).\n\nLas calificaciones están ligadas a tus registros de Mi Agenda.'},
+    {q:'📅 Horario',a:'Tu horario semanal en la pantalla de Inicio. Añade tus asignaturas y cambia sus colores.\n\nPlan gratuito: 1 horario con hasta 2 colores.\nPremium: 2 horarios y paleta completa de colores.\n\nToca una celda del horario para crear una tarea de esa asignatura rápidamente.'},
+    {q:'🔄 Rutinas',a:'Hábitos diarios que puedes registrar cada día.\n\nPlan gratuito: muestra una rutina de ejemplo "💧 Beber agua" (solo lectura).\nPremium: crea rutinas ilimitadas personalizadas.\n\nToca una rutina para registrar si la has completado hoy.'},
+    {q:'📓 Mi Libreta',a:'Canvas táctil para dibujar y escribir a mano.\n\nPlan gratuito: 1 página.\nPremium: páginas ilimitadas.\n\nHerramientas: ✏️ Lápiz · 🖊️ Boli · T Texto · 😊 Stickers · ▭ Figuras · 🧹 Borrador · ↩ Deshacer.'},
+    {q:'🍅 Pomodoro',a:'Temporizador de estudio completamente gratuito.\n\nConfigura el tiempo de trabajo y descanso. Las sesiones se registran automáticamente.\n\nSonidos: pitido, campana, fanfarria o silencio.'},
+    {q:'👩‍🏫 Mis Clases',a:'Tarjetas con información de tus profesores/as: nombre, tutoría, contacto.\n\nPlan gratuito: hasta 5 clases.\nPremium: ilimitadas.\n\nSe sincronizan automáticamente con las asignaturas de tu horario.'},
+    {q:'🔷 Mi Tracker',a:'Registra cómo te sientes cada día con un rombo de colores. Completamente gratuito.\n\nExporta tu tracker como imagen para compartirlo.'},
+    {q:'🔐 PIN y seguridad',a:'Activa un PIN de 4 dígitos en Configuración → Seguridad.\n\nEl PIN se guarda como hash SHA-256, nunca en texto claro. Los datos se cifran con AES-GCM en tu dispositivo. Nadie más puede acceder a ellos.'},
+    {q:'💾 Backup y datos',a:'Tapunto guarda tus datos en el dispositivo, cifrados con AES-GCM.\n\nCon Premium puedes hacer un backup completo (.json). Guárdalo en tu correo, ordenador o en la nube.\n\nPara restaurar: Configuración → Restaurar backup → selecciona tu archivo .json.\n\n☁️ Sincronización con Google Drive: disponible en esta versión. Conecta tu cuenta desde Configuración → Google Drive.'},
+    {q:'🎨 Personalización',a:'En Configuración → Personalización: temas de color y fuente.\n\nEl avatar se personaliza tocando el círculo del inicio: 12 colores, 16 emojis o tu inicial.'},
+    {q:'⭐ Gratuito vs Premium',a:'PLAN GRATUITO:\n• Hasta 10 tareas en Mi Agenda\n• Hasta 10 notas en To Do\n• Hasta 5 clases en Mis Clases\n• 1 página de libreta\n• 1 rutina de ejemplo (solo lectura)\n• 1 horario + 2 colores\n• Calendario y Calificaciones completos\n• Pomodoro y Tracker completos\n\nPLAN PREMIUM (1,99€/año — precio de lanzamiento):\n• Todo ilimitado\n• 2 horarios + colores ilimitados\n• Rutinas propias ilimitadas\n• Libreta ilimitada\n• 🎙️ Dictado de voz\n• 📷 Fotos adjuntas\n• 📤 Exportar PDF\n• 💾 Backup de datos\n• Hasta 5 dispositivos\n\nEl precio sube a 3,99€/año en 2027.\n\nVer tu plan: avatar → ⭐ Mi plan Premium.'},
+    {q:'ℹ️ Acerca de',a:'Tapunto es desarrollada por Alicia Prats y Enrique García © 2026 · Valencia, España · tapunto.app · Contacto: tapunto.soporte@gmail.com'}
+  ]
   var acc=document.getElementById('help-accordion');
   if(!acc) return;
   acc.innerHTML='';
@@ -15669,6 +15776,26 @@ function cerrarPrimerosPasos(){
 var _ASIG_EJEMPLO = '📖 Clase de ejemplo';
 var _COLOR_EJEMPLO = {bg:'#e0e0e0', tx:'#222222'}; // gris neutro
 
+function asegurarRutinaDemo(){
+  // Siempre mantener la rutina demo para usuarios Free
+  if(!state.rutinas) state.rutinas=[];
+  if(!state.rutinas.some(function(r){return r._esDemo;})){
+    state.rutinas.push({
+      id:'rutina-demo-1',
+      nombre:'💧 Beber agua',
+      descripcion:'Beber 8 vasos de agua al día para mantenerte hidratado/a',
+      frecuencia:'diaria',
+      hora:'08:00',
+      icono:'💧',
+      color:'#2980b9',
+      activa:true,
+      _esDemo:true,
+      created:new Date().toISOString()
+    });
+    persist().catch(function(){});
+  }
+}
+
 function ejemploCargar(){
   // Solo si NO hay datos reales aún
   var tieneAsigs = (state.temas||[]).filter(function(t){return t!==_ASIG_EJEMPLO;}).length > 0;
@@ -15746,6 +15873,7 @@ function ejemploCargar(){
     notas:'Esta es una tarjeta de ejemplo. Edítala con los datos reales de tu profesor/a.',
     _esEjemplo:true
   });
+
 
   persist().catch(function(){});
   console.log('Tapunto: datos de ejemplo cargados');
@@ -15950,7 +16078,9 @@ function libSetColor(c,el){_lib.color=c;document.querySelectorAll('.lib-color').
 function libSetSize(s,btn){_lib.grosor=s;document.querySelectorAll('.lib-size').forEach(function(b){b.classList.remove('active');});if(btn)btn.classList.add('active');}
 function libCambiarFondo(){var p=document.getElementById('lib-fondo-panel');if(p)p.style.display='flex';}
 function libSetFondo(tipo,color){var pag=_lib.paginas[_lib.pagActual];if(!pag)return;pag.fondo=tipo;pag.bgColor=(tipo==='custom'&&color)?color:null;libRedraw();libGuardar();if(tipo!=='custom'){var p=document.getElementById('lib-fondo-panel');if(p)p.style.display='none';}}
-function libNuevaPagina(silent){var hoy=new Date().toISOString().slice(0,10);_lib.paginas.push({fecha:hoy,fondo:'rayas',bgColor:null,trazos:[],textos:[]});_lib.pagActual=_lib.paginas.length-1;_lib.historial=[];_lib.zoom=1;_lib.panX=0;_lib.panY=0;if(!silent){libRedraw();libGuardar();libActualizarNavPag();}}
+function libNuevaPagina(silent){
+  if(!isPremium&&_lib.paginas.length>=1){showUpgrade();return;}
+  var hoy=new Date().toISOString().slice(0,10);_lib.paginas.push({fecha:hoy,fondo:'rayas',bgColor:null,trazos:[],textos:[]});_lib.pagActual=_lib.paginas.length-1;_lib.historial=[];_lib.zoom=1;_lib.panX=0;_lib.panY=0;if(!silent){libRedraw();libGuardar();libActualizarNavPag();}}
 function libPagAnterior(){if(_lib.pagActual>0){_lib.pagActual--;_lib.zoom=1;_lib.panX=0;_lib.panY=0;_lib.historial=[];libRedraw();libActualizarNavPag();}}
 function libPagSiguiente(){if(_lib.pagActual<_lib.paginas.length-1){_lib.pagActual++;_lib.zoom=1;_lib.panX=0;_lib.panY=0;_lib.historial=[];libRedraw();libActualizarNavPag();}}
 function libRenderPagina(){_lib.zoom=1;_lib.panX=0;_lib.panY=0;_lib.historial=[];libRedraw();}
@@ -16886,71 +17016,67 @@ if('serviceWorker' in navigator && location.hostname==='tapunto.app'){
     <div class="mpp-paso">
       <div class="mpp-num">1</div>
       <div class="mpp-body">
-        <div class="mpp-paso-title">🗓️ Configura tu horario</div>
-        <div class="mpp-paso-en">Set up your timetable</div>
-        <div class="mpp-paso-desc">Todo en Tapunto parte del horario. Una vez configurado, verás tus clases de hoy en el Inicio, tus profesores en Mis Clases y podrás crear tareas por asignatura.<br><br><em>Everything in Tapunto starts with your timetable. Once set up, you'll see today's classes on the Home screen, your teachers in My Classes, and you can create tasks by subject.</em></div>
-        <div class="mpp-tip">💡 Ve a Rutinas → toca el + → elige el día y hora → escribe la asignatura.<br><em>Go to Routines → tap + → choose day and time → write the subject.</em></div>
-        <button class="mpp-btn-ir" onclick="cerrarPrimerosPasos();irSeccion('rutinas')">🔄 Ir a Rutinas →</button>
+        <p class="mpp-paso-title">🗓️ Configura tu horario</p>
+        <p class="mpp-paso-en">Set up your timetable</p>
+        <p class="mpp-paso-desc">En el Inicio toca ✏️ Editar y añade tus asignaturas en cada franja horaria. El plan gratuito incluye 1 horario con 2 colores. Con Premium tienes 2 horarios y colores ilimitados.</p>
+        <button class="mpp-btn-ir" onclick="cerrarPrimerosPasos();irHome()">🏠 Ir al Inicio →</button>
       </div>
     </div>
 
     <div class="mpp-paso">
       <div class="mpp-num">2</div>
       <div class="mpp-body">
-        <div class="mpp-paso-title">📝 Crea tu primera tarea</div>
-        <div class="mpp-paso-en">Create your first task</div>
-        <div class="mpp-paso-desc">Toca el botón verde ＋ en la barra inferior para crear una tarea. Elige asignatura, fecha y tipo (Examen, Entrega, Apuntes...). Las tareas aparecen en Mi Agenda y en el Calendario.<br><br><em>Tap the green ＋ button at the bottom to create a task. Choose subject, date and type (Exam, Homework, Notes...). Tasks appear in My Agenda and Calendar.</em></div>
-        <div class="mpp-tip">💡 Las tareas de tipo Examen o Trabajo pueden tener nota — aparecen en Calificaciones.<br><em>Tasks of type Exam or Work can have a grade — they appear in Grades.</em></div>
-        <button class="mpp-btn-ir" onclick="cerrarPrimerosPasos();document.querySelector('.fab-btn')&&document.querySelector('.fab-btn').click()">＋ Nueva tarea →</button>
+        <p class="mpp-paso-title">📝 Crea tu primera tarea</p>
+        <p class="mpp-paso-en">Create your first task</p>
+        <p class="mpp-paso-desc">Pulsa el botón ＋ para añadir un examen, trabajo o práctica. Puedes poner fecha de entrega para verla en el Calendario y en las alertas del Inicio. El plan gratuito permite hasta 10 tareas activas.</p>
+        <button class="mpp-btn-ir" onclick="cerrarPrimerosPasos();irSeccion('nuevo')">📝 Nueva tarea →</button>
       </div>
     </div>
 
     <div class="mpp-paso">
       <div class="mpp-num">3</div>
       <div class="mpp-body">
-        <div class="mpp-paso-title">👩‍🏫 Conoce a tus profes</div>
-        <div class="mpp-paso-en">Meet your teachers</div>
-        <div class="mpp-paso-desc">Después de configurar el horario, ve a Mis Clases desde el Inicio. Aparecerán tus asignaturas automáticamente. Añade el nombre del profesor, su horario de tutoría y notas importantes.<br><br><em>After setting up your timetable, go to My Classes from the Home screen. Your subjects will appear automatically. Add the teacher's name, tutoring hours, and important notes.</em></div>
+        <p class="mpp-paso-title">👩‍🏫 Añade tus clases</p>
+        <p class="mpp-paso-en">Add your classes</p>
+        <p class="mpp-paso-desc">En Mis Clases guarda el nombre del profesor/a, tutoría y contacto de cada asignatura. Se sincronizan con tu horario automáticamente. El plan gratuito incluye hasta 5 clases.</p>
         <button class="mpp-btn-ir" onclick="cerrarPrimerosPasos();irSeccion('profes')">👩‍🏫 Mis Clases →</button>
+      </div>
+    </div>
+
+    <div class="mpp-paso">
+      <div class="mpp-num">4</div>
+      <div class="mpp-body">
+        <p class="mpp-paso-title">💾 Protege tus datos</p>
+        <p class="mpp-paso-en">Protect your data</p>
+        <p class="mpp-paso-desc">Activa un PIN en Configuración → Seguridad para proteger tu agenda. Con Premium puedes hacer un backup completo en formato JSON para no perder nada si cambias de dispositivo.</p>
+        <button class="mpp-btn-ir" onclick="cerrarPrimerosPasos();irSeccion('config')">⚙️ Configuración →</button>
       </div>
     </div>
 
     <div class="mpp-divider">✨ Extras / Extra features</div>
 
     <div class="mpp-paso">
-      <div class="mpp-num">4</div>
-      <div class="mpp-body">
-        <div class="mpp-paso-title">🔷 Mi Tracker de estado de ánimo</div>
-        <div class="mpp-paso-en">My mood tracker</div>
-        <div class="mpp-paso-desc">Toca un rombo cada día para registrar cómo te has sentido. Al final del año tienes una imagen completa de tu bienestar. Puedes exportarla como imagen.<br><br><em>Tap a diamond each day to record how you felt. At year's end you have a complete picture of your wellbeing. You can export it as an image.</em></div>
-        <button class="mpp-btn-ir" onclick="cerrarPrimerosPasos();irSeccion('tracker')">🔷 Mi Tracker →</button>
-      </div>
-    </div>
-
-    <div class="mpp-paso">
       <div class="mpp-num">5</div>
       <div class="mpp-body">
-        <div class="mpp-paso-title">📓 La libreta de dibujo</div>
-        <div class="mpp-paso-en">The drawing notebook</div>
-        <div class="mpp-paso-desc">Dibuja, escribe a mano o haz esquemas. La barra de herramientas está en el lateral izquierdo. Toca ●, ━ o 🎨 para cambiar color, grosor o fondo. Los trazos se guardan sin límite de espacio.<br><br><em>Draw, handwrite or make diagrams. The toolbar is on the left side. Tap ●, ━ or 🎨 to change color, thickness or background. Strokes are saved with no space limit.</em></div>
-        <button class="mpp-btn-ir" onclick="cerrarPrimerosPasos();irSeccion('libreta')">📓 Ir a Libreta →</button>
+        <p class="mpp-paso-title">🍅 Estudia con Pomodoro</p>
+        <p class="mpp-paso-en">Study with Pomodoro</p>
+        <p class="mpp-paso-desc">El temporizador Pomodoro es completamente gratuito. Configura tu tiempo de trabajo y descanso, selecciona la asignatura y empieza a estudiar. Tus sesiones se registran automáticamente.</p>
+        <button class="mpp-btn-ir" onclick="cerrarPrimerosPasos();irSeccion('estudio')">🍅 Pomodoro →</button>
       </div>
     </div>
 
     <div class="mpp-paso">
       <div class="mpp-num">6</div>
       <div class="mpp-body">
-        <div class="mpp-paso-title">💾 Haz un backup</div>
-        <div class="mpp-paso-en">Make a backup</div>
-        <div class="mpp-paso-desc">Tus datos se guardan solo en este dispositivo. Haz una copia de seguridad periódica para no perder nada. También puedes conectar Google Drive para sincronizar automáticamente.<br><br><em>Your data is saved only on this device. Make a periodic backup so you don't lose anything. You can also connect Google Drive to sync automatically.</em></div>
-        <div class="mpp-tip">💡 Avatar → Configuración → Backup completo JSON<br><em>Avatar → Settings → Full JSON Backup</em></div>
-        <button class="mpp-btn-ir" onclick="cerrarPrimerosPasos();irSeccion('config')">⚙️ Configuración →</button>
+        <p class="mpp-paso-title">🔷 Registra tu estado de ánimo</p>
+        <p class="mpp-paso-en">Track your mood</p>
+        <p class="mpp-paso-desc">Mi Tracker te permite registrar cómo te sientes cada día con un rombo de colores. Completamente gratuito. Puedes exportarlo como imagen al final del mes.</p>
+        <div class="mpp-tip">💡 Toca el avatar → 🔷 Mi Tracker para abrirlo</div>
       </div>
     </div>
 
   </div>
 </div>
-
 
 <!-- ══ MODAL AVISOS ══ -->
 <div id="modal-avisos" onclick="if(event.target===this)cerrarAvisos()">
