@@ -3183,7 +3183,7 @@ body.nb-mode #nb-pill-orden { display:none !important; }
     <input id="alb-search" type="search" placeholder="Buscar apuntes..." oninput="albFiltrarBusqueda(this.value)" style="width:100%;padding:7px 10px 7px 30px;border:1.5px solid var(--bd);border-radius:10px;font-size:13px;font-family:var(--font-main);background:var(--bp);color:var(--td);box-sizing:border-box;"/>
   </div>
   <div id="albumes-filtro" style="padding:6px 12px 4px;display:flex;gap:6px;overflow-x:auto;background:var(--bl);border-bottom:1px solid var(--bd);"></div>
-  <div id="alb-storage-warn" style="padding:6px 12px;background:var(--bp);border-bottom:1px solid var(--bd);display:block;">
+  <div id="alb-storage-warn" style="padding:6px 12px;background:var(--bp);border-bottom:1px solid var(--bd);display:none;">
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px;font-size:10px;font-family:var(--font-main);color:var(--tl);">
     <span>💾 Almacenamiento local</span>
     <span id="alb-storage-label">calculando...</span>
@@ -4784,8 +4784,26 @@ async function driveSyncSubir(){
     // Incluir libreta (localStorage) en la sincronización
   var _libreta=null;
   try{var _ls=localStorage.getItem('tp_libreta');if(_ls)_libreta=JSON.parse(_ls);}catch(e){}
-  var dataObj=Object.assign({},state,{
+  // Recuperar docs de IDB antes de subir a Drive
+  var stateConDocs=JSON.parse(JSON.stringify(state));
+  var recsD=stateConDocs.records||[];
+  for(var rdi=0;rdi<recsD.length;rdi++){
+    var docsD=recsD[rdi].docs||[];
+    for(var ddi=0;ddi<docsD.length;ddi++){
+      var dd=docsD[ddi];
+      if(dd.idbKey&&!dd.data){
+        try{var idbD=await fotoIDBLeer(dd.idbKey);if(idbD&&idbD.data)dd.data=idbD.data;}catch(e){}
+      }
+    }
+    if(recsD[rdi].imagenIdbKey&&!recsD[rdi].imagenUrl){
+      try{var idbI=await fotoIDBLeer(recsD[rdi].imagenIdbKey);if(idbI&&idbI.data)recsD[rdi].imagenUrl=idbI.data;}catch(e){}
+    }
+  }
+  var _fd2=new Date();
+  var _fechaDrive='TAPUNTO_'+_fd2.getFullYear()+'_'+String(_fd2.getMonth()+1).padStart(2,'0')+'_'+String(_fd2.getDate()).padStart(2,'0');
+  var dataObj=Object.assign({},stateConDocs,{
     _libreta:_libreta||[],
+    _fechaBackup:new Date().toISOString(),
     config:{
       theme:state.theme||'sage',
       font:state.font||'Nunito',
@@ -4795,7 +4813,7 @@ async function driveSyncSubir(){
   });
   var data = JSON.stringify(dataObj);
     var blob = new Blob([data], {type:'application/json'});
-    var metadata = {name: DRIVE_FILE_NAME, mimeType:'application/json'};
+    var metadata = {name: _fechaDrive+'.json', mimeType:'application/json'};
     if(!_driveFileId){
       // Buscar si ya existe el archivo
       var searchRes = await fetch('https://www.googleapis.com/drive/v3/files?q=name%3D%27'+DRIVE_FILE_NAME+'%27+and+trashed%3Dfalse&fields=files(id,modifiedTime)', {
@@ -6026,7 +6044,12 @@ function onImageSelected(e){
     var reader=new FileReader();
     reader.onload=function(ev){
       // Guardar en _nuevoDocs para consistencia
-      window._nuevoDocs.push({nombre:file.name,data:ev.target.result,tipo:file.type});
+      var _tipo=file.type||'';
+      if(!_tipo||_tipo==='image'){
+        var _ext=(file.name||'').split('.').pop().toLowerCase();
+        _tipo=_ext==='jpg'||_ext==='jpeg'?'image/jpeg':_ext==='png'?'image/png':_ext==='gif'?'image/gif':_ext==='pdf'?'application/pdf':file.type||'application/octet-stream';
+      }
+      window._nuevoDocs.push({nombre:file.name,data:ev.target.result,tipo:_tipo});
       // Actualizar preview principal (última imagen seleccionada)
       currentImageBase64=ev.target.result.split(',')[1];
       currentImageName=file.name; currentImageMime=file.type; currentImageUrl=null;
@@ -6184,9 +6207,18 @@ if(!isPremium&&state.records.length>=10&&!editingId){showUpgrade();if(saveBtn)sa
 if(!estado) estado='pendiente';
 let imagenUrl=currentImageUrl;
 try{
-if(currentImageBase64&&!imagenUrl){
-imagenUrl=await resizeImageForLocal(currentImageBase64,currentImageMime);
-}
+  // Prioridad 1: imagen de _nuevoDocs (seleccionada via galería/cámara)
+  if(!imagenUrl&&window._nuevoDocs&&window._nuevoDocs.length>0){
+    var primerDoc=window._nuevoDocs[0];
+    if(primerDoc&&primerDoc.tipo&&(primerDoc.tipo.indexOf('image/')===0||primerDoc.tipo==='image')){
+      imagenUrl=primerDoc.data; // ya es data URL completo
+      window._nuevoDocs=window._nuevoDocs.slice(1);
+    }
+  }
+  // Prioridad 2: currentImageBase64 (otros flujos)
+  if(!imagenUrl&&currentImageBase64){
+    imagenUrl=await resizeImageForLocal(currentImageBase64,currentImageMime||'image/jpeg');
+  }
 }catch(e){console.warn('Error imagen:',e);}
 if(editingId){
 const idx=state.records.findIndex(r=>r.id===editingId);
@@ -6341,7 +6373,24 @@ var chk=document.getElementById('chk-calendar');
 if(chk&&chk.checked){generarICS(rec);return;}
 }
 async function resizeImageForLocal(base64,mime){
-return new Promise(res=>{const img=new Image();img.onload=()=>{const MAX=300;let w=img.width,h=img.height;if(w>h&&w>MAX){h=Math.round(h*MAX/w);w=MAX;}else if(h>MAX){w=Math.round(w*MAX/h);h=MAX;}const c=document.createElement('canvas');c.width=w;c.height=h;c.getContext('2d').drawImage(img,0,0,w,h);res(c.toDataURL('image/jpeg',0.7));};img.src='data:'+mime+';base64,'+base64;});
+return new Promise(res=>{
+  const img=new Image();
+  img.onload=()=>{
+    const MAX=1200;
+    let w=img.width,h=img.height;
+    if(w>h&&w>MAX){h=Math.round(h*MAX/w);w=MAX;}
+    else if(h>MAX){w=Math.round(w*MAX/h);h=MAX;}
+    const c=document.createElement('canvas');
+    c.width=w;c.height=h;
+    c.getContext('2d').drawImage(img,0,0,w,h);
+    res(c.toDataURL('image/jpeg',0.85));
+  };
+  img.onerror=()=>{
+    // Si falla el resize, devolver el data URL original
+    res('data:'+mime+';base64,'+base64);
+  };
+  img.src='data:'+mime+';base64,'+base64;
+});
 }
 function resetForm(){
 ['inp-contacto','inp-tema','inp-accion','inp-comunicado'].forEach(id=>document.getElementById(id).value='');
@@ -9165,7 +9214,7 @@ function exportarDatosCompletos(){
   var kb = Math.round(json.length/1024);
   showWarn('✓ Backup guardado ('+kb+' KB) en tu carpeta de Descargas. Muévelo a una carpeta segura llamada TAPUNTO-AGENDA para no perderlo.');
 }
-function exportBackupJSON(){
+async function exportBackupJSON(){
   // v40: backup y Drive activos para demo
   // Recuperar libreta del localStorage
   var _libData=null;
@@ -9175,7 +9224,28 @@ function exportBackupJSON(){
     fecha:new Date().toISOString(),
     usuario:currentUser||'tapunto',
     // Tareas y datos base
-    records:state.records||[],
+    records:await (async function(){
+      var recs=JSON.parse(JSON.stringify(state.records||[]));
+      for(var ri=0;ri<recs.length;ri++){
+        var docs=recs[ri].docs||[];
+        for(var di=0;di<docs.length;di++){
+          var d=docs[di];
+          if(d.idbKey&&!d.data){
+            try{
+              var idbItem=await fotoIDBLeer(d.idbKey);
+              if(idbItem&&idbItem.data) d.data=idbItem.data;
+            }catch(e){}
+          }
+        }
+        if(recs[ri].imagenIdbKey&&!recs[ri].imagenUrl){
+          try{
+            var idbImg=await fotoIDBLeer(recs[ri].imagenIdbKey);
+            if(idbImg&&idbImg.data) recs[ri].imagenUrl=idbImg.data;
+          }catch(e){}
+        }
+      }
+      return recs;
+    })(),
     profes:state.profes||[],
     tracker:state.tracker||{},
     contactos:state.contactos||[],
@@ -9204,7 +9274,7 @@ function exportBackupJSON(){
   a.href=URL.createObjectURL(new Blob([json],{type:'application/json'}));
   var _fd=new Date();
   var _fechaB=_fd.getFullYear()+'-'+String(_fd.getMonth()+1).padStart(2,'0')+'-'+String(_fd.getDate()).padStart(2,'0');
-  a.download='tapunto-datos-'+_fechaB+'.json';
+  a.download='TAPUNTO_'+_fd.getFullYear()+'_'+String(_fd.getMonth()+1).padStart(2,'0')+'_'+String(_fd.getDate()).padStart(2,'0')+'.json';
   // Guardar fecha del último backup
   localStorage.setItem('tp_last_backup_'+currentUser, Date.now().toString());
   a.click();
@@ -11758,7 +11828,21 @@ function verRegistro(id){
   if(r.imagenUrl){
     var ff=document.createElement('div');ff.className='rvm-field';
     var img=document.createElement('img');img.src=r.imagenUrl;img.style.cssText='width:100%;max-height:200px;object-fit:cover;border-radius:8px;cursor:pointer;';
-    img.onclick=function(){albAbrirFull(r.imagenUrl);};
+    img.onclick=function(){
+      var ex=document.getElementById('doc-visor-ov');if(ex)ex.remove();
+      var ov=document.createElement('div');
+      ov.id='doc-visor-ov';
+      ov.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.95);z-index:99999;display:flex;align-items:center;justify-content:center;';
+      ov.onclick=function(e){if(e.target===ov)ov.remove();};
+      var imgV=document.createElement('img');
+      imgV.src=r.imagenUrl;
+      imgV.style.cssText='max-width:100%;max-height:90vh;object-fit:contain;border-radius:8px;';
+      var bx=document.createElement('button');
+      bx.style.cssText='position:fixed;top:12px;right:12px;background:rgba(0,0,0,.6);border:none;color:#fff;font-size:22px;cursor:pointer;border-radius:50%;width:38px;height:38px;z-index:100000;';
+      bx.textContent='✕';bx.onclick=function(){ov.remove();};
+      ov.appendChild(imgV);ov.appendChild(bx);
+      document.body.appendChild(ov);
+    };
     ff.appendChild(img);sheet.appendChild(ff);
   }
   // Cerrar button
@@ -11781,36 +11865,33 @@ function verRegistro(id){
       var ico=ext==='pdf'?'📄':ext==='doc'||ext==='docx'?'📝':ext==='ppt'||ext==='pptx'?'📊':'📎';
       docBtn.innerHTML='<span style="font-size:16px;">'+ico+'</span><span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">'+doc.nombre+'</span>';
       docBtn.onclick=function(){
-        if(doc.data){
-          try{
-            // Convert base64 dataURL to Blob for proper opening
-            var parts=doc.data.split(',');
-            var mime=parts[0].match(/:(.*?);/)[1];
-            var binary=atob(parts[1]);
-            var arr=new Uint8Array(binary.length);
-            for(var i=0;i<binary.length;i++) arr[i]=binary.charCodeAt(i);
-            var blob=new Blob([arr],{type:mime});
-            var url=URL.createObjectURL(blob);
-            // Open images and PDFs in new tab; download other files
-            if(mime.indexOf('image/')===0||mime.indexOf('pdf')>=0){
-              window.open(url,'_blank');
-              setTimeout(function(){URL.revokeObjectURL(url);},10000);
-            } else {
-              var a=document.createElement('a');
-              a.href=url;
-              a.download=doc.nombre||'archivo';
-              document.body.appendChild(a);
-              a.click();
-              document.body.removeChild(a);
-              setTimeout(function(){URL.revokeObjectURL(url);},5000);
-            }
-          }catch(e){
-            // Fallback: direct download
-            var a=document.createElement('a');
-            a.href=doc.data;
-            a.download=doc.nombre||'archivo';
-            a.click();
-          }
+        if(!doc.data){alert('Archivo no disponible.');return;}
+        var mime=doc.tipo||'';
+        var esImg=mime.indexOf('image/')===0||mime==='image';
+        if(esImg){
+          // Imagen: visor a pantalla completa
+          var ex=document.getElementById('doc-visor-ov');if(ex)ex.remove();
+          var ov=document.createElement('div');
+          ov.id='doc-visor-ov';
+          ov.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.95);z-index:99999;display:flex;align-items:center;justify-content:center;';
+          ov.onclick=function(e){if(e.target===ov)ov.remove();};
+          var imgV=document.createElement('img');
+          imgV.src=doc.data;
+          imgV.style.cssText='max-width:100%;max-height:90vh;object-fit:contain;border-radius:8px;';
+          imgV.onerror=function(){imgV.alt='No se pudo cargar';};
+          var bx=document.createElement('button');
+          bx.style.cssText='position:fixed;top:12px;right:12px;background:rgba(0,0,0,.6);border:none;color:#fff;font-size:22px;cursor:pointer;border-radius:50%;width:38px;height:38px;z-index:100000;';
+          bx.textContent='✕';bx.onclick=function(){ov.remove();};
+          ov.appendChild(imgV);ov.appendChild(bx);
+          document.body.appendChild(ov);
+        } else {
+          // PDF u otro: descargar directamente
+          var a=document.createElement('a');
+          a.href=doc.data;
+          a.download=doc.nombre||'archivo';
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
         }
       };
       docsDiv.appendChild(docBtn);
@@ -12037,12 +12118,70 @@ function viewRecord(id){
   albBtn.textContent='\uD83D\uDCF7 Fotos y archivos de esta tarea';
   albBtn.onclick=function(){
     modal.remove();
-    window._albRecordId = r.id; // vincular álbum a esta tarea
-    irSeccion('albumes');
-    setTimeout(function(){
-      _albFiltroAsig=r.tema||'';
-      renderAlbumes();
-    },200);
+    // Mostrar docs de rec.docs inline
+    if(!r.docs||r.docs.length===0){
+      alert('Esta tarea no tiene archivos adjuntos.');
+      return;
+    }
+    var ovDocs=document.createElement('div');
+    ovDocs.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:99999;display:flex;flex-direction:column;';
+    var hdrD=document.createElement('div');
+    hdrD.style.cssText='display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:rgba(0,0,0,.6);flex-shrink:0;';
+    hdrD.innerHTML='<span style="color:#fff;font-family:var(--font-main);font-size:14px;font-weight:700;">📎 Archivos adjuntos</span>';
+    var btnX2=document.createElement('button');
+    btnX2.style.cssText='background:none;border:none;color:#fff;font-size:22px;cursor:pointer;';
+    btnX2.textContent='✕';
+    btnX2.onclick=function(){ovDocs.remove();};
+    hdrD.appendChild(btnX2);
+    ovDocs.appendChild(hdrD);
+    var listD=document.createElement('div');
+    listD.style.cssText='flex:1;overflow:auto;padding:12px;display:flex;flex-direction:column;gap:8px;';
+    r.docs.forEach(function(doc){
+      var ext=(doc.nombre||'').split('.').pop().toLowerCase();
+      var ico=ext==='pdf'?'📄':doc.tipo&&doc.tipo.indexOf('image/')===0?'🖼️':'📎';
+      var esImg=doc.tipo&&(doc.tipo.indexOf('image/')===0||doc.tipo==='image');
+      var btn=document.createElement('button');
+      btn.style.cssText='display:flex;align-items:center;gap:10px;padding:12px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:10px;cursor:pointer;color:#fff;font-family:var(--font-main);font-size:13px;text-align:left;width:100%;';
+      btn.innerHTML='<span style="font-size:24px;">'+ico+'</span><span style="flex:1;">'+( doc.nombre||'Archivo')+'</span><span style="font-size:11px;opacity:.7;">Abrir →</span>';
+      btn.onclick=function(){
+        if(esImg){
+          // Imagen: mostrar en visor
+          var ex=document.getElementById('doc-visor-ov');if(ex)ex.remove();
+          var ov2=document.createElement('div');
+          ov2.id='doc-visor-ov';
+          ov2.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.95);z-index:100000;display:flex;align-items:center;justify-content:center;';
+          ov2.onclick=function(e){if(e.target===ov2)ov2.remove();};
+          var img2=document.createElement('img');
+          img2.src=doc.data;
+          img2.style.cssText='max-width:100%;max-height:90vh;object-fit:contain;';
+          img2.onerror=function(){img2.alt='No se pudo cargar la imagen';};
+          var bx=document.createElement('button');
+          bx.style.cssText='position:fixed;top:12px;right:12px;background:rgba(0,0,0,.6);border:none;color:#fff;font-size:22px;cursor:pointer;border-radius:50%;width:38px;height:38px;z-index:100001;';
+          bx.textContent='✕';bx.onclick=function(){ov2.remove();};
+          ov2.appendChild(img2);ov2.appendChild(bx);
+          document.body.appendChild(ov2);
+        } else {
+          // PDF/doc: descargar
+          var a2=document.createElement('a');
+          a2.href=doc.data;
+          a2.download=doc.nombre||'archivo';
+          document.body.appendChild(a2);
+          a2.click();
+          document.body.removeChild(a2);
+        }
+      };
+      listD.appendChild(btn);
+      // Preview de imagen
+      if(esImg&&doc.data){
+        var imgPrev=document.createElement('img');
+        imgPrev.src=doc.data;
+        imgPrev.style.cssText='width:100%;max-height:200px;object-fit:cover;border-radius:8px;cursor:pointer;';
+        imgPrev.onclick=btn.onclick;
+        listD.appendChild(imgPrev);
+      }
+    });
+    ovDocs.appendChild(listD);
+    document.body.appendChild(ovDocs);
   };
   sheet.appendChild(albBtn);
   // Fecha de registro
@@ -12439,7 +12578,25 @@ function albEliminarAlbum(){
   state.albums=getAlbums().filter(function(a){return a.id!==_albViewingId;});
   try{persist().catch(function(){});}catch(e){}albCerrarVisor();
 }
-function albAbrirFull(src){var el=document.getElementById('alb-fullimg'),img=document.getElementById('alb-fullimg-src');if(el&&img){img.src=src;el.style.display='flex';}}
+function albAbrirFull(src){
+  // Usar visor embebido independiente (más fiable que alb-fullimg)
+  var existing=document.getElementById('doc-visor-ov');
+  if(existing) existing.remove();
+  var ov=document.createElement('div');
+  ov.id='doc-visor-ov';
+  ov.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.95);z-index:99999;display:flex;flex-direction:column;align-items:center;justify-content:center;';
+  ov.onclick=function(e){if(e.target===ov)ov.remove();};
+  var img=document.createElement('img');
+  img.src=src;
+  img.style.cssText='max-width:100%;max-height:90vh;object-fit:contain;border-radius:8px;';
+  var btnX=document.createElement('button');
+  btnX.style.cssText='position:fixed;top:16px;right:16px;background:rgba(0,0,0,.6);border:none;color:#fff;font-size:24px;cursor:pointer;border-radius:50%;width:40px;height:40px;z-index:100000;';
+  btnX.textContent='✕';
+  btnX.onclick=function(){ov.remove();};
+  ov.appendChild(img);
+  ov.appendChild(btnX);
+  document.body.appendChild(ov);
+}
 function albCerrarFull(){var el=document.getElementById('alb-fullimg');if(el)el.style.display='none';}
 
 /* ── saveRecord refresh alerts ── */
@@ -15643,7 +15800,19 @@ async function fotoIDBMigrarDesdeState(){
       }
     }
   }
-  if(migradas>0){persist().catch(function(){});console.log('Tapunto: '+migradas+' fotos migradas a IDB');}
+  var records=state.records||[];
+  for(var ri=0;ri<records.length;ri++){
+    var docs=records[ri].docs||[];
+    for(var di=0;di<docs.length;di++){
+      var d=docs[di];
+      if(d.data&&d.data.startsWith('data:')&&!d.idbKey){
+        var docId='doc_'+records[ri].id+'_'+di;
+        var ok2=await fotoIDBGuardar(docId,d.data,d.nombre,d.tipo);
+        if(ok2){d.idbKey=docId;delete d.data;migradas++;}
+      }
+    }
+  }
+  if(migradas>0){persist().catch(function(){});console.log('Tapunto: '+migradas+' archivos migrados a IDB');}
   return migradas;
 }
 
