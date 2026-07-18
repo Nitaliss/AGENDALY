@@ -3900,6 +3900,7 @@ body.nb-mode #nb-pill-orden { display:none !important; }
       <span class="tap-header-title" style="font-size:15px;">🔷 Mi Tracker</span>
       <span style="font-size:10px;color:rgba(255,255,255,.7);font-family:var(--font-main);">¿Cómo te ha ido el día?</span>
     </div>
+    <button onclick="trackerGuardarManual()" class="tap-header-btn" title="Guardar" style="font-size:12px;font-weight:700;display:flex;flex-direction:column;align-items:center;gap:1px;font-family:var(--font-main);padding:4px 8px;">💾<span style="font-size:8px;">Guardar</span></button>
     <button onclick="trackerExportarPNG()" class="tap-header-btn" title="Exportar imagen" style="font-size:12px;font-weight:700;display:flex;flex-direction:column;align-items:center;gap:1px;font-family:var(--font-main);padding:4px 8px;">
       <span style="font-size:16px;">📤</span>
       <span style="font-size:8px;color:rgba(255,255,255,.85);">Exportar</span>
@@ -4307,6 +4308,11 @@ function trackerAnioAnterior(){
 function trackerAnioSiguiente(){
   _trackerAnio++;
   renderTracker();
+}
+
+function trackerGuardarManual(){
+  persist().catch(function(){});
+  showToast('💾 Tracker guardado');
 }
 
 function trackerTocarDia(anio,mes,dia){
@@ -6036,8 +6042,8 @@ fillComunicados();
 const btn=document.getElementById('save-btn');
 if(btn){btn.disabled=false;btn.textContent='💾 Guardar registro';btn.classList.remove('editing');}
 }
-function fillAcciones(){ const all=[...new Set([...( state.acciones||[])])]; const el=document.getElementById('inp-accion'),cur=el.value; el.innerHTML='<option value="">Seleccionar...</option>'+all.map(v=>`<option${v===cur?' selected':''}>${x(v)}</option>`).join(''); }
-function fillComunicados(){ const el=document.getElementById('inp-comunicado'),cur=el.value; el.innerHTML='<option value="">Sin comunicar</option>'+state.comunicados.map(v=>`<option${v===cur?' selected':''}>${x(v)}</option>`).join(''); }
+function fillAcciones(){ const all=[...new Set([...( state.acciones||[])])]; const el=document.getElementById('inp-accion');if(!el)return;const cur=el.value; el.innerHTML='<option value="">Seleccionar...</option>'+all.map(v=>`<option${v===cur?' selected':''}>${x(v)}</option>`).join(''); }
+function fillComunicados(){ const el=document.getElementById('inp-comunicado');if(!el)return;const cur=el.value; el.innerHTML='<option value="">Sin comunicar</option>'+state.comunicados.map(v=>`<option${v===cur?' selected':''}>${x(v)}</option>`).join(''); }
 function addContacto(){ const n=prompt('Nuevo contacto:'); if(n&&n.trim()&&!state.contactos.includes(n.trim())){state.contactos.push(n.trim());state.contactos.sort((a,b)=>a.localeCompare(b,'es',{sensitivity:'base'}));persist().catch(()=>{});fillSelect('inp-contacto',state.contactos);document.getElementById('inp-contacto').value=n.trim();syncListsToSheets();} }
 function addTema(){ const n=prompt('Nuevo tema:'); if(n&&n.trim()&&!state.temas.includes(n.trim())){state.temas.push(n.trim());state.temas.sort((a,b)=>a.localeCompare(b,'es',{sensitivity:'base'}));persist().catch(()=>{});fillSelect('inp-tema',state.temas);document.getElementById('inp-tema').value=n.trim();syncListsToSheets();} }
 function addAccion(){ const n=prompt('Nueva acción:'); if(n&&n.trim()&&!state.acciones.includes(n.trim())){state.acciones.push(n.trim());persist().catch(()=>{});fillAcciones();document.getElementById('inp-accion').value=n.trim();} }
@@ -7210,6 +7216,15 @@ if(hist.length){
   });
   list.appendChild(bloqH);
 }
+
+// ── Botón Eliminar rutina ──
+if(r&&!r._esDemo){
+  var btnElim=document.createElement('button');
+  btnElim.style.cssText='width:100%;margin-top:12px;padding:12px;background:#fff0f0;color:#c0392b;border:1.5px solid #e74c3c;border-radius:12px;font-family:var(--font-main);font-size:14px;font-weight:700;cursor:pointer;';
+  btnElim.textContent='🗑️ Eliminar esta rutina';
+  btnElim.onclick=function(){eliminarRutina(r.id);};
+  list.appendChild(btnElim);
+}
 }
 
 function registrarRutinaDetalle(r,key,val,id){
@@ -7632,7 +7647,8 @@ actualizarGrafica(defaultTipo);
 }
 
 function guardarNota(){
-  if(!isPremium&&(state.notas||[]).length>=10){showUpgrade();return;}
+  if(!state.notas) state.notas=[];
+  if(!isPremium&&state.notas.length>=10){showUpgrade();return;}
 var inp=document.getElementById('nota-input');
 var texto=inp?inp.value.trim():'';
 if(!texto) return;
@@ -7700,6 +7716,7 @@ if(!list) return;
 var todasNotas=state.notas||[];
 var mostrarArchivadas=list.getAttribute('data-show-arch')==='1';
 var notas=todasNotas.filter(function(n){return !n.archivado;}); // Archivadas ocultas en To Do
+var nArchivadas=todasNotas.filter(function(n){return !!n.archivado;}).length;
 var toggleArch=document.getElementById('notas-arch-toggle');
 if(!toggleArch){
 toggleArch=document.createElement('button');
@@ -9206,6 +9223,12 @@ function exportarDatosCompletos(){
     // ── To Do ──
     notas: state.notas || [],
     rutinas: state.rutinas || [],
+    // ── Tracker ──
+    tracker: state.tracker || {},
+    // ── Calificaciones ──
+    calificaciones: state.calificaciones || [],
+    // ── Mis Clases ──
+    profes: state.profes || [],
     // ── Horario ──
     horario: state.horario || {},
     // ── Álbumes ──
@@ -9230,7 +9253,7 @@ function exportarDatosCompletos(){
   var blob = new Blob([json], {type:'application/json'});
   var a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
-  a.download = 'Tapunto_backup_completo_'+new Date().toISOString().slice(0,10)+'.json';
+  var _fd3=new Date();a.download='TAPUNTO_'+_fd3.getFullYear()+'_'+String(_fd3.getMonth()+1).padStart(2,'0')+'_'+String(_fd3.getDate()).padStart(2,'0')+'_'+String(_fd3.getHours()).padStart(2,'0')+String(_fd3.getMinutes()).padStart(2,'0')+'.json';
   document.body.appendChild(a); a.click();
   setTimeout(function(){ document.body.removeChild(a); URL.revokeObjectURL(a.href); }, 500);
   var kb = Math.round(json.length/1024);
@@ -9241,33 +9264,26 @@ async function exportBackupJSON(){
   // Recuperar libreta del localStorage
   var _libData=null;
   try{var _ls=localStorage.getItem('tp_libreta');if(_ls)_libData=JSON.parse(_ls);}catch(e){}
+  // Recuperar docs de IDB antes de generar backup
+  var _recsBackup=JSON.parse(JSON.stringify(state.records||[]));
+  for(var _ri=0;_ri<_recsBackup.length;_ri++){
+    var _docs=_recsBackup[_ri].docs||[];
+    for(var _di=0;_di<_docs.length;_di++){
+      var _d=_docs[_di];
+      if(_d.idbKey&&!_d.data){
+        try{var _idbI=await fotoIDBLeer(_d.idbKey);if(_idbI&&_idbI.data)_d.data=_idbI.data;}catch(e){}
+      }
+    }
+    if(_recsBackup[_ri].imagenIdbKey&&!_recsBackup[_ri].imagenUrl){
+      try{var _idbImg=await fotoIDBLeer(_recsBackup[_ri].imagenIdbKey);if(_idbImg&&_idbImg.data)_recsBackup[_ri].imagenUrl=_idbImg.data;}catch(e){}
+    }
+  }
   var backup={
     version:'2.0',
     fecha:new Date().toISOString(),
     usuario:currentUser||'tapunto',
     // Tareas y datos base
-    records:await (async function(){
-      var recs=JSON.parse(JSON.stringify(state.records||[]));
-      for(var ri=0;ri<recs.length;ri++){
-        var docs=recs[ri].docs||[];
-        for(var di=0;di<docs.length;di++){
-          var d=docs[di];
-          if(d.idbKey&&!d.data){
-            try{
-              var idbItem=await fotoIDBLeer(d.idbKey);
-              if(idbItem&&idbItem.data) d.data=idbItem.data;
-            }catch(e){}
-          }
-        }
-        if(recs[ri].imagenIdbKey&&!recs[ri].imagenUrl){
-          try{
-            var idbImg=await fotoIDBLeer(recs[ri].imagenIdbKey);
-            if(idbImg&&idbImg.data) recs[ri].imagenUrl=idbImg.data;
-          }catch(e){}
-        }
-      }
-      return recs;
-    })(),
+    records:_recsBackup,
     profes:state.profes||[],
     tracker:state.tracker||{},
     contactos:state.contactos||[],
@@ -9308,10 +9324,20 @@ function importBackupJSON(e){
   reader.onload=function(ev){
     try{
       var d=JSON.parse(ev.target.result);
-      if(!d||(!d.records&&!d.registros)){alert('Archivo de backup no válido.');return;}
+      // Validación permisiva: acepta cualquier objeto con al menos una clave conocida de Tapunto
+      var esTapunto=d&&(
+        Array.isArray(d.records)||Array.isArray(d.registros)||
+        d.version||d.ver||d.fecha||d.usuario||
+        d.tracker||d.rutinas||d.notas||d.horario
+      );
+      if(!esTapunto){alert('Archivo de backup no válido.\nAsegúrate de usar un archivo TAPUNTO_*.json generado desde la app.');return;}
+      // Normalizar: si no hay records, usar registros o array vacío
+      if(!Array.isArray(d.records)) d.records=Array.isArray(d.registros)?d.registros:[];
       // Compatibilidad v1 (d.registros) y v2 (d.records)
       if(d.records&&Array.isArray(d.records))       state.records=d.records;
       else if(d.registros&&Array.isArray(d.registros)) state.records=d.registros;
+      if(d.profes&&Array.isArray(d.profes))           state.profes=d.profes;
+      if(d.tracker&&typeof d.tracker==='object')        state.tracker=d.tracker;
       if(d.contactos&&Array.isArray(d.contactos))   state.contactos=d.contactos;
       if(d.temas&&Array.isArray(d.temas))           state.temas=d.temas;
       if(d.acciones&&Array.isArray(d.acciones))     state.acciones=d.acciones;
@@ -9350,10 +9376,14 @@ function importBackupJSON(e){
       try{renderCalificaciones&&renderCalificaciones();}catch(ex){}
       try{renderAlertas&&renderAlertas();}catch(ex){}
       try{if(typeof renderRutinas==='function')renderRutinas();}catch(ex){}
+      try{if(typeof renderTracker==='function')renderTracker();}catch(ex){}
+      try{if(typeof renderProfes==='function')renderProfes();}catch(ex){}
       // Mensaje resumen
       var resumen=[];
       var recs=d.records||d.registros||[];
       if(recs.length) resumen.push(recs.length+' tareas');
+      if((d.profes||[]).length) resumen.push(d.profes.length+' clases');
+      if(d.tracker&&Object.keys(d.tracker).length) resumen.push('tracker');
       if((d.calificaciones||[]).length) resumen.push(d.calificaciones.length+' calificaciones');
       if((d.rutinas||[]).length) resumen.push(d.rutinas.length+' rutinas');
       if((d.recordatorios||[]).length) resumen.push(d.recordatorios.length+' recordatorios');
@@ -9366,31 +9396,6 @@ function importBackupJSON(e){
   };
   reader.readAsText(file);
   e.target.value='';
-}
-function exportBackupJSON(){
-var b={version:'1.0',fecha:new Date().toISOString(),records:state.records,contactos:state.contactos,temas:state.temas,acciones:state.acciones,comunicados:state.comunicados};
-var a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(b,null,2)],{type:'application/json'}));
-a.download='Tapunto_backup_'+new Date().toISOString().slice(0,10)+'.json';a.click();
-}
-function importBackupJSON(e){
-var file=e.target.files[0];if(!file)return;
-var reader=new FileReader();
-reader.onload=function(ev){
-try{
-var b=JSON.parse(ev.target.result);
-if(!b.records||!Array.isArray(b.records)){alert('Archivo inválido.');return;}
-var ids=new Set(state.records.map(r=>r.id));var n=0;
-b.records.forEach(function(r){if(r.id&&!ids.has(r.id)){state.records.push(r);n++;}});
-if(b.contactos)b.contactos.forEach(function(c){if(c&&!state.contactos.includes(c))state.contactos.push(c);});
-if(b.temas)b.temas.forEach(function(t){if(t&&!state.temas.includes(t))state.temas.push(t);});
-if(b.horario&&b.horario.schedules){state.horario=b.horario;}
-if(b.rutinas&&b.rutinas.length){state.rutinas=b.rutinas;}
-if(b.notas&&b.notas.length){state.notas=b.notas;}
-if(b.planData){state.planData=b.planData;}
-persist().catch(function(){});renderStats();renderRecords();
-alert('Restaurado: '+n+' registros nuevos'+(b.horario?' + horario':'')+'.');
-}catch(err){alert('Error: '+err.message);}
-};reader.readAsText(file);e.target.value='';
 }
 function exportCSV(){
 const rows=getFiltered();if(!rows.length){alert('No hay registros.');return;}
@@ -9863,7 +9868,7 @@ try{initFontScale();}catch(_e){}
 await _cp();
 if(state.coverImageData&&isPremium) applyCoverImage(state.coverImageData);
 
-document.getElementById('script-box-content').value=APPS_SCRIPT_CODE;
+var _sbc=document.getElementById('script-box-content');if(_sbc)_sbc.value=APPS_SCRIPT_CODE;
 
 state.modo='trabajo';
 sortListas();
@@ -14297,7 +14302,8 @@ function icsOpenFilePicker(){
 
 </script>
 
-<script>
+<script>var _e=function(s){return s?String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'):''};
+
 
 /* ═══ HELP SECTION ═══ */
 (function(){
@@ -14446,7 +14452,7 @@ function renderProximasTareas(){
       else if(dias<=2){bg='#FCEBEB';border='#F7C1C1';badgeBg='#E24B4A';badgeC='#fff';label=dias+'d';dot='#E24B4A';}
       else if(dias<=7){bg='#FAEEDA';border='#FAC775';badgeBg='#EF9F27';badgeC='#fff';label=dias+'d';dot='#EF9F27';}
       else{bg='var(--w)';border='var(--bd)';badgeBg='var(--bp)';badgeC='var(--tl)';label=dias+'d';dot='var(--tl)';}
-      var ico=r.icono||'📋', tema=esc(r.tema||'Sin asignatura'), tipo=esc(r.accion||r.tipo||'');
+      var _esc=function(s){return s?String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'):'';};var ico=r.icono||'📋', tema=_esc(r.tema||'Sin asignatura'), tipo=_esc(r.accion||r.tipo||'');
       var fecha=r.fechaEvento?new Date(r.fechaEvento+'T00:00:00').toLocaleDateString('es',{day:'2-digit',month:'short'}):'';
       html+='<div data-rid="'+r.id+'" class="prox-card" style="display:flex;align-items:center;gap:6px;padding:5px 8px;margin-bottom:3px;border-radius:8px;border:1px solid '+border+';background:'+bg+';cursor:pointer;">'
         +'<div style="width:7px;height:7px;border-radius:50%;background:'+dot+';flex-shrink:0;"></div>'
@@ -14463,7 +14469,7 @@ function renderProximasTareas(){
     html+='<div style="font-size:9px;font-weight:700;color:var(--tm);font-family:var(--font-main);text-transform:uppercase;letter-spacing:.5px;margin:'+(conFecha.length?'8px':'4px')+' 0 4px;">📋 Tareas recientes</div>';
     sinFecha.forEach(function(item){
       var r=item;
-      var ico=r.icono||'📋', tema=esc(r.tema||'Sin asignatura'), tipo=esc(r.accion||r.tipo||'');
+      var _esc2=function(s){return s?String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'):'';};var ico=r.icono||'📋', tema=_esc2(r.tema||'Sin asignatura'), tipo=_esc2(r.accion||r.tipo||'');
       html+='<div data-rid="'+r.id+'" class="prox-card" style="display:flex;align-items:center;gap:6px;padding:5px 8px;margin-bottom:3px;border-radius:8px;border:1px solid var(--bd);background:var(--w);cursor:pointer;">'
         +'<div style="width:7px;height:7px;border-radius:50%;background:var(--tl);flex-shrink:0;"></div>'
         +'<div style="flex:1;min-width:0;">'
@@ -14534,7 +14540,7 @@ if(typeof onNuevoDocSelected === 'undefined'){
         if(preview){
           var row=document.createElement('div');
           row.style.cssText='display:flex;align-items:center;gap:6px;padding:4px 8px;background:var(--bp);border-radius:6px;border:1px solid var(--bd);font-size:11px;font-family:var(--font-main);';
-          row.innerHTML='📎 '+esc(file.name)+'<button onclick="this.parentElement.remove()" style="margin-left:auto;background:none;border:none;color:var(--tl);cursor:pointer;font-size:14px;">✕</button>';
+          row.innerHTML='📎 '+(file.name||'')+'<button onclick="this.parentElement.remove()" style="margin-left:auto;background:none;border:none;color:var(--tl);cursor:pointer;font-size:14px;">✕</button>';
           preview.appendChild(row);
         }
       };
