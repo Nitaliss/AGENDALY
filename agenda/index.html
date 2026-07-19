@@ -3836,7 +3836,7 @@ body.nb-mode #nb-pill-orden { display:none !important; }
       <button onclick="document.getElementById('notas-pdf-filter').style.display='none'" style="padding:6px 10px;background:none;color:var(--tl);border:1px solid var(--bd);border-radius:6px;font-size:12px;cursor:pointer;">✕</button>
     </div>
     <div style="display:flex;gap:8px;margin-bottom:16px;align-items:flex-start;">
-      <textarea id="nota-input" placeholder="Escribe o dicta una tarea o nota..." style="flex:1;padding:10px 12px;border:1px solid var(--bd);border-radius:10px;background:var(--bp);color:var(--td);font-family:var(--font-main);font-size:14px;resize:none;min-height:56px;outline:none;line-height:1.4;"></textarea>
+      <textarea id="nota-input" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();guardarNota();}" placeholder="Escribe o dicta una tarea o nota..." style="flex:1;padding:10px 12px;border:1px solid var(--bd);border-radius:10px;background:var(--bp);color:var(--td);font-family:var(--font-main);font-size:14px;resize:none;min-height:56px;outline:none;line-height:1.4;"></textarea>
       <div style="display:flex;flex-direction:column;gap:6px;">
         <button onclick="dictarCampo('nota-input',this)" title="🎙️ Dictado de voz · Requiere micrófono y HTTPS · El audio se procesa en tu dispositivo" style="padding:10px;background:var(--gm);color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:18px;">🎙️</button>
         <button onclick="guardarNota()" style="padding:10px;background:var(--gd);color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:18px;">✓</button>
@@ -3898,9 +3898,9 @@ body.nb-mode #nb-pill-orden { display:none !important; }
     <button class="tap-header-back" onclick="tapuntoNavBack()">←</button>
     <div style="display:flex;flex-direction:column;gap:1px;">
       <span class="tap-header-title" style="font-size:15px;">🔷 Mi Tracker</span>
-      <span style="font-size:10px;color:rgba(255,255,255,.7);font-family:var(--font-main);">¿Cómo te ha ido el día?</span>
+      <span style="font-size:10px;color:rgba(255,255,255,.7);font-family:var(--font-main);">Toca un rombo · se guarda automáticamente</span>
     </div>
-    <button onclick="trackerGuardarManual()" class="tap-header-btn" title="Guardar" style="font-size:12px;font-weight:700;display:flex;flex-direction:column;align-items:center;gap:1px;font-family:var(--font-main);padding:4px 8px;">💾<span style="font-size:8px;">Guardar</span></button>
+    <button id="btn-tracker-save" onclick="trackerGuardarManual()" class="tap-header-btn" title="Guardar" style="font-size:12px;font-weight:700;display:flex;flex-direction:column;align-items:center;gap:1px;font-family:var(--font-main);padding:4px 8px;">💾<span style="font-size:8px;">Guardar</span></button>
     <button onclick="trackerExportarPNG()" class="tap-header-btn" title="Exportar imagen" style="font-size:12px;font-weight:700;display:flex;flex-direction:column;align-items:center;gap:1px;font-family:var(--font-main);padding:4px 8px;">
       <span style="font-size:16px;">📤</span>
       <span style="font-size:8px;color:rgba(255,255,255,.85);">Exportar</span>
@@ -4311,12 +4311,16 @@ function trackerAnioSiguiente(){
 }
 
 function trackerGuardarManual(){
-  var btn=document.querySelector('#sec-tracker .tap-header button[onclick*="trackerGuardar"]');
-  if(btn){var orig=btn.innerHTML;btn.innerHTML='⏳';setTimeout(function(){btn.innerHTML=orig;},1200);}
+  var btn=document.getElementById('btn-tracker-save');
+  var origHTML=btn?btn.innerHTML:'';
+  if(btn){btn.innerHTML='⏳<span style="font-size:8px;">Guardando</span>';btn.style.color='#f59e0b';}
   persist().then(function(){
-    showToast('✅ Tracker guardado correctamente');
+    if(btn){btn.innerHTML='✅<span style="font-size:8px;">Guardado</span>';btn.style.color='#1D9E75';}
+    setTimeout(function(){if(btn){btn.innerHTML=origHTML;btn.style.color='';}},2500);
+    showWarn('💾 Tracker guardado correctamente');
   }).catch(function(){
-    showToast('❌ Error al guardar el tracker');
+    if(btn){btn.innerHTML='❌<span style="font-size:8px;">Error</span>';btn.style.color='#e74c3c';}
+    setTimeout(function(){if(btn){btn.innerHTML=origHTML;btn.style.color='';}},2500);
   });
 }
 
@@ -7660,8 +7664,9 @@ if(!texto) return;
 var nota={id:Date.now().toString(),texto:texto,fecha:new Date().toISOString()};
 if(!state.notas) state.notas=[];
 state.notas.unshift(nota);
-persist().catch(function(){});
+persist().catch(function(e){console.warn('persist error:',e);});
 inp.value='';
+inp.focus();
 renderNotas();
 // Mantener foco en el input para escribir otra nota sin salir
 setTimeout(function(){if(inp)inp.focus();},50);
@@ -9234,6 +9239,12 @@ function exportarDatosCompletos(){
     calificaciones: state.calificaciones || [],
     // ── Mis Clases ──
     profes: state.profes || [],
+    // ── Tracker ──
+    tracker: state.tracker || {},
+    // ── Calificaciones ──
+    calificaciones: state.calificaciones || [],
+    // ── Mis Clases ──
+    profes: state.profes || [],
     // ── Horario ──
     horario: state.horario || {},
     // ── Álbumes ──
@@ -9287,7 +9298,6 @@ async function exportBackupJSON(){
     version:'2.0',
     fecha:new Date().toISOString(),
     usuario:currentUser||'tapunto',
-    // Tareas y datos base
     records:_recsBackup,
     profes:state.profes||[],
     tracker:state.tracker||{},
@@ -9338,18 +9348,10 @@ function importBackupJSON(e){
       if(!esTapunto){alert('Archivo de backup no válido.\nAsegúrate de usar un archivo TAPUNTO_*.json generado desde la app.');return;}
       // Normalizar: si no hay records, usar registros o array vacío
       if(!Array.isArray(d.records)) d.records=Array.isArray(d.registros)?d.registros:[];
-      // Confirmación antes de restaurar
-      var numRecs=d.records.length||0;
-      var numNotas=(d.notas||[]).length;
-      var fechaBackup=d.exportado||d.fecha||'';
-      var fechaStr=fechaBackup?new Date(fechaBackup).toLocaleDateString('es-ES',{day:'2-digit',month:'long',year:'numeric',hour:'2-digit',minute:'2-digit'}):'desconocida';
-      var msg='⚠️ ¿Restaurar esta copia de seguridad?\n\n'
-        +'📅 Fecha: '+fechaStr+'\n'
-        +'📋 Tareas: '+numRecs+'\n'
-        +'✅ Notas To Do: '+numNotas+'\n\n'
-        +'ATENCIÓN: Esto reemplazará TODOS tus datos actuales.\n'
-        +'Esta acción no se puede deshacer.';
-      if(!confirm(msg)) return;
+      var _nT=(d.records||[]).length;
+      var _fB=d.fecha||d.exportado||'';
+      var _fStr=_fB?new Date(_fB).toLocaleDateString('es-ES',{day:'2-digit',month:'long',year:'numeric'})+' '+new Date(_fB).toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'}):'desconocida';
+      if(!confirm('⚠️ RESTAURAR BACKUP\n\n¿Segura que quieres restaurar este backup?\n\n📅 Fecha: '+_fStr+'\n📋 Tareas: '+_nT+'\n\nATENCIÓN: Se reemplazarán todos los datos actuales.\nEsta acción no se puede deshacer.\n\n¿Continuar?')) return;
       // Compatibilidad v1 (d.registros) y v2 (d.records)
       if(d.records&&Array.isArray(d.records))       state.records=d.records;
       else if(d.registros&&Array.isArray(d.registros)) state.records=d.registros;
@@ -11868,10 +11870,10 @@ function verRegistro(id){
     nf.appendChild(nl);nf.appendChild(nv);sheet.appendChild(nf);
   }
   // Foto
-  if(r.imagenUrl){
+if(r.imagenUrl){
     var ff=document.createElement('div');ff.className='rvm-field';
     var img=document.createElement('img');img.src=r.imagenUrl;img.style.cssText='width:100%;max-height:200px;object-fit:cover;border-radius:8px;cursor:pointer;';
-    img.onclick=function(){
+img.onclick=function(){
       var ex=document.getElementById('doc-visor-ov');if(ex)ex.remove();
       var ov=document.createElement('div');
       ov.id='doc-visor-ov';
@@ -14330,13 +14332,13 @@ function icsOpenFilePicker(){
     {q:'📅 Calendario',a:'Vista mensual de tus tareas con punto de color según urgencia. Toca un día para ver las tareas de ese día.\n\nImportar desde Google Calendar (.ics): Configuración → Importar ICS (Premium).'},
     {q:'📊 Calificaciones',a:'Muestra tus exámenes y trabajos pendientes de nota. Toca uno para añadir la calificación.\n\nExporta el informe en PDF (Premium).\n\nLas calificaciones están ligadas a tus registros de Mi Agenda.'},
     {q:'📅 Horario',a:'Tu horario semanal en la pantalla de Inicio. Añade tus asignaturas y cambia sus colores.\n\nPlan gratuito: 1 horario con hasta 2 colores.\nPremium: 2 horarios y paleta completa de colores.\n\nToca una celda del horario para crear una tarea de esa asignatura rápidamente.'},
-    {q:'🔄 Rutinas',a:'Hábitos diarios que puedes registrar cada día.\n\nPlan gratuito: muestra una rutina de ejemplo "💧 Beber agua" (solo lectura).\nPremium: crea rutinas ilimitadas personalizadas.\n\nToca una rutina para registrar si la has completado hoy.\n\nDesde el detalle de cada rutina puedes ver tu historial y eliminarla (solo rutinas propias, no la demo).'},
+    {q:'🔄 Rutinas',a:'Hábitos diarios que puedes registrar cada día.\n\nPlan gratuito: muestra una rutina de ejemplo "💧 Beber agua" (solo lectura).\nPremium: crea rutinas ilimitadas personalizadas.\n\nToca una rutina para registrar si la has completado hoy.'},
     {q:'📓 Mi Libreta',a:'Canvas táctil para dibujar y escribir a mano.\n\nPlan gratuito: 1 página.\nPremium: páginas ilimitadas.\n\nHerramientas: ✏️ Lápiz · 🖊️ Boli · T Texto · 😊 Stickers · ▭ Figuras · 🧹 Borrador · ↩ Deshacer.'},
     {q:'🍅 Pomodoro',a:'Temporizador de estudio completamente gratuito.\n\nConfigura el tiempo de trabajo y descanso. Las sesiones se registran automáticamente.\n\nSonidos: pitido, campana, fanfarria o silencio.'},
     {q:'👩‍🏫 Mis Clases',a:'Tarjetas con información de tus profesores/as: nombre, tutoría, contacto.\n\nPlan gratuito: hasta 5 clases.\nPremium: ilimitadas.\n\nSe sincronizan automáticamente con las asignaturas de tu horario.'},
-    {q:'🔷 Mi Tracker',a:'Registra cómo te sientes cada día con un rombo de colores. Completamente gratuito.\n\n🔷 Verde brillante = genial · Verde = bien · Amarillo = regular · Rojo = mal\n\nToca cualquier rombo para cambiarlo. Se guarda automáticamente.\n\nUsa el botón 💾 Guardar del header para confirmar el guardado manualmente.\n\nExporta tu tracker como imagen para compartirlo.'},
+    {q:'🔷 Mi Tracker',a:'Registra cómo te sientes cada día con un rombo de colores. Completamente gratuito.\n\n🔷 Verde brillante = Genial · Verde = Bien · Amarillo = Regular · Rojo = Mal\n\nToca un rombo para cambiar el estado. Se guarda automáticamente.\n\n💾 Botón Guardar (header): guarda y muestra confirmación.\n\nExporta tu tracker como imagen desde el botón de la cabecera.'},
     {q:'🔐 PIN y seguridad',a:'Activa un PIN de 4 dígitos en Configuración → Seguridad.\n\nEl PIN se guarda como hash SHA-256, nunca en texto claro. Los datos se cifran con AES-GCM en tu dispositivo. Nadie más puede acceder a ellos.'},
-    {q:'💾 Backup y datos',a:'Tapunto guarda tus datos en el dispositivo, cifrados con AES-GCM.\n\nCon Premium puedes hacer un backup completo (.json). Guárdalo en tu correo, ordenador o en la nube.\n\nPara restaurar: Configuración → Restaurar backup → selecciona tu archivo .json.\n\n☁️ Sincronización con Google Drive: disponible en esta versión. Conecta tu cuenta desde Configuración → Google Drive.'},
+    {q:'💾 Backup y datos',a:'Tapunto guarda tus datos en el dispositivo, cifrados con AES-GCM.\n\nCon Premium puedes hacer un backup completo. El archivo se llama TAPUNTO_AÑO_MES_DIA_HORA.json.\n\nPara restaurar: Configuración → Restaurar backup → selecciona tu archivo TAPUNTO_*.json.\n\nAntes de restaurar aparece una confirmación con la fecha del backup y el número de tareas.\n\n⚠️ Restaurar reemplaza TODOS los datos actuales. Haz siempre un backup antes de restaurar.'},
     {q:'🎨 Personalización',a:'En Configuración → Personalización: temas de color y fuente.\n\nEl avatar se personaliza tocando el círculo del inicio: 12 colores, 16 emojis o tu inicial.'},
     {q:'⭐ Gratuito vs Premium',a:'PLAN GRATUITO:\n• Hasta 10 tareas en Mi Agenda\n• Hasta 10 notas en To Do\n• Hasta 5 clases en Mis Clases\n• 1 página de libreta\n• 1 rutina de ejemplo (solo lectura)\n• 1 horario + 2 colores\n• Calendario y Calificaciones completos\n• Pomodoro y Tracker completos\n\nPLAN PREMIUM (1,99€/año — precio de lanzamiento):\n• Todo ilimitado\n• 2 horarios + colores ilimitados\n• Rutinas propias ilimitadas\n• Libreta ilimitada\n• 🎙️ Dictado de voz\n• 📷 Fotos adjuntas\n• 📤 Exportar PDF\n• 💾 Backup de datos\n• Hasta 5 dispositivos\n\nEl precio sube a 3,99€/año en 2027.\n\nVer tu plan: avatar → ⭐ Mi plan Premium.'},
     {q:'ℹ️ Acerca de',a:'Tapunto es desarrollada por Alicia Prats y Enrique García © 2026 · Valencia, España · tapunto.app · Contacto: tapunto.soporte@gmail.com'}
@@ -15834,6 +15836,7 @@ async function fotoIDBTamano(){
 async function fotoIDBMigrarDesdeState(){
   var albums=state.albums||[];
   var migradas=0;
+  // Migrar fotos de álbumes
   for(var i=0;i<albums.length;i++){
     var fotos=albums[i].fotos||[];
     for(var j=0;j<fotos.length;j++){
@@ -15844,6 +15847,7 @@ async function fotoIDBMigrarDesdeState(){
       }
     }
   }
+  // Migrar docs de registros (evitar superar límite 5MB localStorage)
   var records=state.records||[];
   for(var ri=0;ri<records.length;ri++){
     var docs=records[ri].docs||[];
