@@ -4450,7 +4450,7 @@ function profesSincronizarHorario(){
     var hs=getHS();
     (hs.schedules||[]).forEach(function(sch){
       if(!sch||!sch.grid) return;
-      console.log('Tapunto profes: grid keys=',Object.keys(sch.grid).length,'values=',Object.values(sch.grid).slice(0,3));
+      // log eliminado por seguridad
       Object.values(sch.grid).forEach(function(asig){
         if(asig&&typeof asig==='string'&&asig.trim()){
           var a=asig.trim(); asigSet[a]=true;
@@ -4461,7 +4461,7 @@ function profesSincronizarHorario(){
     });
   }catch(e){ console.warn('Tapunto profes:',e); }
   (state.temas||[]).forEach(function(t){ if(t&&t.trim()) asigSet[t.trim()]=true; });
-  console.log('Tapunto profes: asignaturas detectadas:', Object.keys(asigSet));
+  // log eliminado por seguridad
   Object.keys(asigSet).forEach(function(asig){
     if(!profes.find(function(p){ return p.asig===asig; })){
       profes.push({
@@ -7845,7 +7845,7 @@ secHdr.style.cssText='padding:12px 14px;display:flex;justify-content:space-betwe
 secHdr.innerHTML='<div style="font-size:13px;font-weight:700;color:var(--td);font-family:var(--font-main);">'+sec.titulo+'</div><span style="color:var(--tl);font-size:14px;transition:transform .2s;">▶</span>';
 var secBody=document.createElement('div');
 secBody.style.cssText='display:none;padding:12px 14px;font-size:12px;color:var(--td);font-family:var(--font-main);line-height:1.7;border-top:1px solid var(--bd);';
-secBody.innerHTML=sec.texto;
+secBody.innerHTML=sec.texto||''; // contenido interno hardcodeado, no datos de usuario
 secHdr.onclick=function(){
 var open=secBody.style.display==='block';
 secBody.style.display=open?'none':'block';
@@ -10201,7 +10201,7 @@ if(item==='sep'){const s=document.createElement('div');s.className='rec-menu-sep
 const el=document.createElement('div');
 el.className='rec-menu-item';
 el.innerHTML=item.icon+' '+item.label;
-el.onclick=function(ev){ev.stopPropagation();cerrarMenuRec();eval(item.fn);};
+el.onclick=function(ev){ev.stopPropagation();cerrarMenuRec();try{if(typeof item.fn==='function')item.fn();else if(typeof item.fn==='string'&&window[item.fn])window[item.fn]();}catch(e){};};
 menu.appendChild(el);
 });
 const btn=e.target;
